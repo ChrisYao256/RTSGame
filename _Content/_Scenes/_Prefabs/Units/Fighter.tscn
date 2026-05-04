@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://boowl0qtdgk8g"]
+
+[ext_resource type="PackedScene" uid="uid://85drlqgmmj8i" path="res://_Content/_Scenes/_Prefabs/Units/BaseUnit.tscn" id="1_nrwse"]
+[ext_resource type="PackedScene" uid="uid://dxg1cx6w8moqv" path="res://_Content/_Scenes/_Prefabs/Weapons/MeleeWeapon.tscn" id="2_pcghg"]
+
+[node name="BaseUnit" unique_id=481801141 instance=ExtResource("1_nrwse")]
+collision_mask = 3
+_isBuilding = true
+_moveSpeed = 120.0
+_hpMax = 200
+
+[node name="WeaponComponent" parent="." index="0" unique_id=2120452932 instance=ExtResource("2_pcghg")]
+_damage = 8
+_attackCooldown = 0.8
+
+[node name="AttackArea" parent="UnitPathfinder" parent_id_path=PackedInt32Array(1047001645) index="0" unique_id=1809011067]
+collision_mask = 2

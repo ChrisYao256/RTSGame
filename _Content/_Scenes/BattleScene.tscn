@@ -1,0 +1,37 @@
+[gd_scene format=3 uid="uid://b3dupjk1otmji"]
+
+[ext_resource type="Script" uid="uid://diaqlwxkb7dvh" path="res://_Source/_UI/BattleScene.cs" id="1_8dk3v"]
+[ext_resource type="PackedScene" uid="uid://clx6sk7mljed3" path="res://_Content/_Scenes/_Prefabs/Units/UnitManager.tscn" id="2_1kakq"]
+[ext_resource type="Script" uid="uid://ce6y6raslv15c" path="res://_Source/Camera.cs" id="3_ptj6r"]
+
+[sub_resource type="NavigationPolygon" id="NavigationPolygon_ea6fk"]
+vertices = PackedVector2Array(1721.8672, -349.2578, 1712.1172, 1245.1719, -460, 1264.8125, -460, -378.71875)
+polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3)])
+outlines = Array[PackedVector2Array]([PackedVector2Array(-480, -399, -480, 1285, 1732, 1265, 1742, -369)])
+agent_radius = 20.0
+
+[node name="BattleScene" type="Node2D" unique_id=89453753]
+script = ExtResource("1_8dk3v")
+UnitManager = ExtResource("2_1kakq")
+
+[node name="NavigationRegion2D" type="NavigationRegion2D" parent="." unique_id=196948469]
+position = Vector2(-30, -15)
+navigation_polygon = SubResource("NavigationPolygon_ea6fk")
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1313498845]
+position = Vector2(583, 328)
+script = ExtResource("3_ptj6r")
+
+[node name="TextEdit" type="TextEdit" parent="." unique_id=1208041963]
+visible = false
+offset_right = 1158.0
+offset_bottom = 661.0
+theme_override_colors/font_color = Color(0.9607843, 0, 0, 1)
+theme_override_font_sizes/font_size = 30
+text = "TODO: 
+1. 
+2. Isolate and clean up inputs. e.g. Right click on unit = chase, right click on ground = force move
+2. A+left click to attack
+3. add info bar & selection bar
+4. smarter movement
+"

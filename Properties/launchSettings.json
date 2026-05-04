@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "RTSGame": {
+      "commandName": "Project"
+    },
+    "Godot": {
+      "commandName": "Executable",
+      "executablePath": "C:\\Program Files\\Godot_v4.6-stable_mono_win64\\Godot_v4.6-stable_mono_win64.exe",
+      "workingDirectory": "C:\\Users\\yfq17\\Documents\\rts-game"
+    }
+  }
+}

@@ -1,0 +1,13 @@
+# Godot-specific ignores
+.godot/
+*.translation
+*.worker.js
+*.data.js
+*.wasm
+
+# C# / .NET ignores
+bin/
+obj/
+.csproj.user
+*.sln.dotsettings
+.vs

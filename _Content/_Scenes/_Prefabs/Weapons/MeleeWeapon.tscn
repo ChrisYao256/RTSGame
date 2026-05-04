@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://dxg1cx6w8moqv"]
+
+[ext_resource type="Script" uid="uid://dlsmoa6yxugy0" path="res://_Source/_Units/Weapons/MeleeWeapon.cs" id="1_6g28l"]
+
+[node name="WeaponComponent" type="Node2D" unique_id=2120452932]
+script = ExtResource("1_6g28l")
+_damage = 5
+_range = 40.0
