@@ -15,6 +15,8 @@ public partial class UnitManager : Node2D
 
 	static uint UnitLayerMask = 2;
 
+	private UnitInfoPanel _unitInfoPanel;
+
 	private bool _isDraggingLeft = false;
 	private bool _isDraggingRight = false;
 	private Vector2 _dragStart;
@@ -31,20 +33,21 @@ public partial class UnitManager : Node2D
 
 	public override void _Ready()
 	{
-		for (int i = 0;  i < 5; i++)
+		for (int i = 0;  i < 1; i++)
 		{
 			RandomNumberGenerator rng = new();
 			rng.Randomize();
 			Vector2 jitter = new Vector2(rng.RandfRange(-20, 20), rng.RandfRange(-20, 20));
 			SpawnUnit(new Vector2(100, 200) + jitter, 1, "Fighter");
 		}
-		for (int i = 0; i < 5; i++)
+		for (int i = 0; i < 1; i++)
 		{
 			RandomNumberGenerator rng = new();
 			rng.Randomize();
 			Vector2 jitter = new Vector2(rng.RandfRange(-20, 20), rng.RandfRange(-20, 20));
 			SpawnUnit(new Vector2(500, 200) + jitter, 0, "Shooter");
 		}
+		_unitInfoPanel = GetParent().GetNode<UnitInfoPanel>("UnitInfoPanel");
 	}
 
 	public override void _Input(InputEvent @event)
@@ -53,16 +56,30 @@ public partial class UnitManager : Node2D
 		{
 			_isAMovePending = true;
 			// Optional: Change cursor to a crosshair here
+			Input.SetDefaultCursorShape(Input.CursorShape.Cross);
 		}
 		else if (_isAMovePending && @event is InputEventMouseButton mouseEvent_ && mouseEvent_.ButtonIndex == MouseButton.Left)
 		{
 			Vector2 targetPos = GetGlobalMousePosition();
-			GiveAttackMoveOrder(targetPos);
+			Unit unit = GetUnitUnderCursor();
+			if (unit is not null)
+			{
+				GiveForceAttackOrder(unit);
+			}
+			else
+			{
+				GiveAttackMoveOrder(targetPos);
+			}
+
 			_isAMovePending = false; // Reset mode
+			Input.SetDefaultCursorShape(Input.CursorShape.Arrow);
+			GetViewport().SetInputAsHandled();
 		}
 		else if ((@event is InputEventKey keyEvent && keyEvent.Pressed) || (@event is InputEventMouseButton mouseEvent__ && mouseEvent__.ButtonIndex == MouseButton.Right))
 		{
 			_isAMovePending = false;
+
+			Input.SetDefaultCursorShape(Input.CursorShape.Arrow);
 		}
 
 		if (Input.IsActionJustPressed("show_attack_range"))
@@ -94,10 +111,6 @@ public partial class UnitManager : Node2D
 			else if (_isDraggingRight)
 			{
 				_isDraggingRight = false;
-				if (_dragStart == _dragEnd)
-				{
-					ChaseUnitUnderCursor();
-				}
 			}
 		}
 		else if (@event is InputEventMouseButton mouseEvent_ && mouseEvent_.ButtonIndex == MouseButton.Left)
@@ -134,42 +147,15 @@ public partial class UnitManager : Node2D
 
 	private void SelectUnitUnderCursor()
 	{
-		Vector2 worldPosition = GetGlobalMousePosition();
-
-		// 2. Access the DirectSpaceState2D for physics queries
-		var spaceState = GetWorld2D().DirectSpaceState;
-
-		// 3. Setup the point query parameters
-		var query = new PhysicsPointQueryParameters2D
+		Unit unit = GetUnitUnderCursor();
+		if (unit is null)
 		{
-			Position = worldPosition,
-			CollisionMask = UnitLayerMask,
-			CollideWithBodies = true // Set to true if units use CharacterBody2D
-		};
-
-		// 4. Intersect the point. We only care about the top-most result (maxResults: 1)
-		var results = spaceState.IntersectPoint(query, 1);
-
-		if (results.Count > 0)
-		{
-			// The result is a Godot Dictionary
-			var hitData = results[0];
-			var hitObject = hitData["collider"].As<Node>();
-
-			if (hitObject is Unit unit)
-			{
-				GD.Print($"Selected unit: {unit.Name}");
-				UpdateSelection([unit]);
-			}
+			return;
 		}
-		else
-		{
-			GD.Print("Clicked empty ground.");
-			// Logic to deselect current units could go here
-		}
+		UpdateSelection([unit]);
 	}
 
-	private void ChaseUnitUnderCursor()
+	private Unit GetUnitUnderCursor()
 	{
 		Vector2 worldPosition = GetGlobalMousePosition();
 
@@ -187,7 +173,7 @@ public partial class UnitManager : Node2D
 		// 4. Intersect the point. We only care about the top-most result (maxResults: 1)
 		var results = spaceState.IntersectPoint(query, 1);
 
-		if (results.Count > 0)
+		if (results.Count == 1)
 		{
 			// The result is a Godot Dictionary
 			var hitData = results[0];
@@ -195,28 +181,29 @@ public partial class UnitManager : Node2D
 
 			if (hitObject is Unit unit)
 			{
-				GD.Print($"Selected unit: {unit.Name}");
-				GiveChaseOrder(unit);
+				return unit;
 			}
 		}
-		else
+		if (results.Count > 1)
 		{
-			GD.Print("Clicked empty ground.");
-			// Logic to deselect current units could go here
+			throw new Exception("found multiple units").InnerException;
 		}
+		return null;
 	}
 
 	private void GiveMoveOrder(Vector2 destination)
 	{
 		foreach (Unit unit in _selectedUnits)
 		{
+			unit.ClearAllCommands();
+
 			int rngRangeSize = _selectedUnits.Count * 5;
 
 			// Simple spread logic so units don't overlap perfectly
 			float offsetX = (float)GD.RandRange(-rngRangeSize, rngRangeSize);
 			float offsetY = (float)GD.RandRange(-rngRangeSize, rngRangeSize);
-
-			unit.MoveTo(destination + new Vector2(offsetX, offsetY));
+			ForceMove forceMove = new ForceMove(unit, destination + new Vector2(offsetX, offsetY));
+			unit.AddCommand(forceMove);
 		}
 	}
 
@@ -224,11 +211,14 @@ public partial class UnitManager : Node2D
 	{
 		foreach (Unit unit in _selectedUnits)
 		{
+			unit.ClearAllCommands();
+
 			// Simple spread logic so units don't overlap perfectly
 			float offsetX = (float)GD.RandRange(-20, 20);
 			float offsetY = (float)GD.RandRange(-20, 20);
 
-			unit.AttackMoveTo(destination + new Vector2(offsetX, offsetY));
+			AttackMove attackMove = new AttackMove(unit, destination + new Vector2(offsetX, offsetY));
+			unit.AddCommand(attackMove);
 		}
 	}
 
@@ -236,15 +226,17 @@ public partial class UnitManager : Node2D
 	{
 		foreach (Unit unit in _selectedUnits)
 		{
-			unit.StopMoving();
+			unit.ClearAllCommands();
 		}
 	}
 
-	private void GiveChaseOrder(Unit unit)
+	private void GiveForceAttackOrder(Unit unit)
 	{
 		foreach (Unit unit_ in _selectedUnits)
 		{
-			unit_.ForceAttack(unit);
+			unit_.ClearAllCommands();
+			ForceAttack forceAttack = new ForceAttack(unit_, unit);
+			unit_.AddCommand(forceAttack);
 		}
 	}
 
@@ -343,6 +335,8 @@ public partial class UnitManager : Node2D
 		{
 			unit.SetSelectionVisible(true);
 		}
+
+		_unitInfoPanel.UpdateSelectedUnits(newSelection);
 	}
 
 	public void SpawnUnit(Vector2 position, int teamId, string unitName)

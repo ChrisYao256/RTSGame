@@ -8,10 +8,11 @@ collision_mask = 3
 _isBuilding = true
 _moveSpeed = 120.0
 _hpMax = 200
+_name = "Fighter"
 
 [node name="WeaponComponent" parent="." index="0" unique_id=2120452932 instance=ExtResource("2_pcghg")]
 _damage = 8
 _attackCooldown = 0.8
 
-[node name="AttackArea" parent="UnitPathfinder" parent_id_path=PackedInt32Array(1047001645) index="0" unique_id=1809011067]
+[node name="AttackArea" parent="." index="1" unique_id=1809011067]
 collision_mask = 2

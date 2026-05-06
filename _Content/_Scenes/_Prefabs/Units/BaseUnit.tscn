@@ -39,19 +39,19 @@ script = ExtResource("1_02llj")
 _moveSpeed = 200.0
 _hpMax = 100
 
+[node name="AttackArea" type="Area2D" parent="." unique_id=1809011067]
+collision_layer = 2
+collision_mask = 3
+
+[node name="AttackAreaCollision" type="CollisionShape2D" parent="AttackArea" unique_id=1885292616]
+shape = SubResource("CircleShape2D_xgcm3")
+
 [node name="MainSprite" type="Sprite2D" parent="." unique_id=701942347]
 scale = Vector2(0.2681919, 0.2681919)
 texture = ExtResource("2_md5sk")
 
 [node name="UnitPathfinder" type="Node2D" parent="." unique_id=1047001645]
 script = ExtResource("3_eun4y")
-
-[node name="AttackArea" type="Area2D" parent="UnitPathfinder" unique_id=1809011067]
-collision_layer = 2
-collision_mask = 3
-
-[node name="AttackAreaCollision" type="CollisionShape2D" parent="UnitPathfinder/AttackArea" unique_id=1885292616]
-shape = SubResource("CircleShape2D_xgcm3")
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="UnitPathfinder" unique_id=662068239]
 max_speed = 200.0
@@ -80,6 +80,6 @@ collision_mask = 2
 [node name="AidAreaCollision" type="CollisionShape2D" parent="AidArea" unique_id=1883932864]
 shape = SubResource("CircleShape2D_jwvwn")
 
-[connection signal="body_entered" from="UnitPathfinder/AttackArea" to="UnitPathfinder" method="OnScanAreaBodyEntered"]
-[connection signal="body_exited" from="UnitPathfinder/AttackArea" to="UnitPathfinder" method="OnScanAreaBodyLeft"]
+[connection signal="body_entered" from="AttackArea" to="." method="OnScanAreaBodyEntered"]
+[connection signal="body_exited" from="AttackArea" to="." method="OnScanAreaBodyLeft"]
 [connection signal="target_reached" from="UnitPathfinder/NavigationAgent2D" to="UnitPathfinder" method="OnTargetReached"]

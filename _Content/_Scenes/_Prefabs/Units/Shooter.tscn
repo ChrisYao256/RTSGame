@@ -6,6 +6,7 @@
 [node name="BaseUnit" unique_id=481801141 instance=ExtResource("1_r2ddu")]
 collision_mask = 3
 _moveSpeed = 100.0
+_name = "Shooter"
 
 [node name="WeaponComponent" parent="." index="0" unique_id=2120452932 instance=ExtResource("5_ua7ek")]
 scale = Vector2(0.2681919, 0.2681919)

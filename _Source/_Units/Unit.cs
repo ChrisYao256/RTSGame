@@ -19,17 +19,22 @@ public partial class Unit : CharacterBody2D
 
 	public int _teamId;
 
-	[Export]
-	public int DebugTeamId {
-		get => _teamId;
-		set {}
-}
+
 
 	[Export] public bool _isBuilding;
 	[Export] public float _moveSpeed;
 
 	[Export] public int _hpMax;
-	private int _hp;
+	public int _hp { get; private set; }
+
+	[Export] public string _name;
+
+	[Export]
+	public int DebugTeamId
+	{
+		get => _teamId;
+		set { }
+	}
 
 	[Export]
 	public int DebugHp
@@ -38,22 +43,52 @@ public partial class Unit : CharacterBody2D
 		set { }
 	}
 
-	private UnitPathfinder.State _state;
+	[Export]
+	public string DebugCommand
+	{
+		get => _currentCommand.GetType().ToString();
+		set { }
+	}
+
+	[Export]
+	public State DebugState
+	{
+		get => _state;
+		set { }
+	}
+
+	public enum State
+	{
+		Idle, 
+		Attacking,
+		Moving,
+	}
+
+	private State _state;
+	private List<Command> _commandQueue = [];
+	public Command _currentCommand { get; private set; }
 
 	public bool _displayAttackRange;
+	public float _attackRange;
+
+	private CollisionShape2D _attackCollisionShape;
 
 	public event Action<Unit> Died;
+
+	private Unit _attackTarget;
 
 	public override void _Ready()
 	{
 		GD.Print($"{Name} initialized.");
 		_weapon = GetNode<BaseWeapon>("WeaponComponent");
 		_pathfinder = GetNode<UnitPathfinder>("UnitPathfinder");
-		_pathfinder.SetAttackRange(_weapon._range);
 		_pathfinder.SetSpeed(_moveSpeed);
 		_pathfinder.SetTeamId(_teamId);
 
 		_selectionVisual = GetNode<Sprite2D>("SelectionCircle");
+
+		_attackCollisionShape = GetNode<CollisionShape2D>("AttackArea/AttackAreaCollision");
+		SetAttackRange(_weapon._range);
 
 		_healthBar = GetNode<TextureProgressBar>("HealthBar");
 		_hp = _hpMax;
@@ -61,7 +96,26 @@ public partial class Unit : CharacterBody2D
 		_healthBar.Value = _hp;
 		UpdateHealthBar(_hpMax, _hpMax);
 
+		ProcessNextCommand();
 		
+	}
+
+	public void SetAttackRange(float range)
+	{
+		_attackRange = range;
+
+		// CRITICAL: Make the shape unique so changing this unit 
+		// doesn't change every other unit of the same type.
+		if (_attackCollisionShape.Shape is CircleShape2D circle)
+		{
+			circle = (CircleShape2D)circle.Duplicate();
+			circle.Radius = _attackRange;
+			_attackCollisionShape.Shape = circle;
+		}
+		else
+		{
+			throw new Exception("Attack area shape is not a disk");
+		}
 	}
 
 	public void SetSelectionVisible(bool b)
@@ -71,45 +125,123 @@ public partial class Unit : CharacterBody2D
 
 	public override void _PhysicsProcess(double delta)
 	{
-		// The Unit just tells the pathfinder to do its job
-		_pathfinder.ProcessMovement(delta);
-		_state = _pathfinder.GetState(); ;
-	}
-
-	public void MoveTo(Vector2 position)
-	{
-		_pathfinder.SetMoveTarget(position);
-	}
-
-	public void AttackMoveTo(Vector2 position)
-	{
-		_pathfinder.SetAttackMoveTarget(position);
-	}
-
-	public void ForceAttack(Unit unit)
-	{
-		if (unit._teamId != _teamId)
+		if (_pathfinder.IsNavigationFinished())
 		{
-			_pathfinder.SetForceAttackTarget(unit);
+			_currentCommand.CheckFinish();
+		}
+		else if (_state != State.Attacking)
+		{
+			_state = State.Moving;
+			_pathfinder.ProcessMovement(delta);
+		}
+
+		if (_state == State.Attacking)
+		{
+			// switch target if unit is died
+			if (!IsInstanceValid(_attackTarget))
+			{
+				StopAttackingTarget();
+				ScanForEnemies();
+			}
+		}
+
+		if (_currentCommand is ForceAttack forceAttack)
+		{
+			_currentCommand.CheckFinish();
+			_pathfinder.SetTargetPosition(forceAttack._targetUnit.GlobalPosition);
+		}
+		else if (_currentCommand is NoCommand)
+		{
+			ProcessNextCommand();
+		}
+	}
+	public void ProcessNextCommand()
+	{
+		Command command = new NoCommand(this);
+		if (_commandQueue.Count > 0)
+		{
+			command = _commandQueue[0];
+			_commandQueue.RemoveAt(0);
+		}
+		else
+		{
+			_currentCommand = command;
+		}
+		if (command is AttackMove attackMove)
+		{
+			ProcessAttackMove(attackMove);
+		}
+		else if (command is ForceMove forceMove)
+		{
+			ProcessForceMove(forceMove);
+		}
+		else if (command is ForceAttack forceAttack)
+		{
+			ProcessForceAttack(forceAttack);
+		}
+		else if (command is  NoCommand noCommand)
+		{
+			ScanForEnemies();
 		}
 	}
 
-	public void Chase(Unit unit)
+	private void ProcessForceMove(ForceMove forceMove)
 	{
-		if (unit._teamId != _teamId)
-		{
-			_pathfinder.SetChaseTarget(unit);
-		}
+		_currentCommand = forceMove;
+		StopAttackingTarget();
+		_pathfinder.SetTargetPosition(forceMove._targetLocation);
 	}
 
-	public void StopMoving()
+	private void ProcessForceAttack(ForceAttack forceAttack)
 	{
-		_pathfinder.ForceFinishNavigation();
+		_currentCommand = forceAttack;
+		StopAttackingTarget();
+		_pathfinder.SetTargetPosition(forceAttack._targetUnit.GlobalPosition);
 	}
 
-	public void BeginAttackingTarget(Unit unit)
+	private void ProcessAttackMove(AttackMove attackMove)
 	{
+		_currentCommand = attackMove;
+		ScanForEnemies();
+		_pathfinder.SetTargetPosition(attackMove._targetLocation);
+	}
+
+	public void ClearAllCommands()
+	{
+		_commandQueue = new List<Command>();
+		ProcessNextCommand();
+	}
+
+	public void AddCommand(Command command)
+	{
+		_commandQueue.Add(command);
+	}
+
+	//private void Chase(Unit unit)
+	//{
+	//	if (unit._teamId != _teamId)
+	//	{
+	//		_pathfinder.SetChaseTarget(unit);
+	//	}
+	//}
+
+	//private void StopMoving()
+	//{
+	//	_pathfinder.ForceFinishNavigation();
+	//}
+
+	private void BeginAttackingTarget(Unit unit)
+	{
+		_state = State.Attacking;
+		_attackTarget = unit;
 		_weapon.BeginAttackingTarget(unit);
+	}
+
+	private void StopAttackingTarget()
+	{
+		_state = State.Idle;
+		_attackTarget = null;
+		_weapon.BeginAttackingTarget(null);
 	}
 
 	public void Hit(int damage, Unit source)
@@ -137,9 +269,64 @@ public partial class Unit : CharacterBody2D
 
 	public void Retaliate(Unit unit)
 	{
-		if (_state == UnitPathfinder.State.AttackMoving || _state == UnitPathfinder.State.Idle)
+		if (_currentCommand is AttackMove || _currentCommand is NoCommand)
 		{
-			Chase(unit);
+			//Chase(unit);
+		}
+	}
+
+	private void OnScanAreaBodyEntered(Node2D body)
+	{
+		if (body is Unit unit)
+		{
+			// Check if the body is in the enemy group and we don't have a target yet
+			if (unit._teamId != _teamId && _state != State.Attacking &&(_currentCommand is NoCommand || _currentCommand is AttackMove))
+			{
+				BeginAttackingTarget(unit);
+			}
+			else if (_currentCommand is ForceAttack forceAttack && forceAttack._targetUnit == body)
+			{
+				BeginAttackingTarget(unit);
+			}
+		}
+		else
+		{
+			return;
+		}
+	}
+
+	private void OnScanAreaBodyLeft(Node2D body)
+	{
+		if (body is Unit unit && unit == _attackTarget)
+		{
+			StopAttackingTarget();
+		}
+		else
+		{
+			return;
+		}
+	}
+
+	public void ScanForEnemies()
+	{
+		if (_state == State.Attacking)
+		{
+			return;
+		}
+		var scanArea = GetNode<Area2D>("AttackArea");
+
+		// Get all overlapping physics bodies
+		var bodies = scanArea.GetOverlappingBodies();
+
+		foreach (Node2D body in bodies)
+		{
+			if (body is Unit unit)
+			{
+				if (unit._teamId != _teamId && (_currentCommand is NoCommand || _currentCommand is AttackMove))
+				{
+					BeginAttackingTarget(unit);
+				}
+			}
 		}
 	}
 
