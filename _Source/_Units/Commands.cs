@@ -19,7 +19,7 @@ public abstract class Command
 		FinishCommand();
 	}
 
-	protected void FinishCommand()
+	protected virtual void FinishCommand()
 	{
 		_parent.ProcessNextCommand();
 	}
@@ -111,5 +111,40 @@ public class ForceAttack : Command
 	public override string GetDescription()
 	{
 		return "Force attacking " + _targetUnit._name;
+	}
+}
+
+public class AggroedAttackMove : Command
+{
+	public Unit _targetUnit;
+	public Vector2 _originalPosition;
+
+	public AggroedAttackMove(Unit parent, Vector2 originalPosition, Unit targetUnit) : base(parent)
+	{
+		_targetUnit = targetUnit;
+		_originalPosition = originalPosition;
+	}
+
+	public override void CheckFinish()
+	{
+		if (!GodotObject.IsInstanceValid(_targetUnit))
+		{
+			FinishCommand();
+		}
+		else if ((_parent.GlobalPosition - _originalPosition).Length() > _parent.LeashDistance)
+		{
+			FinishCommand();
+		}
+	}
+
+	protected override void FinishCommand()
+	{
+		_parent.AddCommand(new ForceMove(_parent, _originalPosition));
+		base.FinishCommand();
+	}
+
+	public override string GetDescription()
+	{
+		return "Aggroed by " + _targetUnit._name;
 	}
 }

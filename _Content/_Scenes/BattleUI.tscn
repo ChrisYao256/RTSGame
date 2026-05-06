@@ -12,6 +12,7 @@ offset_bottom = 646.0
 
 [node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer" unique_id=421499899]
 layout_mode = 2
+theme_override_constants/separation = 16
 alignment = 1
 
 [node name="UnitInfo" type="VBoxContainer" parent="PanelContainer/HBoxContainer" unique_id=263363655]
@@ -27,5 +28,9 @@ layout_mode = 2
 [node name="SpeedLabel" type="Label" parent="PanelContainer/HBoxContainer/UnitInfo" unique_id=2133036093]
 layout_mode = 2
 
-[node name="Command" type="Label" parent="PanelContainer/HBoxContainer" unique_id=1395182721]
+[node name="CommandContainer" type="VBoxContainer" parent="PanelContainer/HBoxContainer" unique_id=710287485]
+layout_mode = 2
+alignment = 1
+
+[node name="Position" type="Label" parent="PanelContainer/HBoxContainer" unique_id=1164423950]
 layout_mode = 2

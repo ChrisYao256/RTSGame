@@ -33,14 +33,14 @@ public partial class UnitManager : Node2D
 
 	public override void _Ready()
 	{
-		for (int i = 0;  i < 1; i++)
+		for (int i = 0;  i < 3; i++)
 		{
 			RandomNumberGenerator rng = new();
 			rng.Randomize();
 			Vector2 jitter = new Vector2(rng.RandfRange(-20, 20), rng.RandfRange(-20, 20));
 			SpawnUnit(new Vector2(100, 200) + jitter, 1, "Fighter");
 		}
-		for (int i = 0; i < 1; i++)
+		for (int i = 0; i < 3; i++)
 		{
 			RandomNumberGenerator rng = new();
 			rng.Randomize();

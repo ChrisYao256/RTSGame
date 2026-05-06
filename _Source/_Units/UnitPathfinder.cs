@@ -115,21 +115,21 @@ public partial class UnitPathfinder : Node
 			ApplyMovement(intendedVelocity);
 
 		// Stagnation timer calculations
-		_stagnationTimer += (float)delta;
+		//_stagnationTimer += (float)delta;
 
-		if (_stagnationTimer >= _checkInterval)
-		{
-			// Calculate how far we actually moved since the last check
-			float distanceMoved = _parentBody.GlobalPosition.DistanceTo(_positionLastCheck);
+		//if (_stagnationTimer >= _checkInterval)
+		//{
+		//	// Calculate how far we actually moved since the last check
+		//	float distanceMoved = _parentBody.GlobalPosition.DistanceTo(_positionLastCheck);
 
-			// If we moved less than 2 pixels despite trying to move
-			if (distanceMoved < 5.0f)
-			{
-				ForceFinishNavigation();
-			}
-			_positionLastCheck = _parentBody.GlobalPosition;
-			_stagnationTimer = 0f;
-		}
+		//	// If we moved less than 2 pixels despite trying to move
+		//	if (distanceMoved < 5.0f)
+		//	{
+		//		ForceFinishNavigation();
+		//	}
+		//	_positionLastCheck = _parentBody.GlobalPosition;
+		//	_stagnationTimer = 0f;
+		//}
 	}
 
 	public void ForceFinishNavigation()

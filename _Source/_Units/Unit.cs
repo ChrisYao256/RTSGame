@@ -19,7 +19,7 @@ public partial class Unit : CharacterBody2D
 
 	public int _teamId;
 
-
+	[Export] public float LeashDistance = 500f;
 
 	[Export] public bool _isBuilding;
 	[Export] public float _moveSpeed;
@@ -65,7 +65,7 @@ public partial class Unit : CharacterBody2D
 	}
 
 	private State _state;
-	private List<Command> _commandQueue = [];
+	public List<Command> _commandQueue { get; private set; } = [];
 	public Command _currentCommand { get; private set; }
 
 	public bool _displayAttackRange;
@@ -147,8 +147,13 @@ public partial class Unit : CharacterBody2D
 
 		if (_currentCommand is ForceAttack forceAttack)
 		{
-			_currentCommand.CheckFinish();
 			_pathfinder.SetTargetPosition(forceAttack._targetUnit.GlobalPosition);
+			_currentCommand.CheckFinish();
+		}
+		else if (_currentCommand is AggroedAttackMove aggroedAttackMove)
+		{
+			_pathfinder.SetTargetPosition(aggroedAttackMove._targetUnit.GlobalPosition);
+			_currentCommand.CheckFinish();
 		}
 		else if (_currentCommand is NoCommand)
 		{
@@ -179,7 +184,11 @@ public partial class Unit : CharacterBody2D
 		{
 			ProcessForceAttack(forceAttack);
 		}
-		else if (command is  NoCommand noCommand)
+		else if (command is AggroedAttackMove aggroedAttackMove)
+		{
+			ProcessAggroedAttackMove(aggroedAttackMove);
+		}
+		else if (command is NoCommand noCommand)
 		{
 			ScanForEnemies();
 		}
@@ -204,6 +213,13 @@ public partial class Unit : CharacterBody2D
 		_currentCommand = attackMove;
 		ScanForEnemies();
 		_pathfinder.SetTargetPosition(attackMove._targetLocation);
+	}
+
+	private void ProcessAggroedAttackMove(AggroedAttackMove aggroedAttackMove)
+	{
+		_currentCommand = aggroedAttackMove;
+		ScanForEnemies();
+		_pathfinder.SetTargetPosition(aggroedAttackMove._targetUnit.GlobalPosition);
 	}
 
 	public void ClearAllCommands()
@@ -271,7 +287,9 @@ public partial class Unit : CharacterBody2D
 	{
 		if (_currentCommand is AttackMove || _currentCommand is NoCommand)
 		{
-			//Chase(unit);
+			AddCommand(_currentCommand);
+			AddCommand(new AggroedAttackMove(this, GlobalPosition, unit));
+			ProcessNextCommand();
 		}
 	}
 
@@ -280,7 +298,7 @@ public partial class Unit : CharacterBody2D
 		if (body is Unit unit)
 		{
 			// Check if the body is in the enemy group and we don't have a target yet
-			if (unit._teamId != _teamId && _state != State.Attacking &&(_currentCommand is NoCommand || _currentCommand is AttackMove))
+			if (unit._teamId != _teamId && _state != State.Attacking &&(_currentCommand is NoCommand || _currentCommand is AttackMove || _currentCommand is AggroedAttackMove))
 			{
 				BeginAttackingTarget(unit);
 			}
@@ -322,7 +340,7 @@ public partial class Unit : CharacterBody2D
 		{
 			if (body is Unit unit)
 			{
-				if (unit._teamId != _teamId && (_currentCommand is NoCommand || _currentCommand is AttackMove))
+				if (unit._teamId != _teamId && (_currentCommand is NoCommand || _currentCommand is AttackMove || _currentCommand is AggroedAttackMove))
 				{
 					BeginAttackingTarget(unit);
 				}
