@@ -29,6 +29,7 @@ public partial class UnitManager : Node2D
 	private List<Unit> _activeUnits = new List<Unit>();
 
 	private bool _isAMovePending = false;
+	private bool _shiftMode = false;
 
 	public Signal UnitDied;
 
@@ -53,6 +54,17 @@ public partial class UnitManager : Node2D
 
 	public override void _Input(InputEvent @event)
 	{
+		if (@event is InputEventKey keyEvent_ && keyEvent_.Keycode == Key.Shift)
+		{
+			if (keyEvent_.Pressed)
+			{
+				_shiftMode = true;
+			}
+			else
+			{
+				_shiftMode = false;
+			}
+		}
 		if (Input.IsActionJustPressed("attack_move_command"))
 		{
 			_isAMovePending = true;
@@ -196,8 +208,11 @@ public partial class UnitManager : Node2D
 	{
 		foreach (Unit unit in _selectedUnits)
 		{
-			unit.ClearAllCommands();
-
+			if (!_shiftMode)
+			{
+				unit.ClearAllCommands();
+			}
+			
 			int rngRangeSize = _selectedUnits.Count * 5;
 
 			// Simple spread logic so units don't overlap perfectly
@@ -212,7 +227,10 @@ public partial class UnitManager : Node2D
 	{
 		foreach (Unit unit in _selectedUnits)
 		{
-			unit.ClearAllCommands();
+			if (!_shiftMode)
+			{
+				unit.ClearAllCommands();
+			}
 
 			// Simple spread logic so units don't overlap perfectly
 			float offsetX = (float)GD.RandRange(-20, 20);
@@ -235,7 +253,10 @@ public partial class UnitManager : Node2D
 	{
 		foreach (Unit unit_ in _selectedUnits)
 		{
-			unit_.ClearAllCommands();
+			if (!_shiftMode)
+			{
+				unit.ClearAllCommands();
+			}
 			ForceAttack forceAttack = new ForceAttack(unit_, unit);
 			unit_.AddCommand(forceAttack);
 		}
