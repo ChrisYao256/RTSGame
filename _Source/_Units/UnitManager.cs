@@ -11,6 +11,7 @@ public partial class UnitManager : Node2D
 	{
 		{ "Shooter", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Shooter.tscn") },
 		{ "Fighter", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Fighter.tscn") },
+		{ "Turret", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Turret.tscn") },
 	};
 
 	static uint UnitLayerMask = 2;
@@ -40,7 +41,7 @@ public partial class UnitManager : Node2D
 			Vector2 jitter = new Vector2(rng.RandfRange(-20, 20), rng.RandfRange(-20, 20));
 			SpawnUnit(new Vector2(100, 200) + jitter, 1, "Fighter");
 		}
-		for (int i = 0; i < 3; i++)
+		for (int i = 0; i < 5; i++)
 		{
 			RandomNumberGenerator rng = new();
 			rng.Randomize();

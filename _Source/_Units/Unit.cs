@@ -9,19 +9,18 @@ namespace RTSGame.Units;
 
 public partial class Unit : CharacterBody2D
 {
-	private UnitPathfinder _pathfinder;
+	protected UnitPathfinder _pathfinder;
 
 	private Sprite2D _selectionVisual;
 
-	private TextureProgressBar _healthBar;
+	protected TextureProgressBar _healthBar;
 
-	private BaseWeapon _weapon;
+	protected BaseWeapon _weapon;
 
 	public int _teamId;
 
-	[Export] public float LeashDistance = 500f;
+	[Export] public float LeashDistance = 200f;
 
-	[Export] public bool _isBuilding;
 	[Export] public float _moveSpeed;
 
 	[Export] public int _hpMax;
@@ -64,9 +63,9 @@ public partial class Unit : CharacterBody2D
 		Moving,
 	}
 
-	private State _state;
-	public List<Command> _commandQueue { get; private set; } = [];
-	public Command _currentCommand { get; private set; }
+	protected State _state;
+	public List<Command> _commandQueue { get; protected set; } = [];
+	public Command _currentCommand { get; protected set; }
 
 	public bool _displayAttackRange;
 	public float _attackRange;
@@ -75,34 +74,32 @@ public partial class Unit : CharacterBody2D
 
 	public event Action<Unit> Died;
 
-	private Unit _attackTarget;
+	protected Unit _attackTarget;
 
 	public override void _Ready()
 	{
-		GD.Print($"{Name} initialized.");
-		_weapon = GetNode<BaseWeapon>("WeaponComponent");
-		_pathfinder = GetNode<UnitPathfinder>("UnitPathfinder");
-		_pathfinder.SetSpeed(_moveSpeed);
-		_pathfinder.SetTeamId(_teamId);
-
-		_selectionVisual = GetNode<Sprite2D>("SelectionCircle");
-
-		_attackCollisionShape = GetNode<CollisionShape2D>("AttackArea/AttackAreaCollision");
-		SetAttackRange(_weapon._range);
-
-		_healthBar = GetNode<TextureProgressBar>("HealthBar");
-		_hp = _hpMax;
-		_healthBar.MaxValue = _hpMax;
-		_healthBar.Value = _hp;
-		UpdateHealthBar(_hpMax, _hpMax);
-
-		ProcessNextCommand();
-		
+		SetWeapon();
+		SetSelectionVisual();
+		SetAttackRange();
+		SetPathFinder();
+		SetHealthBar();
+		SetInitialCommand();
 	}
 
-	public void SetAttackRange(float range)
+	protected void SetWeapon()
 	{
-		_attackRange = range;
+		_weapon = GetNode<BaseWeapon>("WeaponComponent");
+	}
+
+	protected void SetSelectionVisual()
+	{
+		_selectionVisual = GetNode<Sprite2D>("SelectionCircle");
+	}
+
+	protected void SetAttackRange()
+	{
+		_attackCollisionShape = GetNode<CollisionShape2D>("AttackArea/AttackAreaCollision");
+		_attackRange = _weapon._range;
 
 		// CRITICAL: Make the shape unique so changing this unit 
 		// doesn't change every other unit of the same type.
@@ -116,6 +113,27 @@ public partial class Unit : CharacterBody2D
 		{
 			throw new Exception("Attack area shape is not a disk");
 		}
+	}
+
+	protected void SetPathFinder()
+	{
+		_pathfinder = GetNode<UnitPathfinder>("UnitPathfinder");
+		_pathfinder.SetSpeed(_moveSpeed);
+		_pathfinder.SetTeamId(_teamId);
+	}
+
+	protected void SetHealthBar()
+	{
+		_healthBar = GetNode<TextureProgressBar>("HealthBar");
+		_hp = _hpMax;
+		_healthBar.MaxValue = _hpMax;
+		_healthBar.Value = _hp;
+		UpdateHealthBar(_hpMax, _hpMax);
+	}
+
+	protected void SetInitialCommand()
+	{
+		_currentCommand = new NoCommand(this);
 	}
 
 	public void SetSelectionVisible(bool b)
@@ -138,28 +156,29 @@ public partial class Unit : CharacterBody2D
 		if (_state == State.Attacking)
 		{
 			// switch target if unit is died
-			if (!IsInstanceValid(_attackTarget))
-			{
-				StopAttackingTarget();
-				ScanForEnemies();
-			}
+			CheckTargetAlive();
 		}
 
 		if (_currentCommand is ForceAttack forceAttack)
 		{
-			_pathfinder.SetTargetPosition(forceAttack._targetUnit.GlobalPosition);
-			_currentCommand.CheckFinish();
+			if (!_currentCommand.CheckFinish())
+			{
+				_pathfinder.SetTargetPosition(forceAttack._targetUnit.GlobalPosition);
+			}
 		}
 		else if (_currentCommand is AggroedAttackMove aggroedAttackMove)
 		{
-			_pathfinder.SetTargetPosition(aggroedAttackMove._targetUnit.GlobalPosition);
-			_currentCommand.CheckFinish();
+			if (!_currentCommand.CheckFinish())
+			{
+				_pathfinder.SetTargetPosition(aggroedAttackMove._targetUnit.GlobalPosition);
+			}
 		}
 		else if (_currentCommand is NoCommand)
 		{
 			ProcessNextCommand();
 		}
 	}
+
 	public void ProcessNextCommand()
 	{
 		Command command = new NoCommand(this);
@@ -194,28 +213,35 @@ public partial class Unit : CharacterBody2D
 		}
 	}
 
-	private void ProcessForceMove(ForceMove forceMove)
+	protected virtual void ProcessForceMove(ForceMove forceMove)
 	{
 		_currentCommand = forceMove;
 		StopAttackingTarget();
 		_pathfinder.SetTargetPosition(forceMove._targetLocation);
 	}
 
-	private void ProcessForceAttack(ForceAttack forceAttack)
+	protected virtual void ProcessForceAttack(ForceAttack forceAttack)
 	{
 		_currentCommand = forceAttack;
 		StopAttackingTarget();
-		_pathfinder.SetTargetPosition(forceAttack._targetUnit.GlobalPosition);
+		if (IsTargetInRange(forceAttack._targetUnit))
+		{
+			BeginAttackingTarget(forceAttack._targetUnit);
+		}
+		else
+		{
+			_pathfinder.SetTargetPosition(forceAttack._targetUnit.GlobalPosition);
+		}	
 	}
 
-	private void ProcessAttackMove(AttackMove attackMove)
+	protected virtual void ProcessAttackMove(AttackMove attackMove)
 	{
 		_currentCommand = attackMove;
 		ScanForEnemies();
 		_pathfinder.SetTargetPosition(attackMove._targetLocation);
 	}
 
-	private void ProcessAggroedAttackMove(AggroedAttackMove aggroedAttackMove)
+	protected virtual void ProcessAggroedAttackMove(AggroedAttackMove aggroedAttackMove)
 	{
 		_currentCommand = aggroedAttackMove;
 		ScanForEnemies();
@@ -233,6 +259,11 @@ public partial class Unit : CharacterBody2D
 		_commandQueue.Add(command);
 	}
 
+	public void InsertCommand(int n, Command command)
+	{
+		_commandQueue.Insert(n, command);
+	}
+
 	//private void Chase(Unit unit)
 	//{
 	//	if (unit._teamId != _teamId)
@@ -246,14 +277,14 @@ public partial class Unit : CharacterBody2D
 	//	_pathfinder.ForceFinishNavigation();
 	//}
 
-	private void BeginAttackingTarget(Unit unit)
+	protected void BeginAttackingTarget(Unit unit)
 	{
 		_state = State.Attacking;
 		_attackTarget = unit;
 		_weapon.BeginAttackingTarget(unit);
 	}
 
-	private void StopAttackingTarget()
+	protected void StopAttackingTarget()
 	{
 		_state = State.Idle;
 		_attackTarget = null;
@@ -283,12 +314,12 @@ public partial class Unit : CharacterBody2D
 		}
 	}
 
-	public void Retaliate(Unit unit)
+	public virtual void Retaliate(Unit unit)
 	{
 		if (_currentCommand is AttackMove || _currentCommand is NoCommand)
 		{
-			AddCommand(_currentCommand);
 			AddCommand(new AggroedAttackMove(this, GlobalPosition, unit));
+			AddCommand(_currentCommand);
 			ProcessNextCommand();
 		}
 	}
@@ -336,6 +367,10 @@ public partial class Unit : CharacterBody2D
 		// Get all overlapping physics bodies
 		var bodies = scanArea.GetOverlappingBodies();
 
+		var sortedBodies = bodies
+				.OrderBy(body => GlobalPosition.DistanceSquaredTo(body.GlobalPosition))
+				.ToList();
+
 		foreach (Node2D body in bodies)
 		{
 			if (body is Unit unit)
@@ -346,6 +381,30 @@ public partial class Unit : CharacterBody2D
 				}
 			}
 		}
+	}
+
+	protected void CheckTargetAlive()
+	{
+		if (!IsInstanceValid(_attackTarget))
+		{
+			StopAttackingTarget();
+			ScanForEnemies();
+		}
+	}
+
+	protected bool IsTargetInRange(Unit target)
+	{
+		var scanArea = GetNode<Area2D>("AttackArea");
+
+		var bodies = scanArea.GetOverlappingBodies();
+		foreach (Node2D body in bodies)
+		{
+			if (body == target)
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private void UpdateHealthBar(float currentHp, float maxHp)

@@ -1,0 +1,76 @@
+[gd_scene format=3 uid="uid://7vf0p5478xp8"]
+
+[ext_resource type="Script" uid="uid://sc4mm3tb8rpk" path="res://_Source/_Units/StationaryUnit.cs" id="1_ls3yt"]
+[ext_resource type="Texture2D" uid="uid://bc230321nqto5" path="res://icon.svg" id="2_7tvxj"]
+[ext_resource type="Texture2D" uid="uid://dviclkrnw762m" path="res://_Assets/SelectionCircle.png" id="4_gmjim"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_xgcm3"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_k5ggm"]
+radius = 20.0
+
+[sub_resource type="Gradient" id="Gradient_xgcm3"]
+offsets = PackedFloat32Array(0)
+colors = PackedColorArray(0, 0, 0, 0.5137255)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_oho58"]
+gradient = SubResource("Gradient_xgcm3")
+width = 48
+height = 12
+fill_to = Vector2(1, 1)
+
+[sub_resource type="Gradient" id="Gradient_1ua6h"]
+offsets = PackedFloat32Array(0)
+colors = PackedColorArray(1, 1, 1, 0.9843137)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_2vjqy"]
+gradient = SubResource("Gradient_1ua6h")
+width = 48
+height = 12
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_hcuqq"]
+radius = 200.0
+
+[node name="BaseStationaryUnit" type="CharacterBody2D" unique_id=481801141]
+collision_layer = 2
+input_pickable = true
+script = ExtResource("1_ls3yt")
+LeashDistance = 500.0
+
+[node name="AttackArea" type="Area2D" parent="." unique_id=1809011067]
+collision_layer = 2
+collision_mask = 3
+
+[node name="AttackAreaCollision" type="CollisionShape2D" parent="AttackArea" unique_id=1885292616]
+shape = SubResource("CircleShape2D_xgcm3")
+
+[node name="MainSprite" type="Sprite2D" parent="." unique_id=701942347]
+scale = Vector2(0.2681919, 0.2681919)
+texture = ExtResource("2_7tvxj")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1381764660]
+visible = false
+shape = SubResource("CircleShape2D_k5ggm")
+
+[node name="SelectionCircle" type="Sprite2D" parent="." unique_id=2070192192]
+visible = false
+scale = Vector2(0.15, 0.15)
+texture = ExtResource("4_gmjim")
+
+[node name="HealthBar" type="TextureProgressBar" parent="." unique_id=640038315]
+offset_left = -24.0
+offset_top = -32.0
+offset_right = 24.0
+offset_bottom = -20.0
+texture_under = SubResource("GradientTexture2D_oho58")
+texture_progress = SubResource("GradientTexture2D_2vjqy")
+
+[node name="AidArea" type="Area2D" parent="." unique_id=724286163]
+collision_layer = 0
+collision_mask = 2
+
+[node name="AidAreaCollision" type="CollisionShape2D" parent="AidArea" unique_id=1952573643]
+shape = SubResource("CircleShape2D_hcuqq")
+
+[connection signal="body_entered" from="AttackArea" to="." method="OnScanAreaBodyEntered"]
+[connection signal="body_exited" from="AttackArea" to="." method="OnScanAreaBodyLeft"]

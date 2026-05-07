@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://ds7xpdti0x5d"]
+
+[ext_resource type="PackedScene" uid="uid://7vf0p5478xp8" path="res://_Content/_Scenes/_Prefabs/Units/BaseStationaryUnit.tscn" id="1_3ogr6"]
+[ext_resource type="PackedScene" uid="uid://cekj6vfjmeih4" path="res://_Content/_Scenes/_Prefabs/Weapons/HitscanWeapon.tscn" id="2_ypi1y"]
+
+[node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_3ogr6")]
+_hpMax = 300
+_name = "Turret"
+
+[node name="WeaponComponent" parent="." index="0" unique_id=2120452932 instance=ExtResource("2_ypi1y")]

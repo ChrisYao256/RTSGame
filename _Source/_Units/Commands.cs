@@ -10,7 +10,7 @@ public abstract class Command
 		_parent = parent;
 	}
 
-	public abstract void CheckFinish();
+	public abstract bool CheckFinish();
 
 	public abstract string GetDescription();
 
@@ -29,9 +29,9 @@ public class NoCommand: Command
 {
 	public NoCommand(Unit parent): base(parent) { }
 
-	public override void CheckFinish()
+	public override bool CheckFinish()
 	{
-		
+		return false;
 	}
 
 	public override void ForceFinish()
@@ -54,12 +54,14 @@ public class AttackMove : Command
 
 	}
 
-	public override void CheckFinish()
+	public override bool CheckFinish()
 	{
 		if ((_parent.GlobalPosition - _targetLocation).Length() <= UnitPathfinder.DesiredDistance)
 		{
 			FinishCommand();
+			return true;
 		}
+		return false;
 	}
 
 	public override string GetDescription()
@@ -77,12 +79,14 @@ public class ForceMove : Command
 		_targetLocation = targetLocation;
 	}
 
-	public override void CheckFinish()
+	public override bool CheckFinish()
 	{
 		if ((_parent.GlobalPosition-_targetLocation).Length() <= UnitPathfinder.DesiredDistance)
 		{
 			FinishCommand();
+			return true;
 		}
+		return false;
 	}
 
 	public override string GetDescription()
@@ -100,12 +104,14 @@ public class ForceAttack : Command
 		_targetUnit = targetUnit;
 	}
 
-	public override void CheckFinish()
+	public override bool CheckFinish()
 	{
 		if (!GodotObject.IsInstanceValid(_targetUnit))
 		{
 			FinishCommand();
+			return true;
 		}
+		return false;
 	}
 
 	public override string GetDescription()
@@ -125,21 +131,24 @@ public class AggroedAttackMove : Command
 		_originalPosition = originalPosition;
 	}
 
-	public override void CheckFinish()
+	public override bool CheckFinish()
 	{
 		if (!GodotObject.IsInstanceValid(_targetUnit))
 		{
 			FinishCommand();
+			return true;
 		}
 		else if ((_parent.GlobalPosition - _originalPosition).Length() > _parent.LeashDistance)
 		{
 			FinishCommand();
+			return true;
 		}
+		return false;
 	}
 
 	protected override void FinishCommand()
 	{
-		_parent.AddCommand(new ForceMove(_parent, _originalPosition));
+		_parent.InsertCommand(0, new ForceMove(_parent, _originalPosition));
 		base.FinishCommand();
 	}
 
