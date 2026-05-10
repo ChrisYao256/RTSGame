@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://c3v1krfkwbrkk"]
+
+[ext_resource type="PackedScene" uid="uid://bqn4h6d52i52" path="res://_Content/_Scenes/_Prefabs/Units/BaseInvaderUnit.tscn" id="1_dafsc"]
+
+[node name="BaseUnit" unique_id=481801141 instance=ExtResource("1_dafsc")]
+_moneyDropped = 2
+_moveSpeed = 100.0
+_hpMax = 60
+_name = "Hound"

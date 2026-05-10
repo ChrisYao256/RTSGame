@@ -1,0 +1,15 @@
+[gd_scene format=3 uid="uid://sob42xcfe80v"]
+
+[ext_resource type="PackedScene" uid="uid://yhbw0b164ui2" path="res://_Content/_Scenes/_Prefabs/Units/BaseTower.tscn" id="1_gjvjw"]
+[ext_resource type="Script" uid="uid://b4jva1l23o6su" path="res://_Source/_Units/Spawner.cs" id="2_jar8h"]
+[ext_resource type="Texture2D" uid="uid://bc230321nqto5" path="res://icon.svg" id="3_bs8t2"]
+
+[node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_gjvjw")]
+script = ExtResource("2_jar8h")
+_units = Array[String](["Slime", "Slime"])
+_spawnAreaRadius = 50.0
+_cost = 1
+_iconTexture = ExtResource("3_bs8t2")
+_description = "Spawns 3 slimes every turn"
+LeashDistance = 200.0
+_name = "Slime Spawner"

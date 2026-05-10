@@ -1,7 +1,8 @@
 using Godot;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace RTSGame.Units;
 
@@ -9,12 +10,27 @@ public partial class UnitManager : Node2D
 {
 	private static Dictionary<string, PackedScene> UnitLibrary = new Dictionary<string, PackedScene>
 	{
+		// test units
 		{ "Shooter", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Shooter.tscn") },
 		{ "Fighter", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Fighter.tscn") },
 		{ "Turret", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Turret.tscn") },
+
+		{ "Exit", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Exit.tscn") },
+
+		// towers
+		{ "GunTurret", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/GunTurret.tscn") },
+		{ "LaserTurret", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/LaserTurret.tscn") },
+		{ "SlimeSpawner", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/SlimeSpawner.tscn") },
+		{ "HoundSpawner", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/HoundSpawner.tscn") },
+
+		// invaders
+		{ "Slime", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Invaders/Slime.tscn") },
+		{ "Hound", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Invaders/Hound.tscn") },
+		{ "MegaSlime",GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Invaders/MegaSlime.tscn")}
 	};
 
-	static uint UnitLayerMask = 2;
+	public static uint UnitLayerMask = 2;
+	public static uint TowerLayerMask = 4;
 
 	private UnitInfoPanel _unitInfoPanel;
 
@@ -35,20 +51,20 @@ public partial class UnitManager : Node2D
 
 	public override void _Ready()
 	{
-		for (int i = 0;  i < 3; i++)
-		{
-			RandomNumberGenerator rng = new();
-			rng.Randomize();
-			Vector2 jitter = new Vector2(rng.RandfRange(-20, 20), rng.RandfRange(-20, 20));
-			SpawnUnit(new Vector2(100, 200) + jitter, 1, "Fighter");
-		}
-		for (int i = 0; i < 5; i++)
-		{
-			RandomNumberGenerator rng = new();
-			rng.Randomize();
-			Vector2 jitter = new Vector2(rng.RandfRange(-20, 20), rng.RandfRange(-20, 20));
-			SpawnUnit(new Vector2(500, 200) + jitter, 0, "Shooter");
-		}
+		//for (int i = 0;  i < 3; i++)
+		//{
+		//	RandomNumberGenerator rng = new();
+		//	rng.Randomize();
+		//	Vector2 jitter = new Vector2(rng.RandfRange(-20, 20), rng.RandfRange(-20, 20));
+		//	SpawnUnit(new Vector2(100, 200) + jitter, 1, "Fighter");
+		//}
+		//for (int i = 0; i < 5; i++)
+		//{
+		//	RandomNumberGenerator rng = new();
+		//	rng.Randomize();
+		//	Vector2 jitter = new Vector2(rng.RandfRange(-20, 20), rng.RandfRange(-20, 20));
+		//	SpawnUnit(new Vector2(500, 200) + jitter, 0, "Shooter");
+		//}
 		_unitInfoPanel = GetParent().GetNode<UnitInfoPanel>("UnitInfoPanel");
 	}
 
@@ -165,7 +181,7 @@ public partial class UnitManager : Node2D
 		{
 			return;
 		}
-		UpdateSelection([unit]);
+		UpdatePlayerSelection([unit]);
 	}
 
 	private Unit GetUnitUnderCursor()
@@ -179,7 +195,7 @@ public partial class UnitManager : Node2D
 		var query = new PhysicsPointQueryParameters2D
 		{
 			Position = worldPosition,
-			CollisionMask = UnitLayerMask,
+			CollisionMask = UnitLayerMask + TowerLayerMask,
 			CollideWithBodies = true // Set to true if units use CharacterBody2D
 		};
 
@@ -204,10 +220,14 @@ public partial class UnitManager : Node2D
 		return null;
 	}
 
-	private void GiveMoveOrder(Vector2 destination)
+	public void GiveMoveOrder(Vector2 destination)
 	{
 		foreach (Unit unit in _selectedUnits)
 		{
+			if (unit._aiControlled)
+			{
+				continue;
+			}
 			if (!_shiftMode)
 			{
 				unit.ClearAllCommands();
@@ -223,10 +243,14 @@ public partial class UnitManager : Node2D
 		}
 	}
 
-	private void GiveAttackMoveOrder(Vector2 destination)
+	public void GiveAttackMoveOrder(Vector2 destination)
 	{
 		foreach (Unit unit in _selectedUnits)
 		{
+			if (unit._aiControlled)
+			{
+				break;
+			}
 			if (!_shiftMode)
 			{
 				unit.ClearAllCommands();
@@ -241,18 +265,26 @@ public partial class UnitManager : Node2D
 		}
 	}
 
-	private void GiveStopOrder()
+	public void GiveStopOrder()
 	{
 		foreach (Unit unit in _selectedUnits)
 		{
+			if (unit._aiControlled)
+			{
+				break;
+			}
 			unit.ClearAllCommands();
 		}
 	}
 
-	private void GiveForceAttackOrder(Unit unit)
+	public void GiveForceAttackOrder(Unit unit)
 	{
 		foreach (Unit unit_ in _selectedUnits)
 		{
+			if (unit_._aiControlled)
+			{
+				break;
+			}
 			if (!_shiftMode)
 			{
 				unit.ClearAllCommands();
@@ -319,7 +351,7 @@ public partial class UnitManager : Node2D
 		query.Transform = new Transform2D(0, selectionRect.Position + (selectionRect.Size / 2));
 
 		// 3. Optional: Only look for units on a specific physics layer (e.g., Layer 2)
-		query.CollisionMask = 2; 
+		query.CollisionMask = UnitLayerMask + TowerLayerMask; 
 
 		var spaceState = GetWorld2D().DirectSpaceState;
 		var results = spaceState.IntersectShape(query);
@@ -334,15 +366,11 @@ public partial class UnitManager : Node2D
 			}
 		}
 
-		UpdateSelection(foundUnits);
+		UpdatePlayerSelection(foundUnits);
 	}
 
-	private void UpdateSelection(List<Unit> newSelection)
+	public void UpdatePlayerSelection(List<Unit> newSelection)
 	{
-		if (newSelection.Count == 0)
-		{
-			return;
-		}
 
 		// Deselect old units first
 		foreach (var unit in _selectedUnits)
@@ -361,7 +389,7 @@ public partial class UnitManager : Node2D
 		_unitInfoPanel.UpdateSelectedUnits(newSelection);
 	}
 
-	public void SpawnUnit(Vector2 position, int teamId, string unitName)
+	public Unit SpawnUnit(Vector2 position, int teamId, string unitName, bool aiControlled = true)
 	{
 		if (UnitLibrary.TryGetValue(unitName, out PackedScene scene))
 		{
@@ -370,6 +398,8 @@ public partial class UnitManager : Node2D
 
 			newUnit.GlobalPosition = position;
 
+			newUnit._aiControlled = aiControlled;
+
 			newUnit.Died += OnUnitDied;
 
 			AddChild(newUnit);
@@ -377,11 +407,13 @@ public partial class UnitManager : Node2D
 			_activeUnits.Add(newUnit);
 
 			GD.Print($"Spawned unit for team {teamId}");
+			return newUnit;
 		}
 		else
 		{
 			GD.PrintErr($"Unit type {unitName} not found in library!");
 		}
+		return null;
 	}
 
 	private void OnUnitDied(Unit deadUnit)
@@ -392,7 +424,21 @@ public partial class UnitManager : Node2D
 		if (_selectedUnits.Contains(deadUnit))
 		{
 			_selectedUnits.Remove(deadUnit);
-			UpdateSelection(_selectedUnits);
+			UpdatePlayerSelection(_selectedUnits);
 		}
+	}
+
+	public Unit GetUnit(string unitName)
+	{
+		if (UnitLibrary.TryGetValue(unitName, out PackedScene scene))
+		{
+			Unit newUnit = scene.Instantiate<Unit>();
+			return newUnit;
+		}
+		else
+		{
+			GD.PrintErr($"Unit type {unitName} not found in library!");
+		}
+		return null;
 	}
 }

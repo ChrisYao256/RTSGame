@@ -21,6 +21,10 @@ public partial class StationaryUnit : Unit
 
 	public override void _PhysicsProcess(double delta)
 	{
+		if (!_active)
+		{
+			return;
+		}
 		if (_state == State.Attacking)
 		{
 			// switch target if unit is died

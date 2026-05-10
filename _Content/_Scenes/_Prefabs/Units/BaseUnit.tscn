@@ -54,6 +54,7 @@ texture = ExtResource("2_md5sk")
 script = ExtResource("3_eun4y")
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="UnitPathfinder" unique_id=662068239]
+path_postprocessing = 2
 max_speed = 200.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1381764660]

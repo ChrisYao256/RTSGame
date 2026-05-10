@@ -1,0 +1,26 @@
+[gd_scene format=3 uid="uid://wo62w62wkp4m"]
+
+[ext_resource type="PackedScene" uid="uid://7vf0p5478xp8" path="res://_Content/_Scenes/_Prefabs/Units/BaseStationaryUnit.tscn" id="1_e28ny"]
+[ext_resource type="Script" uid="uid://goc5aug04g4x" path="res://_Source/_Units/Exit.cs" id="2_jppn4"]
+
+[node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_e28ny")]
+script = ExtResource("2_jppn4")
+_hpMax = 1000
+_name = "Base"
+
+[node name="MainSprite" parent="." index="1" unique_id=701942347]
+visible = false
+scale = Vector2(1, 1)
+
+[node name="CollisionShape2D" parent="." index="2" unique_id=1381764660]
+visible = true
+scale = Vector2(3.32, 3.32)
+
+[node name="HealthBar" parent="." index="4" unique_id=640038315]
+visible = false
+
+[node name="AidArea" parent="." index="5" unique_id=724286163]
+visible = false
+
+[node name="AidAreaCollision" parent="AidArea" index="0" unique_id=1952573643]
+visible = false

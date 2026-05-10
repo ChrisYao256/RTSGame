@@ -29,7 +29,7 @@ public abstract partial class BaseWeapon : Node2D
 			if (_attackTimer < 0)
 			{
 				_attackTimer = _attackCooldown;
-				PerformAttack(_attackTarget);
+				PerformAttack(_attackTarget, _damage);
 			}
 		}
 	}
@@ -41,5 +41,10 @@ public abstract partial class BaseWeapon : Node2D
 	}
 
 	// Abstract method: Every attacker must define HOW they hit
-	public abstract void PerformAttack(Unit target);
+	public abstract void PerformAttack(Unit target, int damage);
+
+	public virtual float GetDPS()
+	{
+		return _damage / (float)_attackCooldown;
+	}
 }

@@ -1,0 +1,15 @@
+[gd_scene format=3 uid="uid://bpqurt1epi6yb"]
+
+[ext_resource type="PackedScene" uid="uid://yhbw0b164ui2" path="res://_Content/_Scenes/_Prefabs/Units/BaseTower.tscn" id="1_hr2c0"]
+[ext_resource type="Script" uid="uid://b4jva1l23o6su" path="res://_Source/_Units/Spawner.cs" id="2_531wn"]
+[ext_resource type="Texture2D" uid="uid://bc230321nqto5" path="res://icon.svg" id="3_12xii"]
+
+[node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_hr2c0")]
+script = ExtResource("2_531wn")
+_units = Array[String](["Hound"])
+_spawnAreaRadius = 50.0
+_cost = 1
+_iconTexture = ExtResource("3_12xii")
+_description = "Spawns 1 hound every turn"
+LeashDistance = 200.0
+_name = "Hound Spawner"

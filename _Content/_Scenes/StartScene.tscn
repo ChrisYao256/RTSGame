@@ -1,20 +1,20 @@
 [gd_scene format=3 uid="uid://cprp1r3sy7f0t"]
 
 [ext_resource type="Script" uid="uid://3k6m8x13r4w1" path="res://_Source/_UI/MainMenu.cs" id="1_1a63w"]
-[ext_resource type="PackedScene" uid="uid://clx6sk7mljed3" path="res://_Content/_Scenes/_Prefabs/Units/UnitManager.tscn" id="2_nstsh"]
 
 [node name="StartScene" type="Control" unique_id=1851011903]
 layout_mode = 3
 anchors_preset = 0
+offset_top = -1.0
+offset_bottom = -1.0
 script = ExtResource("1_1a63w")
-UnitManager = ExtResource("2_nstsh")
 
 [node name="Button" type="Button" parent="." unique_id=598364671]
 layout_mode = 0
-offset_left = 488.0
-offset_top = 277.0
-offset_right = 534.0
-offset_bottom = 308.0
+offset_left = 960.0
+offset_top = 540.0
+offset_right = 1060.0
+offset_bottom = 590.0
 text = "Start
 "
 

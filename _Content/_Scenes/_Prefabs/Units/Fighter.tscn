@@ -4,8 +4,6 @@
 [ext_resource type="PackedScene" uid="uid://dxg1cx6w8moqv" path="res://_Content/_Scenes/_Prefabs/Weapons/MeleeWeapon.tscn" id="2_pcghg"]
 
 [node name="BaseUnit" unique_id=481801141 instance=ExtResource("1_nrwse")]
-collision_mask = 3
-_isBuilding = true
 _moveSpeed = 120.0
 _hpMax = 200
 _name = "Fighter"

@@ -19,6 +19,8 @@ public partial class Unit : CharacterBody2D
 
 	public int _teamId;
 
+	public bool _aiControlled = false;
+
 	[Export] public float LeashDistance = 200f;
 
 	[Export] public float _moveSpeed;
@@ -28,24 +30,11 @@ public partial class Unit : CharacterBody2D
 
 	[Export] public string _name;
 
+
 	[Export]
 	public int DebugTeamId
 	{
 		get => _teamId;
-		set { }
-	}
-
-	[Export]
-	public int DebugHp
-	{
-		get => _teamId;
-		set { }
-	}
-
-	[Export]
-	public string DebugCommand
-	{
-		get => _currentCommand.GetType().ToString();
 		set { }
 	}
 
@@ -55,6 +44,9 @@ public partial class Unit : CharacterBody2D
 		get => _state;
 		set { }
 	}
+
+	[Signal]
+	public delegate void DiedEventHandler(Unit unit);
 
 	public enum State
 	{
@@ -70,11 +62,11 @@ public partial class Unit : CharacterBody2D
 	public bool _displayAttackRange;
 	public float _attackRange;
 
-	private CollisionShape2D _attackCollisionShape;
-
-	public event Action<Unit> Died;
+	protected CollisionShape2D _attackCollisionShape;
 
 	protected Unit _attackTarget;
+
+	protected bool _active = true;
 
 	public override void _Ready()
 	{
@@ -88,7 +80,14 @@ public partial class Unit : CharacterBody2D
 
 	protected void SetWeapon()
 	{
-		_weapon = GetNode<BaseWeapon>("WeaponComponent");
+		if (HasNode("WeaponComponent"))
+		{
+			_weapon = GetNode<BaseWeapon>("WeaponComponent");
+		}
+		else
+		{
+			_weapon = null;
+		}
 	}
 
 	protected void SetSelectionVisual()
@@ -96,8 +95,12 @@ public partial class Unit : CharacterBody2D
 		_selectionVisual = GetNode<Sprite2D>("SelectionCircle");
 	}
 
-	protected void SetAttackRange()
+	protected virtual void SetAttackRange()
 	{
+		if (_weapon is null)
+		{
+			return;
+		}
 		_attackCollisionShape = GetNode<CollisionShape2D>("AttackArea/AttackAreaCollision");
 		_attackRange = _weapon._range;
 
@@ -139,10 +142,26 @@ public partial class Unit : CharacterBody2D
 	public void SetSelectionVisible(bool b)
 	{
 		_selectionVisual.Visible = b;
+		if (b)
+		{
+			DisplayAttackRange();
+		}
+		else
+		{
+			HideAttackRange();
+		}
 	}
 
 	public override void _PhysicsProcess(double delta)
 	{
+		if (!_active)
+		{
+			return;
+		}
+		if (_pathfinder._snapToTarget)
+		{
+			_pathfinder.CheckSnapToTarget(delta);
+		}
 		if (_pathfinder.IsNavigationFinished())
 		{
 			_currentCommand.CheckFinish();
@@ -161,14 +180,14 @@ public partial class Unit : CharacterBody2D
 
 		if (_currentCommand is ForceAttack forceAttack)
 		{
-			if (!_currentCommand.CheckFinish())
+			if (!forceAttack.CheckFinish())
 			{
 				_pathfinder.SetTargetPosition(forceAttack._targetUnit.GlobalPosition);
 			}
 		}
 		else if (_currentCommand is AggroedAttackMove aggroedAttackMove)
 		{
-			if (!_currentCommand.CheckFinish())
+			if (!aggroedAttackMove.CheckFinish())
 			{
 				_pathfinder.SetTargetPosition(aggroedAttackMove._targetUnit.GlobalPosition);
 			}
@@ -281,14 +300,14 @@ public partial class Unit : CharacterBody2D
 	{
 		_state = State.Attacking;
 		_attackTarget = unit;
-		_weapon.BeginAttackingTarget(unit);
+		_weapon?.BeginAttackingTarget(unit);
 	}
 
 	protected void StopAttackingTarget()
 	{
 		_state = State.Idle;
 		_attackTarget = null;
-		_weapon.BeginAttackingTarget(null);
+		_weapon?.BeginAttackingTarget(null);
 	}
 
 	public void Hit(int damage, Unit source)
@@ -316,6 +335,10 @@ public partial class Unit : CharacterBody2D
 
 	public virtual void Retaliate(Unit unit)
 	{
+		if (unit.CollisionLayer != UnitManager.UnitLayerMask)
+		{
+			return;
+		}
 		if (_currentCommand is AttackMove || _currentCommand is NoCommand)
 		{
 			AddCommand(new AggroedAttackMove(this, GlobalPosition, unit));
@@ -324,28 +347,36 @@ public partial class Unit : CharacterBody2D
 		}
 	}
 
-	private void OnScanAreaBodyEntered(Node2D body)
+	protected virtual void OnScanAreaBodyEntered(Node2D body)
 	{
-		if (body is Unit unit)
-		{
-			// Check if the body is in the enemy group and we don't have a target yet
-			if (unit._teamId != _teamId && _state != State.Attacking &&(_currentCommand is NoCommand || _currentCommand is AttackMove || _currentCommand is AggroedAttackMove))
-			{
-				BeginAttackingTarget(unit);
-			}
-			else if (_currentCommand is ForceAttack forceAttack && forceAttack._targetUnit == body)
-			{
-				BeginAttackingTarget(unit);
-			}
-		}
-		else
+		//if (!_active)
+		//{
+		//	return;
+		//}
+		//if (body is Unit unit)
+		//{
+		//	// Check if the body is in the enemy group and we don't have a target yet
+		//	if (unit._teamId != _teamId && _state != State.Attacking && (_currentCommand is NoCommand || _currentCommand is AttackMove || _currentCommand is AggroedAttackMove))
+		//	{
+		//		BeginAttackingTarget(unit);
+		//	}
+		//	else if (_currentCommand is ForceAttack forceAttack && forceAttack._targetUnit == body)
+		//	{
+		//		BeginAttackingTarget(unit);
+		//	}
+		//}
+		//else
+		//{
+		//	return;
+		//}
+	}
+
+	protected virtual void OnScanAreaBodyLeft(Node2D body)
+	{
+		if (!_active)
 		{
 			return;
 		}
-	}
-
-	private void OnScanAreaBodyLeft(Node2D body)
-	{
 		if (body is Unit unit && unit == _attackTarget)
 		{
 			StopAttackingTarget();
@@ -362,17 +393,34 @@ public partial class Unit : CharacterBody2D
 		{
 			return;
 		}
+		if (_weapon is null)
+		{
+			return;
+		}
 		var scanArea = GetNode<Area2D>("AttackArea");
 
 		// Get all overlapping physics bodies
 		var bodies = scanArea.GetOverlappingBodies();
+		if (!bodies.Any(body => body is InvaderUnit))
+		{
+			return;
+		}
 
+		// Bug: the for loop picks the furthest unit instead of the nearest, so I've changed this OrderBy to OrderByDescending. 
 		var sortedBodies = bodies
-				.OrderBy(body => GlobalPosition.DistanceSquaredTo(body.GlobalPosition))
+				.OrderByDescending(body => GlobalPosition.DistanceSquaredTo(body.GlobalPosition))
 				.ToList();
 
-		foreach (Node2D body in bodies)
+		//GD.Print("List: ");
+		//foreach (Node2D body in sortedBodies)
+		//{
+		//	float dist = GlobalPosition.DistanceSquaredTo(body.GlobalPosition);
+		//	GD.Print($"Body: {body.Name}, DistSquared: {dist}");
+		//}
+
+		for (int i = 0; i < sortedBodies.Count; i++)
 		{
+			var body = sortedBodies[i];
 			if (body is Unit unit)
 			{
 				if (unit._teamId != _teamId && (_currentCommand is NoCommand || _currentCommand is AttackMove || _currentCommand is AggroedAttackMove))
@@ -414,14 +462,19 @@ public partial class Unit : CharacterBody2D
 
 		// Transition from Green (0.33) to Red (0.0) using HSV
 		// Or use a simple Lerp between two specific colors:
-		Color healthyColor = Colors.Green;
-		Color criticalColor = Colors.Red;
+		Color healthyColor = new Color(0, 1, 0, 0.75f);
+		Color criticalColor = new Color(1, 0, 0, 0.75f);
 
 		// This blends the two colors based on the health percentage
 		_healthBar.Modulate = criticalColor.Lerp(healthyColor, healthPercent);
 	}
 
-	private void Die()
+	public void Exit()
+	{
+		Die();
+	}
+
+	protected virtual void Die()
 	{
 		SetProcess(false);
 		SetPhysicsProcess(false);
@@ -429,7 +482,8 @@ public partial class Unit : CharacterBody2D
 		// 2. Disable collisions so other units don't bump into a corpse
 		GetNode<CollisionShape2D>("CollisionShape2D").SetDeferred("disabled", true);
 
-		Died?.Invoke(this);
+		EmitSignal(SignalName.Died, this);
+
 		QueueFree();
 	}
 
@@ -440,7 +494,7 @@ public partial class Unit : CharacterBody2D
 		if (_displayAttackRange)
 		{
 			// Get the radius from your CollisionShape2D's resource
-			var attackAreaShape = GetNode<CollisionShape2D>("UnitPathfinder/AttackArea/AttackAreaCollision").Shape as CircleShape2D;
+			var attackAreaShape = GetNode<CollisionShape2D>("AttackArea/AttackAreaCollision").Shape as CircleShape2D;
 
 			if (attackAreaShape != null)
 			{
@@ -467,8 +521,24 @@ public partial class Unit : CharacterBody2D
 	{
 		QueueRedraw();
 	}
+
+	public void DisablePhysicsProcess()
+	{
+		_active = false;
+	}
+
+	public void EnablePhysicsProcess()
+	{
+		_active = true;
+	}
+
 	public UnitPathfinder GetPathfinder()
 	{
 		return _pathfinder;
+	}
+
+	public Texture2D GetIconTexture()
+	{
+		return GetNode<Sprite2D>("MainSprite").Texture;
 	}
 }

@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://cq3t80c5vyoxi"]
+
+[ext_resource type="Script" uid="uid://by51dnu6y0sr0" path="res://_Source/_TD/TDManager.cs" id="1_24ujo"]
+
+[node name="TdManager" type="Node2D" unique_id=116729899]
+script = ExtResource("1_24ujo")

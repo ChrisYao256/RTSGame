@@ -1,0 +1,31 @@
+[gd_scene format=3 uid="uid://b8dws0ci38w1g"]
+
+[ext_resource type="PackedScene" uid="uid://yhbw0b164ui2" path="res://_Content/_Scenes/_Prefabs/Units/BaseTower.tscn" id="1_e5a7y"]
+[ext_resource type="PackedScene" uid="uid://cekj6vfjmeih4" path="res://_Content/_Scenes/_Prefabs/Weapons/HitscanWeapon.tscn" id="2_ct57t"]
+[ext_resource type="Texture2D" uid="uid://1ya6poaby1bi" path="res://_Assets/GunTurret.png" id="2_ll7od"]
+[ext_resource type="Texture2D" uid="uid://b0erpa4s84wnd" path="res://_Assets/GunTurretBase.png" id="3_ct57t"]
+[ext_resource type="PackedScene" uid="uid://bol7o0gl5ji8x" path="res://_Content/_Scenes/_Prefabs/Weapons/TurretTurner.tscn" id="4_sgu7m"]
+[ext_resource type="Texture2D" uid="uid://c30uyptsf2vri" path="res://_Assets/GunTurretTurret.png" id="6_0uk1v"]
+
+[node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_e5a7y")]
+scale = Vector2(1.5, 1.5)
+_cost = 10
+_iconTexture = ExtResource("2_ll7od")
+_description = "Basic turret. "
+_hpMax = 1
+_name = "GunTurret"
+
+[node name="WeaponComponent" parent="." index="0" unique_id=2120452932 instance=ExtResource("2_ct57t")]
+_tracerColor = Color(0.84313726, 0.8039216, 0.7764706, 0.3372549)
+_tracerWidth = 1.0
+_attackCooldown = 0.3
+_attackDelayLow = 0.5
+_attackDelayHigh = 0.5
+
+[node name="MainSprite" parent="." index="2" unique_id=701942347]
+texture_filter = 1
+scale = Vector2(1, 1)
+texture = ExtResource("3_ct57t")
+
+[node name="TurretTurner" parent="." index="6" unique_id=113202010 instance=ExtResource("4_sgu7m")]
+_turretTexture = ExtResource("6_0uk1v")

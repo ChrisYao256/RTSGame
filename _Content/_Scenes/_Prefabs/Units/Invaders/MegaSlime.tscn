@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://cx4pr28vsnkrk"]
+
+[ext_resource type="PackedScene" uid="uid://bqn4h6d52i52" path="res://_Content/_Scenes/_Prefabs/Units/BaseInvaderUnit.tscn" id="1_4ubmv"]
+
+[node name="BaseUnit" unique_id=481801141 instance=ExtResource("1_4ubmv")]
+_moneyDropped = 1
+_moveSpeed = 50.0
+_hpMax = 5000
+_name = "MegaSlime"

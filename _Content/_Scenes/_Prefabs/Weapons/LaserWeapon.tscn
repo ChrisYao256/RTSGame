@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://csclmqhm61enk"]
+
+[ext_resource type="Script" uid="uid://cvkhn0av6rb13" path="res://_Source/_Units/Weapons/LaserWeapon.cs" id="1_drgxj"]
+
+[node name="WeaponComponent" type="Node2D" unique_id=2120452932]
+script = ExtResource("1_drgxj")
+
+[node name="TracerLine" type="Line2D" parent="." unique_id=1982471993]
+visible = false
+top_level = true
+width = 2.0
+default_color = Color(0.80784315, 0, 0.15294118, 0.5294118)
+texture_mode = 2

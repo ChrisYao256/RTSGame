@@ -1,0 +1,28 @@
+[gd_scene format=3 uid="uid://dae3piaxv0d2h"]
+
+[ext_resource type="PackedScene" uid="uid://yhbw0b164ui2" path="res://_Content/_Scenes/_Prefabs/Units/BaseTower.tscn" id="1_mrw2a"]
+[ext_resource type="Texture2D" uid="uid://c7xr1yb8633dx" path="res://_Assets/LaserTurret.png" id="2_mrw2a"]
+[ext_resource type="PackedScene" uid="uid://csclmqhm61enk" path="res://_Content/_Scenes/_Prefabs/Weapons/LaserWeapon.tscn" id="3_7wgq5"]
+[ext_resource type="Texture2D" uid="uid://cxb3drleo562g" path="res://_Assets/LaserTurretBase.png" id="4_mrw2a"]
+[ext_resource type="PackedScene" uid="uid://bol7o0gl5ji8x" path="res://_Content/_Scenes/_Prefabs/Weapons/TurretTurner.tscn" id="5_7ewp4"]
+[ext_resource type="Texture2D" uid="uid://dpq71dqbxcgwo" path="res://_Assets/LaserTurretTurret.png" id="6_7wgq5"]
+
+[node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_mrw2a")]
+scale = Vector2(1.5, 1.5)
+_cost = 15
+_iconTexture = ExtResource("2_mrw2a")
+_description = "Single target turret with long range"
+_hpMax = 1
+_name = "LaserTurret"
+
+[node name="WeaponComponent" parent="." index="0" unique_id=2120452932 instance=ExtResource("3_7wgq5")]
+_damage = 20
+_range = 200.0
+
+[node name="MainSprite" parent="." index="2" unique_id=701942347]
+texture_filter = 1
+scale = Vector2(1, 1)
+texture = ExtResource("4_mrw2a")
+
+[node name="TurretTurner" parent="." index="6" unique_id=113202010 instance=ExtResource("5_7ewp4")]
+_turretTexture = ExtResource("6_7wgq5")

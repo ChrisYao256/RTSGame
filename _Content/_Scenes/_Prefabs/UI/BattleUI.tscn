@@ -1,14 +1,18 @@
 [gd_scene format=3 uid="uid://baks6mq2g1jjx"]
 
-[ext_resource type="Script" uid="uid://cnatx5yla4abt" path="res://_Source/_UI/UnitInfoPanel.cs" id="1_wlu8t"]
+[ext_resource type="Script" uid="uid://cnatx5yla4abt" path="res://_Source/_UI/UnitInfoPanel.cs" id="1_ytyh6"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pxqmk"]
+bg_color = Color(0.525894, 0.5258941, 0.5258938, 1)
 
 [node name="UnitInfoPanel" type="CanvasLayer" unique_id=1871383984]
-script = ExtResource("1_wlu8t")
+script = ExtResource("1_ytyh6")
 
 [node name="PanelContainer" type="PanelContainer" parent="." unique_id=367993238]
-offset_top = 531.0
-offset_right = 1152.0
-offset_bottom = 646.0
+offset_top = 960.0
+offset_right = 1920.0
+offset_bottom = 1080.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_pxqmk")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer" unique_id=421499899]
 layout_mode = 2

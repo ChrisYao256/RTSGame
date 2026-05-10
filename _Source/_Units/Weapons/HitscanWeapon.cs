@@ -5,6 +5,7 @@ public partial class HitscanWeapon : BaseWeapon
 {
 	[Export] public double _tracerDuration = 0.1f;
 	[Export] public Color _tracerColor = Colors.Red;
+	[Export] public float _tracerWidth = 2.0f;
 
 	private Line2D _tracerLine;
 	private Timer _tracerTimer;
@@ -16,12 +17,14 @@ public partial class HitscanWeapon : BaseWeapon
 		_tracerLine.ClearPoints();
 		_tracerLine.AddPoint(Vector2.Zero);
 		_tracerLine.AddPoint(Vector2.Zero);
+		_tracerLine.DefaultColor = _tracerColor;
+		_tracerLine.Width = _tracerWidth;
 		_tracerTimer = GetNode<Timer>("TracerLine/Timer");
 		_tracerTimer.Timeout += () => _tracerLine.Visible = false;
 		base._Ready();
 	}
 
-	public override void PerformAttack(Unit target)
+	public override void PerformAttack(Unit target, int d)
 	{
 		_tracerLine.Visible = true;
 

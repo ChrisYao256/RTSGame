@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://bol7o0gl5ji8x"]
+
+[ext_resource type="Script" uid="uid://bva1xkjx08h5v" path="res://_Source/_Units/Weapons/TurretTurner.cs" id="1_fcnpd"]
+
+[node name="TurretTurner" type="Node2D" unique_id=113202010]
+script = ExtResource("1_fcnpd")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1675279896]
+texture_filter = 1

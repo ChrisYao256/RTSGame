@@ -4,7 +4,7 @@ using RTSGame.Units;
 public partial class MeleeWeapon : BaseWeapon
 {
 
-	public override void PerformAttack(Unit target)
+	public override void PerformAttack(Unit target, int d)
 	{
 		target.Hit(_damage, _parent);
 	}

@@ -5,7 +5,10 @@ using System;
 public partial class MainMenu : Control
 {
 	[Export]
-	public string StartScenePath = "res://_Content/_Scenes/BattleScene.tscn";
+	public string BattleScenePath = "res://_Content/_Scenes/BattleScene.tscn";
+
+	[Export]
+	public string TDScenePath = "res://_Content/_Scenes/TDScene.tscn";
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -19,11 +22,11 @@ public partial class MainMenu : Control
 
 	public void OnStartButtonPressed()
 	{
-		Error result = GetTree().ChangeSceneToFile(StartScenePath);
+		Error result = GetTree().ChangeSceneToFile(TDScenePath);
 
 		if (result != Error.Ok)
 		{
-			GD.PrintErr("Failed to load scene: " + StartScenePath);
+			GD.PrintErr("Failed to load scene: " + TDScenePath);
 		}
 	}
 }

@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://bls83bjgatgd8"]
+
+[ext_resource type="Script" uid="uid://dl8t1lb2ks35w" path="res://_Source/_UI/FloatingText.cs" id="1_mxkip"]
+
+[node name="FloatingText" type="Label" unique_id=1059848697]
+script = ExtResource("1_mxkip")
