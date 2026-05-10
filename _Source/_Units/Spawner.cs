@@ -48,7 +48,7 @@ public partial class Spawner : TowerUnit
 	{
 		foreach (string unit in _units)
 		{
-			int maxAttempts = 50; // Safety cap to prevent infinite loops
+			int maxAttempts = 100; // Safety cap to prevent infinite loops
 
 			for (int i = 0; i < maxAttempts; i++)
 			{

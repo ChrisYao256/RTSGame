@@ -20,6 +20,7 @@ public partial class UnitManager : Node2D
 		// towers
 		{ "GunTurret", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/GunTurret.tscn") },
 		{ "LaserTurret", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/LaserTurret.tscn") },
+		{ "BombTurret", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/ProjectileTower.tscn") },
 		{ "SlimeSpawner", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/SlimeSpawner.tscn") },
 		{ "HoundSpawner", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/HoundSpawner.tscn") },
 

@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://bmcepxq5mjbi1"]
+
+[ext_resource type="Script" uid="uid://c17mtergfc5a0" path="res://_Source/Effects/RampUpDamage.cs" id="1_chul4"]
+
+[node name="RampUpDamage" type="Node" unique_id=2048818353]
+script = ExtResource("1_chul4")

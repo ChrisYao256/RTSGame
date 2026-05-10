@@ -17,6 +17,7 @@ public partial class StationaryUnit : Unit
 		SetAttackRange();
 		SetHealthBar();
 		SetInitialCommand();
+		SetStartingEffects();
 	}
 
 	public override void _PhysicsProcess(double delta)

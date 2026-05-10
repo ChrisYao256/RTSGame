@@ -1,9 +1,14 @@
 [gd_scene format=3 uid="uid://cx4pr28vsnkrk"]
 
 [ext_resource type="PackedScene" uid="uid://bqn4h6d52i52" path="res://_Content/_Scenes/_Prefabs/Units/BaseInvaderUnit.tscn" id="1_4ubmv"]
+[ext_resource type="PackedScene" uid="uid://cswwnpq76hio2" path="res://_Content/_Scenes/_Prefabs/Effects/SelfHealing.tscn" id="2_f7a33"]
 
 [node name="BaseUnit" unique_id=481801141 instance=ExtResource("1_4ubmv")]
-_moneyDropped = 1
+_moneyDropped = 50
+_hpDeducted = 10
 _moveSpeed = 50.0
-_hpMax = 5000
+_hpMax = 2000
 _name = "MegaSlime"
+
+[node name="SelfHealing" parent="Effects" parent_id_path=PackedInt32Array(317912941) index="0" unique_id=1651430447 instance=ExtResource("2_f7a33")]
+_healInterval = 0.05

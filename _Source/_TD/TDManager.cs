@@ -9,6 +9,8 @@ public partial class TDManager : Node
 {
 	[Signal]
 	public delegate void NewWaveEventHandler();
+	[Export]
+	public string MenuPath = "res://_Content/_Scenes/StartScene.tscn";
 
 	private List<string> _availTowerList;
 
@@ -40,7 +42,7 @@ public partial class TDManager : Node
 		_unitManager = GetParent().GetNode<UnitManager>("UnitManager");
 		_towerManager = GetParent().GetNode<TDTowerManager>("TowerManager");
 
-		_availTowerList = ["GunTurret", "LaserTurret", "SlimeSpawner", "HoundSpawner"];
+		_availTowerList = ["GunTurret", "LaserTurret", "BombTurret", "SlimeSpawner", "HoundSpawner"];
 		_towerManager.InitializeTowersPanel(_availTowerList, _unitManager);
 
 		_waveList = new Dictionary<int, List<(List<string>, float)>>{
@@ -118,15 +120,24 @@ public partial class TDManager : Node
 		unit.Connect(Unit.SignalName.Died, Callable.From<Unit>(OnUnitDied));
 	}
 
-	public void UnitExited(Unit unit)
+	public void UnitExited(InvaderUnit unit)
 	{
-		UpdateHp(_hp - 1);
+		UpdateHp(_hp - unit._hpDeducted);
 	}
 
 	private void UpdateHp(int newHp)
 	{
 		_hp = newHp;
 		_hpLabel.Text = "Hp" + _hp.ToString();
+		if (_hp <= 0)
+		{
+			EndTD();
+		}
+	}
+
+	private void EndTD()
+	{
+		GetTree().CallDeferred(SceneTree.MethodName.ChangeSceneToFile, MenuPath);
 	}
 
 	private void UpdateMoney(int newMoney)

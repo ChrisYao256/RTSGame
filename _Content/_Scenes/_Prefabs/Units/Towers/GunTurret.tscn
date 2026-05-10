@@ -8,7 +8,6 @@
 [ext_resource type="Texture2D" uid="uid://c30uyptsf2vri" path="res://_Assets/GunTurretTurret.png" id="6_0uk1v"]
 
 [node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_e5a7y")]
-scale = Vector2(1.5, 1.5)
 _cost = 10
 _iconTexture = ExtResource("2_ll7od")
 _description = "Basic turret. "
@@ -18,6 +17,7 @@ _name = "GunTurret"
 [node name="WeaponComponent" parent="." index="0" unique_id=2120452932 instance=ExtResource("2_ct57t")]
 _tracerColor = Color(0.84313726, 0.8039216, 0.7764706, 0.3372549)
 _tracerWidth = 1.0
+_range = 250.0
 _attackCooldown = 0.3
 _attackDelayLow = 0.5
 _attackDelayHigh = 0.5

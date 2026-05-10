@@ -1,0 +1,35 @@
+[gd_scene format=3 uid="uid://cwom1gjp8b5q2"]
+
+[ext_resource type="PackedScene" uid="uid://yhbw0b164ui2" path="res://_Content/_Scenes/_Prefabs/Units/BaseTower.tscn" id="1_un21u"]
+[ext_resource type="PackedScene" uid="uid://bc7mdwf374doj" path="res://_Content/_Scenes/_Prefabs/Weapons/ProjectileWeapon.tscn" id="2_xhtoo"]
+[ext_resource type="Texture2D" uid="uid://bv5a5sumj7ju2" path="res://_Assets/BombTurret.png" id="2_yhno0"]
+[ext_resource type="PackedScene" uid="uid://bjudui5jhrtku" path="res://_Content/_Scenes/_Prefabs/ExplosionVisualEffect.tscn" id="3_xhtoo"]
+[ext_resource type="Texture2D" uid="uid://bhp6hhysqixwa" path="res://_Assets/BombTurretBase.png" id="5_83j80"]
+[ext_resource type="PackedScene" uid="uid://bol7o0gl5ji8x" path="res://_Content/_Scenes/_Prefabs/Weapons/TurretTurner.tscn" id="6_ta5e5"]
+[ext_resource type="Texture2D" uid="uid://bok5bhu7n00pt" path="res://_Assets/BombTurretTurret.png" id="7_kdf8p"]
+
+[node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_un21u")]
+_cost = 30
+_iconTexture = ExtResource("2_yhno0")
+_description = "Slow-firing cannon with AOE damage"
+LeashDistance = 200.0
+_name = "BombTurret"
+
+[node name="WeaponComponent" parent="." index="0" unique_id=2120452932 instance=ExtResource("2_xhtoo")]
+_projectileSpeed = 1000.0
+_projectileRadius = 5.0
+_isExplosive = true
+_explosionRadius = 50.0
+_explosionDamage = 15
+ExplosionVisualScene = ExtResource("3_xhtoo")
+_damage = 30
+_range = 400.0
+_attackDelayLow = 1.0
+_attackDelayHigh = 1.0
+
+[node name="MainSprite" parent="." index="2" unique_id=701942347]
+scale = Vector2(1, 1)
+texture = ExtResource("5_83j80")
+
+[node name="TurretTurner" parent="." index="4" unique_id=113202010 instance=ExtResource("6_ta5e5")]
+_turretTexture = ExtResource("7_kdf8p")

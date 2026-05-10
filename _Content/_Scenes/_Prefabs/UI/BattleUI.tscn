@@ -19,17 +19,36 @@ layout_mode = 2
 theme_override_constants/separation = 16
 alignment = 1
 
-[node name="UnitInfo" type="VBoxContainer" parent="PanelContainer/HBoxContainer" unique_id=263363655]
+[node name="UnitInfo" type="HBoxContainer" parent="PanelContainer/HBoxContainer" unique_id=994166100]
 layout_mode = 2
+theme_override_constants/separation = 32
 alignment = 1
 
-[node name="UnitNameLabel" type="Label" parent="PanelContainer/HBoxContainer/UnitInfo" unique_id=1529818683]
+[node name="Effects" type="VBoxContainer" parent="PanelContainer/HBoxContainer/UnitInfo" unique_id=866607650]
 layout_mode = 2
 
-[node name="Hp" type="Label" parent="PanelContainer/HBoxContainer/UnitInfo" unique_id=694023451]
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/HBoxContainer/UnitInfo" unique_id=1552552573]
+layout_mode = 2
+
+[node name="UnitNameLabel" type="Label" parent="PanelContainer/HBoxContainer/UnitInfo/VBoxContainer" unique_id=1529818683]
+layout_mode = 2
+
+[node name="Hp" type="Label" parent="PanelContainer/HBoxContainer/UnitInfo/VBoxContainer" unique_id=694023451]
 layout_mode = 2
 
 [node name="SpeedLabel" type="Label" parent="PanelContainer/HBoxContainer/UnitInfo" unique_id=2133036093]
+layout_mode = 2
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="PanelContainer/HBoxContainer/UnitInfo" unique_id=1259900675]
+layout_mode = 2
+
+[node name="DPSLabel" type="Label" parent="PanelContainer/HBoxContainer/UnitInfo/VBoxContainer2" unique_id=1073387485]
+layout_mode = 2
+
+[node name="CooldownLabel" type="Label" parent="PanelContainer/HBoxContainer/UnitInfo/VBoxContainer2" unique_id=1990505348]
+layout_mode = 2
+
+[node name="DamageLabel" type="Label" parent="PanelContainer/HBoxContainer/UnitInfo/VBoxContainer2" unique_id=1991186877]
 layout_mode = 2
 
 [node name="CommandContainer" type="VBoxContainer" parent="PanelContainer/HBoxContainer" unique_id=710287485]

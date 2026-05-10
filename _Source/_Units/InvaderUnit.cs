@@ -13,6 +13,8 @@ public partial class InvaderUnit : Unit
 	public int _moneyDropped;
 	[Export] 
 	private PackedScene _floatingTextScene;
+	[Export]
+	public int _hpDeducted = 1;
 
 	public override void _Ready()
 	{

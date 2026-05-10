@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://cswwnpq76hio2"]
+
+[ext_resource type="Script" uid="uid://gi01wykbp78h" path="res://_Source/Effects/SelfHealing.cs" id="1_6vfq5"]
+
+[node name="SelfHealing" type="Node" unique_id=1651430447]
+script = ExtResource("1_6vfq5")
+_healAmount = 1
+_healInterval = 1.0
+_effectName = "Regenerative"

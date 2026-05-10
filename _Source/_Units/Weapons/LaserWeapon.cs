@@ -30,7 +30,7 @@ public partial class LaserWeapon : BaseWeapon
 			_tracerLine.SetPointPosition(0, GlobalPosition);
 			_tracerLine.SetPointPosition(1, _attackTarget.GlobalPosition);
 
-			float damageThisFrame = _damage * (float)delta + _damageRemainder;
+			float damageThisFrame = (_damage + _damageModifier) * (float)delta + _damageRemainder;
 
 			int damageToDeal = Mathf.FloorToInt(damageThisFrame);
 

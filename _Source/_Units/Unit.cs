@@ -1,4 +1,5 @@
 using Godot;
+using Godot.Collections;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +16,7 @@ public partial class Unit : CharacterBody2D
 
 	protected TextureProgressBar _healthBar;
 
-	protected BaseWeapon _weapon;
+	public BaseWeapon _weapon;
 
 	public int _teamId;
 
@@ -26,10 +27,10 @@ public partial class Unit : CharacterBody2D
 	[Export] public float _moveSpeed;
 
 	[Export] public int _hpMax;
+
 	public int _hp { get; private set; }
 
 	[Export] public string _name;
-
 
 	[Export]
 	public int DebugTeamId
@@ -48,6 +49,18 @@ public partial class Unit : CharacterBody2D
 	[Signal]
 	public delegate void DiedEventHandler(Unit unit);
 
+	[Signal]
+	public delegate void HpChangeEventHandler(Unit unit, int change);
+
+	[Signal]
+	public delegate void NewEffectEventHandler(Unit unit, Effect effect);
+
+	[Signal]
+	public delegate void BeginAttackEventHandler(Unit unit, Unit target);
+
+	[Signal]
+	public delegate void UpdateInfoEventHandler(Unit unit);
+
 	public enum State
 	{
 		Idle, 
@@ -61,6 +74,9 @@ public partial class Unit : CharacterBody2D
 
 	public bool _displayAttackRange;
 	public float _attackRange;
+
+	private Node _effectsNode;
+	public List<Effect> _effects = [];
 
 	protected CollisionShape2D _attackCollisionShape;
 
@@ -76,6 +92,28 @@ public partial class Unit : CharacterBody2D
 		SetPathFinder();
 		SetHealthBar();
 		SetInitialCommand();
+		SetStartingEffects();
+	}
+
+	protected void SetStartingEffects()
+	{
+		_effectsNode = GetNode("Effects");
+		
+		for (int i = 0; i <  _effectsNode.GetChildCount(); i++)
+		{
+			if (_effectsNode.GetChild(i) is Effect effect)
+			{
+				_effects.Add(effect);
+				effect.ConnectSignals(this);
+			}
+		}
+	}
+
+	public void AddEffect(Effect effect)
+	{
+		_effectsNode.AddChild(effect);
+		_effects.Add(effect);
+		effect.ConnectSignals(this);
 	}
 
 	protected void SetWeapon()
@@ -301,6 +339,10 @@ public partial class Unit : CharacterBody2D
 		_state = State.Attacking;
 		_attackTarget = unit;
 		_weapon?.BeginAttackingTarget(unit);
+		if (_weapon is not null)
+		{
+			EmitSignal(SignalName.BeginAttack, unit);
+		}
 	}
 
 	protected void StopAttackingTarget()
@@ -312,9 +354,7 @@ public partial class Unit : CharacterBody2D
 
 	public void Hit(int damage, Unit source)
 	{
-		_hp -= damage;
-		UpdateHealthBar(_hp, _hpMax);
-
+		IncreaseHp(-damage);
 		Area2D socialArea = GetNode<Area2D>("AidArea");
 		var nearbyBodies = socialArea.GetOverlappingBodies();
 
@@ -331,6 +371,15 @@ public partial class Unit : CharacterBody2D
 		{
 			Die();
 		}
+	}
+
+	public void IncreaseHp(int change)
+	{
+		_hp += change;
+		_hp = Math.Min(_hp, _hpMax);
+		UpdateHealthBar(_hp, _hpMax);
+		EmitSignal(SignalName.HpChange, change);
+		EmitSignal(SignalName.UpdateInfo);
 	}
 
 	public virtual void Retaliate(Unit unit)
@@ -453,6 +502,12 @@ public partial class Unit : CharacterBody2D
 			}
 		}
 		return false;
+	}
+
+	public void SetWeaponModifier(int damageModifier)
+	{
+		_weapon._damageModifier = damageModifier;
+		EmitSignal(SignalName.UpdateInfo);
 	}
 
 	private void UpdateHealthBar(float currentHp, float maxHp)

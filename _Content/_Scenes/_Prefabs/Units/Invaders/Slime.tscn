@@ -4,6 +4,7 @@
 
 [node name="BaseUnit" unique_id=481801141 instance=ExtResource("1_d12es")]
 _moneyDropped = 1
+_hpDeducted = 1
 _moveSpeed = 75.0
 _hpMax = 50
 _name = "Slime"

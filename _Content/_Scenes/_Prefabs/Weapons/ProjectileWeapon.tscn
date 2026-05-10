@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://bc7mdwf374doj"]
+
+[ext_resource type="Script" uid="uid://bwav65cg5at1c" path="res://_Source/_Units/Weapons/ProjectileWeapon.cs" id="1_xnx6x"]
+[ext_resource type="Texture2D" uid="uid://0oxqcoop183k" path="res://_Assets/Projectile.png" id="2_cpds0"]
+
+[node name="WeaponComponent" type="Node2D" unique_id=2120452932]
+script = ExtResource("1_xnx6x")
+_projectileSpeed = 1.0
+_projectileTexture = ExtResource("2_cpds0")
+_lifeTime = 2.0
+_projectileRadius = 0.1
+_damage = 5
+_range = 100.0

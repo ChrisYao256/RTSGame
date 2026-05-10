@@ -81,6 +81,8 @@ collision_mask = 2
 [node name="AidAreaCollision" type="CollisionShape2D" parent="AidArea" unique_id=1883932864]
 shape = SubResource("CircleShape2D_jwvwn")
 
+[node name="Effects" type="Node" parent="." unique_id=317912941]
+
 [connection signal="body_entered" from="AttackArea" to="." method="OnScanAreaBodyEntered"]
 [connection signal="body_exited" from="AttackArea" to="." method="OnScanAreaBodyLeft"]
 [connection signal="target_reached" from="UnitPathfinder/NavigationAgent2D" to="UnitPathfinder" method="OnTargetReached"]

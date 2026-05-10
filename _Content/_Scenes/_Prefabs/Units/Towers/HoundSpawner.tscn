@@ -7,9 +7,9 @@
 [node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_hr2c0")]
 script = ExtResource("2_531wn")
 _units = Array[String](["Hound"])
-_spawnAreaRadius = 50.0
+_spawnAreaRadius = 200.0
 _cost = 1
 _iconTexture = ExtResource("3_12xii")
-_description = "Spawns 1 hound every turn"
+_description = "Spawns 1 hound in a medium area every turn"
 LeashDistance = 200.0
 _name = "Hound Spawner"

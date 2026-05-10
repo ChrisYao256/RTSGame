@@ -16,6 +16,8 @@ public abstract partial class BaseWeapon : Node2D
 	protected Unit _parent;
 	public Unit _attackTarget;
 
+	public int _damageModifier = 0;
+
 	public override void _Ready()
 	{
 		_parent = GetParent<Unit>();
@@ -29,7 +31,7 @@ public abstract partial class BaseWeapon : Node2D
 			if (_attackTimer < 0)
 			{
 				_attackTimer = _attackCooldown;
-				PerformAttack(_attackTarget, _damage);
+				PerformAttack(_attackTarget, _damage + _damageModifier);
 			}
 		}
 	}
@@ -45,6 +47,6 @@ public abstract partial class BaseWeapon : Node2D
 
 	public virtual float GetDPS()
 	{
-		return _damage / (float)_attackCooldown;
+		return (_damage + _damageModifier) / (float)_attackCooldown;
 	}
 }

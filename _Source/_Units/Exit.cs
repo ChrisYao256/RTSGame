@@ -60,7 +60,11 @@ public partial class Exit : StationaryUnit
 
 	public void UnitExited(Unit unit)
 	{
+		if (unit is not InvaderUnit)
+		{
+			throw new Exception("Unit is not InvaderUnit!");
+		}
 		unit.Exit();
-		_tdManager.UnitExited(unit);
+		_tdManager.UnitExited((InvaderUnit)unit);
 	}
 }

@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://bjudui5jhrtku"]
+
+[ext_resource type="Script" uid="uid://dltrnewg5aqrv" path="res://_Source/ExplosionVisualEffect.cs" id="1_r3q1s"]
+[ext_resource type="Texture2D" uid="uid://do1ng5pay0vf6" path="res://_Assets/Explosion.png" id="2_on828"]
+
+[node name="ExplosionVisualEffect" type="Node2D" unique_id=856898756]
+script = ExtResource("1_r3q1s")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=124558391]
+texture = ExtResource("2_on828")
