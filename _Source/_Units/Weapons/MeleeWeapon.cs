@@ -6,6 +6,6 @@ public partial class MeleeWeapon : BaseWeapon
 
 	public override void PerformAttack(Unit target, int d)
 	{
-		target.Hit(_damage, _parent);
+		target.Hit(GetDamage(), _parent);
 	}
 }

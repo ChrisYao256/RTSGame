@@ -10,6 +10,8 @@ public partial class LaserWeapon : BaseWeapon
 
 	private float _damageRemainder;
 
+	private bool _beginAttacking = false;
+
 	public override void _Ready()
 	{
 		_tracerLine = GetNode<Line2D>("TracerLine");
@@ -24,13 +26,13 @@ public partial class LaserWeapon : BaseWeapon
 
 	public override void _PhysicsProcess(double delta)
 	{
-		if (_attackTarget is not null)
+		if (_attackTarget is not null && _beginAttacking)
 		{
 			_tracerLine.Visible = true;
 			_tracerLine.SetPointPosition(0, GlobalPosition);
 			_tracerLine.SetPointPosition(1, _attackTarget.GlobalPosition);
 
-			float damageThisFrame = (_damage + _damageModifier) * (float)delta + _damageRemainder;
+			float damageThisFrame = (GetDamage() + _damageModifier) * (float)(1 + _attackSpeedModifier) * (float)delta + _damageRemainder;
 
 			int damageToDeal = Mathf.FloorToInt(damageThisFrame);
 
@@ -51,8 +53,33 @@ public partial class LaserWeapon : BaseWeapon
 		}
 	}
 
+	public override void BeginAttackingTarget(Unit target)
+	{
+		_attackTarget = target;
+		if (_useAttackDelay)
+		{
+			Timer timer = new();
+			timer.WaitTime = GetAttackDelay();
+			timer.Timeout += () => { _beginAttacking = true;  };
+			timer.OneShot = true;
+			AddChild(timer);
+			timer.Start();
+		}
+		else
+		{
+			_beginAttacking = true;
+		}
+	}
+
+	public override void StopAttackingTarget()
+	{
+		base.StopAttackingTarget();
+		_beginAttacking = false;
+	}
+
 	public override void PerformAttack(Unit target, int d)
 	{
 		target.Hit(d , _parent);
+		_parent.OnHitEnemy(target);
 	}
 }

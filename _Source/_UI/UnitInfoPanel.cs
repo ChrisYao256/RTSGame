@@ -4,6 +4,7 @@ using RTSGame.Units;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using static System.Net.Mime.MediaTypeNames;
 
 public partial class UnitInfoPanel : CanvasLayer
 {
@@ -14,15 +15,19 @@ public partial class UnitInfoPanel : CanvasLayer
 	private Label _damageLabel;
 	private Label _cooldownLabel;
 	private Label _dpsLabel;
+	private Label _rangeLabel;
 	private VBoxContainer _effectsContainer;
 	private HBoxContainer _infoContainer;
 	private VBoxContainer _commandContainer;
+	private HBoxContainer _upgradeContainer;
 	private BoxContainer _unitsContainer;
 	private HBoxContainer _hBoxContainer;
 	private PanelContainer _container;
 
 	private List<Unit> _units;
 	private Unit _unit;
+
+	private TDManager _tdManager;
 
 	public override void _Ready()
 	{
@@ -32,10 +37,15 @@ public partial class UnitInfoPanel : CanvasLayer
 		_speedLabel = GetNode<Label>("PanelContainer/HBoxContainer/UnitInfo/SpeedLabel");
 		_damageLabel = GetNode<Label>("PanelContainer/HBoxContainer/UnitInfo/VBoxContainer2/DamageLabel");
 		_cooldownLabel = GetNode<Label>("PanelContainer/HBoxContainer/UnitInfo/VBoxContainer2/CooldownLabel");
+		_rangeLabel = GetNode<Label>("PanelContainer/HBoxContainer/UnitInfo/VBoxContainer2/RangeLabel");
 		_dpsLabel = GetNode<Label>("PanelContainer/HBoxContainer/UnitInfo/VBoxContainer2/DPSLabel");
 		_effectsContainer = GetNode<VBoxContainer>("PanelContainer/HBoxContainer/UnitInfo/Effects");
+
 		_positionLabel = GetNode<Label>("PanelContainer/HBoxContainer/Position");
+		
 		_infoContainer = GetNode<HBoxContainer>("PanelContainer/HBoxContainer/UnitInfo");
+
+		_upgradeContainer = GetNode<HBoxContainer>("PanelContainer/HBoxContainer/Upgrades");
 
 		_commandContainer = GetNode<VBoxContainer>("PanelContainer/HBoxContainer/CommandContainer");
 
@@ -43,6 +53,8 @@ public partial class UnitInfoPanel : CanvasLayer
 
 		_hBoxContainer = GetNode<HBoxContainer>("PanelContainer/HBoxContainer");
 		_container = GetNode<PanelContainer>("PanelContainer");
+
+		_tdManager = GetParent().GetNode<TDManager>("TdManager");
 	}
 
 	// This method will be called by your Selection Manager
@@ -118,7 +130,7 @@ public partial class UnitInfoPanel : CanvasLayer
 			body.QueueFree();
 		}
 
-		foreach (Effect effect in _unit._effects)
+		foreach (EffectResource effect in _unit._effects)
 		{
 			VBoxContainer container = new();
 			Label label_ = new Label();
@@ -129,9 +141,106 @@ public partial class UnitInfoPanel : CanvasLayer
 
 		if (_unit._weapon != null)
 		{
-			_damageLabel.Text = "Weapon Damage: " + _unit._weapon._damage.ToString() + " + " + _unit._weapon._damageModifier.ToString();
-			_cooldownLabel.Text = "Weapon Cooldown: " + _unit._weapon._attackCooldown.ToString();
+			_damageLabel.Text = "Weapon Damage: " + _unit._weapon.GetDamage().ToString();
+			_cooldownLabel.Text = "Weapon Cooldown: " + _unit._weapon.GetCooldown().ToString();
 			_dpsLabel.Text = "DPS: " + _unit._weapon.GetDPS().ToString();
+			_rangeLabel.Text = "Range: " + _unit._weapon.GetRange().ToString();
+		}
+
+		if (_unit is TowerUnit tower)
+		{
+			foreach (Node body in _upgradeContainer.GetChildren())
+			{
+				body.QueueFree();
+			}
+			
+
+			if (!tower._hasFirstUpgrade)
+			{
+				VBoxContainer upgrade = new VBoxContainer();
+				Label cost = new();
+				cost.Text = "$"+ tower._firstUpgradeCost.ToString();
+				upgrade.AddChild(cost);
+
+				Button upgradeButton = new();
+				upgradeButton.Text  = tower._firstUpgrade._effectName;
+				upgradeButton.Pressed += (() => {
+					if (_tdManager._money >= tower._firstUpgradeCost)
+					{
+						_tdManager.SpendMoneyOnTower(tower._firstUpgradeCost);
+						tower.UpgradeFirst();
+					}
+					
+				});
+				upgrade.AddChild(upgradeButton);
+				_upgradeContainer.AddChild(upgrade);
+			}
+			else
+			{
+				if (!tower._hasSecondUpgrade[0])
+				{
+					VBoxContainer upgradeA = new VBoxContainer();
+					Label cost = new();
+					cost.Text = "$" + tower._secondUpgradeACost.ToString();
+					upgradeA.AddChild(cost);
+
+					Button upgradeButton = new();
+					upgradeButton.Text = tower._secondUpgradeA._effectName;
+					upgradeButton.Pressed += (() => {
+						if (_tdManager._money >= tower._secondUpgradeACost)
+						{
+							_tdManager.SpendMoneyOnTower(tower._secondUpgradeACost);
+							tower.UpgradeSecondA();
+						}
+
+					});
+					upgradeA.AddChild(upgradeButton);
+					_upgradeContainer.AddChild(upgradeA);
+				}
+				if (!tower._hasSecondUpgrade[1])
+				{
+					VBoxContainer upgradeB = new VBoxContainer();
+					Label cost = new();
+					cost.Text = "$" + tower._secondUpgradeBCost.ToString();
+					upgradeB.AddChild(cost);
+
+					Button upgradeButton = new();
+					upgradeButton.Text = tower._secondUpgradeB._effectName;
+					upgradeButton.Pressed += (() => {
+						if (_tdManager._money >= tower._secondUpgradeBCost)
+						{
+							_tdManager.SpendMoneyOnTower(tower._secondUpgradeBCost);
+							tower.UpgradeSecondB();
+						}
+
+					});
+					upgradeB.AddChild(upgradeButton);
+					_upgradeContainer.AddChild(upgradeB);
+				}
+				if (!tower._hasSecondUpgrade[2])
+				{
+					VBoxContainer upgradeC = new VBoxContainer();
+					Label cost = new();
+					cost.Text = "$" + tower._secondUpgradeCCost.ToString();
+					upgradeC.AddChild(cost);
+
+					Button upgradeButton = new();
+					upgradeButton.Text = tower._secondUpgradeC._effectName;
+					upgradeButton.Pressed += (() => {
+					if (_tdManager._money >= tower._secondUpgradeCCost)
+					{
+						_tdManager.SpendMoneyOnTower(tower._secondUpgradeCCost);
+						tower.UpgradeSecondC();
+					}
+
+					});
+					upgradeC.AddChild(upgradeButton);
+					_upgradeContainer.AddChild(upgradeC);
+				}
+			}
+
+			
+			_upgradeContainer.Show();
 		}
 
 		//for (int i = _commandContainer.GetChildCount() - 1; i >= 0; i--)
@@ -156,6 +265,7 @@ public partial class UnitInfoPanel : CanvasLayer
 		_unit?.Disconnect(Unit.SignalName.UpdateInfo, Callable.From(UpdateUnitInfo));
 		_unit = null;
 		_infoContainer.Hide();
+		_upgradeContainer.Hide();
 		//_commandContainer.Hide();
 		_unitsContainer.Hide();
 	}

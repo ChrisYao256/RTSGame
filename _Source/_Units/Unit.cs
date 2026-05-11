@@ -28,6 +28,10 @@ public partial class Unit : CharacterBody2D
 
 	[Export] public int _hpMax;
 
+
+	[Export]
+	private Array<EffectResource> _startingEffects;
+
 	public int _hp { get; private set; }
 
 	[Export] public string _name;
@@ -59,6 +63,12 @@ public partial class Unit : CharacterBody2D
 	public delegate void BeginAttackEventHandler(Unit unit, Unit target);
 
 	[Signal]
+	public delegate void StopAttackEventHandler(Unit unit, Unit target);
+
+	[Signal]
+	public delegate void HitEnemyEventHandler(Unit unit, Unit target);
+
+	[Signal]
 	public delegate void UpdateInfoEventHandler(Unit unit);
 
 	public enum State
@@ -75,8 +85,9 @@ public partial class Unit : CharacterBody2D
 	public bool _displayAttackRange;
 	public float _attackRange;
 
-	private Node _effectsNode;
-	public List<Effect> _effects = [];
+	private float _speedModifier;
+
+	public List<EffectResource> _effects = [];
 
 	protected CollisionShape2D _attackCollisionShape;
 
@@ -97,23 +108,42 @@ public partial class Unit : CharacterBody2D
 
 	protected void SetStartingEffects()
 	{
-		_effectsNode = GetNode("Effects");
-		
-		for (int i = 0; i <  _effectsNode.GetChildCount(); i++)
+		foreach (var effect in _startingEffects)
 		{
-			if (_effectsNode.GetChild(i) is Effect effect)
-			{
-				_effects.Add(effect);
-				effect.ConnectSignals(this);
-			}
+			AddEffect(effect);
 		}
 	}
 
-	public void AddEffect(Effect effect)
+	public void AddEffect(EffectResource resource)
 	{
-		_effectsNode.AddChild(effect);
-		_effects.Add(effect);
-		effect.ConnectSignals(this);
+		EffectResource resourceCopy = (EffectResource)resource.Duplicate();
+		_effects.Add(resourceCopy);
+		Effect node = EffectManager.Apply(resourceCopy, this);
+		node.ConnectSignals(this);
+		EmitSignal(SignalName.NewEffect, node);
+		EmitSignal(SignalName.UpdateInfo);
+
+		// Use this to make effects with the same name merge
+		//if (!_effects.Any(e => e._effectName == resource._effectName))
+		//{
+		//	_effects.Add((EffectResource)resource.Duplicate());
+		//	Effect node = EffectManager.Apply(resource, this);
+		//	node.ConnectSignals(this);
+		//	EmitSignal(SignalName.NewEffect, node);
+		//	EmitSignal(SignalName.UpdateInfo);
+		//}
+		//else
+		//{
+		//	EffectResource oldEffect = _effects.First(e => e._effectName == resource._effectName);
+		//	_effects.Remove(oldEffect);
+		//	resource.MergeWithOld(oldEffect);
+		//	AddEffect(resource);
+		//}
+	}
+
+	public EffectResource GetEffect(Type type)
+	{
+		return _effects.First(e => e.GetType() == type);
 	}
 
 	protected void SetWeapon()
@@ -140,7 +170,7 @@ public partial class Unit : CharacterBody2D
 			return;
 		}
 		_attackCollisionShape = GetNode<CollisionShape2D>("AttackArea/AttackAreaCollision");
-		_attackRange = _weapon._range;
+		_attackRange = _weapon.GetRange();
 
 		// CRITICAL: Make the shape unique so changing this unit 
 		// doesn't change every other unit of the same type.
@@ -159,7 +189,7 @@ public partial class Unit : CharacterBody2D
 	protected void SetPathFinder()
 	{
 		_pathfinder = GetNode<UnitPathfinder>("UnitPathfinder");
-		_pathfinder.SetSpeed(_moveSpeed);
+		_pathfinder.SetSpeed(_moveSpeed + _speedModifier);
 		_pathfinder.SetTeamId(_teamId);
 	}
 
@@ -347,9 +377,19 @@ public partial class Unit : CharacterBody2D
 
 	protected void StopAttackingTarget()
 	{
+		Unit oldTarget = _attackTarget;
 		_state = State.Idle;
 		_attackTarget = null;
-		_weapon?.BeginAttackingTarget(null);
+		_weapon?.StopAttackingTarget();
+		if (_weapon is not null)
+		{
+			EmitSignal(SignalName.StopAttack, oldTarget);
+		}
+	}
+
+	public void OnHitEnemy(Unit enemy)
+	{
+		EmitSignal(SignalName.HitEnemy, enemy);
 	}
 
 	public void Hit(int damage, Unit source)
@@ -508,6 +548,61 @@ public partial class Unit : CharacterBody2D
 	{
 		_weapon._damageModifier = damageModifier;
 		EmitSignal(SignalName.UpdateInfo);
+	}
+
+	public void IncreaseWeaponModifier(int change)
+	{
+		SetWeaponModifier(_weapon._damageModifier + change);
+	}
+
+	public void SetWeaponRangeModifier(float range)
+	{
+		_weapon._rangeModifier = range;
+		SetAttackRange();
+		EmitSignal(SignalName.UpdateInfo);
+	}
+
+	public void IncreaseWeaponRangeModifier(float change)
+	{
+		SetWeaponRangeModifier(_weapon._rangeModifier + change);
+	}
+
+	public void SetSpeedModifier(float speed)
+	{
+		if (this is StationaryUnit)
+		{
+			return;
+		}
+		_speedModifier = speed;
+		SetPathFinder();
+		EmitSignal(SignalName.UpdateInfo);
+	}
+
+	public void IncreaseSpeedModifier(float change)
+	{
+		SetSpeedModifier(_speedModifier + change);
+	}
+
+	public void SetAttackSpeedModifier(double speed)
+	{
+		_weapon._attackSpeedModifier = speed;
+		EmitSignal(SignalName.UpdateInfo);
+	}
+
+	public void IncreaseAttackSpeedModifier(double change)
+	{
+		SetAttackSpeedModifier(_weapon._attackSpeedModifier + change);
+	}
+
+	public void SetAttackDelayModifier(double speed)
+	{
+		_weapon._attackDelayModifier = speed;
+		EmitSignal(SignalName.UpdateInfo);
+	}
+
+	public void IncreaseAttackDelayModifier(double change)
+	{
+		SetAttackDelayModifier(_weapon._attackDelayModifier + change);
 	}
 
 	private void UpdateHealthBar(float currentHp, float maxHp)

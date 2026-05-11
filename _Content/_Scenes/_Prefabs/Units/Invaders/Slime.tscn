@@ -8,3 +8,5 @@ _hpDeducted = 1
 _moveSpeed = 75.0
 _hpMax = 50
 _name = "Slime"
+
+[node name="Node" type="Node" parent="Effects" parent_id_path=PackedInt32Array(317912941) index="0" unique_id=1323855175]

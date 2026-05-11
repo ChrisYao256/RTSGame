@@ -3,6 +3,12 @@
 [ext_resource type="PackedScene" uid="uid://yhbw0b164ui2" path="res://_Content/_Scenes/_Prefabs/Units/BaseTower.tscn" id="1_gjvjw"]
 [ext_resource type="Script" uid="uid://b4jva1l23o6su" path="res://_Source/_Units/Spawner.cs" id="2_jar8h"]
 [ext_resource type="Texture2D" uid="uid://bc230321nqto5" path="res://icon.svg" id="3_bs8t2"]
+[ext_resource type="Script" uid="uid://c7ye5bgfhla5e" path="res://_Source/Effects/StatsIncrease/StatsIncreaseResource.cs" id="4_be4ju"]
+
+[sub_resource type="Resource" id="Resource_38tks"]
+script = ExtResource("4_be4ju")
+_effectName = "Upgrade 1"
+metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 
 [node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_gjvjw")]
 script = ExtResource("2_jar8h")
@@ -11,5 +17,8 @@ _spawnAreaRadius = 100.0
 _cost = 2
 _iconTexture = ExtResource("3_bs8t2")
 _description = "Spawns 3 slimes in a small area every turn"
+_firstUpgrade = SubResource("Resource_38tks")
+_firstUpgradeCost = 0
+_secondUpgradeA = null
 LeashDistance = 200.0
 _name = "Slime Spawner"

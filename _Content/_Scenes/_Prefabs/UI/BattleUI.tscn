@@ -51,6 +51,12 @@ layout_mode = 2
 [node name="DamageLabel" type="Label" parent="PanelContainer/HBoxContainer/UnitInfo/VBoxContainer2" unique_id=1991186877]
 layout_mode = 2
 
+[node name="RangeLabel" type="Label" parent="PanelContainer/HBoxContainer/UnitInfo/VBoxContainer2" unique_id=1066977082]
+layout_mode = 2
+
+[node name="Upgrades" type="HBoxContainer" parent="PanelContainer/HBoxContainer" unique_id=134647815]
+layout_mode = 2
+
 [node name="CommandContainer" type="VBoxContainer" parent="PanelContainer/HBoxContainer" unique_id=710287485]
 layout_mode = 2
 alignment = 1

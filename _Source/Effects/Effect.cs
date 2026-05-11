@@ -1,26 +1,33 @@
 using Godot;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices.Marshalling;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RTSGame.Units;
 
 public abstract partial class Effect : Node
 {
-	[Export]
 	public string _effectName;
 
-	[Export]
 	public Texture2D _effectIcon;
 
+	public string _effectDescription;
+
 	protected Unit _parentUnit;
+
+	public Effect(EffectResource resource)
+	{
+		_effectName = resource._effectName;
+		_effectIcon = resource._effectIcon;
+		_effectDescription = resource._effectDescription;
+	}
 
 	public virtual void ConnectSignals(Unit unit)
 	{
 		_parentUnit = unit;
+		OnCreation();
+	}
+
+	protected virtual void OnCreation()
+	{
+
 	}
 
 	protected virtual void OnUnitDied(Unit unit)
@@ -34,6 +41,16 @@ public abstract partial class Effect : Node
 	}
 
 	protected virtual void OnBeginAttack(Unit target)
+	{
+
+	}
+
+	protected virtual void OnStopAttack(Unit target)
+	{
+
+	}
+
+	protected virtual void OnHitEnemy(Unit target)
 	{
 
 	}

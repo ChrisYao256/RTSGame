@@ -3,25 +3,65 @@
 [ext_resource type="PackedScene" uid="uid://yhbw0b164ui2" path="res://_Content/_Scenes/_Prefabs/Units/BaseTower.tscn" id="1_un21u"]
 [ext_resource type="PackedScene" uid="uid://bc7mdwf374doj" path="res://_Content/_Scenes/_Prefabs/Weapons/ProjectileWeapon.tscn" id="2_xhtoo"]
 [ext_resource type="Texture2D" uid="uid://bv5a5sumj7ju2" path="res://_Assets/BombTurret.png" id="2_yhno0"]
+[ext_resource type="Script" uid="uid://c7ye5bgfhla5e" path="res://_Source/Effects/StatsIncrease/StatsIncreaseResource.cs" id="3_83j80"]
 [ext_resource type="PackedScene" uid="uid://bjudui5jhrtku" path="res://_Content/_Scenes/_Prefabs/ExplosionVisualEffect.tscn" id="3_xhtoo"]
+[ext_resource type="Script" uid="uid://ltp3a1v0hhal" path="res://_Source/Effects/ExplosionOnHit/ExplosionOnHitBuffResource.cs" id="4_kdf8p"]
 [ext_resource type="Texture2D" uid="uid://bhp6hhysqixwa" path="res://_Assets/BombTurretBase.png" id="5_83j80"]
+[ext_resource type="Script" uid="uid://bonjif38a25r3" path="res://_Source/Effects/ExplosionOnHit/ExplosionOnHitResource.cs" id="5_ta5e5"]
 [ext_resource type="PackedScene" uid="uid://bol7o0gl5ji8x" path="res://_Content/_Scenes/_Prefabs/Weapons/TurretTurner.tscn" id="6_ta5e5"]
 [ext_resource type="Texture2D" uid="uid://bok5bhu7n00pt" path="res://_Assets/BombTurretTurret.png" id="7_kdf8p"]
 
+[sub_resource type="Resource" id="Resource_ta5e5"]
+script = ExtResource("3_83j80")
+_attackSpeedIncrease = 0.5
+_effectName = "Upgrade 1"
+metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
+
+[sub_resource type="Resource" id="Resource_tlvuk"]
+script = ExtResource("4_kdf8p")
+_explosionDamage = 15
+_effectName = "Stronger Explosive"
+metadata/_custom_type_script = "uid://ltp3a1v0hhal"
+
+[sub_resource type="Resource" id="Resource_0g1g1"]
+script = ExtResource("4_kdf8p")
+_explosionRadius = 25.0
+_effectName = "Wider Explosive"
+metadata/_custom_type_script = "uid://ltp3a1v0hhal"
+
+[sub_resource type="Resource" id="Resource_4vl6b"]
+script = ExtResource("3_83j80")
+_damageIncrease = 30
+_effectName = "Concentrated Explosion"
+metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
+
+[sub_resource type="Resource" id="Resource_kdf8p"]
+script = ExtResource("5_ta5e5")
+_explosionRadius = 50.0
+_explosionDamage = 15
+ExplosionVisualScene = ExtResource("3_xhtoo")
+_effectName = "Explosive"
+metadata/_custom_type_script = "uid://bonjif38a25r3"
+
 [node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_un21u")]
-_cost = 30
+_cost = 40
 _iconTexture = ExtResource("2_yhno0")
 _description = "Slow-firing cannon with AOE damage"
+_firstUpgrade = SubResource("Resource_ta5e5")
+_firstUpgradeCost = 25
+_secondUpgradeA = SubResource("Resource_tlvuk")
+_secondUpgradeACost = 60
+_secondUpgradeB = SubResource("Resource_0g1g1")
+_secondUpgradeBCost = 30
+_secondUpgradeC = SubResource("Resource_4vl6b")
+_secondUpgradeCCost = 45
 LeashDistance = 200.0
+_startingEffects = Array[Object]([SubResource("Resource_kdf8p")])
 _name = "BombTurret"
 
 [node name="WeaponComponent" parent="." index="0" unique_id=2120452932 instance=ExtResource("2_xhtoo")]
 _projectileSpeed = 1000.0
 _projectileRadius = 5.0
-_isExplosive = true
-_explosionRadius = 50.0
-_explosionDamage = 15
-ExplosionVisualScene = ExtResource("3_xhtoo")
 _damage = 30
 _range = 400.0
 _attackDelayLow = 1.0

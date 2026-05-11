@@ -10,12 +10,6 @@ public partial class ProjectileWeapon : BaseWeapon
 	[Export] protected Texture2D _projectileTexture;
 	[Export] protected double _lifeTime;
 	[Export] protected float _projectileRadius;
-
-	[Export] private bool _isExplosive = false;
-	[Export] private float _explosionRadius;
-	[Export] private int _explosionDamage;
-	[Export] public PackedScene ExplosionVisualScene;
-
 	public override void _Ready()
 	{
 		base._Ready();
@@ -31,73 +25,12 @@ public partial class ProjectileWeapon : BaseWeapon
 
 		};
 
-		if (!_isExplosive)
+		dealDamage = new Action<Unit, Projectile>((Unit enemy, Projectile projectile) =>
 		{
-			dealDamage = new Action<Unit, Projectile>((Unit enemy, Projectile projectile) =>
-			{
-				enemy.Hit(_damage, _parent);
-				projectile.QueueFree();
-			});
-		}
-		else
-		{
-			CollisionShape2D explosionCollision = new CollisionShape2D();
-			CircleShape2D explosionCircle = new CircleShape2D();
-			explosionCircle.Radius = _explosionRadius;
-			explosionCollision.Shape = explosionCircle;
-
-			Area2D explosionArea = new Area2D();
-			explosionArea.CollisionMask = 3;
-			explosionArea.AddChild(explosionCollision);
-
-			dealDamage = new Action<Unit, Projectile>((Unit enemy, Projectile projectile) =>
-			{
-				enemy.Hit(_damage, _parent);
-
-				var spaceState = enemy.GetWorld2D().DirectSpaceState;
-
-				// 2. Setup the query parameters
-				var query = new PhysicsShapeQueryParameters2D();
-
-				// Use the shape from your existing explosionArea
-				query.Shape = explosionCircle;
-
-				// Place the query at the impact point
-				query.Transform = new Transform2D(0, enemy.GlobalPosition);
-
-				// Optional: Set collision mask to only hit units (e.g., Layer 2)
-				// query.CollisionMask = 2; 
-
-				// 3. Execute the query
-				var results = spaceState.IntersectShape(query);
-
-				foreach (var result in results)
-				{
-					var collider = result["collider"].As<Node2D>();
-
-					if (collider is Unit unit && unit != enemy && unit._teamId != _parent._teamId)
-					{
-						unit.Hit(_explosionDamage, _parent);
-					}
-				}
-				projectile.QueueFree();
-				if (ExplosionVisualScene != null)
-				{
-					// Create the visual instance
-					var viz = ExplosionVisualScene.Instantiate<Node2D>();
-
-					// Add it to the world (Level), NOT the projectile
-					GetTree().Root.AddChild(viz);
-
-					// Move it to where the hit happened
-					viz.GlobalPosition = enemy.Position;
-
-					// If you want to scale the sprite to match the radius:
-					float radius = _explosionRadius; // Get this from your shape
-					Utils.ScaleVisualToRadius(viz, radius);
-				}
-			});
-		}
+			enemy.Hit(GetDamage(), _parent);
+			_parent.OnHitEnemy(enemy);
+			projectile.QueueFree();
+		});
 
 		Projectile projectile = new(_parent._teamId, _projectileSpeed, _projectileTexture, _lifeTime, _projectileRadius, dealDamage, targetAngle);
 		AddChild(projectile);

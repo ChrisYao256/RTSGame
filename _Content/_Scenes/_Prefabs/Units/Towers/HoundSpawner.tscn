@@ -3,6 +3,12 @@
 [ext_resource type="PackedScene" uid="uid://yhbw0b164ui2" path="res://_Content/_Scenes/_Prefabs/Units/BaseTower.tscn" id="1_hr2c0"]
 [ext_resource type="Script" uid="uid://b4jva1l23o6su" path="res://_Source/_Units/Spawner.cs" id="2_531wn"]
 [ext_resource type="Texture2D" uid="uid://bc230321nqto5" path="res://icon.svg" id="3_12xii"]
+[ext_resource type="Script" uid="uid://c7ye5bgfhla5e" path="res://_Source/Effects/StatsIncrease/StatsIncreaseResource.cs" id="4_531wn"]
+
+[sub_resource type="Resource" id="Resource_12xii"]
+script = ExtResource("4_531wn")
+_effectName = "Upgrade 1"
+metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 
 [node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_hr2c0")]
 script = ExtResource("2_531wn")
@@ -11,5 +17,8 @@ _spawnAreaRadius = 200.0
 _cost = 1
 _iconTexture = ExtResource("3_12xii")
 _description = "Spawns 1 hound in a medium area every turn"
+_firstUpgrade = SubResource("Resource_12xii")
+_firstUpgradeCost = 0
+_secondUpgradeA = null
 LeashDistance = 200.0
 _name = "Hound Spawner"

@@ -34,6 +34,7 @@ public partial class HitscanWeapon : BaseWeapon
 		// Start (or restart) the timer for the set duration
 		_tracerTimer.Start(_tracerDuration);
 
-		target.Hit(_damage, _parent);
+		target.Hit(GetDamage(), _parent);
+		_parent.OnHitEnemy(target);
 	}
 }

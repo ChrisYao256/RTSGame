@@ -4,13 +4,51 @@
 [ext_resource type="PackedScene" uid="uid://cekj6vfjmeih4" path="res://_Content/_Scenes/_Prefabs/Weapons/HitscanWeapon.tscn" id="2_ct57t"]
 [ext_resource type="Texture2D" uid="uid://1ya6poaby1bi" path="res://_Assets/GunTurret.png" id="2_ll7od"]
 [ext_resource type="Texture2D" uid="uid://b0erpa4s84wnd" path="res://_Assets/GunTurretBase.png" id="3_ct57t"]
+[ext_resource type="Script" uid="uid://c7ye5bgfhla5e" path="res://_Source/Effects/StatsIncrease/StatsIncreaseResource.cs" id="3_dbttg"]
 [ext_resource type="PackedScene" uid="uid://bol7o0gl5ji8x" path="res://_Content/_Scenes/_Prefabs/Weapons/TurretTurner.tscn" id="4_sgu7m"]
 [ext_resource type="Texture2D" uid="uid://c30uyptsf2vri" path="res://_Assets/GunTurretTurret.png" id="6_0uk1v"]
+
+[sub_resource type="Resource" id="Resource_7fpxf"]
+script = ExtResource("3_dbttg")
+_damageIncrease = 2
+_rangeIncrease = 20.0
+_effectName = "Upgrade 1"
+metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
+
+[sub_resource type="Resource" id="Resource_dbttg"]
+script = ExtResource("3_dbttg")
+_damageIncrease = 10
+_attackSpeedIncrease = -0.2
+_rangeIncrease = 30.0
+_effectName = "Precision"
+metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
+
+[sub_resource type="Resource" id="Resource_ibxbu"]
+script = ExtResource("3_dbttg")
+_damageIncrease = -1
+_attackSpeedIncrease = 1.0
+_effectName = "Faster Firing"
+metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
+
+[sub_resource type="Resource" id="Resource_n37es"]
+script = ExtResource("3_dbttg")
+_damageIncrease = 8
+_attackSpeedIncrease = 0.2
+_effectName = "Premium bullets"
+metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 
 [node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_e5a7y")]
 _cost = 10
 _iconTexture = ExtResource("2_ll7od")
 _description = "Basic turret. "
+_firstUpgrade = SubResource("Resource_7fpxf")
+_firstUpgradeCost = 10
+_secondUpgradeA = SubResource("Resource_dbttg")
+_secondUpgradeACost = 15
+_secondUpgradeB = SubResource("Resource_ibxbu")
+_secondUpgradeBCost = 15
+_secondUpgradeC = SubResource("Resource_n37es")
+_secondUpgradeCCost = 20
 _hpMax = 1
 _name = "GunTurret"
 

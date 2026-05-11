@@ -1,14 +1,14 @@
+using RTSGame.Units;
+using System;
+using System.Collections.Generic;
 using Godot;
 
-namespace RTSGame.Units;
 public partial class SelfHealing : Effect
 {
 	private Timer _timer;
 
-	[Export]
 	private int _healAmount;
 
-	[Export]
 	private double _healInterval;
 
 	//public SelfHealing(int healAmount, double healInterval)
@@ -17,7 +17,13 @@ public partial class SelfHealing : Effect
 	//	_healInterval = healInterval;
 	//}
 
-	public override void _Ready()
+	public SelfHealing(SelfHealingResource resource) : base(resource)
+	{
+		_healAmount = resource._healAmount;
+		_healInterval = resource._healInterval;
+	}
+
+	protected override void OnCreation()
 	{
 		_timer = new Timer();
 		AddChild(_timer);

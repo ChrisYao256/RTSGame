@@ -53,10 +53,10 @@ public partial class TDManager : Node
 		_base._tdManager = this;
 		_base.CollisionLayer = UnitManager.TowerLayerMask;
 
-		_hp = 10;
+		_hp = 20;
 		_hpLabel.Text = _hp.ToString();
 
-		_money = 60;
+		_money = 100;
 		_moneyLabel.Text = _money.ToString();
 	}
 
