@@ -26,36 +26,37 @@ metadata/_custom_type_script = "uid://dp6ckxy1qef6o"
 [sub_resource type="Resource" id="Resource_d4b7m"]
 script = ExtResource("3_h0vgu")
 _damageIncrease = 100
-_rangeIncrease = 50.0
 _effectName = "High Power"
 metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 
 [sub_resource type="Resource" id="Resource_h8tlq"]
 script = ExtResource("3_h0vgu")
 _damageIncrease = 30
-_attackDelayModifierIncrease = 1.0
+_rangeIncrease = 50.0
+_attackDelayModifierIncrease = 3.0
 _effectName = "Faster Charging"
 metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 
 [node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_mrw2a")]
-_cost = 50
+_cost = 80
 _iconTexture = ExtResource("2_mrw2a")
 _description = "Single target turret with long range"
 _firstUpgrade = SubResource("Resource_odwla")
-_firstUpgradeCost = 25
+_firstUpgradeCost = 40
 _secondUpgradeA = SubResource("Resource_7ewp4")
-_secondUpgradeACost = 60
+_secondUpgradeACost = 120
 _secondUpgradeB = SubResource("Resource_d4b7m")
-_secondUpgradeBCost = 50
+_secondUpgradeBCost = 100
 _secondUpgradeC = SubResource("Resource_h8tlq")
-_secondUpgradeCCost = 40
+_secondUpgradeCCost = 90
 _hpMax = 1
 _startingEffects = Array[Object]([])
 _name = "LaserTurret"
+_radius = 0.0
 
 [node name="WeaponComponent" parent="." index="0" unique_id=2120452932 instance=ExtResource("3_7wgq5")]
-_damage = 40
-_range = 500.0
+_damage = 80
+_range = 300.0
 _attackDelayLow = 1.0
 _attackDelayHigh = 1.0
 _useAttackDelay = true
@@ -67,3 +68,5 @@ texture = ExtResource("4_mrw2a")
 
 [node name="TurretTurner" parent="." index="6" unique_id=113202010 instance=ExtResource("5_7ewp4")]
 _turretTexture = ExtResource("6_7wgq5")
+
+[node name="Effects" type="Node" parent="." index="8" unique_id=1692802782]

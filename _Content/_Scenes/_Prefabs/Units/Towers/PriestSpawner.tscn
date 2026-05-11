@@ -1,0 +1,30 @@
+[gd_scene format=3 uid="uid://cf41gfuhy8t1x"]
+
+[ext_resource type="PackedScene" uid="uid://yhbw0b164ui2" path="res://_Content/_Scenes/_Prefabs/Units/BaseTower.tscn" id="1_fc0yr"]
+[ext_resource type="Script" uid="uid://b4jva1l23o6su" path="res://_Source/_Units/Spawner.cs" id="2_ivq68"]
+[ext_resource type="Texture2D" uid="uid://bc230321nqto5" path="res://icon.svg" id="3_ogl47"]
+[ext_resource type="Script" uid="uid://c7ye5bgfhla5e" path="res://_Source/Effects/StatsIncrease/StatsIncreaseResource.cs" id="4_w05on"]
+
+[sub_resource type="Resource" id="Resource_38tks"]
+script = ExtResource("4_w05on")
+_effectName = "Upgrade 1"
+metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
+
+[node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_fc0yr")]
+script = ExtResource("2_ivq68")
+_units = Array[String](["Priest"])
+_spawnAreaRadius = 100.0
+_cost = 5
+_iconTexture = ExtResource("3_ogl47")
+_description = "Spawns 1 priest in a small area every turn"
+_firstUpgrade = SubResource("Resource_38tks")
+_firstUpgradeCost = 0
+_secondUpgradeA = null
+_secondUpgradeACost = 0
+_secondUpgradeB = null
+_secondUpgradeBCost = 0
+_secondUpgradeC = null
+_secondUpgradeCCost = 0
+LeashDistance = 200.0
+_startingEffects = Array[Object]([])
+_name = "Priest Spawner"

@@ -10,14 +10,14 @@
 
 [sub_resource type="Resource" id="Resource_7fpxf"]
 script = ExtResource("3_dbttg")
-_damageIncrease = 2
+_damageIncrease = 3
 _rangeIncrease = 20.0
 _effectName = "Upgrade 1"
 metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 
 [sub_resource type="Resource" id="Resource_dbttg"]
 script = ExtResource("3_dbttg")
-_damageIncrease = 10
+_damageIncrease = 8
 _attackSpeedIncrease = -0.2
 _rangeIncrease = 30.0
 _effectName = "Precision"
@@ -25,15 +25,15 @@ metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 
 [sub_resource type="Resource" id="Resource_ibxbu"]
 script = ExtResource("3_dbttg")
-_damageIncrease = -1
-_attackSpeedIncrease = 1.0
+_damageIncrease = -2
+_attackSpeedIncrease = 0.8
 _effectName = "Faster Firing"
 metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 
 [sub_resource type="Resource" id="Resource_n37es"]
 script = ExtResource("3_dbttg")
 _damageIncrease = 8
-_attackSpeedIncrease = 0.2
+_attackSpeedIncrease = 0.4
 _effectName = "Premium bullets"
 metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 
@@ -44,18 +44,19 @@ _description = "Basic turret. "
 _firstUpgrade = SubResource("Resource_7fpxf")
 _firstUpgradeCost = 10
 _secondUpgradeA = SubResource("Resource_dbttg")
-_secondUpgradeACost = 15
+_secondUpgradeACost = 20
 _secondUpgradeB = SubResource("Resource_ibxbu")
-_secondUpgradeBCost = 15
+_secondUpgradeBCost = 20
 _secondUpgradeC = SubResource("Resource_n37es")
-_secondUpgradeCCost = 20
+_secondUpgradeCCost = 40
 _hpMax = 1
 _name = "GunTurret"
+_radius = 0.0
 
 [node name="WeaponComponent" parent="." index="0" unique_id=2120452932 instance=ExtResource("2_ct57t")]
 _tracerColor = Color(0.84313726, 0.8039216, 0.7764706, 0.3372549)
 _tracerWidth = 1.0
-_range = 250.0
+_range = 200.0
 _attackCooldown = 0.3
 _attackDelayLow = 0.5
 _attackDelayHigh = 0.5
@@ -67,3 +68,5 @@ texture = ExtResource("3_ct57t")
 
 [node name="TurretTurner" parent="." index="6" unique_id=113202010 instance=ExtResource("4_sgu7m")]
 _turretTexture = ExtResource("6_0uk1v")
+
+[node name="Effects" type="Node" parent="." index="8" unique_id=1692802782]

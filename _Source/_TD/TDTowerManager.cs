@@ -13,7 +13,7 @@ public partial class TDTowerManager : Node2D
 	private VBoxContainer _towersBox;
 	private Grid _grid;
 
-	private List<string> _towers;
+	private Godot.Collections.Array<string> _towers;
 
 	private bool _placementMode = false;
 	private string _towerToPlace;
@@ -35,7 +35,7 @@ public partial class TDTowerManager : Node2D
 		}
 	}
 
-	public void InitializeTowersPanel(List<string> towers, UnitManager unitManager)
+	public void InitializeTowersPanel(Godot.Collections.Array<string> towers, UnitManager unitManager)
 	{
 		_unitManager = unitManager;
 		_towers = towers;

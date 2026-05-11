@@ -23,11 +23,14 @@ public partial class UnitManager : Node2D
 		{ "BombTurret", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/ProjectileTower.tscn") },
 		{ "SlimeSpawner", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/SlimeSpawner.tscn") },
 		{ "HoundSpawner", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/HoundSpawner.tscn") },
+		{ "PriestSpawner", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/PriestSpawner.tscn") },
 
 		// invaders
 		{ "Slime", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Invaders/Slime.tscn") },
 		{ "Hound", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Invaders/Hound.tscn") },
-		{ "MegaSlime",GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Invaders/MegaSlime.tscn")}
+		{ "MegaSlime",GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Invaders/MegaSlime.tscn")},
+		{ "Priest", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Invaders/Priest.tscn")},
+		{ "Archbishop", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Invaders/Archbishop.tscn")},
 	};
 
 	public static uint UnitLayerMask = 2;

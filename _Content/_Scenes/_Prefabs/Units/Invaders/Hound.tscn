@@ -4,6 +4,10 @@
 
 [node name="BaseUnit" unique_id=481801141 instance=ExtResource("1_dafsc")]
 _moneyDropped = 2
-_moveSpeed = 100.0
-_hpMax = 60
+_hpDeducted = 1
+_moveSpeed = 120.0
 _name = "Hound"
+_radius = 16.0
+
+[node name="MainSprite" parent="." index="1" unique_id=701942347]
+scale = Vector2(1, 1)

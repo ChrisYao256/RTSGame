@@ -12,6 +12,8 @@ public partial class LaserWeapon : BaseWeapon
 
 	private bool _beginAttacking = false;
 
+	private Timer _timer;
+
 	public override void _Ready()
 	{
 		_tracerLine = GetNode<Line2D>("TracerLine");
@@ -58,12 +60,12 @@ public partial class LaserWeapon : BaseWeapon
 		_attackTarget = target;
 		if (_useAttackDelay)
 		{
-			Timer timer = new();
-			timer.WaitTime = GetAttackDelay();
-			timer.Timeout += () => { _beginAttacking = true;  };
-			timer.OneShot = true;
-			AddChild(timer);
-			timer.Start();
+			_timer = new();
+			_timer.WaitTime = GetAttackDelay();
+			_timer.Timeout += () => { _beginAttacking = true;  };
+			_timer.OneShot = true;
+			AddChild(_timer);
+			_timer.Start();
 		}
 		else
 		{
@@ -74,6 +76,7 @@ public partial class LaserWeapon : BaseWeapon
 	public override void StopAttackingTarget()
 	{
 		base.StopAttackingTarget();
+		_timer.Stop();
 		_beginAttacking = false;
 	}
 

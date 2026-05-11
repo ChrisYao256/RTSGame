@@ -31,7 +31,7 @@ metadata/_custom_type_script = "uid://ltp3a1v0hhal"
 
 [sub_resource type="Resource" id="Resource_4vl6b"]
 script = ExtResource("3_83j80")
-_damageIncrease = 30
+_damageIncrease = 50
 _effectName = "Concentrated Explosion"
 metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 
@@ -44,26 +44,27 @@ _effectName = "Explosive"
 metadata/_custom_type_script = "uid://bonjif38a25r3"
 
 [node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_un21u")]
-_cost = 40
+_cost = 80
 _iconTexture = ExtResource("2_yhno0")
 _description = "Slow-firing cannon with AOE damage"
 _firstUpgrade = SubResource("Resource_ta5e5")
-_firstUpgradeCost = 25
+_firstUpgradeCost = 50
 _secondUpgradeA = SubResource("Resource_tlvuk")
 _secondUpgradeACost = 60
 _secondUpgradeB = SubResource("Resource_0g1g1")
-_secondUpgradeBCost = 30
+_secondUpgradeBCost = 50
 _secondUpgradeC = SubResource("Resource_4vl6b")
-_secondUpgradeCCost = 45
+_secondUpgradeCCost = 60
 LeashDistance = 200.0
 _startingEffects = Array[Object]([SubResource("Resource_kdf8p")])
 _name = "BombTurret"
+_radius = 0.0
 
 [node name="WeaponComponent" parent="." index="0" unique_id=2120452932 instance=ExtResource("2_xhtoo")]
 _projectileSpeed = 1000.0
 _projectileRadius = 5.0
-_damage = 30
-_range = 400.0
+_damage = 50
+_range = 200.0
 _attackDelayLow = 1.0
 _attackDelayHigh = 1.0
 
@@ -73,3 +74,5 @@ texture = ExtResource("5_83j80")
 
 [node name="TurretTurner" parent="." index="4" unique_id=113202010 instance=ExtResource("6_ta5e5")]
 _turretTexture = ExtResource("7_kdf8p")
+
+[node name="Effects" type="Node" parent="." index="8" unique_id=1692802782]

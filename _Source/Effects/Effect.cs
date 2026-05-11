@@ -2,7 +2,7 @@ using Godot;
 
 namespace RTSGame.Units;
 
-public abstract partial class Effect : Node
+public abstract partial class Effect : Node2D
 {
 	public string _effectName;
 

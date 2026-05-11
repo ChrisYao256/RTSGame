@@ -44,6 +44,10 @@ public abstract partial class BaseWeapon : Node2D
 
 	public virtual void BeginAttackingTarget(Unit target)
 	{
+		if (_attackTarget != null)
+		{
+			throw new Exception("Already have a target!");
+		}
 		_attackTarget = target;
 		if (_useAttackDelay)
 		{

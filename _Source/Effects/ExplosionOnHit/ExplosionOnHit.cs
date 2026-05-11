@@ -72,7 +72,7 @@ public partial class ExplosionOnHit : Effect
 
 			// If you want to scale the sprite to match the radius:
 			float radius = _resource._explosionRadius; // Get this from your shape
-			Utils.ScaleVisualToRadius(viz, radius);
+			Utils.ScaleVisualToRadius(viz.GetNode<Sprite2D>("Sprite2D"), radius);
 		}
 	}
 }

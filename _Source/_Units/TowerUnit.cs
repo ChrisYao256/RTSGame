@@ -1,5 +1,6 @@
 using Godot;
 using Godot.Collections;
+using RTSGame.Source;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,12 +39,15 @@ public partial class TowerUnit : StationaryUnit
 	[Export]
 	public int _secondUpgradeCCost;
 
+	private float _upgradeCostScaling = 1.5f;
+
 	public bool _hasFirstUpgrade = false;
 
 	public List<bool> _hasSecondUpgrade = [false, false, false];
 
 	public override void _Ready()
 	{
+		_radius = TDManager.TileSize / 2f;
 		base._Ready();
 		CollisionLayer = UnitManager.TowerLayerMask;
 		_aiControlled = false;
@@ -58,8 +62,8 @@ public partial class TowerUnit : StationaryUnit
 	public void UpgradeSecondA()
 	{
 		_hasSecondUpgrade[0] = true;
-		_secondUpgradeBCost *= 2;
-		_secondUpgradeCCost *= 2;
+		_secondUpgradeBCost = (int)(_secondUpgradeBCost * _upgradeCostScaling);
+		_secondUpgradeCCost = (int)(_secondUpgradeCCost * _upgradeCostScaling);
 		AddEffect( _secondUpgradeA);
 
 	}
@@ -67,8 +71,8 @@ public partial class TowerUnit : StationaryUnit
 	public void UpgradeSecondB()
 	{
 		_hasSecondUpgrade[1] = true;
-		_secondUpgradeCCost *= 2;
-		_secondUpgradeACost *= 2;
+		_secondUpgradeCCost = (int)(_secondUpgradeCCost * _upgradeCostScaling);
+		_secondUpgradeACost = (int)(_secondUpgradeACost * _upgradeCostScaling);
 		AddEffect(_secondUpgradeB);
 
 	}
@@ -76,8 +80,8 @@ public partial class TowerUnit : StationaryUnit
 	public void UpgradeSecondC()
 	{
 		_hasSecondUpgrade[2] = true;
-		_secondUpgradeBCost *= 2;
-		_secondUpgradeACost *= 2;
+		_secondUpgradeBCost = (int)(_secondUpgradeBCost * _upgradeCostScaling);
+		_secondUpgradeACost = (int)(_secondUpgradeACost * _upgradeCostScaling);
 		AddEffect(_secondUpgradeC);
 
 	}

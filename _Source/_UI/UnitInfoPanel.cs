@@ -12,6 +12,7 @@ public partial class UnitInfoPanel : CanvasLayer
 	private Label _hpLabel;
 	private Label _speedLabel;
 	private Label _positionLabel;
+	private VBoxContainer _weaponContainer;
 	private Label _damageLabel;
 	private Label _cooldownLabel;
 	private Label _dpsLabel;
@@ -35,6 +36,7 @@ public partial class UnitInfoPanel : CanvasLayer
 		_nameLabel = GetNode<Label>("PanelContainer/HBoxContainer/UnitInfo/VBoxContainer/UnitNameLabel");
 		_hpLabel = GetNode<Label>("PanelContainer/HBoxContainer/UnitInfo/VBoxContainer/Hp");
 		_speedLabel = GetNode<Label>("PanelContainer/HBoxContainer/UnitInfo/SpeedLabel");
+		_weaponContainer = GetNode<VBoxContainer>("PanelContainer/HBoxContainer/UnitInfo/VBoxContainer2");
 		_damageLabel = GetNode<Label>("PanelContainer/HBoxContainer/UnitInfo/VBoxContainer2/DamageLabel");
 		_cooldownLabel = GetNode<Label>("PanelContainer/HBoxContainer/UnitInfo/VBoxContainer2/CooldownLabel");
 		_rangeLabel = GetNode<Label>("PanelContainer/HBoxContainer/UnitInfo/VBoxContainer2/RangeLabel");
@@ -141,10 +143,15 @@ public partial class UnitInfoPanel : CanvasLayer
 
 		if (_unit._weapon != null)
 		{
+			_weaponContainer.Show();
 			_damageLabel.Text = "Weapon Damage: " + _unit._weapon.GetDamage().ToString();
 			_cooldownLabel.Text = "Weapon Cooldown: " + _unit._weapon.GetCooldown().ToString();
 			_dpsLabel.Text = "DPS: " + _unit._weapon.GetDPS().ToString();
 			_rangeLabel.Text = "Range: " + _unit._weapon.GetRange().ToString();
+		}
+		else
+		{
+			_weaponContainer.Hide();
 		}
 
 		if (_unit is TowerUnit tower)
@@ -153,24 +160,25 @@ public partial class UnitInfoPanel : CanvasLayer
 			{
 				body.QueueFree();
 			}
-			
+
 
 			if (!tower._hasFirstUpgrade)
 			{
 				VBoxContainer upgrade = new VBoxContainer();
 				Label cost = new();
-				cost.Text = "$"+ tower._firstUpgradeCost.ToString();
+				cost.Text = "$" + tower._firstUpgradeCost.ToString();
 				upgrade.AddChild(cost);
 
 				Button upgradeButton = new();
-				upgradeButton.Text  = tower._firstUpgrade._effectName;
-				upgradeButton.Pressed += (() => {
+				upgradeButton.Text = tower._firstUpgrade._effectName;
+				upgradeButton.Pressed += (() =>
+				{
 					if (_tdManager._money >= tower._firstUpgradeCost)
 					{
 						_tdManager.SpendMoneyOnTower(tower._firstUpgradeCost);
 						tower.UpgradeFirst();
 					}
-					
+
 				});
 				upgrade.AddChild(upgradeButton);
 				_upgradeContainer.AddChild(upgrade);
@@ -186,7 +194,8 @@ public partial class UnitInfoPanel : CanvasLayer
 
 					Button upgradeButton = new();
 					upgradeButton.Text = tower._secondUpgradeA._effectName;
-					upgradeButton.Pressed += (() => {
+					upgradeButton.Pressed += (() =>
+					{
 						if (_tdManager._money >= tower._secondUpgradeACost)
 						{
 							_tdManager.SpendMoneyOnTower(tower._secondUpgradeACost);
@@ -206,7 +215,8 @@ public partial class UnitInfoPanel : CanvasLayer
 
 					Button upgradeButton = new();
 					upgradeButton.Text = tower._secondUpgradeB._effectName;
-					upgradeButton.Pressed += (() => {
+					upgradeButton.Pressed += (() =>
+					{
 						if (_tdManager._money >= tower._secondUpgradeBCost)
 						{
 							_tdManager.SpendMoneyOnTower(tower._secondUpgradeBCost);
@@ -226,12 +236,13 @@ public partial class UnitInfoPanel : CanvasLayer
 
 					Button upgradeButton = new();
 					upgradeButton.Text = tower._secondUpgradeC._effectName;
-					upgradeButton.Pressed += (() => {
-					if (_tdManager._money >= tower._secondUpgradeCCost)
+					upgradeButton.Pressed += (() =>
 					{
-						_tdManager.SpendMoneyOnTower(tower._secondUpgradeCCost);
-						tower.UpgradeSecondC();
-					}
+						if (_tdManager._money >= tower._secondUpgradeCCost)
+						{
+							_tdManager.SpendMoneyOnTower(tower._secondUpgradeCCost);
+							tower.UpgradeSecondC();
+						}
 
 					});
 					upgradeC.AddChild(upgradeButton);
@@ -239,7 +250,7 @@ public partial class UnitInfoPanel : CanvasLayer
 				}
 			}
 
-			
+
 			_upgradeContainer.Show();
 		}
 

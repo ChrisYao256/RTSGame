@@ -8,12 +8,14 @@ script = ExtResource("2_f7a33")
 _healAmount = 1
 _healInterval = 0.05
 _effectName = "Regenerative"
-metadata/_custom_type_script = "uid://dw4xyymjkjw2a"
 
 [node name="BaseUnit" unique_id=481801141 instance=ExtResource("1_4ubmv")]
 _moneyDropped = 50
-_hpDeducted = 10
+_hpDeducted = 20
 _moveSpeed = 50.0
 _hpMax = 2000
-_name = "MegaSlime"
 _startingEffects = Array[Object]([SubResource("Resource_d2hu6")])
+_name = "MegaSlime"
+_radius = 40.0
+
+[node name="Effects" type="Node" parent="." index="7" unique_id=317912941]

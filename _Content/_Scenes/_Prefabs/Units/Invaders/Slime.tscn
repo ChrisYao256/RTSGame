@@ -6,7 +6,9 @@
 _moneyDropped = 1
 _hpDeducted = 1
 _moveSpeed = 75.0
-_hpMax = 50
+_hpMax = 60
 _name = "Slime"
+_radius = 24.0
 
-[node name="Node" type="Node" parent="Effects" parent_id_path=PackedInt32Array(317912941) index="0" unique_id=1323855175]
+[node name="MainSprite" parent="." index="1" unique_id=701942347]
+scale = Vector2(1, 1)

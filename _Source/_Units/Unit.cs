@@ -37,6 +37,9 @@ public partial class Unit : CharacterBody2D
 	[Export] public string _name;
 
 	[Export]
+	protected float _radius = 100f;
+
+	[Export]
 	public int DebugTeamId
 	{
 		get => _teamId;
@@ -104,6 +107,17 @@ public partial class Unit : CharacterBody2D
 		SetHealthBar();
 		SetInitialCommand();
 		SetStartingEffects();
+		SetSize();
+	}
+
+	protected void SetSize()
+	{
+		Sprite2D sprite = GetNode<Sprite2D>("MainSprite");
+		Utils.ScaleVisualToRadius(sprite, _radius);
+		CollisionShape2D collision = GetNode<CollisionShape2D>("CollisionShape2D");
+		CircleShape2D collisionCircle = new CircleShape2D();
+		collisionCircle.Radius = _radius;
+		collision.Shape = collisionCircle;
 	}
 
 	protected void SetStartingEffects()
@@ -366,6 +380,10 @@ public partial class Unit : CharacterBody2D
 
 	protected void BeginAttackingTarget(Unit unit)
 	{
+		if (_state == State.Attacking)
+		{
+			throw new Exception("Already attacking a target!");
+		}
 		_state = State.Attacking;
 		_attackTarget = unit;
 		_weapon?.BeginAttackingTarget(unit);
@@ -495,9 +513,8 @@ public partial class Unit : CharacterBody2D
 			return;
 		}
 
-		// Bug: the for loop picks the furthest unit instead of the nearest, so I've changed this OrderBy to OrderByDescending. 
 		var sortedBodies = bodies
-				.OrderByDescending(body => GlobalPosition.DistanceSquaredTo(body.GlobalPosition))
+				.OrderBy(body => GlobalPosition.DistanceSquaredTo(body.GlobalPosition))
 				.ToList();
 
 		//GD.Print("List: ");
@@ -515,6 +532,7 @@ public partial class Unit : CharacterBody2D
 				if (unit._teamId != _teamId && (_currentCommand is NoCommand || _currentCommand is AttackMove || _currentCommand is AggroedAttackMove))
 				{
 					BeginAttackingTarget(unit);
+					break;
 				}
 			}
 		}

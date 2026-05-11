@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://duss40s7lcad3"]
+
+[ext_resource type="Script" uid="uid://dltrnewg5aqrv" path="res://_Source/ExplosionVisualEffect.cs" id="1_xk5u8"]
+[ext_resource type="Texture2D" uid="uid://cf3lht6ij1jda" path="res://_Assets/HealingCircle.png" id="2_xk5u8"]
+
+[node name="ExplosionVisualEffect" type="Node2D" unique_id=856898756]
+script = ExtResource("1_xk5u8")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=124558391]
+texture = ExtResource("2_xk5u8")

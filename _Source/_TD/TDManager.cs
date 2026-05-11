@@ -1,4 +1,5 @@
 using Godot;
+using Godot.Collections;
 using RTSGame.Units;
 using System;
 using System.Collections.Generic;
@@ -12,9 +13,12 @@ public partial class TDManager : Node
 	[Export]
 	public string MenuPath = "res://_Content/_Scenes/StartScene.tscn";
 
-	private List<string> _availTowerList;
+	[Export]
+	private Array<string> _availTowerList = ["GunTurret", "LaserTurret", "BombTurret", "SlimeSpawner", "HoundSpawner", "PriestSpawner"];
 
-	private Dictionary<int, List<(List<string>, float)>> _waveList;
+	public static float TileSize = 64f;
+
+	private System.Collections.Generic.Dictionary<int, List<(List<string>, float)>> _waveList;
 	public int _waveIndex = 0;
 
 	private UnitManager _unitManager;
@@ -41,23 +45,20 @@ public partial class TDManager : Node
 	{
 		_unitManager = GetParent().GetNode<UnitManager>("UnitManager");
 		_towerManager = GetParent().GetNode<TDTowerManager>("TowerManager");
-
-		_availTowerList = ["GunTurret", "LaserTurret", "BombTurret", "SlimeSpawner", "HoundSpawner"];
 		_towerManager.InitializeTowersPanel(_availTowerList, _unitManager);
 
-		_waveList = new Dictionary<int, List<(List<string>, float)>>{
-			{ 5, [(["MegaSlime"], 1f)]}
+		_waveList = new System.Collections.Generic.Dictionary<int, List<(List<string>, float)>>{
+			{ 5, [(["MegaSlime"], 1f)]},
+			{ 10, [(["Archbishop"], 1f)]},
 		};
 
 		_base = (Exit)(_unitManager.SpawnUnit(_grid.GetExitLocation(), 0, "Exit"));
 		_base._tdManager = this;
 		_base.CollisionLayer = UnitManager.TowerLayerMask;
 
-		_hp = 20;
-		_hpLabel.Text = _hp.ToString();
+		UpdateHp(20);
 
-		_money = 100;
-		_moneyLabel.Text = _money.ToString();
+		UpdateMoney(100);
 	}
 
 	public async void SpawnNextWave()
