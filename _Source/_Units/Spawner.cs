@@ -2,19 +2,20 @@ using Godot;
 using Godot.Collections;
 using RTSGame.Source;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace RTSGame.Units;
 
 public partial class Spawner : TowerUnit
 {
 	[Export]
-	public Array<string> _units = new Array<string>();
+  private SpawnerDataResource _data;
 
 	[Export]
-	public float _spawnAreaRadius = 50f;
+	private double _spawnJitterRadius = 15;
 
 	private TDManager _tdManager;
-	private Grid _grid;
 	private Area2D _spawnArea;
 
 	public override void _Ready()
@@ -22,73 +23,116 @@ public partial class Spawner : TowerUnit
 		base._Ready();
 		_tdManager = GetTree().CurrentScene.GetNode<TDManager>("TdManager");
 		_spawnArea = GetNode<Area2D>("AttackArea");
-		_grid = GetTree().CurrentScene.GetNode<Grid>("TileMapLayer");
+		_data = (SpawnerDataResource)_data.Duplicate();
 	}
 
-	protected override void SetAttackRange()
+	public override void DisplayAttackRange()
 	{
-		_attackCollisionShape = GetNode<CollisionShape2D>("AttackArea/AttackAreaCollision");
-		_attackRange = _spawnAreaRadius;
+		ShowSpawnRange();
+	}
 
-		// CRITICAL: Make the shape unique so changing this unit 
-		// doesn't change every other unit of the same type.
-		if (_attackCollisionShape.Shape is CircleShape2D circle)
-		{
-			circle = (CircleShape2D)circle.Duplicate();
-			circle.Radius = _attackRange;
-			_attackCollisionShape.Shape = circle;
-		}
-		else
-		{
-			throw new Exception("Attack area shape is not a disk");
-		}
+	public override void HideAttackRange()
+	{
+		HideSpawnRange();
 	}
 
 	public void SpawnWave()
 	{
-		foreach (string unit in _units)
+		foreach (string unit in _data._units)
 		{
-			int maxAttempts = 100; // Safety cap to prevent infinite loops
-
-			for (int i = 0; i < maxAttempts; i++)
+			List<Vector2I> validSpawnLocations = [];
+			foreach (Vector2I relativeMapPos in _data._locations)
 			{
-				Vector2 position = GetRandomPositionInCircle(_spawnArea);
-				Vector2I tilePos = _grid.LocalToMap(_grid.ToLocal(position));
-
-				// 3. Check if this tile is a "path"
-				// Option A: Check a custom data layer in TileSet
-				TileData data = _grid.GetCellTileData(tilePos);
+				TileData data = _grid.GetCellTileData(_gridLocation + relativeMapPos);
 				if (data != null && (bool)data.GetCustomData("Path"))
 				{
-					_tdManager.SpawnEnemyFromTower(unit, position);
-					break;
+					validSpawnLocations.Add(_gridLocation + relativeMapPos);
 				}
 			}
-			GD.Print("No valid position found!");
+			if (validSpawnLocations.Count == 0)
+			{
+				return;
+			}
+			int random = GD.RandRange(0, validSpawnLocations.Count - 1);
+			Vector2I gridLocation = validSpawnLocations[random];
+			Vector2 position = _grid.MapToGlobal(gridLocation);
+			float dx = (float)GD.RandRange(-_spawnJitterRadius, _spawnJitterRadius);
+			float dy = (float)GD.RandRange(-_spawnJitterRadius, _spawnJitterRadius);
+			Vector2 jitter = new(dx, dy);
+			InvaderUnit invader = _tdManager.SpawnEnemyFromTower(unit, position + jitter);
+			invader.IncreaseHpMaxModifier(_data._hpBuff);
+			invader.IncreaseSpeedModifier(_data._speedBuff);
+			invader.IncreaseMoneyModifier(_data._moneyBuff);
+			foreach (EffectResource effect in _data._startingEffects)
+			{
+				invader.AddEffect(effect);
+			}
 		}
 	}
 
-	public static Vector2 GetRandomPositionInCircle(Area2D area)
+	public void SetSpawnerEnemies(Array<string> enemies)
 	{
-		var collisionShape = area.GetNode<CollisionShape2D>("AttackAreaCollision");
-		var circleShape = (CircleShape2D)collisionShape.Shape;
-		float radius = circleShape.Radius;
+		_data._units = enemies;
+		EmitSignal(SignalName.UpdateInfo);
+	}
 
-		// 1. Get a random angle (0 to 2*PI)
-		float angle = (float)GD.RandRange(0, Mathf.Tau);
+	public void AddSpawnerEnemies(Array<string> enemies)
+	{
+		SetSpawnerEnemies(_data._units + enemies);
+	}
 
-		// 2. Get a random distance (Square root ensures even distribution)
-		float r = radius * Mathf.Sqrt((float)GD.RandRange(0, 1));
+	public void SetSpawnerHpBuff(float hpBuff)
+	{
+		_data._hpBuff = hpBuff;
+		EmitSignal(SignalName.UpdateInfo);
+	}
 
-		// 3. Convert Polar to Cartesian coordinates
-		Vector2 offset = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * r;
+	public void IncreaseSpawnerHpBuff(float change)
+	{
+		SetSpawnerHpBuff(_data._hpBuff + change);
+	}
 
-		return collisionShape.GlobalPosition + offset;
+	public void SetSpawnerSpeedBuff(float speedBuff)
+	{
+		_data._speedBuff = speedBuff;
+		EmitSignal(SignalName.UpdateInfo);
+	}
+
+	public void IncreaseSpawnerSpeedBuff(float change)
+	{
+		SetSpawnerSpeedBuff(_data._speedBuff + change);
+	}
+
+	public void UpdateSpawnerArea(Array<Vector2I> newArea)
+	{
+		_data._locations = newArea;
+		EmitSignal(SignalName.UpdateInfo);
+	}
+
+	public void SetSpawnerMoneyBuff(int change)
+	{
+		_data._moneyBuff = change;
+		EmitSignal(SignalName.UpdateInfo);
+	}
+
+	public void IncreaseSpawnerMoneyBuff(int change)
+	{
+		SetSpawnerMoneyBuff(_data._moneyBuff + change);
 	}
 
 	public void OnNewWave()
 	{
 		SpawnWave();
+	}
+
+	public void ShowSpawnRange()
+	{
+		_grid.DrawVisualTiles(_data._locations.ToList(), _gridLocation);
+	}
+
+	public void HideSpawnRange()
+	{
+		_grid.HideVisualTiles();
 	}
 }
 

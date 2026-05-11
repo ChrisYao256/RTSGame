@@ -2,29 +2,85 @@
 
 [ext_resource type="PackedScene" uid="uid://yhbw0b164ui2" path="res://_Content/_Scenes/_Prefabs/Units/BaseTower.tscn" id="1_fc0yr"]
 [ext_resource type="Script" uid="uid://b4jva1l23o6su" path="res://_Source/_Units/Spawner.cs" id="2_ivq68"]
+[ext_resource type="Script" uid="uid://cvroohkeaovqw" path="res://_Source/_Units/SpawnerDataResource.cs" id="3_ivq68"]
 [ext_resource type="Texture2D" uid="uid://bc230321nqto5" path="res://icon.svg" id="3_ogl47"]
-[ext_resource type="Script" uid="uid://c7ye5bgfhla5e" path="res://_Source/Effects/StatsIncrease/StatsIncreaseResource.cs" id="4_w05on"]
+[ext_resource type="Script" uid="uid://dj1iuetxsjca2" path="res://_Source/Effects/SpawnerStatsIncrease/SpawnerStatsIncreaseResource.cs" id="5_ivq68"]
+[ext_resource type="Script" uid="uid://of8d3f3k7s7j" path="res://_Source/Effects/NearbyHealing/NearbyHealingResource.cs" id="6_ogl47"]
+[ext_resource type="Script" uid="uid://bwnw1f3ti2dgi" path="res://_Source/Effects/SelfHealing/SelfHealingResource.cs" id="7_cotg0"]
+[ext_resource type="Script" uid="uid://c4pph75db2q3s" path="res://_Source/Effects/NearbySpawnerStatsIncrease/NearbySpawnerStatsIncreaseResource.cs" id="8_7mgh1"]
 
-[sub_resource type="Resource" id="Resource_38tks"]
-script = ExtResource("4_w05on")
-_effectName = "Upgrade 1"
-metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
+[sub_resource type="Resource" id="Resource_ogl47"]
+script = ExtResource("3_ivq68")
+_units = Array[String](["Priest"])
+_locations = Array[Vector2i]([Vector2i(1, 1), Vector2i(1, 0), Vector2i(1, -1), Vector2i(0, 1), Vector2i(0, 0), Vector2i(0, -1), Vector2i(-1, 1), Vector2i(-1, 0), Vector2i(-1, -1)])
+_startingEffects = null
+metadata/_custom_type_script = "uid://cvroohkeaovqw"
+
+[sub_resource type="Resource" id="Resource_w05on"]
+script = ExtResource("5_ivq68")
+_units = Array[String](["Slime"])
+_startingEffects = null
+_effectName = "Extra slime"
+metadata/_custom_type_script = "uid://dj1iuetxsjca2"
+
+[sub_resource type="Resource" id="Resource_cotg0"]
+script = ExtResource("6_ogl47")
+_healAmount = 25
+_healInterval = 2.0
+_radius = 200.0
+_effectName = "Stronger healing"
+metadata/_custom_type_script = "uid://of8d3f3k7s7j"
+
+[sub_resource type="Resource" id="Resource_7mgh1"]
+script = ExtResource("5_ivq68")
+_moneyBuff = 3
+_startingEffects = Array[Object]([SubResource("Resource_cotg0")])
+_effectName = "+$3, Stronger heal"
+metadata/_custom_type_script = "uid://dj1iuetxsjca2"
+
+[sub_resource type="Resource" id="Resource_dolah"]
+script = ExtResource("5_ivq68")
+_hpBuff = 0.5
+_moneyBuff = 3
+_startingEffects = null
+_effectName = "+$3, HpBuff"
+metadata/_custom_type_script = "uid://dj1iuetxsjca2"
+
+[sub_resource type="Resource" id="Resource_eh4s5"]
+script = ExtResource("7_cotg0")
+_healAmount = 1
+_healInterval = 0.1
+metadata/_custom_type_script = "uid://bwnw1f3ti2dgi"
+
+[sub_resource type="Resource" id="Resource_q6qux"]
+script = ExtResource("5_ivq68")
+_moneyBuff = 1
+_startingEffects = Array[Object]([SubResource("Resource_eh4s5")])
+_effectName = "Blessed"
+metadata/_custom_type_script = "uid://dj1iuetxsjca2"
+
+[sub_resource type="Resource" id="Resource_i7vgs"]
+script = ExtResource("8_7mgh1")
+_buffResource = SubResource("Resource_q6qux")
+_area = Array[Vector2i]([Vector2i(1, 1), Vector2i(1, 0), Vector2i(1, -1), Vector2i(0, 1), Vector2i(0, 0), Vector2i(0, -1), Vector2i(-1, 1), Vector2i(-1, 0), Vector2i(-1, -1)])
+_effectName = "Units from nearby towers heal themselves, but drop $1 more. "
+metadata/_custom_type_script = "uid://c4pph75db2q3s"
 
 [node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_fc0yr")]
 script = ExtResource("2_ivq68")
-_units = Array[String](["Priest"])
-_spawnAreaRadius = 100.0
+_data = SubResource("Resource_ogl47")
+_spawnJitterRadius = 15.0
 _cost = 5
 _iconTexture = ExtResource("3_ogl47")
 _description = "Spawns 1 priest in a small area every turn"
-_firstUpgrade = SubResource("Resource_38tks")
-_firstUpgradeCost = 0
-_secondUpgradeA = null
-_secondUpgradeACost = 0
-_secondUpgradeB = null
-_secondUpgradeBCost = 0
-_secondUpgradeC = null
-_secondUpgradeCCost = 0
+_firstUpgrade = SubResource("Resource_w05on")
+_firstUpgradeCost = 1
+_secondUpgradeA = SubResource("Resource_7mgh1")
+_secondUpgradeACost = 3
+_secondUpgradeB = SubResource("Resource_dolah")
+_secondUpgradeBCost = 3
+_secondUpgradeC = SubResource("Resource_i7vgs")
+_secondUpgradeCCost = 5
 LeashDistance = 200.0
 _startingEffects = Array[Object]([])
 _name = "Priest Spawner"

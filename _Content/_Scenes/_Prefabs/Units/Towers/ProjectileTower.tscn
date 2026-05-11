@@ -44,17 +44,17 @@ _effectName = "Explosive"
 metadata/_custom_type_script = "uid://bonjif38a25r3"
 
 [node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_un21u")]
-_cost = 80
+_cost = 60
 _iconTexture = ExtResource("2_yhno0")
 _description = "Slow-firing cannon with AOE damage"
 _firstUpgrade = SubResource("Resource_ta5e5")
-_firstUpgradeCost = 50
+_firstUpgradeCost = 40
 _secondUpgradeA = SubResource("Resource_tlvuk")
-_secondUpgradeACost = 60
+_secondUpgradeACost = 50
 _secondUpgradeB = SubResource("Resource_0g1g1")
 _secondUpgradeBCost = 50
 _secondUpgradeC = SubResource("Resource_4vl6b")
-_secondUpgradeCCost = 60
+_secondUpgradeCCost = 40
 LeashDistance = 200.0
 _startingEffects = Array[Object]([SubResource("Resource_kdf8p")])
 _name = "BombTurret"
@@ -74,5 +74,3 @@ texture = ExtResource("5_83j80")
 
 [node name="TurretTurner" parent="." index="4" unique_id=113202010 instance=ExtResource("6_ta5e5")]
 _turretTexture = ExtResource("7_kdf8p")
-
-[node name="Effects" type="Node" parent="." index="8" unique_id=1692802782]

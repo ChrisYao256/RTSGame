@@ -19,13 +19,13 @@ metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 [sub_resource type="Resource" id="Resource_7ewp4"]
 script = ExtResource("4_odwla")
 _increaseAmount = 40
-_increaseInterval = 5.0
+_increaseInterval = 1.5
 _effectName = "Focus"
 metadata/_custom_type_script = "uid://dp6ckxy1qef6o"
 
 [sub_resource type="Resource" id="Resource_d4b7m"]
 script = ExtResource("3_h0vgu")
-_damageIncrease = 100
+_damageIncrease = 120
 _effectName = "High Power"
 metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 
@@ -42,9 +42,9 @@ _cost = 80
 _iconTexture = ExtResource("2_mrw2a")
 _description = "Single target turret with long range"
 _firstUpgrade = SubResource("Resource_odwla")
-_firstUpgradeCost = 40
+_firstUpgradeCost = 50
 _secondUpgradeA = SubResource("Resource_7ewp4")
-_secondUpgradeACost = 120
+_secondUpgradeACost = 110
 _secondUpgradeB = SubResource("Resource_d4b7m")
 _secondUpgradeBCost = 100
 _secondUpgradeC = SubResource("Resource_h8tlq")
@@ -68,5 +68,3 @@ texture = ExtResource("4_mrw2a")
 
 [node name="TurretTurner" parent="." index="6" unique_id=113202010 instance=ExtResource("5_7ewp4")]
 _turretTexture = ExtResource("6_7wgq5")
-
-[node name="Effects" type="Node" parent="." index="8" unique_id=1692802782]

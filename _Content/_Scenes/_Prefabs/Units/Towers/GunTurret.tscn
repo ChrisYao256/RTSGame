@@ -19,7 +19,6 @@ metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 script = ExtResource("3_dbttg")
 _damageIncrease = 8
 _attackSpeedIncrease = -0.2
-_rangeIncrease = 30.0
 _effectName = "Precision"
 metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 
@@ -34,6 +33,7 @@ metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 script = ExtResource("3_dbttg")
 _damageIncrease = 8
 _attackSpeedIncrease = 0.4
+_rangeIncrease = 30.0
 _effectName = "Premium bullets"
 metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 
@@ -68,5 +68,3 @@ texture = ExtResource("3_ct57t")
 
 [node name="TurretTurner" parent="." index="6" unique_id=113202010 instance=ExtResource("4_sgu7m")]
 _turretTexture = ExtResource("6_0uk1v")
-
-[node name="Effects" type="Node" parent="." index="8" unique_id=1692802782]

@@ -24,9 +24,9 @@ public partial class Unit : CharacterBody2D
 
 	[Export] public float LeashDistance = 200f;
 
-	[Export] public float _moveSpeed;
+	[Export] protected float _moveSpeed;
 
-	[Export] public int _hpMax;
+	[Export] private int _hpMax;
 
 
 	[Export]
@@ -37,7 +37,7 @@ public partial class Unit : CharacterBody2D
 	[Export] public string _name;
 
 	[Export]
-	protected float _radius = 100f;
+	public float _radius = 100f;
 
 	[Export]
 	public int DebugTeamId
@@ -72,6 +72,9 @@ public partial class Unit : CharacterBody2D
 	public delegate void HitEnemyEventHandler(Unit unit, Unit target);
 
 	[Signal]
+	public delegate void PlacedTowerEventHandler(TowerUnit tower);
+
+	[Signal]
 	public delegate void UpdateInfoEventHandler(Unit unit);
 
 	public enum State
@@ -88,7 +91,9 @@ public partial class Unit : CharacterBody2D
 	public bool _displayAttackRange;
 	public float _attackRange;
 
-	private float _speedModifier;
+	public float _speedModifier;
+
+	public float _hpMaxModifier;
 
 	public List<EffectResource> _effects = [];
 
@@ -110,7 +115,7 @@ public partial class Unit : CharacterBody2D
 		SetSize();
 	}
 
-	protected void SetSize()
+	public virtual void SetSize()
 	{
 		Sprite2D sprite = GetNode<Sprite2D>("MainSprite");
 		Utils.ScaleVisualToRadius(sprite, _radius);
@@ -203,17 +208,37 @@ public partial class Unit : CharacterBody2D
 	protected void SetPathFinder()
 	{
 		_pathfinder = GetNode<UnitPathfinder>("UnitPathfinder");
-		_pathfinder.SetSpeed(_moveSpeed + _speedModifier);
+		_pathfinder.SetSpeed(GetSpeed());
 		_pathfinder.SetTeamId(_teamId);
 	}
 
 	protected void SetHealthBar()
 	{
 		_healthBar = GetNode<TextureProgressBar>("HealthBar");
-		_hp = _hpMax;
-		_healthBar.MaxValue = _hpMax;
+		_hp = GetHpMax();
+		_healthBar.MaxValue = GetHpMax();
 		_healthBar.Value = _hp;
-		UpdateHealthBar(_hpMax, _hpMax);
+		UpdateHealthBar(_hp, GetHpMax());
+	}
+
+	private void UpdateHpMax()
+	{
+		float percentage = (float)_hp / (float)_hpMax;
+		_healthBar = GetNode<TextureProgressBar>("HealthBar");
+		_hp = (int)(GetHpMax() * percentage);
+		_healthBar.MaxValue = GetHpMax();
+		_healthBar.Value = _hp;
+		UpdateHealthBar(_hp, GetHpMax());
+	}
+
+	public int GetHpMax()
+	{
+		return  (int)(_hpMax * (1 + _hpMaxModifier));
+	}
+
+	public float GetSpeed()
+	{
+		return _moveSpeed + _speedModifier;
 	}
 
 	protected void SetInitialCommand()
@@ -410,6 +435,11 @@ public partial class Unit : CharacterBody2D
 		EmitSignal(SignalName.HitEnemy, enemy);
 	}
 
+	public void OnPlacedTower(TowerUnit tower)
+	{
+		EmitSignal(SignalName.PlacedTower, tower);
+	}
+
 	public void Hit(int damage, Unit source)
 	{
 		IncreaseHp(-damage);
@@ -434,8 +464,8 @@ public partial class Unit : CharacterBody2D
 	public void IncreaseHp(int change)
 	{
 		_hp += change;
-		_hp = Math.Min(_hp, _hpMax);
-		UpdateHealthBar(_hp, _hpMax);
+		_hp = Math.Min(_hp, GetHpMax());
+		UpdateHealthBar(_hp, GetHpMax());
 		EmitSignal(SignalName.HpChange, change);
 		EmitSignal(SignalName.UpdateInfo);
 	}
@@ -562,6 +592,18 @@ public partial class Unit : CharacterBody2D
 		return false;
 	}
 
+	public void SetHpMaxModifier(float hpModifier)
+	{
+		_hpMaxModifier = hpModifier;
+		EmitSignal(SignalName.UpdateInfo);
+		UpdateHpMax();
+	}
+
+	public void IncreaseHpMaxModifier(float change)
+	{
+		SetHpMaxModifier(_hpMaxModifier + change);
+	}
+
 	public void SetWeaponModifier(int damageModifier)
 	{
 		_weapon._damageModifier = damageModifier;
@@ -637,11 +679,6 @@ public partial class Unit : CharacterBody2D
 		_healthBar.Modulate = criticalColor.Lerp(healthyColor, healthPercent);
 	}
 
-	public void Exit()
-	{
-		Die();
-	}
-
 	protected virtual void Die()
 	{
 		SetProcess(false);
@@ -672,13 +709,13 @@ public partial class Unit : CharacterBody2D
 		}
 	}
 
-	public void DisplayAttackRange()
+	public virtual void DisplayAttackRange()
 	{
 		_displayAttackRange = true;
 		UpdateVisualRange();
 	}
 
-	public void HideAttackRange()
+	public virtual void HideAttackRange()
 	{
 		_displayAttackRange = false;
 		UpdateVisualRange();

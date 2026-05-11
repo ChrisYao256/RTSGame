@@ -123,9 +123,13 @@ public partial class UnitInfoPanel : CanvasLayer
 		//_commandContainer.Show();
 
 		Unit unit = _unit;
+
+		unit.HideAttackRange();
+		unit.DisplayAttackRange();
+
 		_nameLabel.Text = unit._name;
-		_hpLabel.Text = "Hp: " + unit._hp.ToString() + "/" + unit._hpMax.ToString();
-		_speedLabel.Text = "Move speed: " + unit._moveSpeed.ToString();
+		_hpLabel.Text = "Hp: " + unit._hp.ToString() + "/" + unit.GetHpMax().ToString();
+		_speedLabel.Text = "Move speed: " + unit.GetSpeed().ToString();
 
 		foreach (Node body in _effectsContainer.GetChildren())
 		{

@@ -1,0 +1,41 @@
+[gd_resource type="TileSet" format=3 uid="uid://dvtw5c2hlwcre"]
+
+[ext_resource type="Texture2D" uid="uid://b6hubjnjkaq2e" path="res://_Assets/Tile.png" id="1_lovk2"]
+[ext_resource type="Texture2D" uid="uid://ehu2il24wypp" path="res://_Assets/OverlayTile.png" id="1_pkr6j"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_r27g4"]
+resource_name = "World"
+texture = ExtResource("1_lovk2")
+0:0/0 = 0
+0:0/0/custom_data_0 = true
+1:0/0 = 0
+1:0/0/custom_data_1 = true
+2:0/0 = 0
+3:0/0 = 0
+3:0/0/custom_data_1 = true
+3:0/0/custom_data_2 = true
+4:0/0 = 0
+4:0/0/custom_data_1 = true
+4:0/0/custom_data_3 = true
+0:1/0 = 0
+1:1/0 = 0
+2:1/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_5ivv1"]
+resource_name = "Overlay"
+texture = ExtResource("1_pkr6j")
+0:0/0 = 0
+1:0/0 = 0
+2:0/0 = 0
+
+[resource]
+custom_data_layer_0/name = "Buildable"
+custom_data_layer_0/type = 1
+custom_data_layer_1/name = "Path"
+custom_data_layer_1/type = 1
+custom_data_layer_2/name = "Entrance"
+custom_data_layer_2/type = 1
+custom_data_layer_3/name = "Exit"
+custom_data_layer_3/type = 1
+sources/0 = SubResource("TileSetAtlasSource_r27g4")
+sources/1 = SubResource("TileSetAtlasSource_5ivv1")

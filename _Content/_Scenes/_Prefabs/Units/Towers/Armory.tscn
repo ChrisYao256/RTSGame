@@ -1,0 +1,91 @@
+[gd_scene format=3 uid="uid://cx04wmpsiymtq"]
+
+[ext_resource type="PackedScene" uid="uid://yhbw0b164ui2" path="res://_Content/_Scenes/_Prefabs/Units/BaseTower.tscn" id="1_ql2uf"]
+[ext_resource type="Script" uid="uid://b4jva1l23o6su" path="res://_Source/_Units/Spawner.cs" id="2_h13nb"]
+[ext_resource type="Script" uid="uid://cvroohkeaovqw" path="res://_Source/_Units/SpawnerDataResource.cs" id="3_ftiga"]
+[ext_resource type="Texture2D" uid="uid://bc230321nqto5" path="res://icon.svg" id="4_8t0mg"]
+[ext_resource type="Script" uid="uid://dj1iuetxsjca2" path="res://_Source/Effects/SpawnerStatsIncrease/SpawnerStatsIncreaseResource.cs" id="6_ftiga"]
+[ext_resource type="Script" uid="uid://c4pph75db2q3s" path="res://_Source/Effects/NearbySpawnerStatsIncrease/NearbySpawnerStatsIncreaseResource.cs" id="7_8t0mg"]
+
+[sub_resource type="Resource" id="Resource_jssxb"]
+script = ExtResource("3_ftiga")
+_locations = Array[Vector2i]([Vector2i(1, 1), Vector2i(1, 0), Vector2i(1, -1), Vector2i(0, 1), Vector2i(0, 0), Vector2i(0, -1), Vector2i(-1, 1), Vector2i(-1, 0), Vector2i(-1, -1)])
+_startingEffects = null
+metadata/_custom_type_script = "uid://cvroohkeaovqw"
+
+[sub_resource type="Resource" id="Resource_h13nb"]
+script = ExtResource("6_ftiga")
+_hpBuff = -0.2
+_startingEffects = null
+_effectName = "richer"
+metadata/_custom_type_script = "uid://dj1iuetxsjca2"
+
+[sub_resource type="Resource" id="Resource_ftiga"]
+script = ExtResource("7_8t0mg")
+_buffResource = SubResource("Resource_h13nb")
+_area = Array[Vector2i]([Vector2i(1, 1), Vector2i(1, 0), Vector2i(1, -1), Vector2i(0, 1), Vector2i(0, 0), Vector2i(0, -1), Vector2i(-1, 1), Vector2i(-1, 0), Vector2i(-1, -1)])
+_effectName = "-20%Hp"
+metadata/_custom_type_script = "uid://c4pph75db2q3s"
+
+[sub_resource type="Resource" id="Resource_8t0mg"]
+script = ExtResource("6_ftiga")
+_hpBuff = 0.5
+_moneyBuff = 1
+_startingEffects = null
+metadata/_custom_type_script = "uid://dj1iuetxsjca2"
+
+[sub_resource type="Resource" id="Resource_krd5a"]
+script = ExtResource("7_8t0mg")
+_buffResource = SubResource("Resource_8t0mg")
+_area = Array[Vector2i]([Vector2i(1, 1), Vector2i(1, 0), Vector2i(1, -1), Vector2i(0, 1), Vector2i(0, 0), Vector2i(0, -1), Vector2i(-1, 1), Vector2i(-1, 0), Vector2i(-1, -1)])
+_effectName = "+$1, +100% more hp"
+metadata/_custom_type_script = "uid://c4pph75db2q3s"
+
+[sub_resource type="Resource" id="Resource_wh3ql"]
+script = ExtResource("6_ftiga")
+_locations = Array[Vector2i]([Vector2i(1, 1), Vector2i(1, 0), Vector2i(1, -1), Vector2i(0, 1), Vector2i(0, 0), Vector2i(0, -1), Vector2i(-1, 1), Vector2i(-1, 0), Vector2i(-1, -1)])
+_speedBuff = 50.0
+_moneyBuff = 1
+_startingEffects = null
+metadata/_custom_type_script = "uid://dj1iuetxsjca2"
+
+[sub_resource type="Resource" id="Resource_qd4hu"]
+script = ExtResource("7_8t0mg")
+_buffResource = SubResource("Resource_wh3ql")
+_effectName = "+$1, +50% move speed"
+metadata/_custom_type_script = "uid://c4pph75db2q3s"
+
+[sub_resource type="Resource" id="Resource_d1644"]
+script = ExtResource("6_ftiga")
+_hpBuff = 0.5
+_moneyBuff = 1
+_startingEffects = null
+_effectName = "Enhanced armor"
+metadata/_custom_type_script = "uid://dj1iuetxsjca2"
+
+[sub_resource type="Resource" id="Resource_hewn2"]
+script = ExtResource("7_8t0mg")
+_buffResource = SubResource("Resource_d1644")
+_area = Array[Vector2i]([Vector2i(1, 1), Vector2i(1, 0), Vector2i(1, -1), Vector2i(0, 1), Vector2i(0, 0), Vector2i(0, -1), Vector2i(-1, 1), Vector2i(-1, 0), Vector2i(-1, -1)])
+_effectName = "Armor distribution"
+metadata/_custom_type_script = "uid://c4pph75db2q3s"
+
+[node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_ql2uf")]
+script = ExtResource("2_h13nb")
+_data = SubResource("Resource_jssxb")
+_spawnJitterRadius = 15.0
+_cost = 5
+_iconTexture = ExtResource("4_8t0mg")
+_description = "Units from nearby spawners drop $1 more, but have +50% Hp"
+_firstUpgrade = SubResource("Resource_ftiga")
+_firstUpgradeCost = 8
+_secondUpgradeA = SubResource("Resource_ftiga")
+_secondUpgradeACost = 5
+_secondUpgradeB = SubResource("Resource_krd5a")
+_secondUpgradeBCost = 10
+_secondUpgradeC = SubResource("Resource_qd4hu")
+_secondUpgradeCCost = 10
+LeashDistance = 200.0
+_startingEffects = Array[Object]([SubResource("Resource_hewn2")])
+_name = "Armory"
+_radius = 0.0

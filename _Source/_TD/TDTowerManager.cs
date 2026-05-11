@@ -19,6 +19,8 @@ public partial class TDTowerManager : Node2D
 	private string _towerToPlace;
 	private TowerUnit _previewTower;
 
+	private List<TowerUnit> _allTowers = [];
+
 	public override void _Ready()
 	{
 		_rightPanel = GetParent().GetNode<Panel>("RightPanel");
@@ -123,6 +125,10 @@ public partial class TDTowerManager : Node2D
 		_unitManager.UpdatePlayerSelection([]);
 		_placementMode = false;
 		_towerToPlace = "";
+		if (_previewTower is Spawner spawner)
+		{
+			spawner.HideSpawnRange();
+		}
 		_previewTower.QueueFree();
 		_previewTower = null;
 	}
@@ -137,6 +143,12 @@ public partial class TDTowerManager : Node2D
 
 		// Snap the preview to the center of the tile
 		_previewTower.GlobalPosition = _grid.ToGlobal(_grid.MapToLocal(gridCoords));
+		_previewTower._gridLocation = gridCoords;
+
+		if (_previewTower is Spawner spawner)
+		{
+			spawner.ShowSpawnRange();
+		}
 
 		// Check if the tile allows building
 		TileData data = _grid.GetCellTileData(gridCoords);
@@ -170,12 +182,17 @@ public partial class TDTowerManager : Node2D
 	private void PlaceTower(Vector2I gridCoords)
 	{
 		Vector2 position = _grid.ToGlobal(_grid.MapToLocal(gridCoords));
-		Unit newTower = _unitManager.SpawnUnit(position, 0, _towerToPlace, false);
+		TowerUnit newTower = (TowerUnit)_unitManager.SpawnUnit(position, 0, _towerToPlace, false, gridCoords);
 		_tdManager.SpendMoneyOnTower(((TowerUnit)newTower)._cost);
 		if (newTower is Spawner spawner)
 		{
 			_tdManager.Connect(TDManager.SignalName.NewWave, Callable.From(spawner.OnNewWave));
 		}
-		_grid.OccupyCell(gridCoords);
+		_grid.OccupyCell(gridCoords, (TowerUnit)newTower);
+		foreach (TowerUnit tower in _allTowers)
+		{
+			tower.OnPlacedTower(newTower);
+		}
+		_allTowers.Add(newTower);
 	}
 }

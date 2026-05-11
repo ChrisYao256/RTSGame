@@ -18,7 +18,7 @@ public partial class ExplosionOnHit : Effect
 
 	public override void ConnectSignals(Unit unit)
 	{
-		_parentUnit = unit;
+		base.ConnectSignals(unit);
 		unit.Connect(Unit.SignalName.HitEnemy, Callable.From<Unit>(OnHitEnemy));
 	}
 

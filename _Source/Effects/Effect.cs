@@ -54,4 +54,9 @@ public abstract partial class Effect : Node2D
 	{
 
 	}
+
+	protected virtual void OnPlacedTower(TowerUnit tower)
+	{
+
+	}
 }

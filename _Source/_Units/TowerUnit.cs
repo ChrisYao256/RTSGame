@@ -45,12 +45,26 @@ public partial class TowerUnit : StationaryUnit
 
 	public List<bool> _hasSecondUpgrade = [false, false, false];
 
+	public Grid _grid;
+	public Vector2I _gridLocation;
+
 	public override void _Ready()
 	{
 		_radius = TDManager.TileSize / 2f;
+		_grid = GetTree().CurrentScene.GetNode<Grid>("TileMapLayer");
 		base._Ready();
 		CollisionLayer = UnitManager.TowerLayerMask;
 		_aiControlled = false;
+	}
+
+	public override void SetSize()
+	{
+		base.SetSize();
+		if (HasNode("TurretTurner"))
+		{
+			TurretTurner turret = GetNode<TurretTurner>("TurretTurner"); Sprite2D sprite = turret.GetNode<Sprite2D>("Sprite2D");
+			Utils.ScaleVisualToRadius(sprite, _radius);
+		}
 	}
 
 	public void UpgradeFirst()

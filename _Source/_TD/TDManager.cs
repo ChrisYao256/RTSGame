@@ -55,6 +55,8 @@ public partial class TDManager : Node
 		_base = (Exit)(_unitManager.SpawnUnit(_grid.GetExitLocation(), 0, "Exit"));
 		_base._tdManager = this;
 		_base.CollisionLayer = UnitManager.TowerLayerMask;
+		_base._radius = 0.1f;
+		_base.SetSize();
 
 		UpdateHp(20);
 
@@ -109,7 +111,7 @@ public partial class TDManager : Node
 		unit.Connect(Unit.SignalName.Died, Callable.From<Unit>(OnUnitDied));
 	}
 
-	public void SpawnEnemyFromTower(string name, Vector2 position)
+	public InvaderUnit SpawnEnemyFromTower(string name, Vector2 position)
 	{
 		Unit unit = _unitManager.SpawnUnit(position, 1, name, true);
 		GD.Print(name + " Spawned");
@@ -119,17 +121,19 @@ public partial class TDManager : Node
 			unit.AddCommand(new AttackMove(unit, waypoint));
 		}
 		unit.Connect(Unit.SignalName.Died, Callable.From<Unit>(OnUnitDied));
+		return (InvaderUnit)unit;
 	}
 
 	public void UnitExited(InvaderUnit unit)
 	{
+		UpdateMoney(_money - unit._moneyDeducted);
 		UpdateHp(_hp - unit._hpDeducted);
 	}
 
 	private void UpdateHp(int newHp)
 	{
 		_hp = newHp;
-		_hpLabel.Text = "Hp" + _hp.ToString();
+		_hpLabel.Text = "Hp: " + _hp.ToString();
 		if (_hp <= 0)
 		{
 			EndTD();
@@ -156,7 +160,7 @@ public partial class TDManager : Node
 	{
 		if (unit is InvaderUnit invader)
 		{
-			UpdateMoney(_money + invader._moneyDropped);
+			UpdateMoney(_money + invader.GetMoneyDropped());
 		}
 	}
 }

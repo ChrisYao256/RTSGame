@@ -1,20 +1,14 @@
 [gd_scene format=3 uid="uid://cx4pr28vsnkrk"]
 
 [ext_resource type="PackedScene" uid="uid://bqn4h6d52i52" path="res://_Content/_Scenes/_Prefabs/Units/BaseInvaderUnit.tscn" id="1_4ubmv"]
-[ext_resource type="Script" uid="uid://bwnw1f3ti2dgi" path="res://_Source/Effects/SelfHealing/SelfHealingResource.cs" id="2_f7a33"]
-
-[sub_resource type="Resource" id="Resource_d2hu6"]
-script = ExtResource("2_f7a33")
-_healAmount = 1
-_healInterval = 0.05
-_effectName = "Regenerative"
 
 [node name="BaseUnit" unique_id=481801141 instance=ExtResource("1_4ubmv")]
 _moneyDropped = 50
 _hpDeducted = 20
+_moneyDeducted = 1
 _moveSpeed = 50.0
 _hpMax = 2000
-_startingEffects = Array[Object]([SubResource("Resource_d2hu6")])
+_startingEffects = Array[Object]([])
 _name = "MegaSlime"
 _radius = 40.0
 

@@ -24,6 +24,7 @@ public partial class UnitManager : Node2D
 		{ "SlimeSpawner", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/SlimeSpawner.tscn") },
 		{ "HoundSpawner", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/HoundSpawner.tscn") },
 		{ "PriestSpawner", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/PriestSpawner.tscn") },
+		{ "Armory", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/Armory.tscn") },
 
 		// invaders
 		{ "Slime", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Invaders/Slime.tscn") },
@@ -393,7 +394,7 @@ public partial class UnitManager : Node2D
 		_unitInfoPanel.UpdateSelectedUnits(newSelection);
 	}
 
-	public Unit SpawnUnit(Vector2 position, int teamId, string unitName, bool aiControlled = true)
+	public Unit SpawnUnit(Vector2 position, int teamId, string unitName, bool aiControlled = true, Vector2I? gridLocation = null)
 	{
 		if (UnitLibrary.TryGetValue(unitName, out PackedScene scene))
 		{
@@ -405,6 +406,11 @@ public partial class UnitManager : Node2D
 			newUnit._aiControlled = aiControlled;
 
 			newUnit.Died += OnUnitDied;
+
+			if (gridLocation is not null && newUnit is TowerUnit tower)
+			{
+				tower._gridLocation = (Vector2I)gridLocation;
+			}
 
 			AddChild(newUnit);
 
