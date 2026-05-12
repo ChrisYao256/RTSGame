@@ -19,8 +19,8 @@ public partial class StatsIncrease : Effect
 	{
 		_parentUnit.IncreaseWeaponModifier(_resource._damageIncrease);
 		_parentUnit.IncreaseWeaponRangeModifier(_resource._rangeIncrease);
-		_parentUnit.IncreaseSpeedModifier(_resource._speedIncrease);
 		_parentUnit.IncreaseAttackSpeedModifier(_resource._attackSpeedIncrease);
+		_parentUnit.IncreaseSpeedModifier(_resource._speedIncrease);
 		_parentUnit.IncreaseAttackDelayModifier(_resource._attackDelayModifierIncrease);
 	}
 }

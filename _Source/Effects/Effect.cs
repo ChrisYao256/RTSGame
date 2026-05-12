@@ -4,19 +4,17 @@ namespace RTSGame.Units;
 
 public abstract partial class Effect : Node2D
 {
-	public string _effectName;
+	//public string _effectName;
 
-	public Texture2D _effectIcon;
+	//public Texture2D _effectIcon;
 
-	public string _effectDescription;
+	//public string _effectDescription;
 
 	protected Unit _parentUnit;
 
 	public Effect(EffectResource resource)
 	{
-		_effectName = resource._effectName;
-		_effectIcon = resource._effectIcon;
-		_effectDescription = resource._effectDescription;
+		resource.SetDescription();
 	}
 
 	public virtual void ConnectSignals(Unit unit)

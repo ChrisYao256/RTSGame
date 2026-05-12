@@ -16,6 +16,11 @@ public partial class NearbyHealingResource : EffectResource
 	[Export]
 	public PackedScene _healingVisualScene;
 
+	public override void SetDescription()
+	{
+		_effectDescription = "Heals all units in a " + _radius + " radius for " + _healAmount + " every " + _healInterval + " seconds";
+	}
+
 	public override Effect CreateNode()
 	{
 		return new NearbyHealing(this);

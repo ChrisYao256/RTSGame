@@ -17,6 +17,7 @@ public partial class NearbyHealing : Effect
 	public NearbyHealing(NearbyHealingResource resource) : base(resource)
 	{
 		_resource = resource;
+		_resource._effectDescription = "Heals all nearby friendly units in a " + _resource._radius + " radius for " + _resource._healAmount + " every " + _resource._healInterval + " seconds.";
 	}
 
 	protected override void OnCreation()

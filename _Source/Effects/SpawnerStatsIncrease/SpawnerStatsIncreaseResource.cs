@@ -31,6 +31,48 @@ public partial class SpawnerStatsIncreaseResource : EffectResource
 	[Export]
 	public Array<EffectResource> _startingEffects;
 
+	public override void SetDescription()
+	{
+		_effectDescription = "";
+		if (_units != null && _units.Count > 0)
+		{
+			
+			_effectDescription += "Spawns " + _units.Count + " extra enemies.\n";
+		}
+
+		if (_hpBuff != 0)
+		{
+			
+			_effectDescription += "Increase spawned enemy HP by " + _hpBuff + "\n";
+		}
+
+		if (_speedBuff != 0)
+		{
+			
+			_effectDescription += "Increase spawned enemy speed by " + _speedBuff + "\n";
+		}
+
+		if (_moneyBuff != 0)
+		{
+			
+			_effectDescription += "Increase spawned enemy gold drop by " + _moneyBuff + "\n";
+		}
+		if (_locations.Count > 0)
+		{
+			
+			_effectDescription += "Changes spawning area \n";
+		}
+		if (_startingEffects.Count > 0)
+		{
+			_effectDescription += "Gives spawned units the following effects: \n";
+			foreach (EffectResource effect in _startingEffects)
+			{
+				effect.SetDescription();
+				_effectDescription += effect._effectDescription + "\n";
+			}
+		}
+	}
+
 	public override Effect CreateNode()
 	{
 		return new SpawnerStatsIncrease(this);

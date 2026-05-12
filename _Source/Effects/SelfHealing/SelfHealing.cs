@@ -7,29 +7,24 @@ public partial class SelfHealing : Effect
 {
 	private Timer _timer;
 
-	private int _healAmount;
+	//private int _healAmount;
 
-	private double _healInterval;
+	//private double _healInterval;
 
-	//public SelfHealing(int healAmount, double healInterval)
-	//{
-	//	_healAmount = healAmount;
-	//	_healInterval = healInterval;
-	//}
+	SelfHealingResource _resource;
 
 	public SelfHealing(SelfHealingResource resource) : base(resource)
 	{
-		_healAmount = resource._healAmount;
-		_healInterval = resource._healInterval;
+		_resource = resource;
 	}
 
 	protected override void OnCreation()
 	{
 		_timer = new Timer();
 		AddChild(_timer);
-		_timer.WaitTime = _healInterval;
+		_timer.WaitTime = _resource._healInterval;
 		_timer.OneShot = false;
-		_timer.Timeout += () => _parentUnit.IncreaseHp(_healAmount);
+		_timer.Timeout += () => _parentUnit.IncreaseHp(_resource._healAmount);
 		_timer.Start();
 	}
 }

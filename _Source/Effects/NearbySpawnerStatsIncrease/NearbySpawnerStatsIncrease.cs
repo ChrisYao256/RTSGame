@@ -11,6 +11,7 @@ public partial class NearbySpawnerStatsIncrease : Effect
 	public NearbySpawnerStatsIncrease(NearbySpawnerStatsIncreaseResource resource) : base(resource)
 	{
 		_resource = resource;
+		
 	}
 
 	public override void ConnectSignals(Unit unit)

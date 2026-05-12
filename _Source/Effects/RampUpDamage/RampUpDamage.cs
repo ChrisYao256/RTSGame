@@ -5,11 +5,7 @@ public partial class RampUpDamage : Effect
 {
 	private Timer _timer;
 
-	private int _increaseAmount;
-
-	private double _increaseInterval;
-
-	private bool _oneTime;
+	private RampUpDamageResource _resource;
 
 	private int _oldModifier;
 
@@ -21,9 +17,7 @@ public partial class RampUpDamage : Effect
 
 	public RampUpDamage(RampUpDamageResource resource) : base(resource)
 	{
-		_increaseAmount = resource._increaseAmount;
-		_increaseInterval = resource._increaseInterval;
-		_oneTime = resource._oneTime;
+		_resource = resource;
 	}
 
 	public override void ConnectSignals(Unit unit)
@@ -41,9 +35,9 @@ public partial class RampUpDamage : Effect
 		_timer?.QueueFree();
 		_timer = new Timer();
 		AddChild(_timer);
-		_timer.WaitTime = _increaseInterval;
-		_timer.OneShot = _oneTime;
-		_timer.Timeout += () => _parentUnit.IncreaseWeaponModifier(_increaseAmount);
+		_timer.WaitTime = _resource._increaseInterval;
+		_timer.OneShot = _resource._oneTime;
+		_timer.Timeout += () => _parentUnit.IncreaseWeaponModifier(_resource._increaseAmount);
 		_timer.Start();
 	}
 

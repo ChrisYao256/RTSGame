@@ -17,7 +17,7 @@ public partial class UnitInfoPanel : CanvasLayer
 	private Label _cooldownLabel;
 	private Label _dpsLabel;
 	private Label _rangeLabel;
-	private VBoxContainer _effectsContainer;
+	private HBoxContainer _effectsContainer;
 	private HBoxContainer _infoContainer;
 	private VBoxContainer _commandContainer;
 	private HBoxContainer _upgradeContainer;
@@ -41,7 +41,7 @@ public partial class UnitInfoPanel : CanvasLayer
 		_cooldownLabel = GetNode<Label>("PanelContainer/HBoxContainer/UnitInfo/VBoxContainer2/CooldownLabel");
 		_rangeLabel = GetNode<Label>("PanelContainer/HBoxContainer/UnitInfo/VBoxContainer2/RangeLabel");
 		_dpsLabel = GetNode<Label>("PanelContainer/HBoxContainer/UnitInfo/VBoxContainer2/DPSLabel");
-		_effectsContainer = GetNode<VBoxContainer>("PanelContainer/HBoxContainer/UnitInfo/Effects");
+		_effectsContainer = GetNode<HBoxContainer>("PanelContainer/HBoxContainer/UnitInfo/Effects");
 
 		_positionLabel = GetNode<Label>("PanelContainer/HBoxContainer/Position");
 		
@@ -139,9 +139,8 @@ public partial class UnitInfoPanel : CanvasLayer
 		foreach (EffectResource effect in _unit._effects)
 		{
 			VBoxContainer container = new();
-			Label label_ = new Label();
-			label_.Text = effect._effectName;
-			container.AddChild(label_);
+			HoverInfoLabel effectName = effect.MakeEffectTooltip(false);
+			container.AddChild(effectName);
 			_effectsContainer.AddChild(container);
 		}
 
@@ -173,8 +172,8 @@ public partial class UnitInfoPanel : CanvasLayer
 				cost.Text = "$" + tower._firstUpgradeCost.ToString();
 				upgrade.AddChild(cost);
 
-				Button upgradeButton = new();
-				upgradeButton.Text = tower._firstUpgrade._effectName;
+				tower._firstUpgrade.SetDescription();
+				Button upgradeButton = tower._firstUpgrade.MakeEffectTooltip(true);
 				upgradeButton.Pressed += (() =>
 				{
 					if (_tdManager._money >= tower._firstUpgradeCost)
@@ -196,8 +195,8 @@ public partial class UnitInfoPanel : CanvasLayer
 					cost.Text = "$" + tower._secondUpgradeACost.ToString();
 					upgradeA.AddChild(cost);
 
-					Button upgradeButton = new();
-					upgradeButton.Text = tower._secondUpgradeA._effectName;
+					tower._secondUpgradeA.SetDescription();
+					Button upgradeButton = tower._secondUpgradeA.MakeEffectTooltip(true);
 					upgradeButton.Pressed += (() =>
 					{
 						if (_tdManager._money >= tower._secondUpgradeACost)
@@ -217,8 +216,8 @@ public partial class UnitInfoPanel : CanvasLayer
 					cost.Text = "$" + tower._secondUpgradeBCost.ToString();
 					upgradeB.AddChild(cost);
 
-					Button upgradeButton = new();
-					upgradeButton.Text = tower._secondUpgradeB._effectName;
+					tower._secondUpgradeB.SetDescription();
+					Button upgradeButton = tower._secondUpgradeB.MakeEffectTooltip(true); 
 					upgradeButton.Pressed += (() =>
 					{
 						if (_tdManager._money >= tower._secondUpgradeBCost)
@@ -238,8 +237,8 @@ public partial class UnitInfoPanel : CanvasLayer
 					cost.Text = "$" + tower._secondUpgradeCCost.ToString();
 					upgradeC.AddChild(cost);
 
-					Button upgradeButton = new();
-					upgradeButton.Text = tower._secondUpgradeC._effectName;
+					tower._secondUpgradeC.SetDescription();
+				 Button upgradeButton = tower._secondUpgradeC.MakeEffectTooltip(true);
 					upgradeButton.Pressed += (() =>
 					{
 						if (_tdManager._money >= tower._secondUpgradeCCost)

@@ -8,6 +8,11 @@ public partial class ExplosionOnHitResource : EffectResource
 	[Export] public int _explosionDamage;
 	[Export] public PackedScene ExplosionVisualScene;
 
+	public override void SetDescription()
+	{
+		_effectDescription = "Every hit causes an explosion, dealing " + _explosionDamage.ToString() + " damage to all nearby enemies in a " + _explosionRadius + " radius.";
+	}
+
 	public override Effect CreateNode()
 	{
 		return new ExplosionOnHit(this);
