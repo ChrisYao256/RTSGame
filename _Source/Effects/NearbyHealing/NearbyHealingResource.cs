@@ -16,9 +16,12 @@ public partial class NearbyHealingResource : EffectResource
 	[Export]
 	public PackedScene _healingVisualScene;
 
+	[Export]
+	public bool _isShield;
+
 	public override void SetDescription()
 	{
-		_effectDescription = "Heals all units in a " + _radius + " radius for " + _healAmount + " every " + _healInterval + " seconds";
+		_effectDescription = $"{(_isShield? "Shields" : "Heals")} all units in a " + _radius + " radius for " + _healAmount + " every " + _healInterval + " seconds";
 	}
 
 	public override Effect CreateNode()

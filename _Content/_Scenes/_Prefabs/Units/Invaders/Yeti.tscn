@@ -1,0 +1,41 @@
+[gd_scene format=3 uid="uid://dwua5uu6g5hxb"]
+
+[ext_resource type="PackedScene" uid="uid://bqn4h6d52i52" path="res://_Content/_Scenes/_Prefabs/Units/BaseInvaderUnit.tscn" id="1_7qlbt"]
+[ext_resource type="Script" uid="uid://dlf3d2oy6u4uv" path="res://_Source/Effects/SlowAttack/SlowAttackResource.cs" id="2_7qlbt"]
+[ext_resource type="Script" uid="uid://l43pmp147h4r" path="res://_Source/Effects/DebuffNearbyTowers/DebuffNearbyTowersResource.cs" id="2_a54bf"]
+[ext_resource type="PackedScene" uid="uid://clrw6q0tvt2a8" path="res://_Content/_Scenes/_Prefabs/SlowVisualScene.tscn" id="3_h4fil"]
+[ext_resource type="PackedScene" uid="uid://dxg1cx6w8moqv" path="res://_Content/_Scenes/_Prefabs/Weapons/MeleeWeapon.tscn" id="4_mignd"]
+
+[sub_resource type="Resource" id="Resource_h4fil"]
+script = ExtResource("2_7qlbt")
+_percentDecrease = 0.5
+_time = 1.0
+metadata/_custom_type_script = "uid://dlf3d2oy6u4uv"
+
+[sub_resource type="Resource" id="Resource_7qlbt"]
+script = ExtResource("2_a54bf")
+_debuff = SubResource("Resource_h4fil")
+_radius = 200.0
+_period = 1.0
+_slowVisualScene = ExtResource("3_h4fil")
+metadata/_custom_type_script = "uid://l43pmp147h4r"
+
+[node name="BaseUnit" unique_id=481801141 instance=ExtResource("1_7qlbt")]
+_moneyDropped = 6
+_hpDeducted = 2
+_moneyDeducted = 0
+_moveSpeed = 50.0
+_hpMax = 300
+_armor = 1
+_startingEffects = Array[Object]([SubResource("Resource_7qlbt")])
+_internalName = "Yeti"
+_name = "Yeti"
+_radius = 32.0
+
+[node name="WeaponComponent" parent="." index="0" unique_id=2120452932 instance=ExtResource("4_mignd")]
+
+[node name="HealthBar" parent="." index="6" unique_id=640038315]
+offset_left = -24.0
+offset_top = -32.0
+offset_right = 24.0
+offset_bottom = -20.0

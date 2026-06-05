@@ -82,7 +82,7 @@ public partial class LaserWeapon : BaseWeapon
 
 	public override void PerformAttack(Unit target, int d)
 	{
-		target.Hit(d , _parent);
+		target.Hit(d , _parent, true);
 		_parent.OnHitEnemy(target);
 	}
 }

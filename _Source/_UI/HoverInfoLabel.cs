@@ -3,26 +3,39 @@ using System.Drawing;
 
 public partial class HoverInfoLabel : Button
 {
-	public Control PopupBox;
+	public Control _popupBox;
 
 	public override void _Ready()
 	{
 		MouseEntered += () => SetPopupVisibility(true);
 		MouseExited += () => SetPopupVisibility(false);
+		CheckForMouseOverlap();
+	}
+
+	private void CheckForMouseOverlap()
+	{
+		Vector2 mousePosition = GetGlobalMousePosition();
+
+		Rect2 globalRect = new Rect2(GlobalPosition, Size);
+
+		if (globalRect.HasPoint(mousePosition))
+		{
+			SetPopupVisibility(true);
+		}
 	}
 
 	private void SetPopupVisibility(bool visible)
 	{
-		if (PopupBox == null) return;
+		if (_popupBox == null) return;
 
 		if (visible)
 		{
-			PopupBox.Visible = true;
+			_popupBox.Visible = true;
 			UpdatePopupPosition();
 		}
 		else
 		{
-			PopupBox.Visible = false;
+			_popupBox.Visible = false;
 		}
 	}
 
@@ -31,7 +44,7 @@ public partial class HoverInfoLabel : Button
 		Vector2 screenSize = GetViewportRect().Size;
 		Vector2 triggerPos = GlobalPosition;
 		Vector2 triggerSize = Size;
-		Vector2 popupSize = PopupBox.Size;
+		Vector2 popupSize = _popupBox.Size;
 
 		// Default position: Directly below the label
 		float x = triggerPos.X;
@@ -55,6 +68,6 @@ public partial class HoverInfoLabel : Button
 		x = Mathf.Max(x, 10);
 		y = Mathf.Max(y, 10);
 
-		PopupBox.GlobalPosition = new Vector2(x, y);
+		_popupBox.GlobalPosition = new Vector2(x, y);
 	}
 }

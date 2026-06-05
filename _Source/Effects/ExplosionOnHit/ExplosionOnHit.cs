@@ -24,14 +24,8 @@ public partial class ExplosionOnHit : Effect
 
 	protected override void OnHitEnemy(Unit enemy)
 	{
-		CollisionShape2D explosionCollision = new CollisionShape2D();
 		CircleShape2D explosionCircle = new CircleShape2D();
 		explosionCircle.Radius = _resource._explosionRadius;
-		explosionCollision.Shape = explosionCircle;
-
-		Area2D explosionArea = new Area2D();
-		explosionArea.CollisionMask = 3;
-		explosionArea.AddChild(explosionCollision);
 
 		var spaceState = enemy.GetWorld2D().DirectSpaceState;
 

@@ -1,0 +1,127 @@
+[gd_scene format=3 uid="uid://d1bvi4p2i4tbe"]
+
+[ext_resource type="PackedScene" uid="uid://yhbw0b164ui2" path="res://_Content/_Scenes/_Prefabs/Units/BaseTower.tscn" id="1_22s5n"]
+[ext_resource type="Texture2D" uid="uid://bms1krdspg4es" path="res://_Assets/FlameTurret.png" id="2_6wrck"]
+[ext_resource type="Script" uid="uid://c7ye5bgfhla5e" path="res://_Source/Effects/StatsIncrease/StatsIncreaseResource.cs" id="3_geji6"]
+[ext_resource type="Script" uid="uid://dafcorp34tb4a" path="res://_Source/Effects/DamageOverTime/DamageOverTimeBuffResource.cs" id="4_geji6"]
+[ext_resource type="Script" uid="uid://dtpcxn7d2dqcy" path="res://_Source/Effects/EffectResource.cs" id="4_jjii2"]
+[ext_resource type="Script" uid="uid://6ysk040uxhpj" path="res://_Source/Effects/DebuffOnHit/DebuffOnHitBuffResource.cs" id="5_jjii2"]
+[ext_resource type="Script" uid="uid://fdug3yybl4s5" path="res://_Source/Effects/AdjacencyTransform/AdjacencyTransformResource.cs" id="5_kl4k3"]
+[ext_resource type="Script" uid="uid://dxi5nbbsr1isf" path="res://_Source/Effects/DamageOverTime/DamageOverTimeResource.cs" id="6_6wrck"]
+[ext_resource type="PackedScene" uid="uid://ynqfp128ardg" path="res://_Content/_Scenes/_Prefabs/Weapons/ZoneWeapon.tscn" id="6_le7hc"]
+[ext_resource type="Script" uid="uid://cxg3f5ateuini" path="res://_Source/Effects/DebuffOnHit/DebuffOnHitResource.cs" id="7_geji6"]
+[ext_resource type="Texture2D" uid="uid://bgv17tb1w3qtl" path="res://_Assets/FlameTurretBase.png" id="9_6wrck"]
+[ext_resource type="PackedScene" uid="uid://bol7o0gl5ji8x" path="res://_Content/_Scenes/_Prefabs/Weapons/TurretTurner.tscn" id="9_s7m3k"]
+[ext_resource type="Texture2D" uid="uid://br7cpvpv5qogr" path="res://_Assets/FlameTurretTurret.png" id="11_6wrck"]
+
+[sub_resource type="Resource" id="Resource_cmo3r"]
+script = ExtResource("3_geji6")
+_damageIncrease = 15
+metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
+
+[sub_resource type="Resource" id="Resource_6wr3n"]
+script = ExtResource("4_geji6")
+_damage = 5
+_time = 1.0
+metadata/_custom_type_script = "uid://dafcorp34tb4a"
+
+[sub_resource type="Resource" id="Resource_arvu4"]
+script = ExtResource("5_jjii2")
+_debuffs = Array[Object]([SubResource("Resource_6wr3n")])
+metadata/_custom_type_script = "uid://6ysk040uxhpj"
+
+[sub_resource type="Resource" id="Resource_ibxbu"]
+script = ExtResource("3_geji6")
+_damageIncrease = 18
+_effectName = "Faster Firing"
+metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
+
+[sub_resource type="ConvexPolygonShape2D" id="ConvexPolygonShape2D_6wrck"]
+points = PackedVector2Array(100, 50, 120, 50, 170, 0, 120, -50, 100, -50, 0, 0)
+
+[sub_resource type="Resource" id="Resource_n37es"]
+script = ExtResource("3_geji6")
+_rangeIncrease = 20.0
+_newZone = SubResource("ConvexPolygonShape2D_6wrck")
+_effectName = "Premium bullets"
+metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
+
+[sub_resource type="Resource" id="Resource_yglny"]
+script = ExtResource("3_geji6")
+_attackSpeedIncrease = 0.5
+metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
+
+[sub_resource type="Resource" id="Resource_jjii2"]
+script = ExtResource("4_geji6")
+_damage = 30
+_time = 2.0
+metadata/_custom_type_script = "uid://dafcorp34tb4a"
+
+[sub_resource type="Resource" id="Resource_s7m3k"]
+script = ExtResource("5_jjii2")
+_debuffs = Array[Object]([SubResource("Resource_jjii2")])
+metadata/_custom_type_script = "uid://6ysk040uxhpj"
+
+[sub_resource type="Resource" id="Resource_2vm1c"]
+script = ExtResource("5_kl4k3")
+_transformedUnit = "FrostTurret"
+_requirements = Array[Dictionary]([{
+Vector2i(1, 0): ["YetiSpawner"]
+}, {
+Vector2i(-1, 0): ["YetiSpawner"]
+}, {
+Vector2i(0, 1): ["YetiSpawner"]
+}, {
+Vector2i(0, -1): ["YetiSpawner"]
+}])
+metadata/_custom_type_script = "uid://fdug3yybl4s5"
+
+[sub_resource type="Resource" id="Resource_1k1ln"]
+script = ExtResource("6_6wrck")
+_damage = 5
+_time = 1.0
+metadata/_custom_type_script = "uid://dxi5nbbsr1isf"
+
+[sub_resource type="Resource" id="Resource_kl4k3"]
+script = ExtResource("7_geji6")
+_debuffs = Array[Object]([SubResource("Resource_1k1ln")])
+metadata/_custom_type_script = "uid://cxg3f5ateuini"
+
+[sub_resource type="ConvexPolygonShape2D" id="ConvexPolygonShape2D_22s5n"]
+points = PackedVector2Array(100, 50, 150, 0, 100, -50, 0, 0)
+
+[node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_22s5n")]
+_cost = 30
+_iconTexture = ExtResource("2_6wrck")
+_towerType = 0
+_description = "Releases flame that damages and ignites all enemies in an area."
+_firstUpgrade = Array[Object]([SubResource("Resource_cmo3r")])
+_firstUpgradeCost = 20
+_firstUpgradeName = "First Upgrade"
+_secondUpgradeA = SubResource("Resource_arvu4")
+_secondUpgradeACost = 20
+_secondUpgradeB = SubResource("Resource_ibxbu")
+_secondUpgradeBCost = 25
+_secondUpgradeC = SubResource("Resource_n37es")
+_secondUpgradeCCost = 25
+_thirdUpgrade = Array[Object]([SubResource("Resource_yglny"), SubResource("Resource_s7m3k")])
+_thirdUpgradeCost = 125
+_thirdUpgradeName = "Third Upgrade"
+_transformEffects = Array[ExtResource("4_jjii2")]([SubResource("Resource_2vm1c")])
+_hpMax = 1
+_startingEffects = Array[Object]([SubResource("Resource_kl4k3")])
+_internalName = "FlameTurret"
+_name = "Flame Turret"
+_radius = 0.0
+
+[node name="WeaponComponent" parent="." index="0" unique_id=2120452932 instance=ExtResource("6_le7hc")]
+_shape = SubResource("ConvexPolygonShape2D_22s5n")
+_damage = 15
+_range = 150.0
+
+[node name="MainSprite" parent="." index="2" unique_id=701942347]
+scale = Vector2(1, 1)
+texture = ExtResource("9_6wrck")
+
+[node name="TurretTurner" parent="." index="6" unique_id=113202010 instance=ExtResource("9_s7m3k")]
+_turretTexture = ExtResource("11_6wrck")

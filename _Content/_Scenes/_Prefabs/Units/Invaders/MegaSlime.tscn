@@ -5,11 +5,17 @@
 [node name="BaseUnit" unique_id=481801141 instance=ExtResource("1_4ubmv")]
 _moneyDropped = 50
 _hpDeducted = 20
-_moneyDeducted = 1
+_moneyDeducted = 0
 _moveSpeed = 50.0
 _hpMax = 2000
+_armor = 3
 _startingEffects = Array[Object]([])
+_internalName = "MegaSlime"
 _name = "MegaSlime"
 _radius = 40.0
 
-[node name="Effects" type="Node" parent="." index="7" unique_id=317912941]
+[node name="HealthBar" parent="." index="5" unique_id=640038315]
+offset_left = -24.0
+offset_top = -32.0
+offset_right = 24.0
+offset_bottom = -20.0

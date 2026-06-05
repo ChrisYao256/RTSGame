@@ -1,3 +1,4 @@
+using Godot;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,10 +16,17 @@ public partial class ExplosionOnHitBuff : Effect
 		_resource = resource;
 	}
 
+	public override void ConnectSignals(Unit unit)
+	{
+		base.ConnectSignals(unit);
+		OnCreation();
+	}
+
 	protected override void OnCreation()
 	{
 		ExplosionOnHitResource resource = (ExplosionOnHitResource)_parentUnit.GetEffect(typeof(ExplosionOnHitResource));
 		resource._explosionDamage += _resource._explosionDamage;
 		resource._explosionRadius += _resource._explosionRadius;
+		resource.SetDescription();
 	}
 }

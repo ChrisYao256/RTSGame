@@ -126,6 +126,11 @@ public partial class Grid : TileMapLayer
 		_occupiedCells.Add(cell, tower);
 	}
 
+	public void UnoccupyCell(Vector2I cell)
+	{
+		_occupiedCells.Remove(cell);
+	}
+
 	public bool IsCellVacant(Vector2I cell)
 	{
 		foreach (Vector2I occupiedCell in _occupiedCells.Keys)

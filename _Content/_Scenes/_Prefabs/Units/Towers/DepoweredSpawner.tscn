@@ -1,0 +1,64 @@
+[gd_scene format=3 uid="uid://baogbvdtmwmy4"]
+
+[ext_resource type="PackedScene" uid="uid://yhbw0b164ui2" path="res://_Content/_Scenes/_Prefabs/Units/BaseTower.tscn" id="1_8vol0"]
+[ext_resource type="Script" uid="uid://b4jva1l23o6su" path="res://_Source/_Units/Spawner.cs" id="2_x4pyh"]
+[ext_resource type="Script" uid="uid://cvroohkeaovqw" path="res://_Source/_Units/SpawnerDataResource.cs" id="3_2elwc"]
+[ext_resource type="Texture2D" uid="uid://b1n42dv6cvvon" path="res://_Assets/GrayPortal.png" id="4_brthf"]
+[ext_resource type="Script" uid="uid://dj1iuetxsjca2" path="res://_Source/Effects/SpawnerStatsIncrease/SpawnerStatsIncreaseResource.cs" id="5_jgsm8"]
+
+[sub_resource type="Resource" id="Resource_jssxb"]
+script = ExtResource("3_2elwc")
+_startingEffects = null
+metadata/_custom_type_script = "uid://cvroohkeaovqw"
+
+[sub_resource type="Resource" id="Resource_38tks"]
+script = ExtResource("5_jgsm8")
+_units = Array[String](["Slime", "Slime"])
+_hpBuff = 0.25
+_startingEffects = null
+_effectName = "2 more slime, +Hp"
+metadata/_custom_type_script = "uid://dj1iuetxsjca2"
+
+[sub_resource type="Resource" id="Resource_0bcix"]
+script = ExtResource("5_jgsm8")
+_locations = Array[Vector2i]([Vector2i(1, 1), Vector2i(1, 0), Vector2i(1, -1), Vector2i(0, 1), Vector2i(0, 0), Vector2i(0, -1), Vector2i(-1, 1), Vector2i(-1, 0), Vector2i(-1, -1), Vector2i(2, 0), Vector2i(-2, 0), Vector2i(0, 2), Vector2i(0, -2)])
+_startingEffects = null
+_effectName = "Longer range"
+metadata/_custom_type_script = "uid://dj1iuetxsjca2"
+
+[sub_resource type="Resource" id="Resource_lh454"]
+script = ExtResource("5_jgsm8")
+_units = Array[String](["Slime", "Slime"])
+_speedBuff = 25.0
+_startingEffects = null
+_effectName = "2 more slime. +Speed"
+metadata/_custom_type_script = "uid://dj1iuetxsjca2"
+
+[node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_8vol0")]
+script = ExtResource("2_x4pyh")
+_data = SubResource("Resource_jssxb")
+_spawnJitterRadius = 15.0
+_isEnemy = true
+_iconTexture = ExtResource("4_brthf")
+_towerType = 2
+_description = ""
+_firstUpgrade = Array[Object]([])
+_firstUpgradeCost = 5
+_firstUpgradeName = "First Upgrade"
+_secondUpgradeA = SubResource("Resource_38tks")
+_secondUpgradeACost = 8
+_secondUpgradeB = SubResource("Resource_0bcix")
+_secondUpgradeBCost = 6
+_secondUpgradeC = SubResource("Resource_lh454")
+_secondUpgradeCCost = 8
+_thirdUpgrade = null
+_thirdUpgradeCost = 0
+_thirdUpgradeName = "Third Upgrade"
+_transformEffects = Array[Object]([])
+LeashDistance = 200.0
+_internalName = "DepoweredSpawner"
+_name = "Depowered Portal"
+_radius = 0.0
+
+[node name="MainSprite" parent="." index="1" unique_id=701942347]
+texture = ExtResource("4_brthf")

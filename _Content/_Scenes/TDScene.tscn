@@ -35,7 +35,8 @@ scale = Vector2(5, 5)
 tile_set = ExtResource("7_5ivv1")
 
 [node name="TdManager" parent="." unique_id=116729899 instance=ExtResource("3_v6k6q")]
-_availTowerList = Array[String](["GunTurret", "LaserTurret", "BombTurret", "SlimeSpawner", "HoundSpawner", "PriestSpawner", "Armory"])
+_availTowerList = Array[String](["GunTurret", "LaserTurret", "FlameTurret", "SlimeSpawner", "HoundSpawner", "PriestSpawner", "YetiSpawner", "SoldierSpawner", "Armory", "Mine", "Lab"])
+_startingMoney = 1500
 
 [node name="NavigationRegion2D" type="NavigationRegion2D" parent="." unique_id=1731619863]
 position = Vector2(328, 55)
@@ -46,17 +47,35 @@ position = Vector2(960, 540)
 script = ExtResource("2_473pp")
 
 [node name="RightPanel" type="Panel" parent="." unique_id=1327318761]
-offset_left = 1700.0
+offset_left = 1634.0
 offset_right = 1920.0
 offset_bottom = 1080.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_r27g4")
 
-[node name="Towers" type="VBoxContainer" parent="RightPanel" unique_id=898462609]
+[node name="WaveCounter" type="Label" parent="RightPanel" unique_id=1760873018]
 layout_mode = 0
-offset_left = 60.0
+offset_left = 9.0
+offset_top = 694.0
+offset_right = 120.0
+offset_bottom = 739.0
+theme_override_font_sizes/font_size = 32
+text = "Wave 0"
+
+[node name="BossWaveLabel" type="Label" parent="RightPanel" unique_id=2051085642]
+layout_mode = 0
+offset_left = 11.0
+offset_top = 784.0
+offset_right = 122.0
+offset_bottom = 829.0
+theme_override_font_sizes/font_size = 32
+
+[node name="Towers" type="GridContainer" parent="RightPanel" unique_id=1478457631]
+layout_mode = 0
+offset_left = 43.0
 offset_top = 60.0
-offset_right = 160.0
+offset_right = 246.0
 offset_bottom = 860.0
+columns = 2
 
 [node name="HpLabel" type="Label" parent="RightPanel" unique_id=1228266498]
 layout_mode = 0
@@ -64,6 +83,7 @@ offset_left = 16.0
 offset_top = 12.0
 offset_right = 56.0
 offset_bottom = 35.0
+theme_override_font_sizes/font_size = 24
 
 [node name="MoneyLabel" type="Label" parent="RightPanel" unique_id=823248237]
 layout_mode = 0
@@ -71,16 +91,54 @@ offset_left = 165.0
 offset_top = 13.0
 offset_right = 205.0
 offset_bottom = 36.0
+theme_override_font_sizes/font_size = 24
 
-[node name="NextWave" type="Button" parent="." unique_id=195529716]
-offset_left = 19.0
-offset_top = 303.0
-offset_right = 111.0
-offset_bottom = 363.0
+[node name="IncomeLabel" type="Label" parent="RightPanel" unique_id=1510190194]
+layout_mode = 0
+offset_left = 13.0
+offset_top = 752.0
+offset_right = 125.0
+offset_bottom = 786.0
+theme_override_font_sizes/font_size = 24
+text = "Income: $0"
+
+[node name="NextWave" type="Button" parent="RightPanel" unique_id=195529716]
+layout_mode = 0
+offset_left = 135.0
+offset_top = 685.0
+offset_right = 268.0
+offset_bottom = 745.0
+theme_override_font_sizes/font_size = 24
 text = "Next Wave
+"
+
+[node name="Tabs" type="VBoxContainer" parent="RightPanel" unique_id=215239085]
+layout_mode = 0
+offset_left = -119.0
+offset_top = 23.0
+offset_right = -10.0
+offset_bottom = 157.0
+
+[node name="DefenseTab" type="Button" parent="RightPanel/Tabs" unique_id=505616612]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Defense"
+
+[node name="SpawnerTab" type="Button" parent="RightPanel/Tabs" unique_id=827187694]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Spawner"
+
+[node name="SupportTab" type="Button" parent="RightPanel/Tabs" unique_id=432975526]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Support
 "
 
 [node name="TowerManager" type="Node2D" parent="." unique_id=1104962410]
 script = ExtResource("6_ih04x")
 
-[connection signal="pressed" from="NextWave" to="." method="OnNextWavePressed"]
+[connection signal="pressed" from="RightPanel/NextWave" to="." method="OnNextWavePressed"]
+[connection signal="button_down" from="RightPanel/Tabs/DefenseTab" to="TowerManager" method="SwitchDisplayedTabDefense"]
+[connection signal="button_down" from="RightPanel/Tabs/SpawnerTab" to="TowerManager" method="SwitchDisplayedTabSpawner"]
+[connection signal="button_down" from="RightPanel/Tabs/SupportTab" to="TowerManager" method="SwitchDisplayedTabSupport"]

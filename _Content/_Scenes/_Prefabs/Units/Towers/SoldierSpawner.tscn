@@ -1,0 +1,75 @@
+[gd_scene format=3 uid="uid://ol71fhekejbw"]
+
+[ext_resource type="PackedScene" uid="uid://yhbw0b164ui2" path="res://_Content/_Scenes/_Prefabs/Units/BaseTower.tscn" id="1_d3jpy"]
+[ext_resource type="Script" uid="uid://b4jva1l23o6su" path="res://_Source/_Units/Spawner.cs" id="2_rn5l1"]
+[ext_resource type="Script" uid="uid://cvroohkeaovqw" path="res://_Source/_Units/SpawnerDataResource.cs" id="3_q2jb2"]
+[ext_resource type="Texture2D" uid="uid://iocgjnp7i8td" path="res://_Assets/Portal.png" id="4_d63dk"]
+[ext_resource type="Script" uid="uid://dj1iuetxsjca2" path="res://_Source/Effects/SpawnerStatsIncrease/SpawnerStatsIncreaseResource.cs" id="5_yf86q"]
+[ext_resource type="Script" uid="uid://dtpcxn7d2dqcy" path="res://_Source/Effects/EffectResource.cs" id="6_f0flp"]
+
+[sub_resource type="Resource" id="Resource_jssxb"]
+script = ExtResource("3_q2jb2")
+_units = Array[String](["Soldier"])
+_locations = Array[Vector2i]([Vector2i(1, 1), Vector2i(1, 0), Vector2i(1, -1), Vector2i(0, 1), Vector2i(0, 0), Vector2i(0, -1), Vector2i(-1, 1), Vector2i(-1, 0), Vector2i(-1, -1)])
+_startingEffects = null
+metadata/_custom_type_script = "uid://cvroohkeaovqw"
+
+[sub_resource type="Resource" id="Resource_q3hbh"]
+script = ExtResource("5_yf86q")
+_hpBuff = 0.3
+_moneyBuff = 2
+_startingEffects = null
+metadata/_custom_type_script = "uid://dj1iuetxsjca2"
+
+[sub_resource type="Resource" id="Resource_38tks"]
+script = ExtResource("5_yf86q")
+_units = Array[String](["Slime", "Slime"])
+_hpBuff = 0.25
+_startingEffects = null
+_effectName = "2 more slime, +Hp"
+metadata/_custom_type_script = "uid://dj1iuetxsjca2"
+
+[sub_resource type="Resource" id="Resource_0bcix"]
+script = ExtResource("5_yf86q")
+_locations = Array[Vector2i]([Vector2i(1, 1), Vector2i(1, 0), Vector2i(1, -1), Vector2i(0, 1), Vector2i(0, 0), Vector2i(0, -1), Vector2i(-1, 1), Vector2i(-1, 0), Vector2i(-1, -1), Vector2i(2, 0), Vector2i(-2, 0), Vector2i(0, 2), Vector2i(0, -2)])
+_startingEffects = null
+_effectName = "Longer range"
+metadata/_custom_type_script = "uid://dj1iuetxsjca2"
+
+[sub_resource type="Resource" id="Resource_lh454"]
+script = ExtResource("5_yf86q")
+_units = Array[String](["Slime", "Slime"])
+_speedBuff = 25.0
+_startingEffects = null
+_effectName = "2 more slime. +Speed"
+metadata/_custom_type_script = "uid://dj1iuetxsjca2"
+
+[node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_d3jpy")]
+script = ExtResource("2_rn5l1")
+_data = SubResource("Resource_jssxb")
+_spawnJitterRadius = 15.0
+_isEnemy = true
+_cost = 25
+_iconTexture = ExtResource("4_d63dk")
+_towerType = 2
+_description = "Spawns a soldier"
+_firstUpgrade = Array[Object]([SubResource("Resource_q3hbh")])
+_firstUpgradeCost = 5
+_firstUpgradeName = "First Upgrade"
+_secondUpgradeA = SubResource("Resource_38tks")
+_secondUpgradeACost = 8
+_secondUpgradeB = SubResource("Resource_0bcix")
+_secondUpgradeBCost = 6
+_secondUpgradeC = SubResource("Resource_lh454")
+_secondUpgradeCCost = 8
+_thirdUpgrade = null
+_thirdUpgradeCost = 0
+_thirdUpgradeName = "Third Upgrade"
+_transformEffects = Array[ExtResource("6_f0flp")]([])
+LeashDistance = 200.0
+_internalName = "SoldierSpawner"
+_name = "Soldier Portal"
+_radius = 0.0
+
+[node name="MainSprite" parent="." index="1" unique_id=701942347]
+texture = ExtResource("4_d63dk")

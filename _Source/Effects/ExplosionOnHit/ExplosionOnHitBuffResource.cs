@@ -9,13 +9,14 @@ public partial class ExplosionOnHitBuffResource : EffectResource
 
 	public override void SetDescription()
 	{
+		_effectDescription = "";
 		if (_explosionDamage != 0)
 		{
-			_effectDescription = "Increases explosion damage by " + _explosionDamage + "\n";
+			_effectDescription += "Increases explosion damage by " + _explosionDamage + "\n";
 		}
 		if (_explosionRadius != 0)
 		{
-			_effectDescription = "Increases explosion radius by " + _explosionRadius + "\n";
+			_effectDescription += "Increases explosion radius by " + _explosionRadius + "\n";
 		}
 	}
 

@@ -116,7 +116,7 @@ public class ForceAttack : Command
 
 	public override string GetDescription()
 	{
-		return "Force attacking " + _targetUnit._name;
+		return "Force attacking " + _targetUnit._internalName;
 	}
 }
 
@@ -154,6 +154,6 @@ public class AggroedAttackMove : Command
 
 	public override string GetDescription()
 	{
-		return "Aggroed by " + _targetUnit._name;
+		return "Aggroed by " + _targetUnit._internalName;
 	}
 }

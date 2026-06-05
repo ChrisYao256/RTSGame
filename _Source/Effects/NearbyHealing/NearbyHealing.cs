@@ -17,7 +17,12 @@ public partial class NearbyHealing : Effect
 	public NearbyHealing(NearbyHealingResource resource) : base(resource)
 	{
 		_resource = resource;
-		_resource._effectDescription = "Heals all nearby friendly units in a " + _resource._radius + " radius for " + _resource._healAmount + " every " + _resource._healInterval + " seconds.";
+	}
+
+	public override void ConnectSignals(Unit unit)
+	{
+		base.ConnectSignals(unit);
+		OnCreation();
 	}
 
 	protected override void OnCreation()
@@ -28,6 +33,8 @@ public partial class NearbyHealing : Effect
 		_timer.WaitTime = _resource._healInterval;
 		_timer.OneShot = false;
 		_timer.Timeout += () => {
+			_parentUnit.PauseNavigation();
+			GetTree().CreateTimer(0.5f).Timeout += () => _parentUnit.ResumeNavigation();
 			List<Node> nodes = Utils.QueryPhysicsCircle(GetWorld2D(), GlobalPosition, _resource._radius);
 
 			List<Unit> friendlies = [];
@@ -38,9 +45,19 @@ public partial class NearbyHealing : Effect
 					friendlies.Add(unit);
 				}
 			}
-			foreach (Unit unit in friendlies)
+			if (_resource._isShield)
 			{
-				unit.IncreaseHp(_resource._healAmount);
+				foreach (Unit unit in friendlies)
+				{
+					unit.IncreaseShield(_resource._healAmount);
+				}
+			}
+			else
+			{
+				foreach (Unit unit in friendlies)
+				{
+					unit.IncreaseHp(_resource._healAmount, false);
+				}
 			}
 			if (_resource._healingVisualScene != null)
 			{

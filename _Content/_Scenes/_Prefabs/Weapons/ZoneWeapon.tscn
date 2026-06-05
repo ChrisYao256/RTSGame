@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://ynqfp128ardg"]
+
+[ext_resource type="Script" uid="uid://bbdfg3bhadw7u" path="res://_Source/_Units/Weapons/ZoneWeapon.cs" id="1_amqe4"]
+
+[node name="WeaponComponent" type="Node2D" unique_id=2120452932]
+script = ExtResource("1_amqe4")
+_damage = 5
+_range = 40.0

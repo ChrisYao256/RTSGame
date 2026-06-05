@@ -1,68 +1,135 @@
 [gd_scene format=3 uid="uid://b8dws0ci38w1g"]
 
 [ext_resource type="PackedScene" uid="uid://yhbw0b164ui2" path="res://_Content/_Scenes/_Prefabs/Units/BaseTower.tscn" id="1_e5a7y"]
-[ext_resource type="PackedScene" uid="uid://cekj6vfjmeih4" path="res://_Content/_Scenes/_Prefabs/Weapons/HitscanWeapon.tscn" id="2_ct57t"]
 [ext_resource type="Texture2D" uid="uid://1ya6poaby1bi" path="res://_Assets/GunTurret.png" id="2_ll7od"]
 [ext_resource type="Texture2D" uid="uid://b0erpa4s84wnd" path="res://_Assets/GunTurretBase.png" id="3_ct57t"]
 [ext_resource type="Script" uid="uid://c7ye5bgfhla5e" path="res://_Source/Effects/StatsIncrease/StatsIncreaseResource.cs" id="3_dbttg"]
+[ext_resource type="Script" uid="uid://fdug3yybl4s5" path="res://_Source/Effects/AdjacencyTransform/AdjacencyTransformResource.cs" id="4_7fpxf"]
+[ext_resource type="Script" uid="uid://bf746mou1jsik" path="res://_Source/Effects/StatsIncreaseOnKill/StatsIncreaseOnKillResource.cs" id="4_7kxbi"]
+[ext_resource type="Script" uid="uid://dtpcxn7d2dqcy" path="res://_Source/Effects/EffectResource.cs" id="4_ibxbu"]
 [ext_resource type="PackedScene" uid="uid://bol7o0gl5ji8x" path="res://_Content/_Scenes/_Prefabs/Weapons/TurretTurner.tscn" id="4_sgu7m"]
+[ext_resource type="Script" uid="uid://dp2y3egpfahx1" path="res://_Source/Effects/StatsIncreasePerNearbyTower/StatsIncreasePerNearbyTowerResource.cs" id="5_3pddp"]
 [ext_resource type="Texture2D" uid="uid://c30uyptsf2vri" path="res://_Assets/GunTurretTurret.png" id="6_0uk1v"]
+[ext_resource type="Script" uid="uid://bwav65cg5at1c" path="res://_Source/_Units/Weapons/ProjectileWeapon.cs" id="6_n37es"]
+[ext_resource type="Texture2D" uid="uid://wswb4au2cnxn" path="res://_Assets/GunShot.png" id="7_n37es"]
 
-[sub_resource type="Resource" id="Resource_7fpxf"]
+[sub_resource type="Resource" id="Resource_cmo3r"]
 script = ExtResource("3_dbttg")
-_damageIncrease = 3
-_rangeIncrease = 20.0
-_effectName = "Upgrade 1"
+_damageIncrease = 15
+_rangeIncrease = 25.0
 metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 
 [sub_resource type="Resource" id="Resource_dbttg"]
 script = ExtResource("3_dbttg")
-_damageIncrease = 8
-_attackSpeedIncrease = -0.2
-_effectName = "Precision"
+_damageIncrease = 24
+_effectName = "Larger calibre"
 metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 
 [sub_resource type="Resource" id="Resource_ibxbu"]
 script = ExtResource("3_dbttg")
-_damageIncrease = -2
-_attackSpeedIncrease = 0.8
+_attackSpeedIncrease = 0.6
 _effectName = "Faster Firing"
 metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 
-[sub_resource type="Resource" id="Resource_n37es"]
+[sub_resource type="Resource" id="Resource_oh15a"]
 script = ExtResource("3_dbttg")
-_damageIncrease = 8
-_attackSpeedIncrease = 0.4
-_rangeIncrease = 30.0
-_effectName = "Premium bullets"
+_damageIncrease = 2
 metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 
+[sub_resource type="Resource" id="Resource_dnbqd"]
+script = ExtResource("4_7kxbi")
+_buffResource = SubResource("Resource_oh15a")
+_cap = 25
+_effectName = "Veteran Guardsmen"
+metadata/_custom_type_script = "uid://bf746mou1jsik"
+
+[sub_resource type="Resource" id="Resource_yglny"]
+script = ExtResource("3_dbttg")
+_damageIncrease = 60
+_attackSpeedIncrease = 0.6
+metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
+
+[sub_resource type="Resource" id="Resource_in623"]
+script = ExtResource("3_dbttg")
+_damageIncrease = 80
+metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
+
+[sub_resource type="Resource" id="Resource_d1w5n"]
+script = ExtResource("5_3pddp")
+_buffResource = SubResource("Resource_in623")
+_area = Array[Vector2i]([Vector2i(1, 1), Vector2i(1, 0), Vector2i(1, -1), Vector2i(0, 1), Vector2i(0, 0), Vector2i(0, -1), Vector2i(-1, 1), Vector2i(-1, 0), Vector2i(-1, -1)])
+_towers = Array[String](["GunTurret"])
+metadata/_custom_type_script = "uid://dp2y3egpfahx1"
+
+[sub_resource type="Resource" id="Resource_7kxbi"]
+script = ExtResource("4_7fpxf")
+_transformedUnit = "PiercingTower"
+_requirements = Array[Dictionary]([{
+Vector2i(1, 0): ["Armory"]
+}, {
+Vector2i(-1, 0): ["Armory"]
+}, {
+Vector2i(0, 1): ["Armory"]
+}, {
+Vector2i(0, -1): ["Armory"]
+}])
+_removeUsedTowers = true
+metadata/_custom_type_script = "uid://fdug3yybl4s5"
+
+[sub_resource type="Resource" id="Resource_3pddp"]
+script = ExtResource("4_7fpxf")
+_transformedUnit = "BombTurret"
+_requirements = Array[Dictionary]([{
+Vector2i(1, 0): ["Mine"]
+}, {
+Vector2i(-1, 0): ["Mine"]
+}, {
+Vector2i(0, 1): ["Mine"]
+}, {
+Vector2i(0, -1): ["Mine"]
+}])
+_removeUsedTowers = true
+metadata/_custom_type_script = "uid://fdug3yybl4s5"
+
 [node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_e5a7y")]
-_cost = 10
+_cost = 15
 _iconTexture = ExtResource("2_ll7od")
-_description = "Basic turret. "
-_firstUpgrade = SubResource("Resource_7fpxf")
-_firstUpgradeCost = 10
+_towerType = 0
+_description = "Cost-efficient turret that shoots single-target projectiles"
+_firstUpgrade = Array[Object]([SubResource("Resource_cmo3r")])
+_firstUpgradeCost = 12
+_firstUpgradeName = "Lv 1"
 _secondUpgradeA = SubResource("Resource_dbttg")
 _secondUpgradeACost = 20
 _secondUpgradeB = SubResource("Resource_ibxbu")
 _secondUpgradeBCost = 20
-_secondUpgradeC = SubResource("Resource_n37es")
-_secondUpgradeCCost = 40
+_secondUpgradeC = SubResource("Resource_dnbqd")
+_secondUpgradeCCost = 20
+_thirdUpgrade = Array[Object]([SubResource("Resource_yglny")])
+_thirdUpgradeCost = 80
+_thirdUpgradeName = "Lv 3"
+_fourthUpgrade = Array[Object]([SubResource("Resource_d1w5n")])
+_fourthUpgradeCost = 600
+_fourthUpgradeName = "Lv 4"
+_transformEffects = Array[ExtResource("4_ibxbu")]([SubResource("Resource_7kxbi"), SubResource("Resource_3pddp")])
 _hpMax = 1
-_name = "GunTurret"
+_internalName = "GunTurret"
+_name = "Gun Turret"
 _radius = 0.0
 
-[node name="WeaponComponent" parent="." index="0" unique_id=2120452932 instance=ExtResource("2_ct57t")]
-_tracerColor = Color(0.84313726, 0.8039216, 0.7764706, 0.3372549)
-_tracerWidth = 1.0
-_range = 200.0
-_attackCooldown = 0.3
-_attackDelayLow = 0.5
-_attackDelayHigh = 0.5
+[node name="WeaponComponent" type="Node2D" parent="." index="0" unique_id=2120452932]
+script = ExtResource("6_n37es")
+_projectileSpeed = 1500.0
+_projectileTexture = ExtResource("7_n37es")
+_lifeTime = 5.0
+_projectileRadius = 10.0
+_pierceCount = 1
+_damage = 20
+_range = 250.0
+_attackDelayLow = 0.3
+_attackDelayHigh = 0.3
 
 [node name="MainSprite" parent="." index="2" unique_id=701942347]
-texture_filter = 1
 scale = Vector2(1, 1)
 texture = ExtResource("3_ct57t")
 

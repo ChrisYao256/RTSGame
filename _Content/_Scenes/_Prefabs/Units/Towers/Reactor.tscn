@@ -1,0 +1,101 @@
+[gd_scene format=3 uid="uid://j61dbt7ycia5"]
+
+[ext_resource type="PackedScene" uid="uid://yhbw0b164ui2" path="res://_Content/_Scenes/_Prefabs/Units/BaseTower.tscn" id="1_v4h0i"]
+[ext_resource type="Script" uid="uid://b4jva1l23o6su" path="res://_Source/_Units/Spawner.cs" id="2_qamm1"]
+[ext_resource type="Script" uid="uid://cvroohkeaovqw" path="res://_Source/_Units/SpawnerDataResource.cs" id="3_gaof2"]
+[ext_resource type="Texture2D" uid="uid://dx5jbvqnyj0hw" path="res://_Assets/Reactor.png" id="4_gaof2"]
+[ext_resource type="Script" uid="uid://c7ye5bgfhla5e" path="res://_Source/Effects/StatsIncrease/StatsIncreaseResource.cs" id="6_cjrj4"]
+[ext_resource type="Script" uid="uid://dby4w7fetnae6" path="res://_Source/Effects/NearbyTowerStatsIncrease/NearbyTowerStatsIncreaseResource.cs" id="7_bgrc3"]
+[ext_resource type="Script" uid="uid://dj1iuetxsjca2" path="res://_Source/Effects/SpawnerStatsIncrease/SpawnerStatsIncreaseResource.cs" id="8_n5vkt"]
+[ext_resource type="Script" uid="uid://c4pph75db2q3s" path="res://_Source/Effects/NearbySpawnerStatsIncrease/NearbySpawnerStatsIncreaseResource.cs" id="9_wpavs"]
+[ext_resource type="Script" uid="uid://dtpcxn7d2dqcy" path="res://_Source/Effects/EffectResource.cs" id="10_uc4gn"]
+[ext_resource type="Script" uid="uid://jqenopfjll3e" path="res://_Source/Effects/SpawnerStatsIncreasePerNearbyTower/SpawnerStatsIncreasePerNearbyTowerResource.cs" id="10_v4h0i"]
+
+[sub_resource type="Resource" id="Resource_jssxb"]
+script = ExtResource("3_gaof2")
+_locations = Array[Vector2i]([Vector2i(1, 1), Vector2i(1, 0), Vector2i(1, -1), Vector2i(0, 1), Vector2i(0, 0), Vector2i(0, -1), Vector2i(-1, 1), Vector2i(-1, 0), Vector2i(-1, -1), Vector2i(2, 0), Vector2i(-2, 0), Vector2i(0, 2), Vector2i(0, -2)])
+_startingEffects = null
+metadata/_custom_type_script = "uid://cvroohkeaovqw"
+
+[sub_resource type="Resource" id="Resource_inayk"]
+script = ExtResource("6_cjrj4")
+_attackSpeedIncrease = 0.15
+metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
+
+[sub_resource type="Resource" id="Resource_5x6l2"]
+script = ExtResource("7_bgrc3")
+_buffResource = SubResource("Resource_inayk")
+_area = Array[Vector2i]([Vector2i(1, 1), Vector2i(1, 0), Vector2i(1, -1), Vector2i(0, 1), Vector2i(0, 0), Vector2i(0, -1), Vector2i(-1, 1), Vector2i(-1, 0), Vector2i(-1, -1)])
+metadata/_custom_type_script = "uid://dby4w7fetnae6"
+
+[sub_resource type="Resource" id="Resource_8t0mg"]
+script = ExtResource("8_n5vkt")
+_hpBuff = 0.5
+_moneyBuff = 1
+_startingEffects = null
+metadata/_custom_type_script = "uid://dj1iuetxsjca2"
+
+[sub_resource type="Resource" id="Resource_krd5a"]
+script = ExtResource("9_wpavs")
+_buffResource = SubResource("Resource_8t0mg")
+_area = Array[Vector2i]([Vector2i(1, 1), Vector2i(1, 0), Vector2i(1, -1), Vector2i(0, 1), Vector2i(0, 0), Vector2i(0, -1), Vector2i(-1, 1), Vector2i(-1, 0), Vector2i(-1, -1)])
+_effectName = "+$1, +100% more hp"
+metadata/_custom_type_script = "uid://c4pph75db2q3s"
+
+[sub_resource type="Resource" id="Resource_wh3ql"]
+script = ExtResource("8_n5vkt")
+_locations = Array[Vector2i]([Vector2i(1, 1), Vector2i(1, 0), Vector2i(1, -1), Vector2i(0, 1), Vector2i(0, 0), Vector2i(0, -1), Vector2i(-1, 1), Vector2i(-1, 0), Vector2i(-1, -1)])
+_speedBuff = 50.0
+_moneyBuff = 1
+_startingEffects = null
+metadata/_custom_type_script = "uid://dj1iuetxsjca2"
+
+[sub_resource type="Resource" id="Resource_qd4hu"]
+script = ExtResource("9_wpavs")
+_buffResource = SubResource("Resource_wh3ql")
+_effectName = "+$1, +50% move speed"
+metadata/_custom_type_script = "uid://c4pph75db2q3s"
+
+[sub_resource type="Resource" id="Resource_qamm1"]
+script = ExtResource("8_n5vkt")
+_units = Array[String](["Bonus"])
+_startingEffects = null
+metadata/_custom_type_script = "uid://dj1iuetxsjca2"
+
+[sub_resource type="Resource" id="Resource_gaof2"]
+script = ExtResource("10_v4h0i")
+_buffResource = SubResource("Resource_qamm1")
+_area = Array[Vector2i]([Vector2i(1, 1), Vector2i(1, 0), Vector2i(1, -1), Vector2i(0, 1), Vector2i(0, 0), Vector2i(0, -1), Vector2i(-1, 1), Vector2i(-1, 0), Vector2i(-1, -1)])
+_towers = Array[String](["Mine"])
+metadata/_custom_type_script = "uid://jqenopfjll3e"
+
+[node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_v4h0i")]
+script = ExtResource("2_qamm1")
+_data = SubResource("Resource_jssxb")
+_spawnJitterRadius = 15.0
+_isEnemy = true
+_cost = 50
+_iconTexture = ExtResource("4_gaof2")
+_towerType = 1
+_description = "Units from nearby spawners drop $1 more, but have +50% Hp"
+_firstUpgrade = null
+_firstUpgradeCost = 25
+_firstUpgradeName = "First Upgrade"
+_secondUpgradeA = SubResource("Resource_5x6l2")
+_secondUpgradeACost = 5
+_secondUpgradeB = SubResource("Resource_krd5a")
+_secondUpgradeBCost = 10
+_secondUpgradeC = SubResource("Resource_qd4hu")
+_secondUpgradeCCost = 10
+_thirdUpgrade = null
+_thirdUpgradeCost = 0
+_thirdUpgradeName = "Third Upgrade"
+_transformEffects = Array[ExtResource("10_uc4gn")]([])
+LeashDistance = 200.0
+_startingEffects = Array[Object]([SubResource("Resource_gaof2")])
+_internalName = "Reactor"
+_name = "Reactor"
+_radius = 0.0
+
+[node name="MainSprite" parent="." index="1" unique_id=701942347]
+texture = ExtResource("4_gaof2")

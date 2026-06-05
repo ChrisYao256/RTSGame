@@ -1,0 +1,92 @@
+[gd_scene format=3 uid="uid://bg0b7slpwaqty"]
+
+[ext_resource type="PackedScene" uid="uid://yhbw0b164ui2" path="res://_Content/_Scenes/_Prefabs/Units/BaseTower.tscn" id="1_bpy14"]
+[ext_resource type="Texture2D" uid="uid://cyrbqtc037xqg" path="res://_Assets/MachineGunBase.png" id="2_2kx6n"]
+[ext_resource type="Script" uid="uid://c7ye5bgfhla5e" path="res://_Source/Effects/StatsIncrease/StatsIncreaseResource.cs" id="3_7mvqi"]
+[ext_resource type="Script" uid="uid://dtpcxn7d2dqcy" path="res://_Source/Effects/EffectResource.cs" id="4_4kcl2"]
+[ext_resource type="Script" uid="uid://l2tsn5punoj6" path="res://_Source/Effects/LowerArmor/LowerArmorResource.cs" id="4_msjep"]
+[ext_resource type="Script" uid="uid://cxg3f5ateuini" path="res://_Source/Effects/DebuffOnHit/DebuffOnHitResource.cs" id="5_7mvqi"]
+[ext_resource type="Texture2D" uid="uid://b4w5wtfxwocy4" path="res://_Assets/MachineGunTurretBase.png" id="7_bpy14"]
+[ext_resource type="Texture2D" uid="uid://wswb4au2cnxn" path="res://_Assets/GunShot.png" id="7_msjep"]
+[ext_resource type="PackedScene" uid="uid://bc7mdwf374doj" path="res://_Content/_Scenes/_Prefabs/Weapons/ProjectileWeapon.tscn" id="7_vdetk"]
+[ext_resource type="Texture2D" uid="uid://dexpve2hjmblj" path="res://_Assets/MachineGunTurretTurret.png" id="9_2kx6n"]
+[ext_resource type="PackedScene" uid="uid://bol7o0gl5ji8x" path="res://_Content/_Scenes/_Prefabs/Weapons/TurretTurner.tscn" id="9_sodxo"]
+
+[sub_resource type="Resource" id="Resource_bpy14"]
+script = ExtResource("3_7mvqi")
+_damageIncrease = 3
+metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
+
+[sub_resource type="Resource" id="Resource_msjep"]
+script = ExtResource("3_7mvqi")
+_damageIncrease = 4
+metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
+
+[sub_resource type="Resource" id="Resource_2kx6n"]
+script = ExtResource("3_7mvqi")
+_attackSpeedIncrease = 0.6
+metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
+
+[sub_resource type="Resource" id="Resource_4vl6b"]
+script = ExtResource("3_7mvqi")
+_pierceCount = 3
+metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
+
+[sub_resource type="Resource" id="Resource_7mvqi"]
+script = ExtResource("3_7mvqi")
+_pierceCount = 3
+metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
+
+[sub_resource type="Resource" id="Resource_m1b1x"]
+script = ExtResource("4_msjep")
+_change = -8
+_time = 1.0
+metadata/_custom_type_script = "uid://l2tsn5punoj6"
+
+[sub_resource type="Resource" id="Resource_6kf8s"]
+script = ExtResource("5_7mvqi")
+_debuffs = Array[Object]([SubResource("Resource_m1b1x")])
+_effectName = "AP Rounds"
+metadata/_custom_type_script = "uid://cxg3f5ateuini"
+
+[node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_bpy14")]
+_iconTexture = ExtResource("2_2kx6n")
+_towerType = 0
+_description = "Machine gun that pieces through multiple enemies"
+_firstUpgrade = Array[Object]([SubResource("Resource_bpy14")])
+_firstUpgradeCost = 20
+_firstUpgradeName = "First Upgrade"
+_secondUpgradeA = SubResource("Resource_msjep")
+_secondUpgradeACost = 25
+_secondUpgradeB = SubResource("Resource_2kx6n")
+_secondUpgradeBCost = 25
+_secondUpgradeC = SubResource("Resource_4vl6b")
+_secondUpgradeCCost = 25
+_thirdUpgrade = Array[Object]([SubResource("Resource_7mvqi"), SubResource("Resource_6kf8s")])
+_thirdUpgradeCost = 150
+_thirdUpgradeName = "Third Upgrade"
+_transformEffects = Array[ExtResource("4_4kcl2")]([])
+LeashDistance = 200.0
+_startingEffects = Array[ExtResource("4_4kcl2")]([])
+_internalName = "PiercingTower"
+_name = "Machine Gun Turret"
+_radius = 0.0
+
+[node name="WeaponComponent" parent="." index="0" unique_id=2120452932 instance=ExtResource("7_vdetk")]
+_projectileSpeed = 2000.0
+_projectileTexture = ExtResource("7_msjep")
+_lifeTime = 8.0
+_projectileRadius = 5.0
+_pierceCount = 3
+_damage = 3
+_range = 200.0
+_attackCooldown = 0.15
+_attackDelayLow = 0.3
+_attackDelayHigh = 0.3
+
+[node name="MainSprite" parent="." index="2" unique_id=701942347]
+scale = Vector2(1, 1)
+texture = ExtResource("7_bpy14")
+
+[node name="TurretTurner" parent="." index="4" unique_id=113202010 instance=ExtResource("9_sodxo")]
+_turretTexture = ExtResource("9_2kx6n")

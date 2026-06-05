@@ -8,3 +8,8 @@
 script = ExtResource("2_l4a7x")
 _moneyDropped = 0
 _floatingTextScene = ExtResource("3_l4a7x")
+_hpDeducted = 1
+_moneyDeducted = 1
+
+[node name="AidArea" parent="." index="7" unique_id=818912131]
+visible = false

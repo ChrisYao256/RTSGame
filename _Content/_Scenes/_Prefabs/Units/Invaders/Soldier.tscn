@@ -1,0 +1,27 @@
+[gd_scene format=3 uid="uid://ctgpqpcl3e2kb"]
+
+[ext_resource type="PackedScene" uid="uid://bqn4h6d52i52" path="res://_Content/_Scenes/_Prefabs/Units/BaseInvaderUnit.tscn" id="1_ksbbh"]
+[ext_resource type="PackedScene" uid="uid://dxg1cx6w8moqv" path="res://_Content/_Scenes/_Prefabs/Weapons/MeleeWeapon.tscn" id="2_oxx1p"]
+
+[node name="BaseUnit" unique_id=481801141 instance=ExtResource("1_ksbbh")]
+_moneyDropped = 10
+_hpDeducted = 2
+_moneyDeducted = 0
+_moveSpeed = 50.0
+_hpMax = 600
+_armor = 4
+_startingEffects = Array[Object]([])
+_internalName = "Soldier"
+_name = "Soldier"
+_radius = 24.0
+
+[node name="WeaponComponent" parent="." index="0" unique_id=2120452932 instance=ExtResource("2_oxx1p")]
+
+[node name="MainSprite" parent="." index="2" unique_id=701942347]
+scale = Vector2(1, 1)
+
+[node name="HealthBar" parent="." index="6" unique_id=640038315]
+offset_left = -24.0
+offset_top = -32.0
+offset_right = 24.0
+offset_bottom = -20.0

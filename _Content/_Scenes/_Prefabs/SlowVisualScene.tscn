@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://clrw6q0tvt2a8"]
+
+[ext_resource type="Script" uid="uid://dltrnewg5aqrv" path="res://_Source/ExplosionVisualEffect.cs" id="1_46pkk"]
+[ext_resource type="Texture2D" uid="uid://c60ob3y2f4n88" path="res://_Assets/IceCircle.png" id="2_46pkk"]
+
+[node name="ExplosionVisualEffect" type="Node2D" unique_id=856898756]
+script = ExtResource("1_46pkk")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=124558391]
+texture = ExtResource("2_46pkk")

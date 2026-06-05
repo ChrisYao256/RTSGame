@@ -1,0 +1,113 @@
+[gd_scene format=3 uid="uid://b2qd61nxkhao0"]
+
+[ext_resource type="PackedScene" uid="uid://yhbw0b164ui2" path="res://_Content/_Scenes/_Prefabs/Units/BaseTower.tscn" id="1_4i08k"]
+[ext_resource type="Texture2D" uid="uid://bvsxt6e16ye0n" path="res://_Assets/IceLaserTurret.png" id="2_nwt1o"]
+[ext_resource type="Script" uid="uid://c7ye5bgfhla5e" path="res://_Source/Effects/StatsIncrease/StatsIncreaseResource.cs" id="3_nohh6"]
+[ext_resource type="Script" uid="uid://cwdxtjh8yj1wq" path="res://_Source/Effects/SlowMovement/SlowMovementBuffResource.cs" id="4_nohh6"]
+[ext_resource type="Script" uid="uid://6ysk040uxhpj" path="res://_Source/Effects/DebuffOnHit/DebuffOnHitBuffResource.cs" id="4_vhrie"]
+[ext_resource type="Script" uid="uid://dtpcxn7d2dqcy" path="res://_Source/Effects/EffectResource.cs" id="5_vhrie"]
+[ext_resource type="Script" uid="uid://csv13a4vnrcwo" path="res://_Source/Effects/Vulnerable/VulnerableResource.cs" id="6_bye23"]
+[ext_resource type="Script" uid="uid://y1enulr4b71h" path="res://_Source/Effects/SlowMovement/SlowMovementResource.cs" id="6_nwt1o"]
+[ext_resource type="PackedScene" uid="uid://csclmqhm61enk" path="res://_Content/_Scenes/_Prefabs/Weapons/LaserWeapon.tscn" id="7_33g7k"]
+[ext_resource type="Script" uid="uid://cxg3f5ateuini" path="res://_Source/Effects/DebuffOnHit/DebuffOnHitResource.cs" id="7_nohh6"]
+[ext_resource type="PackedScene" uid="uid://bol7o0gl5ji8x" path="res://_Content/_Scenes/_Prefabs/Weapons/TurretTurner.tscn" id="9_0qnp1"]
+[ext_resource type="Texture2D" uid="uid://6fei0lxgbx0y" path="res://_Assets/IceLaserTurretBase.png" id="9_nwt1o"]
+[ext_resource type="Texture2D" uid="uid://dpy215gbh430l" path="res://_Assets/IceLaserTurretTurret.png" id="11_nwt1o"]
+
+[sub_resource type="Resource" id="Resource_w232m"]
+script = ExtResource("4_nohh6")
+_percentDecrease = 0.07
+metadata/_custom_type_script = "uid://cwdxtjh8yj1wq"
+
+[sub_resource type="Resource" id="Resource_33g7k"]
+script = ExtResource("4_vhrie")
+_debuffs = Array[Object]([SubResource("Resource_w232m")])
+metadata/_custom_type_script = "uid://6ysk040uxhpj"
+
+[sub_resource type="Resource" id="Resource_bye23"]
+script = ExtResource("4_nohh6")
+_percentDecrease = 0.1
+metadata/_custom_type_script = "uid://cwdxtjh8yj1wq"
+
+[sub_resource type="Resource" id="Resource_766yx"]
+script = ExtResource("4_vhrie")
+_debuffs = Array[Object]([SubResource("Resource_bye23")])
+metadata/_custom_type_script = "uid://6ysk040uxhpj"
+
+[sub_resource type="Resource" id="Resource_d4b7m"]
+script = ExtResource("3_nohh6")
+_attackDelayModifierIncrease = 2.0
+_effectName = "Faster retargeting"
+metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
+
+[sub_resource type="Resource" id="Resource_h8tlq"]
+script = ExtResource("3_nohh6")
+_damageIncrease = 40
+_rangeIncrease = 30.0
+_effectName = "Faster Charging"
+metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
+
+[sub_resource type="Resource" id="Resource_0qnp1"]
+script = ExtResource("6_bye23")
+_percentIncrease = 0.5
+_time = 1.0
+metadata/_custom_type_script = "uid://csv13a4vnrcwo"
+
+[sub_resource type="Resource" id="Resource_nohh6"]
+script = ExtResource("7_nohh6")
+_debuffs = Array[Object]([SubResource("Resource_0qnp1")])
+metadata/_custom_type_script = "uid://cxg3f5ateuini"
+
+[sub_resource type="Resource" id="Resource_nwt1o"]
+script = ExtResource("6_nwt1o")
+_percentDecrease = 0.35
+_time = 0.5
+metadata/_custom_type_script = "uid://y1enulr4b71h"
+
+[sub_resource type="Resource" id="Resource_vhrie"]
+script = ExtResource("7_nohh6")
+_debuffs = Array[Object]([SubResource("Resource_nwt1o")])
+metadata/_custom_type_script = "uid://cxg3f5ateuini"
+
+[node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_4i08k")]
+_cost = 20
+_iconTexture = ExtResource("2_nwt1o")
+_towerType = 0
+_description = "High dps turret that takes time swapping targets"
+_firstUpgrade = Array[Object]([SubResource("Resource_33g7k")])
+_firstUpgradeCost = 40
+_firstUpgradeName = "First Upgrade"
+_secondUpgradeA = SubResource("Resource_766yx")
+_secondUpgradeACost = 40
+_secondUpgradeB = SubResource("Resource_d4b7m")
+_secondUpgradeBCost = 30
+_secondUpgradeC = SubResource("Resource_h8tlq")
+_secondUpgradeCCost = 30
+_thirdUpgrade = Array[Object]([SubResource("Resource_nohh6")])
+_thirdUpgradeCost = 100
+_thirdUpgradeName = "Third Upgrade"
+_fourthUpgrade = null
+_fourthUpgradeCost = 0
+_fourthUpgradeName = "Lv 4"
+_transformEffects = Array[ExtResource("5_vhrie")]([])
+_hpMax = 1
+_lockOnTarget = true
+_startingEffects = Array[ExtResource("5_vhrie")]([SubResource("Resource_vhrie")])
+_internalName = "IceLaserTurret"
+_name = "Ice Laser Turret"
+_radius = 0.0
+
+[node name="WeaponComponent" parent="." index="0" unique_id=2120452932 instance=ExtResource("7_33g7k")]
+_tracerColor = Color(0.18625751, 0.55225414, 0.8695221, 1)
+_damage = 20
+_range = 300.0
+_attackDelayLow = 1.0
+_attackDelayHigh = 1.0
+_useAttackDelay = true
+
+[node name="MainSprite" parent="." index="2" unique_id=701942347]
+scale = Vector2(1, 1)
+texture = ExtResource("9_nwt1o")
+
+[node name="TurretTurner" parent="." index="6" unique_id=113202010 instance=ExtResource("9_0qnp1")]
+_turretTexture = ExtResource("11_nwt1o")

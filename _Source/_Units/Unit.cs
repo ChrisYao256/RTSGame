@@ -1,7 +1,9 @@
 using Godot;
 using Godot.Collections;
+using RTSGame.Source;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,11 +12,16 @@ namespace RTSGame.Units;
 
 public partial class Unit : CharacterBody2D
 {
+
 	protected UnitPathfinder _pathfinder;
 
 	private Sprite2D _selectionVisual;
 
 	protected TextureProgressBar _healthBar;
+
+	protected TextureProgressBar _shieldBar;
+
+	protected Node2D _effectsNode;
 
 	public BaseWeapon _weapon;
 
@@ -22,11 +29,17 @@ public partial class Unit : CharacterBody2D
 
 	public bool _aiControlled = false;
 
+	private TDManager _tdManager;
+
 	[Export] public float LeashDistance = 200f;
 
 	[Export] protected float _moveSpeed;
 
 	[Export] private int _hpMax;
+
+	[Export] public int _armor = 0;
+
+	[Export] private bool _lockOnTarget = false;
 
 
 	[Export]
@@ -34,10 +47,19 @@ public partial class Unit : CharacterBody2D
 
 	public int _hp { get; private set; }
 
+	public int _shield { get; private set; }
+
+	[Export] public string _internalName;
+
 	[Export] public string _name;
 
 	[Export]
 	public float _radius = 100f;
+
+	[Export]
+	public float _baseHealthBarWidth = 24f;
+	[Export]
+	public float _baseHealthBarHeight = 12f;
 
 	[Export]
 	public int DebugTeamId
@@ -57,10 +79,16 @@ public partial class Unit : CharacterBody2D
 	public delegate void DiedEventHandler(Unit unit);
 
 	[Signal]
+	public delegate void RemovedEventHandler(Unit unit);
+
+	[Signal]
 	public delegate void HpChangeEventHandler(Unit unit, int change);
 
 	[Signal]
 	public delegate void NewEffectEventHandler(Unit unit, Effect effect);
+
+	[Signal]
+	public delegate void RemovedEffectEventHandler(Unit unit, Effect effect);
 
 	[Signal]
 	public delegate void BeginAttackEventHandler(Unit unit, Unit target);
@@ -75,7 +103,16 @@ public partial class Unit : CharacterBody2D
 	public delegate void PlacedTowerEventHandler(TowerUnit tower);
 
 	[Signal]
+	public delegate void KilledUnitEventHandler(Unit unit, Unit target);
+
+	[Signal]
 	public delegate void UpdateInfoEventHandler(Unit unit);
+
+	[Signal]
+	public delegate void UpdateStatsInfoEventHandler(Unit unit);
+
+	[Signal]
+	public delegate void CreationEventHandler(); // used only by transform effects that may remove this unit when created. Allows the tower to be fully placed before OnCreation effects activate. 
 
 	public enum State
 	{
@@ -93,7 +130,17 @@ public partial class Unit : CharacterBody2D
 
 	public float _speedModifier;
 
+	public float _speedDebuff;
+
 	public float _hpMaxModifier;
+
+	public int _armorModifier;
+
+	public int _armorDebuff;
+
+	public float _damageTakenModifier;
+
+	public float _damageTakenDebuff;
 
 	public List<EffectResource> _effects = [];
 
@@ -102,6 +149,8 @@ public partial class Unit : CharacterBody2D
 	protected Unit _attackTarget;
 
 	protected bool _active = true;
+
+	private bool _navigationPaused = false;
 
 	public override void _Ready()
 	{
@@ -125,44 +174,68 @@ public partial class Unit : CharacterBody2D
 		collision.Shape = collisionCircle;
 	}
 
-	protected void SetStartingEffects()
+	protected virtual void SetStartingEffects()
 	{
+		_effectsNode = GetNode<Node2D>("Effects");
 		foreach (var effect in _startingEffects)
 		{
 			AddEffect(effect);
 		}
 	}
 
-	public void AddEffect(EffectResource resource)
+	public Effect AddEffect(EffectResource resource)
 	{
-		EffectResource resourceCopy = (EffectResource)resource.Duplicate();
-		_effects.Add(resourceCopy);
-		Effect node = EffectManager.Apply(resourceCopy, this);
-		node.ConnectSignals(this);
-		EmitSignal(SignalName.NewEffect, node);
-		EmitSignal(SignalName.UpdateInfo);
+		//EffectResource resourceCopy = (EffectResource)resource.Duplicate();
+		//_effects.Add(resourceCopy);
+		//Effect node = EffectManager.Apply(resourceCopy, _effectsNode);
+		//node.ConnectSignals(this);
+		//EmitSignal(SignalName.NewEffect, node);
+		//EmitSignal(SignalName.UpdateInfo);
 
-		// Use this to make effects with the same name merge
-		//if (!_effects.Any(e => e._effectName == resource._effectName))
-		//{
-		//	_effects.Add((EffectResource)resource.Duplicate());
-		//	Effect node = EffectManager.Apply(resource, this);
-		//	node.ConnectSignals(this);
-		//	EmitSignal(SignalName.NewEffect, node);
-		//	EmitSignal(SignalName.UpdateInfo);
-		//}
-		//else
-		//{
-		//	EffectResource oldEffect = _effects.First(e => e._effectName == resource._effectName);
-		//	_effects.Remove(oldEffect);
-		//	resource.MergeWithOld(oldEffect);
-		//	AddEffect(resource);
-		//}
+		
+		//Use this to make effects with the same name merge
+		if (!_effects.Any(e => e.GetType() == resource.GetType()))
+		{
+			EffectResource resourceCopy = (EffectResource)resource.Duplicate();
+			_effects.Add(resourceCopy);
+			Effect node = EffectManager.Apply(resourceCopy, _effectsNode);
+			node.ConnectSignals(this);
+			EmitSignal(SignalName.NewEffect, node);
+			EmitSignal(SignalName.UpdateInfo);
+			return node;
+		}
+		else
+		{
+			EffectResource oldEffect = _effects.First(e => e.GetType() == resource.GetType());
+			bool addNewEffect = resource.MergeWithOld(oldEffect);
+			if (addNewEffect)
+			{
+				EffectResource resourceCopy = (EffectResource)resource.Duplicate();
+				_effects.Add(resourceCopy);
+				Effect node = EffectManager.Apply(resourceCopy, _effectsNode);
+				node.ConnectSignals(this);
+				EmitSignal(SignalName.NewEffect, node);
+				EmitSignal(SignalName.UpdateInfo);
+				return node;
+			}
+			else
+			{
+				return null;
+			}
+		}
 	}
 
 	public EffectResource GetEffect(Type type)
 	{
 		return _effects.First(e => e.GetType() == type);
+	}
+
+	public void RemoveAllEffects()
+	{
+		foreach (Effect effect in _effectsNode.GetChildren())
+		{
+			effect.RemoveEffectNode();
+		}
 	}
 
 	protected void SetWeapon()
@@ -197,7 +270,12 @@ public partial class Unit : CharacterBody2D
 		{
 			circle = (CircleShape2D)circle.Duplicate();
 			circle.Radius = _attackRange;
-			_attackCollisionShape.Shape = circle;
+			Callable.From(() => {
+				if (IsInstanceValid(_attackCollisionShape))
+				{
+					_attackCollisionShape.Shape = circle;
+				}
+			}).CallDeferred();
 		}
 		else
 		{
@@ -217,18 +295,26 @@ public partial class Unit : CharacterBody2D
 		_healthBar = GetNode<TextureProgressBar>("HealthBar");
 		_hp = GetHpMax();
 		_healthBar.MaxValue = GetHpMax();
-		_healthBar.Value = _hp;
-		UpdateHealthBar(_hp, GetHpMax());
+		float length = _baseHealthBarWidth + Math.Min(2 * _baseHealthBarWidth, 5f * Mathf.Log(_hp + 1));
+		_healthBar.Size = new Vector2(length, _baseHealthBarHeight);
+		_healthBar.Position = new Vector2(-length / 2, -48f);
+
+		_shieldBar = GetNode<TextureProgressBar>("ShieldBar");
+		_shieldBar.MaxValue = GetHpMax();
+		_shieldBar.Modulate = new Color(0.2f, 0.2f, 1, 0.75f);
+		_shieldBar.Size = new Vector2(length, _baseHealthBarHeight);
+		_shieldBar.Position = new Vector2(-length / 2, -48f - _baseHealthBarHeight);
+		UpdateHealthBar(_hp, GetHpMax(), _shield);
+
+		
 	}
 
 	private void UpdateHpMax()
 	{
-		float percentage = (float)_hp / (float)_hpMax;
 		_healthBar = GetNode<TextureProgressBar>("HealthBar");
-		_hp = (int)(GetHpMax() * percentage);
 		_healthBar.MaxValue = GetHpMax();
-		_healthBar.Value = _hp;
-		UpdateHealthBar(_hp, GetHpMax());
+		_shieldBar.MaxValue = GetHpMax();
+		UpdateHealthBar(_hp, GetHpMax(), _shield);
 	}
 
 	public int GetHpMax()
@@ -238,7 +324,12 @@ public partial class Unit : CharacterBody2D
 
 	public float GetSpeed()
 	{
-		return _moveSpeed + _speedModifier;
+		return (_moveSpeed + _speedModifier) * (1 - _speedDebuff);
+	}
+
+	public int GetArmor()
+	{
+		return _armor + _armorModifier + _armorDebuff;
 	}
 
 	protected void SetInitialCommand()
@@ -273,7 +364,7 @@ public partial class Unit : CharacterBody2D
 		{
 			_currentCommand.CheckFinish();
 		}
-		else if (_state != State.Attacking)
+		else if (_state != State.Attacking && !_navigationPaused)
 		{
 			_state = State.Moving;
 			_pathfinder.ProcessMovement(delta);
@@ -337,6 +428,16 @@ public partial class Unit : CharacterBody2D
 		{
 			ScanForEnemies();
 		}
+	}
+
+	public void PauseNavigation()
+	{
+		_navigationPaused = true;
+	}
+
+	public void ResumeNavigation()
+	{
+		_navigationPaused = false;
 	}
 
 	protected virtual void ProcessForceMove(ForceMove forceMove)
@@ -440,16 +541,17 @@ public partial class Unit : CharacterBody2D
 		EmitSignal(SignalName.PlacedTower, tower);
 	}
 
-	public void Hit(int damage, Unit source)
+	public void Hit(int damage, Unit source, bool ignoreArmor = false)
 	{
-		IncreaseHp(-damage);
+		damage = (int)(damage * (1f + _damageTakenDebuff + _damageTakenModifier));
+		IncreaseHp(-damage, ignoreArmor);
 		Area2D socialArea = GetNode<Area2D>("AidArea");
 		var nearbyBodies = socialArea.GetOverlappingBodies();
 
 		foreach (var body in nearbyBodies)
 		{
 			// Check if the body is a Unit and on the same team
-			if (body is Unit ally && ally._teamId == this._teamId)
+			if (body is Unit ally && ally._teamId == this._teamId && source is Unit)
 			{
 				ally.Retaliate(source);
 			}
@@ -458,16 +560,61 @@ public partial class Unit : CharacterBody2D
 		if (_hp <= 0)
 		{
 			Die();
+			if (source is not null)
+			{
+				source.EmitSignal(Unit.SignalName.KilledUnit, this);
+			}
 		}
 	}
 
-	public void IncreaseHp(int change)
+	public void IncreaseHp(int change, bool ignoreArmor)
 	{
+		if (change < 0 && _shield > 0)
+		{
+			int newChange = Math.Min(change + _shield, 0);
+			IncreaseShield(change);
+			change = newChange;
+		}
+		if (change < 0 && !ignoreArmor)
+		{
+			change = Math.Min(change + GetArmor(), 0);
+		}
 		_hp += change;
 		_hp = Math.Min(_hp, GetHpMax());
-		UpdateHealthBar(_hp, GetHpMax());
+		UpdateHealthBar(_hp, GetHpMax(), _shield);
 		EmitSignal(SignalName.HpChange, change);
-		EmitSignal(SignalName.UpdateInfo);
+		EmitSignal(SignalName.UpdateStatsInfo);
+	}
+
+	public void IncreaseShield(int change)
+	{
+		_shield += change;
+		_shield = Math.Min(_shield, GetHpMax());
+		_shield = Math.Max(_shield, 0);
+		UpdateHealthBar(_hp, GetHpMax(), _shield);
+		EmitSignal(SignalName.UpdateStatsInfo);
+	}
+
+	public void IncreaseArmorModifier(int change)
+	{
+		_armorModifier += change;
+		EmitSignal(SignalName.UpdateStatsInfo);
+	}
+
+	public void SetArmorDebuff(int debuff)
+	{
+		_armorDebuff = debuff;
+		EmitSignal(SignalName.UpdateStatsInfo);
+	}
+
+	public void IncreaseDamageTakenModifier(float change)
+	{
+		_damageTakenModifier += change;
+	}
+
+	public void SetDamageTakenDebuff(float debuff)
+	{
+		_damageTakenDebuff = debuff;
 	}
 
 	public virtual void Retaliate(Unit unit)
@@ -478,34 +625,42 @@ public partial class Unit : CharacterBody2D
 		}
 		if (_currentCommand is AttackMove || _currentCommand is NoCommand)
 		{
-			AddCommand(new AggroedAttackMove(this, GlobalPosition, unit));
-			AddCommand(_currentCommand);
+			InsertCommand(0, _currentCommand);
+			InsertCommand(0, new AggroedAttackMove(this, GlobalPosition, unit));
 			ProcessNextCommand();
 		}
 	}
 
 	protected virtual void OnScanAreaBodyEntered(Node2D body)
 	{
-		//if (!_active)
-		//{
-		//	return;
-		//}
-		//if (body is Unit unit)
-		//{
-		//	// Check if the body is in the enemy group and we don't have a target yet
-		//	if (unit._teamId != _teamId && _state != State.Attacking && (_currentCommand is NoCommand || _currentCommand is AttackMove || _currentCommand is AggroedAttackMove))
-		//	{
-		//		BeginAttackingTarget(unit);
-		//	}
-		//	else if (_currentCommand is ForceAttack forceAttack && forceAttack._targetUnit == body)
-		//	{
-		//		BeginAttackingTarget(unit);
-		//	}
-		//}
-		//else
-		//{
-		//	return;
-		//}
+		if (!_active)
+		{
+			return;
+		}
+		if (_state == State.Attacking)
+		{
+			return;
+		}
+		if (_weapon is null)
+		{
+			return;
+		}
+		if (body is Unit unit)
+		{
+			// Check if the body is in the enemy 
+			if (unit._teamId != _teamId &&  (_currentCommand is NoCommand || _currentCommand is AttackMove || _currentCommand is AggroedAttackMove))
+			{
+				BeginAttackingTarget(unit);
+			}
+			else if (_currentCommand is ForceAttack forceAttack && forceAttack._targetUnit == body)
+			{
+				BeginAttackingTarget(unit);
+			}
+		}
+		else
+		{
+			return;
+		}
 	}
 
 	protected virtual void OnScanAreaBodyLeft(Node2D body)
@@ -526,7 +681,7 @@ public partial class Unit : CharacterBody2D
 
 	public void ScanForEnemies()
 	{
-		if (_state == State.Attacking)
+		if (_state == State.Attacking && _lockOnTarget)
 		{
 			return;
 		}
@@ -538,14 +693,15 @@ public partial class Unit : CharacterBody2D
 
 		// Get all overlapping physics bodies
 		var bodies = scanArea.GetOverlappingBodies();
-		if (!bodies.Any(body => body is InvaderUnit))
+		if (!bodies.Any(body => body is Unit))
 		{
 			return;
 		}
+		Array<Unit> units = new Godot.Collections.Array<Unit>(bodies.OfType<Unit>());
 
-		var sortedBodies = bodies
-				.OrderBy(body => GlobalPosition.DistanceSquaredTo(body.GlobalPosition))
-				.ToList();
+		var sortedBodies = new List<Unit>();
+
+		sortedBodies = FormTargetOrder(units);
 
 		//GD.Print("List: ");
 		//foreach (Node2D body in sortedBodies)
@@ -561,11 +717,26 @@ public partial class Unit : CharacterBody2D
 			{
 				if (unit._teamId != _teamId && (_currentCommand is NoCommand || _currentCommand is AttackMove || _currentCommand is AggroedAttackMove))
 				{
+					if (_state == State.Attacking && _attackTarget != unit)
+					{
+						StopAttackingTarget();
+					}
+					else if (_state == State.Attacking && _attackTarget == unit)
+					{
+						return;
+					}
 					BeginAttackingTarget(unit);
 					break;
 				}
 			}
 		}
+	}
+
+	protected virtual List<Unit> FormTargetOrder(Array<Unit> bodies)
+	{
+		return bodies
+		.OrderBy(body => GlobalPosition.DistanceSquaredTo(body.GlobalPosition))
+		.ToList();
 	}
 
 	protected void CheckTargetAlive()
@@ -594,8 +765,11 @@ public partial class Unit : CharacterBody2D
 
 	public void SetHpMaxModifier(float hpModifier)
 	{
+		int newMax = (int)(_hpMax * (1 + hpModifier));
+		int change = newMax - _hpMax;
+		_hp += change;
 		_hpMaxModifier = hpModifier;
-		EmitSignal(SignalName.UpdateInfo);
+		EmitSignal(SignalName.UpdateStatsInfo);
 		UpdateHpMax();
 	}
 
@@ -607,23 +781,54 @@ public partial class Unit : CharacterBody2D
 	public void SetWeaponModifier(int damageModifier)
 	{
 		_weapon._damageModifier = damageModifier;
-		EmitSignal(SignalName.UpdateInfo);
+		EmitSignal(SignalName.UpdateStatsInfo);
+
 	}
 
-	public void IncreaseWeaponModifier(int change)
+	public void IncreaseWeaponModifier(int change, BaseWeapon.DamageType type = BaseWeapon.DamageType.Null)
 	{
-		SetWeaponModifier(_weapon._damageModifier + change);
+		if (_weapon is null)
+		{
+			return;
+		}
+		if (type == BaseWeapon.DamageType.Null || _weapon._damageType == type)
+		{
+			SetWeaponModifier(_weapon._damageModifier + change);
+		}
+	}
+
+	public void SetWeaponPercentModifier(float damagePercentModifier)
+	{
+		_weapon._damagePercentModifier = damagePercentModifier;
+		EmitSignal(SignalName.UpdateStatsInfo);
+
+	}
+
+	public void IncreaseWeaponPercentModifier(float change, BaseWeapon.DamageType type = BaseWeapon.DamageType.Null)
+	{
+		if (_weapon is null)
+		{
+			return;
+		}
+		if (type == BaseWeapon.DamageType.Null || _weapon._damageType == type)
+		{
+			SetWeaponPercentModifier(_weapon._damagePercentModifier + change);
+		}
 	}
 
 	public void SetWeaponRangeModifier(float range)
 	{
 		_weapon._rangeModifier = range;
 		SetAttackRange();
-		EmitSignal(SignalName.UpdateInfo);
+		EmitSignal(SignalName.UpdateStatsInfo);
 	}
 
 	public void IncreaseWeaponRangeModifier(float change)
 	{
+		if (_weapon is null)
+		{
+			return;
+		}
 		SetWeaponRangeModifier(_weapon._rangeModifier + change);
 	}
 
@@ -635,7 +840,7 @@ public partial class Unit : CharacterBody2D
 		}
 		_speedModifier = speed;
 		SetPathFinder();
-		EmitSignal(SignalName.UpdateInfo);
+		EmitSignal(SignalName.UpdateStatsInfo);
 	}
 
 	public void IncreaseSpeedModifier(float change)
@@ -643,29 +848,91 @@ public partial class Unit : CharacterBody2D
 		SetSpeedModifier(_speedModifier + change);
 	}
 
+	public void SetSpeedDebuff(float debuff)
+	{
+		_speedDebuff = debuff;
+		SetPathFinder();
+		EmitSignal(SignalName.UpdateStatsInfo);
+	}
+
 	public void SetAttackSpeedModifier(double speed)
 	{
 		_weapon._attackSpeedModifier = speed;
-		EmitSignal(SignalName.UpdateInfo);
+		EmitSignal(SignalName.UpdateStatsInfo);
 	}
 
 	public void IncreaseAttackSpeedModifier(double change)
 	{
+		if (_weapon is null)
+		{
+			return;
+		}
 		SetAttackSpeedModifier(_weapon._attackSpeedModifier + change);
+	}
+
+	public void SetAttackSpeedDebuff(double debuff)
+	{
+		if (_weapon is null)
+		{
+			return;
+		}
+		_weapon._attackSpeedDebuff = debuff;
+		EmitSignal(SignalName.UpdateStatsInfo);
 	}
 
 	public void SetAttackDelayModifier(double speed)
 	{
 		_weapon._attackDelayModifier = speed;
-		EmitSignal(SignalName.UpdateInfo);
+		EmitSignal(SignalName.UpdateStatsInfo);
 	}
 
 	public void IncreaseAttackDelayModifier(double change)
 	{
+		if (_weapon is null)
+		{
+			return;
+		}
 		SetAttackDelayModifier(_weapon._attackDelayModifier + change);
 	}
 
-	private void UpdateHealthBar(float currentHp, float maxHp)
+	public void DisableAttackDelay()
+	{
+		if (_weapon is null)
+		{
+			return;
+		}
+		_weapon._useAttackDelay = false;
+	}
+
+	public void IncreasePierceCountModifier(int change)
+	{
+		if (_weapon is null)
+		{
+			return;
+		}
+		if (_weapon is not ProjectileWeapon)
+		{
+			return;
+		}
+		ProjectileWeapon pWeapon = (ProjectileWeapon)_weapon;
+		pWeapon._pierceCount += change;
+	}
+
+	public void UpdateWeaponAttackZone(Shape2D shape)
+	{
+		if (_weapon is null || shape is null)
+		{
+			return;
+		}
+		if (_weapon is not ZoneWeapon)
+		{
+			return;
+		}
+		ZoneWeapon zWeapon = (ZoneWeapon)_weapon;
+		zWeapon._shape = shape;
+	}
+
+	private void UpdateHealthBar(float currentHp, float maxHp, float shield)
 	{
 		float healthPercent = currentHp / maxHp;
 		_healthBar.Value = currentHp;
@@ -677,6 +944,22 @@ public partial class Unit : CharacterBody2D
 
 		// This blends the two colors based on the health percentage
 		_healthBar.Modulate = criticalColor.Lerp(healthyColor, healthPercent);
+
+		if (_shield > 0)
+		{
+			float shieldPercent = shield / maxHp;
+			_shieldBar.Value = shield;
+
+			_shieldBar.Show();
+		}
+		else
+		{
+			if (_shieldBar.Visible)
+			{
+				_shieldBar.Hide();
+			}
+			
+		}
 	}
 
 	protected virtual void Die()
@@ -692,7 +975,18 @@ public partial class Unit : CharacterBody2D
 		QueueFree();
 	}
 
-	
+	protected virtual void RemoveSelf()
+	{
+		SetProcess(false);
+		SetPhysicsProcess(false);
+
+		// 2. Disable collisions so other units don't bump into a corpse
+		GetNode<CollisionShape2D>("CollisionShape2D").SetDeferred("disabled", true);
+
+		EmitSignal(SignalName.Removed, this);
+
+		QueueFree();
+	}
 
 	public override void _Draw()
 	{
@@ -703,7 +997,7 @@ public partial class Unit : CharacterBody2D
 
 			if (attackAreaShape != null)
 			{
-				Color drawColor = new Color(0.2f, 0.6f, 1.0f, 0.3f); // Light blue, semi-transparent
+				Color drawColor = new Color(0.4f, 0.6f, 1.0f, 0.3f); // Light blue, semi-transparent
 				DrawCircle(Vector2.Zero, attackAreaShape.Radius, drawColor);
 			}
 		}
@@ -742,7 +1036,7 @@ public partial class Unit : CharacterBody2D
 		return _pathfinder;
 	}
 
-	public Texture2D GetIconTexture()
+	public virtual Texture2D GetIconTexture()
 	{
 		return GetNode<Sprite2D>("MainSprite").Texture;
 	}

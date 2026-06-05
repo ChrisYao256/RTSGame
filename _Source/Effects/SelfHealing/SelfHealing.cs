@@ -13,18 +13,20 @@ public partial class SelfHealing : Effect
 
 	SelfHealingResource _resource;
 
+	float _queuedHealing;
+
 	public SelfHealing(SelfHealingResource resource) : base(resource)
 	{
 		_resource = resource;
 	}
 
-	protected override void OnCreation()
+	public override void _PhysicsProcess(double delta)
 	{
-		_timer = new Timer();
-		AddChild(_timer);
-		_timer.WaitTime = _resource._healInterval;
-		_timer.OneShot = false;
-		_timer.Timeout += () => _parentUnit.IncreaseHp(_resource._healAmount);
-		_timer.Start();
+		_queuedHealing += (float)delta * _resource._healAmount;
+		if (_queuedHealing > 1)
+		{
+			_parentUnit.IncreaseHp((int)Mathf.FloorToInt(_queuedHealing), true);
+			_queuedHealing -= Mathf.FloorToInt(_queuedHealing);
+		}
 	}
 }

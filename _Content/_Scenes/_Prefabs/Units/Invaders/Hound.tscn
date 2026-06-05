@@ -3,11 +3,20 @@
 [ext_resource type="PackedScene" uid="uid://bqn4h6d52i52" path="res://_Content/_Scenes/_Prefabs/Units/BaseInvaderUnit.tscn" id="1_dafsc"]
 
 [node name="BaseUnit" unique_id=481801141 instance=ExtResource("1_dafsc")]
-_moneyDropped = 2
-_hpDeducted = 1
-_moveSpeed = 120.0
-_name = "Hound"
+_moneyDropped = 4
+_moneyDeducted = 5
+_moveSpeed = 100.0
+_hpMax = 250
+_startingEffects = Array[Object]([])
+_internalName = "Hound"
+_name = "Goblin"
 _radius = 16.0
 
 [node name="MainSprite" parent="." index="1" unique_id=701942347]
 scale = Vector2(1, 1)
+
+[node name="HealthBar" parent="." index="5" unique_id=640038315]
+offset_left = -24.0
+offset_top = -32.0
+offset_right = 24.0
+offset_bottom = -20.0

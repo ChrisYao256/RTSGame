@@ -20,6 +20,9 @@ public partial class SpawnerDataResource : Resource
 	public float _speedBuff;
 
 	[Export]
+	public int _armorBuff;
+
+	[Export]
 	public int _moneyBuff;
 
 	[Export]

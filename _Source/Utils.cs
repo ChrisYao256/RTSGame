@@ -2,9 +2,6 @@ using Godot;
 using Godot.Collections;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RTSGame.Units
 {
@@ -20,7 +17,22 @@ namespace RTSGame.Units
 			visual.Scale = new Vector2(targetScaleX, targetScaleY);
 		}
 
-		public static List<Node> QueryPhysicsCircle(World2D world, Vector2 position, float radius)
+		public static void ScaleTextureButtonToRadius(TextureButton button, float radius)
+		{
+			float diameter = radius * 2.0f;
+
+			// 1. Force the button's layout boundaries to be the target diameter
+			button.CustomMinimumSize = new Vector2(diameter, diameter);
+			button.Size = new Vector2(diameter, diameter); // Force immediate update if not in a container
+
+			// 2. Configure the button's texture settings so it actually stretches to match
+			button.StretchMode = TextureButton.StretchModeEnum.KeepAspectCentered;
+			button.IgnoreTextureSize = true;
+		}
+
+
+
+		public static List<Node> QueryPhysicsCircle(World2D world, Vector2 position, float radius, uint collisionMask = 2)
 		{
 			var spaceState = world.DirectSpaceState;
 			var query = new PhysicsShapeQueryParameters2D();
@@ -31,7 +43,7 @@ namespace RTSGame.Units
 
 			query.Shape = circle;
 			query.Transform = new Transform2D(0, position);
-			query.CollisionMask = 2; // Target only the 'Enemies' layer
+			query.CollisionMask = collisionMask; // Target only the 'Enemies' layer
 
 			var results = spaceState.IntersectShape(query);
 			List<Node> nodes = new List<Node>();
@@ -44,6 +56,17 @@ namespace RTSGame.Units
 				}
 			}
 			return nodes;
+		}
+
+		public static int Mod(int dividend, int divisor)
+		{
+			// Guard against division by zero
+			if (divisor == 0)
+				throw new DivideByZeroException();
+
+			int remainder = dividend % divisor;
+			// Make sure result is positive
+			return remainder < 0 ? remainder + divisor : remainder;
 		}
 	}
 }

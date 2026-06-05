@@ -24,7 +24,7 @@ public partial class NearbySpawnerStatsIncreaseResource : EffectResource
 
 		if (_buffResource._hpBuff != 0)
 		{
-			_effectDescription += "Increase spawned enemy HP by " + _buffResource._hpBuff + "\n";
+			_effectDescription += "Increase spawned enemy HP by " + _buffResource._hpBuff * 100 + "%\n";
 		}
 
 		if (_buffResource._speedBuff != 0)
@@ -34,7 +34,7 @@ public partial class NearbySpawnerStatsIncreaseResource : EffectResource
 
 		if (_buffResource._moneyBuff != 0)
 		{
-			_effectDescription += "Increase spawned enemy gold drop by " + _buffResource._moneyBuff + "\n";
+			_effectDescription += "Increase spawned enemy gold drop by $" + _buffResource._moneyBuff + "\n";
 		}
 		if (_buffResource._locations.Count > 0)
 		{

@@ -2,6 +2,7 @@ using Godot;
 using Godot.Collections;
 using RTSGame.Units;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 
 namespace RTSGame.Source;
@@ -14,7 +15,10 @@ public partial class TDManager : Node
 	public string MenuPath = "res://_Content/_Scenes/StartScene.tscn";
 
 	[Export]
-	private Array<string> _availTowerList = ["GunTurret", "LaserTurret", "BombTurret", "SlimeSpawner", "HoundSpawner", "PriestSpawner"];
+	public Array<string> _availTowerList;
+
+	[Export]
+	private int _startingMoney = 100;
 
 	public static float TileSize = 64f;
 
@@ -22,11 +26,13 @@ public partial class TDManager : Node
 	public int _waveIndex = 0;
 
 	private UnitManager _unitManager;
-	private TDTowerManager _towerManager;
+	public TDTowerManager _towerManager;
 	private Panel _rightPanel;
 	private Label _hpLabel;
 	private Label _moneyLabel;
 	private Grid _grid;
+	private Label _waveCounter;
+	private Label _bossWaveLabel;
 
 	private Exit _base;
 
@@ -39,17 +45,20 @@ public partial class TDManager : Node
 		_hpLabel = _rightPanel.GetNode<Label>("HpLabel");
 		_moneyLabel = _rightPanel.GetNode<Label>("MoneyLabel");
 		_grid = GetParent().GetNode<Grid>("TileMapLayer");
+		_waveCounter = _rightPanel.GetNode<Label>("WaveCounter");
+		_bossWaveLabel = _rightPanel.GetNode<Label>("BossWaveLabel");
 	}
 
 	public void Initialize()
 	{
 		_unitManager = GetParent().GetNode<UnitManager>("UnitManager");
 		_towerManager = GetParent().GetNode<TDTowerManager>("TowerManager");
-		_towerManager.InitializeTowersPanel(_availTowerList, _unitManager);
+		_towerManager.InitializeTowersPanel(_availTowerList, _unitManager, TowerUnit.TowerType.Defense);
 
 		_waveList = new System.Collections.Generic.Dictionary<int, List<(List<string>, float)>>{
-			{ 5, [(["MegaSlime"], 1f)]},
-			{ 10, [(["Archbishop"], 1f)]},
+			{ 7, [(["MegaSlime"], 1f)]},
+			{ 15, [(["Archbishop"], 1f)]},
+			{ 20, [(["BigArchbishop"], 1f)]},
 		};
 
 		_base = (Exit)(_unitManager.SpawnUnit(_grid.GetExitLocation(), 0, "Exit"));
@@ -60,27 +69,15 @@ public partial class TDManager : Node
 
 		UpdateHp(20);
 
-		UpdateMoney(100);
+		UpdateMoney(_startingMoney);
+		UpdateWaveIndexCounter();
 	}
 
 	public async void SpawnNextWave()
 	{
-		//List<(List<string>, float)> enemyList = _waveList[_waveIndex];
-		//for (int i = 0; i < enemyList.Count; i++)
-		//{
-		//	(List<string> enemies, float delay) = enemyList[i];
-		//	foreach (string enemy in enemyList[i].Item1)
-		//	{
-		//		SpawnEnemy(enemy);
-		//	}
-		//	if (delay > 0)
-		//	{
-		//		await ToSignal(GetTree().CreateTimer(delay), SceneTreeTimer.SignalName.Timeout);
-		//	}
-		//}
-
 		_waveIndex++;
 		EmitSignal(SignalName.NewWave);
+		UpdateWaveIndexCounter();
 		if (_waveList.Keys.Contains(_waveIndex))
 		{
 			List<(List<string>, float)> enemyList = _waveList[_waveIndex];
@@ -89,7 +86,7 @@ public partial class TDManager : Node
 				(List<string> enemies, float delay) = enemyList[i];
 				foreach (string enemy in enemyList[i].Item1)
 				{
-					SpawnEnemy(enemy);
+					SpawnEnemyAtEntrance(enemy);
 				}
 				if (delay > 0)
 				{
@@ -99,7 +96,13 @@ public partial class TDManager : Node
 		}
 	}
 
-	private void SpawnEnemy(string name)
+	private void UpdateWaveIndexCounter()
+	{
+		_waveCounter.Text = "Wave " + _waveIndex;
+		_bossWaveLabel.Text = "Boss at wave " + GetNextBossWave();
+	}
+
+	private void SpawnEnemyAtEntrance(string name)
 	{
 		Unit unit = _unitManager.SpawnUnit(_grid.GetEntrancePosition(), 1, name, true);
 		GD.Print(name+ " Spawned");
@@ -122,6 +125,33 @@ public partial class TDManager : Node
 		}
 		unit.Connect(Unit.SignalName.Died, Callable.From<Unit>(OnUnitDied));
 		return (InvaderUnit)unit;
+	}
+
+	public InvaderUnit GetEnemy(string name)
+	{
+		InvaderUnit unit = (InvaderUnit) UnitManager.GetUnit(name);
+		return unit;
+	}
+
+	public Unit SpawnAllyFromTower(string name, Vector2 position)
+	{
+		Unit unit = _unitManager.SpawnUnit(position, 0, name, true);
+		GD.Print(name + " Spawned");
+		unit.Connect(Unit.SignalName.Died, Callable.From<Unit>(OnUnitDied));
+		return (Unit)unit;
+	}
+
+	public void AddEnemyToQueue(string unit)
+	{
+		int nextWave = GetNextBossWave();
+		if (nextWave == -1)
+		{
+			return;
+		}
+		else
+		{
+			_waveList[nextWave].Add(([unit], 0.5f));
+		}
 	}
 
 	public void UnitExited(InvaderUnit unit)
@@ -151,6 +181,11 @@ public partial class TDManager : Node
 		_moneyLabel.Text = "$" + _money.ToString();
 	}
 
+	public void GainMoney(int gain)
+	{
+		UpdateMoney(_money + gain);
+	}
+
 	public void SpendMoneyOnTower(int cost)
 	{
 		UpdateMoney(_money - cost);
@@ -160,7 +195,23 @@ public partial class TDManager : Node
 	{
 		if (unit is InvaderUnit invader)
 		{
-			UpdateMoney(_money + invader.GetMoneyDropped());
+			GainMoney(invader.GetMoneyDropped());
+		}
+	}
+
+	public int GetNextBossWave()
+	{
+		List<int> waves = _waveList.Keys.ToList();
+		int? result = waves.Where(x => x > _waveIndex)
+									.Cast<int?>() // Allows returning null if none found
+									.Min();
+		if (result is not null)
+		{
+			return (int)result;
+		}
+		else
+		{
+			return -1;
 		}
 	}
 }

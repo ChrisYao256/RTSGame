@@ -70,16 +70,25 @@ public partial class InvaderUnit : Unit
 
 		GetTree().Root.AddChild(textNode);
 
-		SetProcess(false);
-		SetPhysicsProcess(false);
-		GetNode<CollisionShape2D>("CollisionShape2D").SetDeferred("disabled", true);
-
-		QueueFree();
+		RemoveSelf();
 	}
 
 	public int GetMoneyDropped()
 	{
 		return _moneyDropped + _moneyModifier;
+	}
+
+	public int GetDistanceToExit()
+	{
+		int distance = 0;
+		foreach (Command command in _commandQueue)
+		{
+			if (command is AttackMove attackMove)
+			{
+				distance++;
+			}
+		}
+		return distance;
 	}
 }
 

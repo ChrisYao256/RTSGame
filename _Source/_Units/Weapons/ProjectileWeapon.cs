@@ -10,6 +10,8 @@ public partial class ProjectileWeapon : BaseWeapon
 	[Export] protected Texture2D _projectileTexture;
 	[Export] protected double _lifeTime;
 	[Export] protected float _projectileRadius;
+	[Export] public int _pierceCount;
+
 	public override void _Ready()
 	{
 		base._Ready();
@@ -29,10 +31,9 @@ public partial class ProjectileWeapon : BaseWeapon
 		{
 			enemy.Hit(GetDamage(), _parent);
 			_parent.OnHitEnemy(enemy);
-			projectile.QueueFree();
 		});
 
-		Projectile projectile = new(_parent._teamId, _projectileSpeed, _projectileTexture, _lifeTime, _projectileRadius, dealDamage, targetAngle);
+		Projectile projectile = new(_parent._teamId, _projectileSpeed, _projectileTexture, _lifeTime, _projectileRadius, dealDamage, targetAngle, _pierceCount);
 		AddChild(projectile);
 	}
 }
@@ -50,7 +51,10 @@ public partial class Projectile: Area2D
 
 	private bool _hasHit = false;
 
-	public Projectile(int teamId, float speed, Texture2D texture, double lifeTime,  float projectileRadius, Action<Unit, Projectile> contact, float targetAngle, Action timeOut = null)
+	private int _pierceCount = 1;
+	private int _hasPierced = 0;
+
+	public Projectile(int teamId, float speed, Texture2D texture, double lifeTime,  float projectileRadius, Action<Unit, Projectile> contact, float targetAngle, int pierceCount = 1, Action timeOut = null)
 	{
 		_teamId = teamId;
 		_projectileSpeed = speed;
@@ -67,6 +71,8 @@ public partial class Projectile: Area2D
 		}
 			
 		_targetAngle = targetAngle;
+		Rotation = _targetAngle;
+		_pierceCount = pierceCount;
 		_contactAction = contact;
 	}
 
@@ -110,14 +116,18 @@ public partial class Projectile: Area2D
 
 	private void OnBodyEntered(Node2D body)
 	{
-		if (_hasHit)
+		if (_hasPierced >= _pierceCount)
 		{
 			return;
 		}
 		if (body is Unit unit && unit._teamId != _teamId)
 		{
-			_hasHit = true;
+			_hasPierced++;
 			_contactAction.Invoke(unit, this);
+			if (_hasPierced >= _pierceCount)
+			{
+				QueueFree();
+			}
 		}
 	}
 }

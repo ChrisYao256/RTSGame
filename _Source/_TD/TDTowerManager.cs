@@ -1,16 +1,17 @@
 using Godot;
 using RTSGame.Units;
-using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace RTSGame.Source;
 
 public partial class TDTowerManager : Node2D
 {
+
 	private TDManager _tdManager;
 	private UnitManager _unitManager;
 	private Panel _rightPanel;
-	private VBoxContainer _towersBox;
+	private GridContainer _towersBox;
 	private Grid _grid;
 
 	private Godot.Collections.Array<string> _towers;
@@ -24,9 +25,10 @@ public partial class TDTowerManager : Node2D
 	public override void _Ready()
 	{
 		_rightPanel = GetParent().GetNode<Panel>("RightPanel");
-		_towersBox = _rightPanel.GetNode<VBoxContainer>("Towers");
+		_towersBox = _rightPanel.GetNode<GridContainer>("Towers");
 		_grid = GetParent().GetNode<Grid>("TileMapLayer");
 		_tdManager = GetParent().GetNode<TDManager>("TdManager");
+		UpdateIncomeDisplay();
 	}
 
 	public override void _Process(double delta)
@@ -37,26 +39,34 @@ public partial class TDTowerManager : Node2D
 		}
 	}
 
-	public void InitializeTowersPanel(Godot.Collections.Array<string> towers, UnitManager unitManager)
+	public void InitializeTowersPanel(Godot.Collections.Array<string> towers, UnitManager unitManager, TowerUnit.TowerType tab)
 	{
 		_unitManager = unitManager;
 		_towers = towers;
+		foreach (Node child in _towersBox.GetChildren())
+		{
+			child.QueueFree();
+		}
 		foreach (string name in towers)
 		{
 			VBoxContainer container = new VBoxContainer();
 
 			string name_ = name;
-			TowerUnit unit = (TowerUnit)_unitManager.GetUnit(name);
+			TowerUnit unit = (TowerUnit)UnitManager.GetUnit(name);
+
+			if (unit._towerType != tab)
+			{
+				continue;
+			}
+
+			AddChild(unit);
 
 			Label nameLabel = new Label();
 			nameLabel.Text = unit._name;
 			container.AddChild(nameLabel);
 
-			HoverBoxTextureButton towerButton = new HoverBoxTextureButton();
-			towerButton.TextureNormal = unit._iconTexture;
-			towerButton.IgnoreTextureSize = true;
-			towerButton.StretchMode = TextureButton.StretchModeEnum.KeepAspect;
-			towerButton.CustomMinimumSize = new Vector2(48, 48);
+			HoverInfoImage towerButton
+				= unit.MakeTowerTooltip(true);
 			towerButton.Pressed += (()=> 
 			{
 				if (_tdManager._money >= unit._cost)
@@ -65,35 +75,32 @@ public partial class TDTowerManager : Node2D
 				} 
 			});
 
-			Panel infoPanel = new Panel();
-
-			StyleBoxFlat solidBox = new StyleBoxFlat();
-
-			solidBox.BgColor = Colors.Black;
-
-			solidBox.SetBorderWidthAll(0);
-			infoPanel.AddThemeStyleboxOverride("panel", solidBox);
-
-			Label towerDesc = new Label();
-			towerDesc.Text = unit.GetDescription();
-			towerDesc.Text += "\n" + "DPS: " + unit.GetDPS();
-			//towerDesc.ForceUpdateTransform();
-			infoPanel.Size = towerDesc.GetCombinedMinimumSize();
-			infoPanel.ZIndex = 1;
-			infoPanel.AddChild(towerDesc);
-
-			towerButton._popUpBox = infoPanel;
-			//towerButton.Initialize();
-
 			container.AddChild(towerButton);
 
 			Label costLabel = new Label();
 			costLabel.Text = "$" + unit._cost.ToString();
 			container.AddChild(costLabel);
-
+			
 			_towersBox.AddChild(container);
 
+			unit.QueueFree();
+
 		}
+	}
+
+	public void SwitchDisplayedTabDefense()
+	{
+		InitializeTowersPanel(_tdManager._availTowerList, _unitManager, TowerUnit.TowerType.Defense);
+	}
+
+	public void SwitchDisplayedTabSupport()
+	{
+		InitializeTowersPanel(_tdManager._availTowerList, _unitManager, TowerUnit.TowerType.Support);
+	}
+
+	public void SwitchDisplayedTabSpawner()
+	{
+		InitializeTowersPanel(_tdManager._availTowerList, _unitManager, TowerUnit.TowerType.Spawner);
 	}
 
 	public override void _UnhandledInput(InputEvent @event)
@@ -169,7 +176,7 @@ public partial class TDTowerManager : Node2D
 		{
 			if (canBuild && _previewTower._cost <= _tdManager._money)
 			{
-				PlaceTower(gridCoords);
+				PlaceDraggingTower(gridCoords);
 			}
 			else
 			{
@@ -179,7 +186,29 @@ public partial class TDTowerManager : Node2D
 		
 	}
 
-	private void PlaceTower(Vector2I gridCoords)
+	// for automatically placing tower
+	public void PlaceTower(Vector2I gridCoords, string towerName)
+	{
+		Vector2 position = _grid.ToGlobal(_grid.MapToLocal(gridCoords));
+		TowerUnit newTower = (TowerUnit)_unitManager.SpawnUnit(position, 0, towerName, false, gridCoords);
+		if (newTower is Spawner spawner)
+		{
+			_tdManager.Connect(TDManager.SignalName.NewWave, Callable.From(spawner.OnNewWave));
+		}
+		_grid.OccupyCell(gridCoords, (TowerUnit)newTower);
+		List<TowerUnit> allTowersCopy = _allTowers.ToList();
+		_allTowers.Add(newTower);
+		foreach (TowerUnit tower in allTowersCopy)
+		{
+			tower.OnPlacedTower(newTower);
+		}
+		
+		newTower.EmitSignal(Unit.SignalName.Creation);
+		UpdateIncomeDisplay();
+	}
+
+	// for dragging tower from right panel to place
+	private void PlaceDraggingTower(Vector2I gridCoords)
 	{
 		Vector2 position = _grid.ToGlobal(_grid.MapToLocal(gridCoords));
 		TowerUnit newTower = (TowerUnit)_unitManager.SpawnUnit(position, 0, _towerToPlace, false, gridCoords);
@@ -189,10 +218,51 @@ public partial class TDTowerManager : Node2D
 			_tdManager.Connect(TDManager.SignalName.NewWave, Callable.From(spawner.OnNewWave));
 		}
 		_grid.OccupyCell(gridCoords, (TowerUnit)newTower);
-		foreach (TowerUnit tower in _allTowers)
+		List<TowerUnit> allTowersCopy = _allTowers.ToList();
+		_allTowers.Add(newTower);
+		foreach (TowerUnit tower in allTowersCopy)
 		{
 			tower.OnPlacedTower(newTower);
+		}		
+		newTower.EmitSignal(Unit.SignalName.Creation);
+		UpdateIncomeDisplay();
+	}
+
+	public void RemoveTower(Vector2I gridCoords)
+	{
+		if (_grid.IsCellVacant(gridCoords))
+		{
+			return;
 		}
-		_allTowers.Add(newTower);
+		TowerUnit tower = _grid.GetTowerOnCell(gridCoords);
+		_allTowers.Remove(tower);
+		tower.RemoveAllEffects();
+		_grid.UnoccupyCell(gridCoords);
+		tower.QueueFree();
+	}
+
+	public void TransformTower(Vector2I gridCoords, string newTower)
+	{
+		RemoveTower(gridCoords);
+		PlaceTower(gridCoords, newTower);
+	}
+
+	public void UpdateIncomeDisplay()
+	{
+		Label incomeLabel = _rightPanel.GetNode<Label>("IncomeLabel");
+
+		int income = 0;
+
+		foreach (TowerUnit tower in _allTowers)
+		{
+			income += tower.GetIncome();
+		}
+
+		incomeLabel.Text = "Maximum Income: $" + income;
+	}
+
+	public List<TowerUnit> GetAllTowers()
+	{
+		return _allTowers;
 	}
 }

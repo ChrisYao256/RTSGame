@@ -4,6 +4,15 @@ using System;
 
 public abstract partial class BaseWeapon : Node2D
 {
+	public enum DamageType
+	{
+		Null,
+		Physical,
+		Energy,
+		Flame,
+		Explosive
+	}
+
 	[Export] private int _damage;
 	[Export] private float _range;
 
@@ -11,7 +20,9 @@ public abstract partial class BaseWeapon : Node2D
 	[Export] private double _attackDelayLow = 0.1;
 	[Export] private double _attackDelayHigh = 0.2;
 
-	[Export] protected bool _useAttackDelay = false;
+	[Export] public bool _useAttackDelay = false;
+
+	[Export] public DamageType _damageType;
 
 	protected double _attackTimer = 0;
 
@@ -19,8 +30,10 @@ public abstract partial class BaseWeapon : Node2D
 	public Unit _attackTarget;
 
 	public int _damageModifier = 0;
+	public float _damagePercentModifier = 1f;
 	public float _rangeModifier = 0;
 	public double _attackSpeedModifier = 0;
+	public double _attackSpeedDebuff = 0;
 	public double _attackDelayModifier = 0;
 
 	public override void _Ready()
@@ -36,8 +49,8 @@ public abstract partial class BaseWeapon : Node2D
 			_attackTimer -= delta;
 			if (_attackTimer < 0)
 			{
-				_attackTimer = _attackCooldown / ( 1 + _attackSpeedModifier);
-				PerformAttack(_attackTarget, _damage + _damageModifier);
+				_attackTimer = GetCooldown();
+				PerformAttack(_attackTarget, (int)((_damage + _damageModifier) * _damagePercentModifier));
 			}
 		}
 	}
@@ -70,12 +83,12 @@ public abstract partial class BaseWeapon : Node2D
 
 	public int GetDamage()
 	{
-		return _damage + _damageModifier;
+		return (int)((_damage + _damageModifier) * _damagePercentModifier);
 	}
 
 	public double GetCooldown()
 	{
-		return _attackCooldown / (1 + _attackSpeedModifier);
+		return _attackCooldown / ((1 + _attackSpeedModifier) * (1 - _attackSpeedDebuff));
 	}
 
 	public double GetAttackDelay()
@@ -85,6 +98,6 @@ public abstract partial class BaseWeapon : Node2D
 
 	public virtual float GetDPS()
 	{
-		return (_damage + _damageModifier) / (float) (_attackCooldown/ (1 + _attackSpeedModifier));
+		return (GetDamage()) / (float) (GetCooldown());
 	}
 }

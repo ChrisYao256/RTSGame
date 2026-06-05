@@ -1,6 +1,7 @@
 using Godot;
 using Godot.Collections;
 using System.Linq.Expressions;
+using static Godot.HttpRequest;
 
 namespace RTSGame.Units;
 
@@ -20,6 +21,9 @@ public partial class SpawnerStatsIncreaseResource : EffectResource
 	public float _speedBuff;
 
 	[Export]
+	public int _armorBuff;
+
+	[Export]
 	public int _moneyBuff;
 
 	[Export]
@@ -30,6 +34,28 @@ public partial class SpawnerStatsIncreaseResource : EffectResource
 
 	[Export]
 	public Array<EffectResource> _startingEffects;
+
+	public SpawnerStatsIncreaseResource MultiplyEffect(int n)
+	{
+		SpawnerStatsIncreaseResource newResource = (SpawnerStatsIncreaseResource)Duplicate();
+		if (_units.Count > 0)
+		{
+			Array<string> newUnits = [];
+			for (int i = 0; i < n; i++)
+			{
+				newUnits.AddRange(_units);
+			}
+			newResource._units = newUnits;
+		}
+		newResource._hpBuff *= n;
+		newResource._hpLossBuff *= n;
+		newResource._armorBuff *= n;
+		newResource._moneyBuff *= n;
+		newResource._moneyLossBuff *= n;
+		newResource._speedBuff *= n;
+		newResource.SetDescription();
+		return newResource;
+	}
 
 	public override void SetDescription()
 	{
@@ -43,13 +69,19 @@ public partial class SpawnerStatsIncreaseResource : EffectResource
 		if (_hpBuff != 0)
 		{
 			
-			_effectDescription += "Increase spawned enemy HP by " + _hpBuff + "\n";
+			_effectDescription += "Increase spawned enemy HP by " + _hpBuff * 100 + "%\n";
 		}
 
 		if (_speedBuff != 0)
 		{
 			
 			_effectDescription += "Increase spawned enemy speed by " + _speedBuff + "\n";
+		}
+
+		if (_armorBuff != 0)
+		{
+
+			_effectDescription += "Increase spawned enemy armor by " + _armorBuff + "\n";
 		}
 
 		if (_moneyBuff != 0)

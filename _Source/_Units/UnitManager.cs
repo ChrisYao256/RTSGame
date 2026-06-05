@@ -20,11 +20,28 @@ public partial class UnitManager : Node2D
 		// towers
 		{ "GunTurret", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/GunTurret.tscn") },
 		{ "LaserTurret", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/LaserTurret.tscn") },
-		{ "BombTurret", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/ProjectileTower.tscn") },
+		{ "BombTurret", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/BombTurret.tscn") },
+		{ "PiercingTower", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/PiercingTower.tscn") },
+		{ "BigLaserTurret", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/BigLaserTurret.tscn") },
+		{ "IceLaserTurret", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/IceLaserTurret.tscn") },
+		{ "FlameTurret", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/FlameTurret.tscn") },
+		{ "FrostTurret", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/FrostTurret.tscn") },
+		{ "TestTurret", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/TestTurret.tscn") },
+
 		{ "SlimeSpawner", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/SlimeSpawner.tscn") },
 		{ "HoundSpawner", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/HoundSpawner.tscn") },
 		{ "PriestSpawner", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/PriestSpawner.tscn") },
+		{ "YetiSpawner", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/YetiSpawner.tscn") },
+		{ "SoldierSpawner", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/SoldierSpawner.tscn") },
+
+		{ "DepoweredSpawner", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/DepoweredSpawner.tscn") },
+
+		{ "PortalAmplifier", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/PortalAmplifier.tscn") },
 		{ "Armory", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/Armory.tscn") },
+		{ "Mine", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/Mine.tscn") },
+		{ "DamageArmory", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/DamageArmory.tscn") },
+		{ "Reactor", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/Reactor.tscn") },
+		{ "Lab", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/Lab.tscn") },
 
 		// invaders
 		{ "Slime", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Invaders/Slime.tscn") },
@@ -32,10 +49,33 @@ public partial class UnitManager : Node2D
 		{ "MegaSlime",GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Invaders/MegaSlime.tscn")},
 		{ "Priest", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Invaders/Priest.tscn")},
 		{ "Archbishop", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Invaders/Archbishop.tscn")},
+		{ "Yeti", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Invaders/Yeti.tscn")},
+		{ "Soldier", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Invaders/Soldier.tscn")},
+		{ "BigArchbishop", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Invaders/BigArchbishop.tscn")},
+		{ "Bonus", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Invaders/Bonus.tscn")},
 	};
 
 	public static uint UnitLayerMask = 2;
 	public static uint TowerLayerMask = 4;
+
+	public static Unit GetUnit(string unitName)
+	{
+		if (UnitLibrary.TryGetValue(unitName, out PackedScene scene))
+		{
+			Unit newUnit = scene.Instantiate<Unit>();
+			return newUnit;
+		}
+		else
+		{
+			GD.PrintErr($"Unit type {unitName} not found in library!");
+		}
+		return null;
+	}
+
+	public static string InternalNameToName(string internalName)
+	{
+		return UnitManager.GetUnit(internalName)._name;
+	}
 
 	private UnitInfoPanel _unitInfoPanel;
 
@@ -406,6 +446,7 @@ public partial class UnitManager : Node2D
 			newUnit._aiControlled = aiControlled;
 
 			newUnit.Died += OnUnitDied;
+			newUnit.Removed += OnUnitRemoved;
 
 			if (gridLocation is not null && newUnit is TowerUnit tower)
 			{
@@ -416,7 +457,6 @@ public partial class UnitManager : Node2D
 
 			_activeUnits.Add(newUnit);
 
-			GD.Print($"Spawned unit for team {teamId}");
 			return newUnit;
 		}
 		else
@@ -438,17 +478,15 @@ public partial class UnitManager : Node2D
 		}
 	}
 
-	public Unit GetUnit(string unitName)
+	private void OnUnitRemoved(Unit removedUnit)
 	{
-		if (UnitLibrary.TryGetValue(unitName, out PackedScene scene))
+		removedUnit.Died -= OnUnitDied;
+
+		_activeUnits.Remove(removedUnit);
+		if (_selectedUnits.Contains(removedUnit))
 		{
-			Unit newUnit = scene.Instantiate<Unit>();
-			return newUnit;
+			_selectedUnits.Remove(removedUnit);
+			UpdatePlayerSelection(_selectedUnits);
 		}
-		else
-		{
-			GD.PrintErr($"Unit type {unitName} not found in library!");
-		}
-		return null;
 	}
 }

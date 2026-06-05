@@ -7,6 +7,7 @@ using RTSGame.Source;
 public partial class NearbySpawnerStatsIncrease : Effect
 {
 	private NearbySpawnerStatsIncreaseResource _resource;
+	private List<Effect> _createdEffects = [];
 
 	public NearbySpawnerStatsIncrease(NearbySpawnerStatsIncreaseResource resource) : base(resource)
 	{
@@ -18,6 +19,7 @@ public partial class NearbySpawnerStatsIncrease : Effect
 	{
 		base.ConnectSignals(unit);
 		unit.Connect(Unit.SignalName.PlacedTower, Callable.From<TowerUnit>(OnPlacedTower));
+		OnCreation();
 	}
 
 	protected override void OnCreation()
@@ -32,7 +34,8 @@ public partial class NearbySpawnerStatsIncrease : Effect
 				TowerUnit tower = parentTower._grid.GetTowerOnCell(position);
 				if (tower is Spawner spawner)
 				{
-					spawner.AddEffect(_resource._buffResource);
+					Effect addedEffect = spawner.AddEffect(_resource._buffResource);
+					_createdEffects.Add(addedEffect);
 				}
 			}
 		}
@@ -46,8 +49,24 @@ public partial class NearbySpawnerStatsIncrease : Effect
 		{
 			if (tower is Spawner spawner)
 			{
-				spawner.AddEffect(_resource._buffResource);
+				Effect addedEffect = spawner.AddEffect(_resource._buffResource);
+				_createdEffects.Add(addedEffect);
 			}
 		}
+	}
+
+	public override void RemoveEffectNode()
+	{
+		if (!GodotObject.IsInstanceValid(_parentUnit))
+		{
+			QueueFree();
+			return;
+		}
+		foreach (Effect effect in _createdEffects)
+		{
+			effect.RemoveEffectNode();
+		}
+		_parentUnit._effects.Remove(_resource);
+		QueueFree();
 	}
 }
