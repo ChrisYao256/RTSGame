@@ -5,7 +5,7 @@ namespace RTSGame.Units;
 public partial class MoneyOnWaveStartResource : EffectResource
 {
 	[Export]
-	public int _money;
+	public Vector4I _money;
 
 	public override void SetDescription()
 	{

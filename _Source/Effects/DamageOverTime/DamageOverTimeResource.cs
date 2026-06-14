@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.Design;
 namespace RTSGame.Units;
 
@@ -12,9 +13,12 @@ public partial class DamageOverTimeResource : EffectResource
 	[Export]
 	public float _time;
 
+	[Export]
+	public PackedScene _burnVisualScene;
+
 	private DamageOverTime _effect;
 
-	public override bool MergeWithOld(EffectResource oldResource)
+	public override bool MergeWithOld(EffectResource oldResource, List<EffectResource> allMatchingResource)
 	{
 		DamageOverTimeResource typedOldResource = (DamageOverTimeResource)oldResource;
 
@@ -24,6 +28,7 @@ public partial class DamageOverTimeResource : EffectResource
 
 	public override void SetDescription()
 	{
+		_displayType = DisplayTypes.Small;
 		_effectName = "Burn";
 		_effectDescription = "Taking " + _damage.ToString() + " every second";
 	}

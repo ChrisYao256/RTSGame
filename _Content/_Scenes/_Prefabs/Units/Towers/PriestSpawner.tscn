@@ -4,10 +4,8 @@
 [ext_resource type="Script" uid="uid://b4jva1l23o6su" path="res://_Source/_Units/Spawner.cs" id="2_ivq68"]
 [ext_resource type="Script" uid="uid://cvroohkeaovqw" path="res://_Source/_Units/SpawnerDataResource.cs" id="3_ivq68"]
 [ext_resource type="Texture2D" uid="uid://iocgjnp7i8td" path="res://_Assets/Portal.png" id="4_dolah"]
-[ext_resource type="PackedScene" uid="uid://duss40s7lcad3" path="res://_Content/_Scenes/_Prefabs/HealingVisualEffect.tscn" id="5_eh4s5"]
 [ext_resource type="Script" uid="uid://dj1iuetxsjca2" path="res://_Source/Effects/SpawnerStatsIncrease/SpawnerStatsIncreaseResource.cs" id="5_ivq68"]
 [ext_resource type="Script" uid="uid://of8d3f3k7s7j" path="res://_Source/Effects/NearbyHealing/NearbyHealingResource.cs" id="6_ogl47"]
-[ext_resource type="Script" uid="uid://bwnw1f3ti2dgi" path="res://_Source/Effects/SelfHealing/SelfHealingResource.cs" id="7_cotg0"]
 [ext_resource type="Script" uid="uid://c4pph75db2q3s" path="res://_Source/Effects/NearbySpawnerStatsIncrease/NearbySpawnerStatsIncreaseResource.cs" id="8_7mgh1"]
 [ext_resource type="Script" uid="uid://dtpcxn7d2dqcy" path="res://_Source/Effects/EffectResource.cs" id="9_dolah"]
 [ext_resource type="Script" uid="uid://fdug3yybl4s5" path="res://_Source/Effects/AdjacencyTransform/AdjacencyTransformResource.cs" id="10_eh4s5"]
@@ -21,61 +19,86 @@ metadata/_custom_type_script = "uid://cvroohkeaovqw"
 
 [sub_resource type="Resource" id="Resource_rn78u"]
 script = ExtResource("6_ogl47")
-_healAmount = 25
+_healAmount = 40
 _healInterval = 2.0
 _radius = 200.0
-_healingVisualScene = ExtResource("5_eh4s5")
 _isShield = true
 _effectName = "Healing Aura"
 metadata/_custom_type_script = "uid://of8d3f3k7s7j"
 
 [sub_resource type="Resource" id="Resource_jk1h7"]
 script = ExtResource("5_ivq68")
-_hpBuff = 0.5
-_moneyBuff = 3
+_hpBuff = 120
+_moneyBuff = Vector4i(2, 0, 0, 0)
 _startingEffects = Array[Object]([SubResource("Resource_rn78u")])
 metadata/_custom_type_script = "uid://dj1iuetxsjca2"
 
-[sub_resource type="Resource" id="Resource_cotg0"]
-script = ExtResource("6_ogl47")
-_healAmount = 25
-_healInterval = 2.0
-_radius = 200.0
-_effectName = "Stronger healing"
-metadata/_custom_type_script = "uid://of8d3f3k7s7j"
-
 [sub_resource type="Resource" id="Resource_7mgh1"]
 script = ExtResource("5_ivq68")
-_moneyBuff = 3
-_startingEffects = Array[Object]([SubResource("Resource_cotg0")])
-_effectName = "+$3, Stronger heal"
+_moneyBuff = Vector4i(1, 0, 0, 0)
+_startingEffects = null
 metadata/_custom_type_script = "uid://dj1iuetxsjca2"
 
 [sub_resource type="Resource" id="Resource_dolah"]
-script = ExtResource("5_ivq68")
-_hpBuff = 0.5
-_moneyBuff = 3
-_startingEffects = null
-_effectName = "+$3, HpBuff"
-metadata/_custom_type_script = "uid://dj1iuetxsjca2"
+script = ExtResource("8_7mgh1")
+_buffResource = SubResource("Resource_7mgh1")
+_area = Array[Vector2i]([Vector2i(1, 1), Vector2i(1, 0), Vector2i(1, -1), Vector2i(0, 1), Vector2i(0, 0), Vector2i(0, -1), Vector2i(-1, 1), Vector2i(-1, 0), Vector2i(-1, -1), Vector2i(2, 0), Vector2i(-2, 0), Vector2i(0, 2), Vector2i(0, -2)])
+metadata/_custom_type_script = "uid://c4pph75db2q3s"
 
 [sub_resource type="Resource" id="Resource_eh4s5"]
-script = ExtResource("7_cotg0")
-_healAmount = 1
-metadata/_custom_type_script = "uid://bwnw1f3ti2dgi"
+script = ExtResource("6_ogl47")
+_healAmount = 100
+_healInterval = 2.0
+_radius = 200.0
+_isShield = true
+_effectName = "Healing Aura"
+metadata/_custom_type_script = "uid://of8d3f3k7s7j"
 
 [sub_resource type="Resource" id="Resource_q6qux"]
 script = ExtResource("5_ivq68")
-_moneyBuff = 1
+_hpBuff = 250
+_moneyBuff = Vector4i(1, 0, 1, 0)
 _startingEffects = Array[Object]([SubResource("Resource_eh4s5")])
-_effectName = "Blessed"
 metadata/_custom_type_script = "uid://dj1iuetxsjca2"
 
 [sub_resource type="Resource" id="Resource_i7vgs"]
+script = ExtResource("5_ivq68")
+_moneyBuff = Vector4i(1, 0, 0, 0)
+_startingEffects = null
+metadata/_custom_type_script = "uid://dj1iuetxsjca2"
+
+[sub_resource type="Resource" id="Resource_re0g3"]
 script = ExtResource("8_7mgh1")
-_buffResource = SubResource("Resource_q6qux")
-_area = Array[Vector2i]([Vector2i(1, 1), Vector2i(1, 0), Vector2i(1, -1), Vector2i(0, 1), Vector2i(0, 0), Vector2i(0, -1), Vector2i(-1, 1), Vector2i(-1, 0), Vector2i(-1, -1)])
-_effectName = "Units from nearby towers heal themselves, but drop $1 more. "
+_buffResource = SubResource("Resource_i7vgs")
+_area = Array[Vector2i]([Vector2i(1, 1), Vector2i(1, 0), Vector2i(1, -1), Vector2i(0, 1), Vector2i(0, 0), Vector2i(0, -1), Vector2i(-1, 1), Vector2i(-1, 0), Vector2i(-1, -1), Vector2i(2, 0), Vector2i(-2, 0), Vector2i(0, 2), Vector2i(0, -2)])
+metadata/_custom_type_script = "uid://c4pph75db2q3s"
+
+[sub_resource type="Resource" id="Resource_vcgrl"]
+script = ExtResource("6_ogl47")
+_healAmount = 250
+_healInterval = 2.0
+_radius = 200.0
+_isShield = true
+_effectName = "Healing Aura"
+metadata/_custom_type_script = "uid://of8d3f3k7s7j"
+
+[sub_resource type="Resource" id="Resource_fjhxd"]
+script = ExtResource("5_ivq68")
+_hpBuff = 500
+_moneyBuff = Vector4i(1, 0, 1, 0)
+_startingEffects = Array[Object]([SubResource("Resource_vcgrl")])
+metadata/_custom_type_script = "uid://dj1iuetxsjca2"
+
+[sub_resource type="Resource" id="Resource_frhtf"]
+script = ExtResource("5_ivq68")
+_moneyBuff = Vector4i(1, 0, 0, 0)
+_startingEffects = null
+metadata/_custom_type_script = "uid://dj1iuetxsjca2"
+
+[sub_resource type="Resource" id="Resource_54r1y"]
+script = ExtResource("8_7mgh1")
+_buffResource = SubResource("Resource_frhtf")
+_area = Array[Vector2i]([Vector2i(1, 1), Vector2i(1, 0), Vector2i(1, -1), Vector2i(0, 1), Vector2i(0, 0), Vector2i(0, -1), Vector2i(-1, 1), Vector2i(-1, 0), Vector2i(-1, -1), Vector2i(2, 0), Vector2i(-2, 0), Vector2i(0, 2), Vector2i(0, -2)])
 metadata/_custom_type_script = "uid://c4pph75db2q3s"
 
 [sub_resource type="Resource" id="Resource_fjsrn"]
@@ -88,7 +111,7 @@ metadata/_custom_type_script = "uid://fdug3yybl4s5"
 
 [sub_resource type="Resource" id="Resource_v18gg"]
 script = ExtResource("5_ivq68")
-_moneyBuff = 1
+_moneyBuff = Vector4i(1, 0, 0, 0)
 _startingEffects = null
 metadata/_custom_type_script = "uid://dj1iuetxsjca2"
 
@@ -96,6 +119,7 @@ metadata/_custom_type_script = "uid://dj1iuetxsjca2"
 script = ExtResource("8_7mgh1")
 _buffResource = SubResource("Resource_v18gg")
 _area = Array[Vector2i]([Vector2i(1, 1), Vector2i(1, 0), Vector2i(1, -1), Vector2i(0, 1), Vector2i(0, 0), Vector2i(0, -1), Vector2i(-1, 1), Vector2i(-1, 0), Vector2i(-1, -1), Vector2i(2, 0), Vector2i(-2, 0), Vector2i(0, 2), Vector2i(0, -2)])
+_displayType = 1
 metadata/_custom_type_script = "uid://c4pph75db2q3s"
 
 [node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_fc0yr")]
@@ -103,22 +127,22 @@ script = ExtResource("2_ivq68")
 _data = SubResource("Resource_ogl47")
 _spawnJitterRadius = 15.0
 _isEnemy = true
-_cost = 16
+_cost = Vector4i(0, 0, 0, 0)
 _iconTexture = ExtResource("4_dolah")
 _towerType = 2
 _description = "Spawns 1 mage every turn. Mages shields nearby enemies"
-_firstUpgrade = Array[Object]([SubResource("Resource_jk1h7")])
-_firstUpgradeCost = 10
-_firstUpgradeName = "First Upgrade"
-_secondUpgradeA = SubResource("Resource_7mgh1")
-_secondUpgradeACost = 3
-_secondUpgradeB = SubResource("Resource_dolah")
-_secondUpgradeBCost = 3
-_secondUpgradeC = SubResource("Resource_i7vgs")
-_secondUpgradeCCost = 5
-_thirdUpgrade = null
-_thirdUpgradeCost = 0
-_thirdUpgradeName = "Third Upgrade"
+_firstUpgrade = Array[Object]([SubResource("Resource_jk1h7"), SubResource("Resource_dolah")])
+_firstUpgradeCost = Vector4i(0, 0, 0, 0)
+_secondUpgrade = Array[Object]([SubResource("Resource_q6qux"), SubResource("Resource_re0g3")])
+_secondUpgradeCost = Vector4i(0, 0, 0, 0)
+_thirdUpgrade = Array[Object]([SubResource("Resource_fjhxd"), SubResource("Resource_54r1y")])
+_thirdUpgradeCost = Vector4i(0, 0, 0, 0)
+_fourthUpgradeA = null
+_fourthUpgradeATexture = null
+_fourthUpgradeACost = Vector4i(0, 0, 0, 0)
+_fourthUpgradeB = null
+_fourthUpgradeBTexture = null
+_fourthUpgradeBCost = Vector4i(0, 0, 0, 0)
 _transformEffects = Array[ExtResource("9_dolah")]([SubResource("Resource_fjsrn")])
 LeashDistance = 200.0
 _startingEffects = Array[Object]([SubResource("Resource_3u4kw")])

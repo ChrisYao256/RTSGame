@@ -7,10 +7,11 @@ namespace RTSGame.Source;
 
 public partial class TDTowerManager : Node2D
 {
+	public static Texture2D TowerBackgroundTexture = GD.Load<Texture2D>("res://_Assets/TowerIconBackground.png");
 
 	private TDManager _tdManager;
 	private UnitManager _unitManager;
-	private Panel _rightPanel;
+	private VBoxContainer _rightPanel;
 	private GridContainer _towersBox;
 	private Grid _grid;
 
@@ -24,7 +25,7 @@ public partial class TDTowerManager : Node2D
 
 	public override void _Ready()
 	{
-		_rightPanel = GetParent().GetNode<Panel>("RightPanel");
+		_rightPanel = GetParent().GetNode("RightPanel").GetNode<VBoxContainer>("VBoxContainer");
 		_towersBox = _rightPanel.GetNode<GridContainer>("Towers");
 		_grid = GetParent().GetNode<Grid>("TileMapLayer");
 		_tdManager = GetParent().GetNode<TDManager>("TdManager");
@@ -59,6 +60,8 @@ public partial class TDTowerManager : Node2D
 				continue;
 			}
 
+			unit._hasEffects = false;
+
 			AddChild(unit);
 
 			Label nameLabel = new Label();
@@ -69,16 +72,23 @@ public partial class TDTowerManager : Node2D
 				= unit.MakeTowerTooltip(true);
 			towerButton.Pressed += (()=> 
 			{
-				if (_tdManager._money >= unit._cost)
+				if (Utils.VectorLeq(unit._cost, _tdManager._money))
 				{
 					EnterPlacementMode(name_); 
 				} 
 			});
 
-			container.AddChild(towerButton);
+			TextureRect background = unit.MakeTowerIconBackground();
 
-			Label costLabel = new Label();
-			costLabel.Text = "$" + unit._cost.ToString();
+			PanelContainer panelContainer = new();
+			panelContainer.AddChild(background);
+			panelContainer.AddChild(towerButton);
+			container.AddChild(panelContainer);
+
+			RichTextLabel costLabel = new RichTextLabel();
+			costLabel.FitContent = true;
+			costLabel.BbcodeEnabled = true;
+			costLabel.Text = Utils.MakeMoneyText(unit._cost);
 			container.AddChild(costLabel);
 			
 			_towersBox.AddChild(container);
@@ -122,7 +132,7 @@ public partial class TDTowerManager : Node2D
 	{
 		_placementMode = true;
 		_towerToPlace = towerName;
-		_previewTower = (TowerUnit)_unitManager.SpawnUnit(GetGlobalMousePosition(), 0 ,towerName);
+		_previewTower = (TowerUnit)_unitManager.SpawnUnit(GetGlobalMousePosition(), 0 ,towerName, hasEffects: false);
 		_previewTower.DisablePhysicsProcess();
 		_unitManager.UpdatePlayerSelection([_previewTower]);
 	}
@@ -174,7 +184,11 @@ public partial class TDTowerManager : Node2D
 		
 		if (Input.IsActionJustPressed("Left_click"))
 		{
-			if (canBuild && _previewTower._cost <= _tdManager._money)
+			if (_previewTower._towerType == TowerUnit.TowerType.Spawner && !_tdManager.CanBuildExtraSpawner())
+			{
+				ExitPlacementMode();
+			}
+			else if (canBuild && Utils.VectorLeq(_previewTower._cost, _tdManager._money))
 			{
 				PlaceDraggingTower(gridCoords);
 			}
@@ -195,6 +209,10 @@ public partial class TDTowerManager : Node2D
 		{
 			_tdManager.Connect(TDManager.SignalName.NewWave, Callable.From(spawner.OnNewWave));
 		}
+		if (newTower._towerType == TowerUnit.TowerType.Spawner)
+		{
+			_tdManager.IncreaseSpawnerCount(1);
+		}
 		_grid.OccupyCell(gridCoords, (TowerUnit)newTower);
 		List<TowerUnit> allTowersCopy = _allTowers.ToList();
 		_allTowers.Add(newTower);
@@ -212,10 +230,14 @@ public partial class TDTowerManager : Node2D
 	{
 		Vector2 position = _grid.ToGlobal(_grid.MapToLocal(gridCoords));
 		TowerUnit newTower = (TowerUnit)_unitManager.SpawnUnit(position, 0, _towerToPlace, false, gridCoords);
-		_tdManager.SpendMoneyOnTower(((TowerUnit)newTower)._cost);
+		_tdManager.SpendMoney(((TowerUnit)newTower)._cost);
 		if (newTower is Spawner spawner)
 		{
 			_tdManager.Connect(TDManager.SignalName.NewWave, Callable.From(spawner.OnNewWave));
+		}
+		if (newTower._towerType == TowerUnit.TowerType.Spawner)
+		{
+			_tdManager.IncreaseSpawnerCount(1);
 		}
 		_grid.OccupyCell(gridCoords, (TowerUnit)newTower);
 		List<TowerUnit> allTowersCopy = _allTowers.ToList();
@@ -236,6 +258,7 @@ public partial class TDTowerManager : Node2D
 		}
 		TowerUnit tower = _grid.GetTowerOnCell(gridCoords);
 		_allTowers.Remove(tower);
+		tower.EmitSignal(Unit.SignalName.Removed, tower);
 		tower.RemoveAllEffects();
 		_grid.UnoccupyCell(gridCoords);
 		tower.QueueFree();
@@ -249,16 +272,16 @@ public partial class TDTowerManager : Node2D
 
 	public void UpdateIncomeDisplay()
 	{
-		Label incomeLabel = _rightPanel.GetNode<Label>("IncomeLabel");
+		RichTextLabel incomeLabel = _rightPanel.GetNode<RichTextLabel>("IncomeLabel");
 
-		int income = 0;
+		Vector4I income = new Vector4I(0,0,0,0);
 
 		foreach (TowerUnit tower in _allTowers)
 		{
 			income += tower.GetIncome();
 		}
 
-		incomeLabel.Text = "Maximum Income: $" + income;
+		incomeLabel.Text = "Maximum Income: " + Utils.MakeMoneyText(income);
 	}
 
 	public List<TowerUnit> GetAllTowers()

@@ -2,5 +2,9 @@
 
 [ext_resource type="Script" uid="uid://dl8t1lb2ks35w" path="res://_Source/_UI/FloatingText.cs" id="1_mxkip"]
 
-[node name="FloatingText" type="Label" unique_id=1059848697]
+[node name="FloatingText" type="RichTextLabel" unique_id=2108216028]
+offset_right = 1.0
+offset_bottom = 23.0
+bbcode_enabled = true
+fit_content = true
 script = ExtResource("1_mxkip")

@@ -1,0 +1,33 @@
+[gd_scene format=3 uid="uid://tjf5vmfcot3t"]
+
+[ext_resource type="Texture2D" uid="uid://captb2lm8y5km" path="res://_Assets/Burn.png" id="1_g3u5e"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_m30ij"]
+atlas = ExtResource("1_g3u5e")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_d0vgq"]
+atlas = ExtResource("1_g3u5e")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_prw48"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_m30ij")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_d0vgq")
+}],
+"loop": true,
+"name": &"default",
+"speed": 2.0
+}]
+
+[node name="Burn" type="Node2D" unique_id=1845694767]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=322440417]
+texture_filter = 1
+sprite_frames = SubResource("SpriteFrames_prw48")
+frame = 1
+frame_progress = 0.12858248

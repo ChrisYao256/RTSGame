@@ -10,7 +10,15 @@ public partial class ZoneWeapon : BaseWeapon
   [Export]
   PackedScene _attackVisualEffect;
 
-  public override void PerformAttack(Unit target, int d)
+	private Marker2D _firePoint;
+
+	public override void _Ready()
+	{
+		base._Ready();
+		_firePoint = GetParent().GetNode("TurretTurner").GetNode<Marker2D>("Marker2D");
+	}
+
+	public override void PerformAttack(Unit target, int d)
   {
 		if (_attackVisualEffect != null)
 		{
@@ -38,6 +46,7 @@ public partial class ZoneWeapon : BaseWeapon
 		Transform2D queryTransform = new Transform2D(angleToTarget, GlobalPosition);
 
     visualizer.Transform = queryTransform;
+    visualizer.GlobalPosition = _firePoint.GlobalPosition;
 
 	 // 1. Get the direct space state for the current 2D world
 	  PhysicsDirectSpaceState2D spaceState = GetWorld2D().DirectSpaceState;

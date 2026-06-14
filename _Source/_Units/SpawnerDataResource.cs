@@ -14,7 +14,7 @@ public partial class SpawnerDataResource : Resource
 	public Array<Vector2I> _locations = new Array<Vector2I>();
 
 	[Export]
-	public float _hpBuff;
+	public int _hpBuff;
 
 	[Export]
 	public float _speedBuff;
@@ -23,13 +23,13 @@ public partial class SpawnerDataResource : Resource
 	public int _armorBuff;
 
 	[Export]
-	public int _moneyBuff;
+	public Vector4I _moneyBuff;
 
 	[Export]
 	public int _hpLossBuff;
 
 	[Export]
-	public int _moneyLossBuff;
+	public Vector4I _moneyLossBuff;
 
 	[Export]
 	public Array<EffectResource> _startingEffects;

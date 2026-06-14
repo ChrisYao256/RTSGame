@@ -1,75 +1,112 @@
 [gd_scene format=3 uid="uid://baks6mq2g1jjx"]
 
 [ext_resource type="Script" uid="uid://cnatx5yla4abt" path="res://_Source/_UI/UnitInfoPanel.cs" id="1_ytyh6"]
+[ext_resource type="Texture2D" uid="uid://bkm4bqmo50wk3" path="res://_Assets/Panel.png" id="2_pxqmk"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pxqmk"]
-bg_color = Color(0.525894, 0.5258941, 0.5258938, 1)
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_4chrn"]
+texture = ExtResource("2_pxqmk")
+texture_margin_left = 12.0
+texture_margin_top = 12.0
+texture_margin_right = 12.0
+texture_margin_bottom = 12.0
 
 [node name="UnitInfoPanel" type="CanvasLayer" unique_id=1871383984]
 script = ExtResource("1_ytyh6")
 
-[node name="PanelContainer" type="PanelContainer" parent="." unique_id=367993238]
-offset_top = 875.0
+[node name="PanelContainer" type="PanelContainer" parent="." unique_id=1719557160]
+offset_top = 880.0
 offset_right = 1920.0
 offset_bottom = 1080.0
-theme_override_styles/panel = SubResource("StyleBoxFlat_pxqmk")
+theme_override_styles/panel = SubResource("StyleBoxTexture_4chrn")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer" unique_id=421499899]
 layout_mode = 2
-theme_override_constants/separation = 16
-alignment = 1
+theme_override_constants/separation = 32
 
 [node name="UnitInfo" type="HBoxContainer" parent="PanelContainer/HBoxContainer" unique_id=994166100]
 layout_mode = 2
-theme_override_constants/separation = 32
-alignment = 1
+theme_override_constants/separation = 8
+
+[node name="BasicInfoContainer" type="PanelContainer" parent="PanelContainer/HBoxContainer/UnitInfo" unique_id=718236429]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/HBoxContainer/UnitInfo/BasicInfoContainer" unique_id=1889099790]
+layout_mode = 2
+
+[node name="UnitNameLabel" type="Label" parent="PanelContainer/HBoxContainer/UnitInfo/BasicInfoContainer/VBoxContainer" unique_id=1529818683]
+layout_mode = 2
+
+[node name="Hp" type="Label" parent="PanelContainer/HBoxContainer/UnitInfo/BasicInfoContainer/VBoxContainer" unique_id=694023451]
+layout_mode = 2
+
+[node name="Shield" type="Label" parent="PanelContainer/HBoxContainer/UnitInfo/BasicInfoContainer/VBoxContainer" unique_id=912767190]
+layout_mode = 2
+
+[node name="SpeedLabel" type="Label" parent="PanelContainer/HBoxContainer/UnitInfo/BasicInfoContainer/VBoxContainer" unique_id=2133036093]
+layout_mode = 2
+
+[node name="ArmorLabel" type="Label" parent="PanelContainer/HBoxContainer/UnitInfo/BasicInfoContainer/VBoxContainer" unique_id=1273290180]
+layout_mode = 2
+
+[node name="IncomeContainer" type="PanelContainer" parent="PanelContainer/HBoxContainer/UnitInfo" unique_id=784851011]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/HBoxContainer/UnitInfo/IncomeContainer" unique_id=1688707701]
+layout_mode = 2
+
+[node name="IncomeLabel" type="RichTextLabel" parent="PanelContainer/HBoxContainer/UnitInfo/IncomeContainer/VBoxContainer" unique_id=2116267110]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+
+[node name="SpawnLabel" type="RichTextLabel" parent="PanelContainer/HBoxContainer/UnitInfo/IncomeContainer/VBoxContainer" unique_id=916114149]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+
+[node name="TotalCostLabel" type="RichTextLabel" parent="PanelContainer/HBoxContainer/UnitInfo/IncomeContainer/VBoxContainer" unique_id=2138741745]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+
+[node name="MoneyDroppedLabel" type="RichTextLabel" parent="PanelContainer/HBoxContainer/UnitInfo/IncomeContainer/VBoxContainer" unique_id=1761790522]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+
+[node name="WeaponContainer" type="PanelContainer" parent="PanelContainer/HBoxContainer/UnitInfo" unique_id=1426050931]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/HBoxContainer/UnitInfo/WeaponContainer" unique_id=886953083]
+layout_mode = 2
+
+[node name="DamageLabel" type="Label" parent="PanelContainer/HBoxContainer/UnitInfo/WeaponContainer/VBoxContainer" unique_id=370420130]
+layout_mode = 2
+
+[node name="CooldownLabel" type="Label" parent="PanelContainer/HBoxContainer/UnitInfo/WeaponContainer/VBoxContainer" unique_id=981913271]
+layout_mode = 2
+
+[node name="DPSLabel" type="Label" parent="PanelContainer/HBoxContainer/UnitInfo/WeaponContainer/VBoxContainer" unique_id=1674060104]
+layout_mode = 2
+
+[node name="RangeLabel" type="Label" parent="PanelContainer/HBoxContainer/UnitInfo/WeaponContainer/VBoxContainer" unique_id=82758122]
+layout_mode = 2
+
+[node name="SpawnContainer" type="PanelContainer" parent="PanelContainer/HBoxContainer/UnitInfo" unique_id=1652796050]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/HBoxContainer/UnitInfo/SpawnContainer" unique_id=2003739550]
+layout_mode = 2
+
+[node name="SmallEffects" type="VBoxContainer" parent="PanelContainer/HBoxContainer/UnitInfo" unique_id=542117197]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
 
 [node name="Effects" type="HBoxContainer" parent="PanelContainer/HBoxContainer/UnitInfo" unique_id=1529505966]
-layout_mode = 2
-
-[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/HBoxContainer/UnitInfo" unique_id=1552552573]
-layout_mode = 2
-
-[node name="UnitNameLabel" type="Label" parent="PanelContainer/HBoxContainer/UnitInfo/VBoxContainer" unique_id=1529818683]
-layout_mode = 2
-
-[node name="Hp" type="Label" parent="PanelContainer/HBoxContainer/UnitInfo/VBoxContainer" unique_id=694023451]
-layout_mode = 2
-
-[node name="Shield" type="Label" parent="PanelContainer/HBoxContainer/UnitInfo/VBoxContainer" unique_id=912767190]
-layout_mode = 2
-
-[node name="SpeedLabel" type="Label" parent="PanelContainer/HBoxContainer/UnitInfo/VBoxContainer" unique_id=2133036093]
-layout_mode = 2
-
-[node name="ArmorLabel" type="Label" parent="PanelContainer/HBoxContainer/UnitInfo/VBoxContainer" unique_id=1273290180]
-layout_mode = 2
-
-[node name="IncomeLabel" type="Label" parent="PanelContainer/HBoxContainer/UnitInfo/VBoxContainer" unique_id=737729009]
-layout_mode = 2
-
-[node name="SpawnLabel" type="Label" parent="PanelContainer/HBoxContainer/UnitInfo/VBoxContainer" unique_id=201428491]
-layout_mode = 2
-
-[node name="TotalCostLabel" type="Label" parent="PanelContainer/HBoxContainer/UnitInfo/VBoxContainer" unique_id=154464784]
-layout_mode = 2
-
-[node name="MoneyDroppedLabel" type="Label" parent="PanelContainer/HBoxContainer/UnitInfo/VBoxContainer" unique_id=103877305]
-layout_mode = 2
-
-[node name="VBoxContainer2" type="VBoxContainer" parent="PanelContainer/HBoxContainer/UnitInfo" unique_id=1259900675]
-layout_mode = 2
-
-[node name="DPSLabel" type="Label" parent="PanelContainer/HBoxContainer/UnitInfo/VBoxContainer2" unique_id=1073387485]
-layout_mode = 2
-
-[node name="CooldownLabel" type="Label" parent="PanelContainer/HBoxContainer/UnitInfo/VBoxContainer2" unique_id=1990505348]
-layout_mode = 2
-
-[node name="DamageLabel" type="Label" parent="PanelContainer/HBoxContainer/UnitInfo/VBoxContainer2" unique_id=1991186877]
-layout_mode = 2
-
-[node name="RangeLabel" type="Label" parent="PanelContainer/HBoxContainer/UnitInfo/VBoxContainer2" unique_id=1066977082]
 layout_mode = 2
 
 [node name="TargetPriorityContainer" type="VBoxContainer" parent="PanelContainer/HBoxContainer/UnitInfo" unique_id=273917751]
@@ -78,7 +115,10 @@ layout_mode = 2
 [node name="TargetPriority" type="Label" parent="PanelContainer/HBoxContainer/UnitInfo/TargetPriorityContainer" unique_id=638593614]
 layout_mode = 2
 
-[node name="Upgrades" type="HBoxContainer" parent="PanelContainer/HBoxContainer" unique_id=134647815]
+[node name="Upgrades" type="PanelContainer" parent="PanelContainer/HBoxContainer" unique_id=24257544]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/HBoxContainer/Upgrades" unique_id=780373225]
 layout_mode = 2
 
 [node name="CommandContainer" type="VBoxContainer" parent="PanelContainer/HBoxContainer" unique_id=710287485]

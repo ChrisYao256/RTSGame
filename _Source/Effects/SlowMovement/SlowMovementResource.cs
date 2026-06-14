@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.Design;
 namespace RTSGame.Units;
 
@@ -14,7 +15,7 @@ public partial class SlowMovementResource : EffectResource
 
 	private SlowMovement _effect;
 
-	public override bool MergeWithOld(EffectResource oldResource)
+	public override bool MergeWithOld(EffectResource oldResource, List<EffectResource> allMatchingResource)
 	{
 		SlowMovementResource typedOldResource = (SlowMovementResource)oldResource;
 

@@ -112,13 +112,13 @@ public partial class Spawner : TowerUnit
 		SetSpawnerEnemies(_data._units);
 	}
 
-	public void SetSpawnerHpBuff(float hpBuff)
+	public void SetSpawnerHpBuff(int hpBuff)
 	{
 		_data._hpBuff = hpBuff;
 		EmitSignal(SignalName.UpdateStatsInfo);
 	}
 
-	public void IncreaseSpawnerHpBuff(float change)
+	public void IncreaseSpawnerHpBuff(int change)
 	{
 		SetSpawnerHpBuff(_data._hpBuff + change);
 	}
@@ -166,13 +166,13 @@ public partial class Spawner : TowerUnit
 		EmitSignal(SignalName.UpdateInfo);
 	}
 
-	public void SetSpawnerMoneyBuff(int change)
+	public void SetSpawnerMoneyBuff(Vector4I change)
 	{
 		_data._moneyBuff = change;
 		EmitSignal(SignalName.UpdateStatsInfo);
 	}
 
-	public void IncreaseSpawnerMoneyBuff(int change)
+	public void IncreaseSpawnerMoneyBuff(Vector4I change)
 	{
 		SetSpawnerMoneyBuff(_data._moneyBuff + change);
 	}
@@ -192,9 +192,9 @@ public partial class Spawner : TowerUnit
 		_grid.HideVisualTiles();
 	}
 
-	public override int GetIncome()
+	public override Vector4I GetIncome()
 	{
-		int income = base.GetIncome();
+		Vector4I income = base.GetIncome();
 
 		foreach (string unit in _data._units)
 		{
@@ -225,14 +225,14 @@ public partial class Spawner : TowerUnit
 			string name = spawns.Keys.ElementAt(i);
 			InvaderUnit invader = _tdManager.GetEnemy(name);
 			invader.IncreaseMoneyModifier(_data._moneyBuff);
-			int income = invader.GetMoneyDropped();
-			spawnText += spawns[name] + " " + UnitManager.InternalNameToName(name) + " ($" + income + "), ";
+			Vector4I income = invader.GetMoneyDropped();
+			spawnText += spawns[name] + " " + UnitManager.InternalNameToName(name) + " (" + Utils.MakeMoneyText(income) + "), ";
 		}
 		string lastName = spawns.Keys.ElementAt(spawns.Keys.Count - 1);
 		InvaderUnit lastInvader = _tdManager.GetEnemy(lastName);
 		lastInvader.IncreaseMoneyModifier(_data._moneyBuff);
-		int lastIncome = lastInvader.GetMoneyDropped();
-		spawnText += spawns[lastName] + " " + UnitManager.InternalNameToName(lastName) + " ($" + lastIncome + ")";
+		Vector4I lastIncome = lastInvader.GetMoneyDropped();
+		spawnText += spawns[lastName] + " " + UnitManager.InternalNameToName(lastName) + " (" + Utils.MakeMoneyText(lastIncome) + ")";
 		return spawnText;
 	}
 }

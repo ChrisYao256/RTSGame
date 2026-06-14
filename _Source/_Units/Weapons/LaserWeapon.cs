@@ -14,6 +14,8 @@ public partial class LaserWeapon : BaseWeapon
 
 	private Timer _timer;
 
+	private Marker2D _firePoint;
+
 	public override void _Ready()
 	{
 		_tracerLine = GetNode<Line2D>("TracerLine");
@@ -23,6 +25,7 @@ public partial class LaserWeapon : BaseWeapon
 		_tracerLine.AddPoint(Vector2.Zero);
 		_tracerLine.DefaultColor = _tracerColor;
 		_tracerLine.Width = _tracerWidth;
+		_firePoint = GetParent().GetNode("TurretTurner").GetNode<Marker2D>("Marker2D");
 		base._Ready();
 	}
 
@@ -31,7 +34,7 @@ public partial class LaserWeapon : BaseWeapon
 		if (_attackTarget is not null && _beginAttacking)
 		{
 			_tracerLine.Visible = true;
-			_tracerLine.SetPointPosition(0, GlobalPosition);
+			_tracerLine.SetPointPosition(0, _firePoint.GlobalPosition);
 			_tracerLine.SetPointPosition(1, _attackTarget.GlobalPosition);
 
 			float damageThisFrame = (GetDamage() + _damageModifier) * (float)(1 + _attackSpeedModifier) * (float)delta + _damageRemainder;

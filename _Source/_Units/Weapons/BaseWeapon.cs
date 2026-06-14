@@ -75,7 +75,7 @@ public abstract partial class BaseWeapon : Node2D
 
 	// Abstract method: Every attacker must define HOW they hit
 	public abstract void PerformAttack(Unit target, int damage);
-	
+
 	public float GetRange()
 	{
 		return _range + _rangeModifier;

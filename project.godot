@@ -25,6 +25,14 @@ window/stretch/mode="canvas_items"
 
 project/assembly_name="RTSGame"
 
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/sicilica.import.pixelorama/plugin.cfg")
+
+[gui]
+
+theme/custom="uid://bsu71ea0ccyb4"
+
 [input]
 
 attack_move_command={

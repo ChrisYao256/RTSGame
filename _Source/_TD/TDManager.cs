@@ -2,8 +2,8 @@ using Godot;
 using Godot.Collections;
 using RTSGame.Units;
 using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace RTSGame.Source;
 
@@ -18,35 +18,47 @@ public partial class TDManager : Node
 	public Array<string> _availTowerList;
 
 	[Export]
-	private int _startingMoney = 100;
+	private Vector4I _startingMoney = new Vector4I(100, 0, 0, 0);
 
-	public static float TileSize = 64f;
+	[Export]
+	private int _startingSpawnerLimit = 5;
+
+	public static float TileSize = 120f;
 
 	private System.Collections.Generic.Dictionary<int, List<(List<string>, float)>> _waveList;
 	public int _waveIndex = 0;
 
 	private UnitManager _unitManager;
 	public TDTowerManager _towerManager;
-	private Panel _rightPanel;
+	private VBoxContainer _rightPanel;
 	private Label _hpLabel;
-	private Label _moneyLabel;
+	private RichTextLabel _moneyLabel;
 	private Grid _grid;
 	private Label _waveCounter;
 	private Label _bossWaveLabel;
+	private Label _spawnerLimitLabel;
+	public Button _spawnerLimitIncreaseButton;
+	private RichTextLabel _spawnerLimitIncreaseButtonText;
 
 	private Exit _base;
 
 	public int _hp;
-	public int _money;
+	public Vector4I _money;
+	private int _spawnerLimit;
+	private int _spawnerCount;
+	public float _spawnerExpanderCostMultipler;
 
 	public override void _Ready()
 	{
-		_rightPanel = GetParent().GetNode<Panel>("RightPanel");
+		_rightPanel = GetParent().GetNode("RightPanel").GetNode<VBoxContainer>("VBoxContainer");
 		_hpLabel = _rightPanel.GetNode<Label>("HpLabel");
-		_moneyLabel = _rightPanel.GetNode<Label>("MoneyLabel");
+		_moneyLabel = _rightPanel.GetNode<RichTextLabel>("MoneyLabel");
 		_grid = GetParent().GetNode<Grid>("TileMapLayer");
 		_waveCounter = _rightPanel.GetNode<Label>("WaveCounter");
 		_bossWaveLabel = _rightPanel.GetNode<Label>("BossWaveLabel");
+		_spawnerLimitLabel = _rightPanel.GetNode("HBoxContainer").GetNode<Label>("SpawnerLimitLabel");
+		_spawnerLimitIncreaseButton = _rightPanel.GetNode("HBoxContainer").GetNode<Button>("Button");
+		_spawnerLimitIncreaseButtonText = _spawnerLimitIncreaseButton.GetNode<RichTextLabel>("RichTextLabel");
 	}
 
 	public void Initialize()
@@ -71,6 +83,7 @@ public partial class TDManager : Node
 
 		UpdateMoney(_startingMoney);
 		UpdateWaveIndexCounter();
+		IncreaseSpawnerLimit(_startingSpawnerLimit);
 	}
 
 	public async void SpawnNextWave()
@@ -100,6 +113,46 @@ public partial class TDManager : Node
 	{
 		_waveCounter.Text = "Wave " + _waveIndex;
 		_bossWaveLabel.Text = "Boss at wave " + GetNextBossWave();
+	}
+
+	public void UpdateSpawnerLimit(int newLimit)
+	{
+		_spawnerLimit = newLimit;
+		_spawnerLimitLabel.Text = "Portals: " + _spawnerCount + "/" + _spawnerLimit;
+	}
+
+	public void IncreaseSpawnerLimit(int change)
+	{
+		UpdateSpawnerLimit(_spawnerLimit + change);
+	}
+
+	public void UpdateSpawnerCount(int newCount)
+	{
+		_spawnerCount = newCount;
+		_spawnerLimitLabel.Text = "Portals: " + _spawnerCount + "/" + _spawnerLimit;
+	}
+
+	public void IncreaseSpawnerCount(int change)
+	{
+		UpdateSpawnerCount(_spawnerCount + change);
+	}
+
+	public bool CanBuildExtraSpawner()
+	{
+		return _spawnerCount < _spawnerLimit;
+	}
+
+	public void BuyExtraPortalLimit()
+	{
+		int cost = 10 * (int)Math.Pow(2, (double)(_spawnerLimit - _startingSpawnerLimit));
+		if (_money[0] < cost)
+		{
+			return;
+		}
+		SpendMoney(new Vector4I(cost, 0, 0, 0));
+		IncreaseSpawnerLimit(1);
+		cost = 10 * (int)Math.Pow(2, (double)(_spawnerLimit - _startingSpawnerLimit));
+		_spawnerLimitIncreaseButtonText.Text = "Increase Portal Limit: " + Utils.MakeMoneyText(new Vector4I(cost, 0,0,0));
 	}
 
 	private void SpawnEnemyAtEntrance(string name)
@@ -175,18 +228,18 @@ public partial class TDManager : Node
 		GetTree().CallDeferred(SceneTree.MethodName.ChangeSceneToFile, MenuPath);
 	}
 
-	private void UpdateMoney(int newMoney)
+	private void UpdateMoney(Vector4I newMoney)
 	{
 		_money = newMoney;
-		_moneyLabel.Text = "$" + _money.ToString();
+		_moneyLabel.Text = Utils.MakeMoneyText(_money, true);
 	}
 
-	public void GainMoney(int gain)
+	public void GainMoney(Vector4I gain)
 	{
 		UpdateMoney(_money + gain);
 	}
 
-	public void SpendMoneyOnTower(int cost)
+	public void SpendMoney(Vector4I cost)
 	{
 		UpdateMoney(_money - cost);
 	}

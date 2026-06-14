@@ -29,7 +29,7 @@ public partial class NearbySpawnerStatsIncrease : Effect
 		foreach (Vector2I relativePos in _resource._area)
 		{
 			Vector2I position = relativePos + location;
-			if (!parentTower._grid.IsCellVacant(position))
+			if (!parentTower._grid.IsCellVacant(position) && relativePos != new Vector2I(0,0))
 			{
 				TowerUnit tower = parentTower._grid.GetTowerOnCell(position);
 				if (tower is Spawner spawner)
@@ -45,7 +45,7 @@ public partial class NearbySpawnerStatsIncrease : Effect
 	{
 		TowerUnit parentTower = (TowerUnit)_parentUnit;
 		Vector2I delta = tower._gridLocation - parentTower._gridLocation;
-		if (_resource._area.Contains(delta))
+		if (_resource._area.Contains(delta) && delta != new Vector2I(0,0))
 		{
 			if (tower is Spawner spawner)
 			{

@@ -4,8 +4,8 @@
 [ext_resource type="PackedScene" uid="uid://dxg1cx6w8moqv" path="res://_Content/_Scenes/_Prefabs/Weapons/MeleeWeapon.tscn" id="2_drv2e"]
 
 [node name="BaseUnit" unique_id=481801141 instance=ExtResource("1_d12es")]
-_moneyDropped = 2
-_moneyDeducted = 0
+_moneyDropped = Vector4i(2, 0, 0, 0)
+_moneyDeducted = Vector4i(0, 0, 0, 0)
 _moveSpeed = 75.0
 _hpMax = 150
 _startingEffects = Array[Object]([])

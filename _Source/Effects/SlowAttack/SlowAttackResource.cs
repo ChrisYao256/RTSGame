@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.Design;
 namespace RTSGame.Units;
 
@@ -14,7 +15,7 @@ public partial class SlowAttackResource : EffectResource
 
 	private SlowAttack _effect;
 
-	public override bool MergeWithOld(EffectResource oldResource)
+	public override bool MergeWithOld(EffectResource oldResource, List<EffectResource> allMatchingResource)
 	{
 		SlowAttackResource typedOldResource = (SlowAttackResource)oldResource;
 		//if (typedOldResource._change > _change && typedOldResource._effect._timer.TimeLeft < _time) // if new debuff is stronger and lasts longer, then remove old debuff and add new one.

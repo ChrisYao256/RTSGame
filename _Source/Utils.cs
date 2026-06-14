@@ -7,7 +7,31 @@ namespace RTSGame.Units
 {
 	public static class Utils
 	{
+		
 		public static void ScaleVisualToRadius(Sprite2D visual, float radius)
+		{
+			Vector2 textureSize = visual.Texture.GetSize();
+
+			// Diameter / Texture Width = Scale
+			float targetScaleX = (radius * 2.0f) / textureSize.X;
+			float targetScaleY = (radius * 2.0f) / textureSize.Y;
+			visual.Scale = new Vector2(targetScaleX, targetScaleY);
+		}
+
+		public static void ScaleVisualToRadius(AnimatedSprite2D visual, float radius)
+		{
+			//if(visual.SpriteFrames.GetFrameCount() == 0) return;
+			// Get the texture from the current animation frame
+			Texture2D currentTexture = visual.SpriteFrames.GetFrameTexture(visual.Animation, visual.Frame);
+			Vector2 textureSize = currentTexture.GetSize();
+
+			// Diameter / Texture Width = Scale
+			float targetScaleX = (radius * 2.0f) / textureSize.X;
+			float targetScaleY = (radius * 2.0f) / textureSize.Y;
+			visual.Scale = new Vector2(targetScaleX, targetScaleY);
+		}
+
+		public static void ScaleVisualToRadius(TextureRect visual, float radius)
 		{
 			Vector2 textureSize = visual.Texture.GetSize();
 
@@ -67,6 +91,74 @@ namespace RTSGame.Units
 			int remainder = dividend % divisor;
 			// Make sure result is positive
 			return remainder < 0 ? remainder + divisor : remainder;
+		}
+
+		public static bool VectorLeq(Vector4I a, Vector4I b)
+		{
+			if (a[0] > b[0])
+			{
+				return false;
+			}
+			if (a[1] > b[1])
+			{
+				return false;
+			}
+			if (a[2] > b[2])
+			{
+				return false;
+			}
+			if (a[3] > b[3])
+			{
+				return false;
+			}
+			return true;
+		}
+
+		public static bool VectorLNeq(Vector4I a, Vector4I b)
+		{
+			if (a[0] >= b[0])
+			{
+				return false;
+			}
+			if (a[1] >= b[1])
+			{
+				return false;
+			}
+			if (a[2] >= b[2])
+			{
+				return false;
+			}
+			if (a[3] >= b[3])
+			{
+				return false;
+			}
+			return true;
+		}
+
+		public static string MakeMoneyText(Vector4I money, bool displayAll = false)
+		{
+			string yellowHex = ThemePalette.Yellow.ToHtml(false);
+			string redHex = ThemePalette.Red.ToHtml(false);
+			string blueHex = ThemePalette.Blue.ToHtml(false);
+			string greenHex = ThemePalette.Green.ToHtml(false);
+			string output = "";
+			if (money[0]!= 0 || displayAll)
+			{
+				output += $"[color=#{yellowHex}]${money[0]}[/color]  ";
+			}
+			if (money[1] != 0 || displayAll)
+			{
+				output += $"[color=#{redHex}]■{money[1]}[/color]  ";
+			}
+			if (money[2] != 0 || displayAll)
+			{
+				output += $"[color=#{blueHex}]●{money[2]}[/color]  ";
+			}
+			if (money[3] != 0 || displayAll)
+			{
+				output += $"[color=#{greenHex}]▲{money[3]}[/color]  ";
+			}
+			return output.Trim();
 		}
 	}
 }

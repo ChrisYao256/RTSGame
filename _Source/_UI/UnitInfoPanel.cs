@@ -3,9 +3,6 @@ using RTSGame.Source;
 using RTSGame.Units;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using static Godot.GodotThread;
-using static System.Net.Mime.MediaTypeNames;
 
 public partial class UnitInfoPanel : CanvasLayer
 {
@@ -13,22 +10,24 @@ public partial class UnitInfoPanel : CanvasLayer
 	private Label _hpLabel;
 	private Label _shieldLabel;
 	private Label _speedLabel;
-	private Label _totalCostLabel;
+	private RichTextLabel _totalCostLabel;
 	private Label _armorLabel;
 	private Label _positionLabel;
-	private VBoxContainer _weaponContainer;
+	private Container _weaponContainer;
 	private Label _damageLabel;
 	private Label _cooldownLabel;
 	private Label _dpsLabel;
 	private Label _rangeLabel;
-	private Label _incomeLabel;
-	private Label _moneyDroppedLabel;
-	private Label _spawnLabel;
+	private RichTextLabel _incomeLabel;
+	private RichTextLabel _moneyDroppedLabel;
+	private RichTextLabel _spawnLabel;
+	private VBoxContainer _spawnContainer;
 
 	private VBoxContainer _priorityContainer;
 	private Label _priorityLabel;
 
-	private HBoxContainer _effectsContainer;
+	private HBoxContainer _largeEffectsContainer;
+	private VBoxContainer _smallEffectsContainer;
 	private HBoxContainer _infoContainer;
 	private VBoxContainer _commandContainer;
 	private HBoxContainer _upgradeContainer;
@@ -44,30 +43,32 @@ public partial class UnitInfoPanel : CanvasLayer
 	public override void _Ready()
 	{
 		// Link our C# variables to the nodes in the scene
-		_nameLabel = GetNode<Label>("PanelContainer/HBoxContainer/UnitInfo/VBoxContainer/UnitNameLabel");
-		_hpLabel = GetNode<Label>("PanelContainer/HBoxContainer/UnitInfo/VBoxContainer/Hp");
-		_shieldLabel = GetNode<Label>("PanelContainer/HBoxContainer/UnitInfo/VBoxContainer/Shield");
-		_speedLabel = GetNode<Label>("PanelContainer/HBoxContainer/UnitInfo/VBoxContainer/SpeedLabel");
-		_totalCostLabel = GetNode<Label>("PanelContainer/HBoxContainer/UnitInfo/VBoxContainer/TotalCostLabel");
-		_armorLabel = GetNode<Label>("PanelContainer/HBoxContainer/UnitInfo/VBoxContainer/ArmorLabel");
-		_weaponContainer = GetNode<VBoxContainer>("PanelContainer/HBoxContainer/UnitInfo/VBoxContainer2");
-		_damageLabel = GetNode<Label>("PanelContainer/HBoxContainer/UnitInfo/VBoxContainer2/DamageLabel");
-		_cooldownLabel = GetNode<Label>("PanelContainer/HBoxContainer/UnitInfo/VBoxContainer2/CooldownLabel");
-		_rangeLabel = GetNode<Label>("PanelContainer/HBoxContainer/UnitInfo/VBoxContainer2/RangeLabel");
-		_dpsLabel = GetNode<Label>("PanelContainer/HBoxContainer/UnitInfo/VBoxContainer2/DPSLabel");
-		_incomeLabel = GetNode<Label>("PanelContainer/HBoxContainer/UnitInfo/VBoxContainer/IncomeLabel");
-		_moneyDroppedLabel = GetNode<Label>("PanelContainer/HBoxContainer/UnitInfo/VBoxContainer/MoneyDroppedLabel");
-		_spawnLabel = GetNode<Label>("PanelContainer/HBoxContainer/UnitInfo/VBoxContainer/SpawnLabel");
+		_nameLabel = GetNode<Label>("PanelContainer/HBoxContainer/UnitInfo/BasicInfoContainer/VBoxContainer/UnitNameLabel");
+		_hpLabel = GetNode<Label>("PanelContainer/HBoxContainer/UnitInfo/BasicInfoContainer/VBoxContainer/Hp");
+		_shieldLabel = GetNode<Label>("PanelContainer/HBoxContainer/UnitInfo/BasicInfoContainer/VBoxContainer/Shield");
+		_speedLabel = GetNode<Label>("PanelContainer/HBoxContainer/UnitInfo/BasicInfoContainer/VBoxContainer/SpeedLabel");
+		_armorLabel = GetNode<Label>("PanelContainer/HBoxContainer/UnitInfo/BasicInfoContainer/VBoxContainer/ArmorLabel");
+		_totalCostLabel = GetNode<RichTextLabel>("PanelContainer/HBoxContainer/UnitInfo/IncomeContainer/VBoxContainer/TotalCostLabel");
+		_incomeLabel = GetNode<RichTextLabel>("PanelContainer/HBoxContainer/UnitInfo/IncomeContainer/VBoxContainer/IncomeLabel");
+		_moneyDroppedLabel = GetNode<RichTextLabel>("PanelContainer/HBoxContainer/UnitInfo/IncomeContainer/VBoxContainer/MoneyDroppedLabel");
+		_spawnLabel = GetNode<RichTextLabel>("PanelContainer/HBoxContainer/UnitInfo/IncomeContainer/VBoxContainer/SpawnLabel");
+		_weaponContainer = GetNode<VBoxContainer>("PanelContainer/HBoxContainer/UnitInfo/WeaponContainer/VBoxContainer");
+		_damageLabel = _weaponContainer.GetNode<Label>("DamageLabel");
+		_cooldownLabel = _weaponContainer.GetNode<Label>("CooldownLabel");
+		_rangeLabel = _weaponContainer.GetNode<Label>("DPSLabel");
+		_dpsLabel = _weaponContainer.GetNode<Label>("RangeLabel");
+		_spawnContainer = GetNode<VBoxContainer>("PanelContainer/HBoxContainer/UnitInfo/SpawnContainer/VBoxContainer");
 
 		_priorityContainer = GetNode<VBoxContainer>("PanelContainer/HBoxContainer/UnitInfo/TargetPriorityContainer");
 		_priorityLabel = GetNode<Label>("PanelContainer/HBoxContainer/UnitInfo/TargetPriorityContainer/TargetPriority");
-		_effectsContainer = GetNode<HBoxContainer>("PanelContainer/HBoxContainer/UnitInfo/Effects");
+		_largeEffectsContainer = GetNode<HBoxContainer>("PanelContainer/HBoxContainer/UnitInfo/Effects");
+		_smallEffectsContainer = GetNode<VBoxContainer>("PanelContainer/HBoxContainer/UnitInfo/SmallEffects");
 
 		_positionLabel = GetNode<Label>("PanelContainer/HBoxContainer/Position");
 		
 		_infoContainer = GetNode<HBoxContainer>("PanelContainer/HBoxContainer/UnitInfo");
 
-		_upgradeContainer = GetNode<HBoxContainer>("PanelContainer/HBoxContainer/Upgrades");
+		_upgradeContainer = GetNode<HBoxContainer>("PanelContainer/HBoxContainer/Upgrades/HBoxContainer");
 
 		_commandContainer = GetNode<VBoxContainer>("PanelContainer/HBoxContainer/CommandContainer");
 
@@ -102,17 +103,8 @@ public partial class UnitInfoPanel : CanvasLayer
 				_unitsContainer.GetChild(i).Free();
 			}
 			Dictionary<string, int> unitTypes = new Dictionary<string, int>();
-			bool sameTower = true;
 			for (int i = 0; i < _units.Count; i++)
 			{
-				if (_units[i]._internalName != _units[0]._internalName || _units[i] is not TowerUnit)
-				{
-					sameTower = false;
-				}
-				else if (_units[i] is TowerUnit tower && tower._hasFirstUpgrade)
-				{
-					sameTower = false;
-				}
 				if (unitTypes.Keys.Contains(units[i]._internalName))
 				{
 					unitTypes[units[i]._internalName] += 1;
@@ -144,41 +136,6 @@ public partial class UnitInfoPanel : CanvasLayer
 					
 			}
 			_unitsContainer.Show();
-			if (sameTower)
-			{
-				foreach (Node body in _upgradeContainer.GetChildren())
-				{
-					body.QueueFree();
-				}
-				_upgradeContainer.Show();
-
-				TowerUnit tower = (TowerUnit)_units[0];
-				VBoxContainer upgrade = new VBoxContainer();
-				Label cost = new();
-				cost.Text = "$" + tower._firstUpgradeCost.ToString();
-				upgrade.AddChild(cost);
-
-				foreach (EffectResource effect in tower._firstUpgrade)
-				{
-					effect.SetDescription();
-				}
-
-				Button upgradeButton = EffectResource.MakeCombinedEffectTooltip(true, tower._firstUpgradeName, tower._firstUpgrade);
-				upgradeButton.Pressed += (() =>
-				{
-					foreach (TowerUnit tower_ in _units)
-					{
-						if (_tdManager._money >= tower_._firstUpgradeCost)
-						{
-							_tdManager.SpendMoneyOnTower(tower_._firstUpgradeCost);
-							tower_.UpgradeFirst();
-						}
-					}
-					UpdateSelectedUnits(units);
-				});
-				upgrade.AddChild(upgradeButton);
-				_upgradeContainer.AddChild(upgrade);
-			}
 		}
 	}
 
@@ -196,21 +153,34 @@ public partial class UnitInfoPanel : CanvasLayer
 		_hpLabel.Text = "Hp: " + unit._hp.ToString() + "/" + unit.GetHpMax().ToString();
 		_speedLabel.Text = "Move speed: " + unit.GetSpeed().ToString();
 
-		foreach (Node body in _effectsContainer.GetChildren())
+		foreach (Node body in _largeEffectsContainer.GetChildren())
+		{
+			body.QueueFree();
+		}
+		foreach (Node body in _smallEffectsContainer.GetChildren())
 		{
 			body.QueueFree();
 		}
 
 		foreach (EffectResource effect in _unit._effects)
 		{
-			if (effect is StatsIncreaseResource || effect is SpawnerStatsIncreaseResource)
+			switch (effect._displayType)
 			{
-				continue;
+				case (EffectResource.DisplayTypes.Large):
+					VBoxContainer container = new();
+					PanelContainer effectName = effect.MakeFullEffectDescription();
+					container.AddChild(effectName);
+					_largeEffectsContainer.AddChild(container);
+					break;
+				case (EffectResource.DisplayTypes.Small):
+					VBoxContainer container1 = new();
+					HoverInfoLabel effectName1 = effect.MakeEffectTooltip(false);
+					container1.AddChild(effectName1);
+					_smallEffectsContainer.AddChild(container1);
+					break;
+				case (EffectResource.DisplayTypes.Hidden):
+					continue;
 			}
-			VBoxContainer container = new();
-			HoverInfoLabel effectName = effect.MakeEffectTooltip(false);
-			container.AddChild(effectName);
-			_effectsContainer.AddChild(container);
 		}
 
 		//foreach (Node body in _commandContainer.GetChildren())
@@ -231,8 +201,8 @@ public partial class UnitInfoPanel : CanvasLayer
 		{
 			_weaponContainer.Show();
 			_damageLabel.Text = "Weapon Damage: " + _unit._weapon.GetDamage().ToString();
-			_cooldownLabel.Text = "Weapon Cooldown: " + _unit._weapon.GetCooldown().ToString();
-			_dpsLabel.Text = "DPS: " + _unit._weapon.GetDPS().ToString();
+			_cooldownLabel.Text = "Weapon Cooldown: " + _unit._weapon.GetCooldown().ToString("F2");
+			_dpsLabel.Text = "DPS: " + _unit._weapon.GetDPS().ToString("F0");
 			_rangeLabel.Text = "Range: " + _unit._weapon.GetRange().ToString();
 		}
 		else
@@ -242,7 +212,7 @@ public partial class UnitInfoPanel : CanvasLayer
 
 		if (_unit is TowerUnit tower)
 		{
-			_totalCostLabel.Text = "Total Cost: $" + tower.GetTotalCost().ToString();
+			_totalCostLabel.Text = "Total Cost: " + Utils.MakeMoneyText(tower.GetTotalCost());
 
 			_totalCostLabel.Show();
 
@@ -264,8 +234,10 @@ public partial class UnitInfoPanel : CanvasLayer
 					return;
 				}
 				VBoxContainer upgrade = new VBoxContainer();
-				Label cost = new();
-				cost.Text = "$" + tower._firstUpgradeCost.ToString();
+				RichTextLabel cost = new();
+				cost.FitContent = true;
+				cost.BbcodeEnabled = true;
+				cost.Text = Utils.MakeMoneyText(tower._firstUpgradeCost);
 				upgrade.AddChild(cost);
 
 				foreach (EffectResource effect in tower._firstUpgrade)
@@ -276,84 +248,45 @@ public partial class UnitInfoPanel : CanvasLayer
 				Button upgradeButton = EffectResource.MakeCombinedEffectTooltip(true, tower._firstUpgradeName, tower._firstUpgrade);
 				upgradeButton.Pressed += (() =>
 				{
-					if (_tdManager._money >= tower._firstUpgradeCost)
+					if (Utils.VectorLeq(tower._firstUpgradeCost, _tdManager._money))
 					{
-						_tdManager.SpendMoneyOnTower(tower._firstUpgradeCost);
+						_tdManager.SpendMoney(tower._firstUpgradeCost);
 						tower.UpgradeFirst();
 					}
 				});
 				upgrade.AddChild(upgradeButton);
 				_upgradeContainer.AddChild(upgrade);
 			}
-			else if ((!tower._hasSecondUpgrade[0] || !tower._hasSecondUpgrade[1] || !tower._hasSecondUpgrade[2]) && tower._unlockedSecondUpgrades)
+			else if ((!tower._hasSecondUpgrade) && tower._unlockedSecondUpgrade)
 			{
-				if (tower._secondUpgradeA is null)
+				if (tower._secondUpgrade is null)
 				{
 					return;
 				}
-				if (!tower._hasSecondUpgrade[0])
+				VBoxContainer upgrade = new VBoxContainer();
+				RichTextLabel cost = new();
+				cost.FitContent = true;
+				cost.BbcodeEnabled = true;
+				cost.Text = Utils.MakeMoneyText(tower._secondUpgradeCost);
+				upgrade.AddChild(cost);
+
+				foreach (EffectResource effect in tower._secondUpgrade)
 				{
-					VBoxContainer upgradeA = new VBoxContainer();
-					Label cost = new();
-					cost.Text = "$" + tower._secondUpgradeACost.ToString();
-					upgradeA.AddChild(cost);
-
-					tower._secondUpgradeA.SetDescription();
-					Button upgradeButton = tower._secondUpgradeA.MakeEffectTooltip(true);
-					upgradeButton.Pressed += (() =>
-					{
-						if (_tdManager._money >= tower._secondUpgradeACost)
-						{
-							_tdManager.SpendMoneyOnTower(tower._secondUpgradeACost);
-							tower.UpgradeSecondA();
-						}
-
-					});
-					upgradeA.AddChild(upgradeButton);
-					_upgradeContainer.AddChild(upgradeA);
+					effect.SetDescription();
 				}
-				if (!tower._hasSecondUpgrade[1])
+
+				Button upgradeButton = EffectResource.MakeCombinedEffectTooltip(true, tower._secondUpgradeName, tower._secondUpgrade);
+				upgradeButton.Pressed += (() =>
 				{
-					VBoxContainer upgradeB = new VBoxContainer();
-					Label cost = new();
-					cost.Text = "$" + tower._secondUpgradeBCost.ToString();
-					upgradeB.AddChild(cost);
-
-					tower._secondUpgradeB.SetDescription();
-					Button upgradeButton = tower._secondUpgradeB.MakeEffectTooltip(true);
-					upgradeButton.Pressed += (() =>
+					if (Utils.VectorLeq(tower._secondUpgradeCost, _tdManager._money))
 					{
-						if (_tdManager._money >= tower._secondUpgradeBCost)
-						{
-							_tdManager.SpendMoneyOnTower(tower._secondUpgradeBCost);
-							tower.UpgradeSecondB();
-						}
+						_tdManager.SpendMoney(tower._secondUpgradeCost);
+						tower.UpgradeSecond();
+					}
 
-					});
-					upgradeB.AddChild(upgradeButton);
-					_upgradeContainer.AddChild(upgradeB);
-				}
-				if (!tower._hasSecondUpgrade[2])
-				{
-					VBoxContainer upgradeC = new VBoxContainer();
-					Label cost = new();
-					cost.Text = "$" + tower._secondUpgradeCCost.ToString();
-					upgradeC.AddChild(cost);
-
-					tower._secondUpgradeC.SetDescription();
-					Button upgradeButton = tower._secondUpgradeC.MakeEffectTooltip(true);
-					upgradeButton.Pressed += (() =>
-					{
-						if (_tdManager._money >= tower._secondUpgradeCCost)
-						{
-							_tdManager.SpendMoneyOnTower(tower._secondUpgradeCCost);
-							tower.UpgradeSecondC();
-						}
-
-					});
-					upgradeC.AddChild(upgradeButton);
-					_upgradeContainer.AddChild(upgradeC);
-				}
+				});
+				upgrade.AddChild(upgradeButton);
+				_upgradeContainer.AddChild(upgrade);
 			}
 			else if (!tower._hasThirdUpgrade && tower._unlockedThirdUpgrade)
 			{
@@ -362,8 +295,10 @@ public partial class UnitInfoPanel : CanvasLayer
 					return;
 				}
 				VBoxContainer upgrade = new VBoxContainer();
-				Label cost = new();
-				cost.Text = "$" + tower._thirdUpgradeCost.ToString();
+				RichTextLabel cost = new();
+				cost.FitContent = true;
+				cost.BbcodeEnabled = true;
+				cost.Text = Utils.MakeMoneyText(tower._thirdUpgradeCost);
 				upgrade.AddChild(cost);
 
 				foreach (EffectResource effect in tower._thirdUpgrade)
@@ -374,9 +309,9 @@ public partial class UnitInfoPanel : CanvasLayer
 				Button upgradeButton = EffectResource.MakeCombinedEffectTooltip(true, tower._thirdUpgradeName, tower._thirdUpgrade);
 				upgradeButton.Pressed += (() =>
 				{
-					if (_tdManager._money >= tower._thirdUpgradeCost)
+					if (Utils.VectorLeq(tower._thirdUpgradeCost, _tdManager._money))
 					{
-						_tdManager.SpendMoneyOnTower(tower._thirdUpgradeCost);
+						_tdManager.SpendMoney(tower._thirdUpgradeCost);
 						tower.UpgradeThird();
 					}
 
@@ -386,40 +321,80 @@ public partial class UnitInfoPanel : CanvasLayer
 			}
 			else if (!tower._hasFourthUpgrade && tower._unlockedFourthUpgrade)
 			{
-				if (tower._fourthUpgrade.Count == 0)
+				if (tower._fourthUpgradeA is not null && tower._fourthUpgradeA.Count != 0)
 				{
-					return;
-				}
-				VBoxContainer upgrade = new VBoxContainer();
-				Label cost = new();
-				cost.Text = "$" + tower._fourthUpgradeCost.ToString();
-				upgrade.AddChild(cost);
+					VBoxContainer upgrade = new VBoxContainer();
+					RichTextLabel cost = new();
+					cost.FitContent = true;
+					cost.BbcodeEnabled = true;
+					cost.Text = Utils.MakeMoneyText(tower._fourthUpgradeACost);
+					upgrade.AddChild(cost);
 
-				foreach (EffectResource effect in tower._fourthUpgrade)
-				{
-					effect.SetDescription();
-				}
-
-				Button upgradeButton = EffectResource.MakeCombinedEffectTooltip(true, tower._fourthUpgradeName, tower._fourthUpgrade);
-				upgradeButton.Pressed += (() =>
-				{
-					if (_tdManager._money >= tower._fourthUpgradeCost)
+					foreach (EffectResource effect in tower._fourthUpgradeA)
 					{
-						_tdManager.SpendMoneyOnTower(tower._fourthUpgradeCost);
-						tower.UpgradeFourth();
+						effect.SetDescription();
 					}
 
-				});
-				upgrade.AddChild(upgradeButton);
-				_upgradeContainer.AddChild(upgrade);
+					Button upgradeButton = EffectResource.MakeCombinedEffectTooltip(true, tower._fourthUpgradeAName, tower._fourthUpgradeA);
+					upgradeButton.Pressed += (() =>
+					{
+						if (Utils.VectorLeq(tower._fourthUpgradeACost, _tdManager._money))
+						{
+							_tdManager.SpendMoney(tower._fourthUpgradeACost);
+							tower.UpgradeFourthA();
+						}
+
+					});
+					upgrade.AddChild(upgradeButton);
+
+					TextureRect image = new();
+					image.Texture = tower._fourthUpgradeATexture;
+					image.StretchMode = TextureRect.StretchModeEnum.KeepAspectCentered;
+					upgrade.AddChild(image);
+
+					_upgradeContainer.AddChild(upgrade);
+				}
+				if (tower._fourthUpgradeB is not null && tower._fourthUpgradeB.Count!= 0)
+				{
+					VBoxContainer upgrade = new VBoxContainer();
+					RichTextLabel cost = new();
+					cost.FitContent = true;
+					cost.BbcodeEnabled = true;
+					cost.Text = Utils.MakeMoneyText(tower._fourthUpgradeBCost);
+					upgrade.AddChild(cost);
+
+					foreach (EffectResource effect in tower._fourthUpgradeB)
+					{
+						effect.SetDescription();
+					}
+
+					Button upgradeButton = EffectResource.MakeCombinedEffectTooltip(true, tower._fourthUpgradeBName, tower._fourthUpgradeB);
+					upgradeButton.Pressed += (() =>
+					{
+						if (Utils.VectorLeq(tower._fourthUpgradeBCost, _tdManager._money))
+						{
+							_tdManager.SpendMoney(tower._fourthUpgradeBCost);
+							tower.UpgradeFourthB();
+						}
+
+					});
+					upgrade.AddChild(upgradeButton);
+
+					TextureRect image = new();
+					image.Texture = tower._fourthUpgradeBTexture;
+					image.StretchMode = TextureRect.StretchModeEnum.KeepAspectCentered;
+					upgrade.AddChild(image);
+
+					_upgradeContainer.AddChild(upgrade);
+				}
 			}
 
 
 			_upgradeContainer.Show();
 
-			if (tower.GetIncome() > 0)
+			if (tower.GetIncome() != new Vector4I(0,0,0,0))
 			{
-				_incomeLabel.Text = "Maximum Income: $" + tower.GetIncome();
+				_incomeLabel.Text = "Maximum Income: " + Utils.MakeMoneyText(tower.GetIncome());
 				_incomeLabel.Show();
 			}
 			else
@@ -527,7 +502,7 @@ public partial class UnitInfoPanel : CanvasLayer
 		if (_unit is InvaderUnit invader)
 		{
 			_moneyDroppedLabel.Show();
-			_moneyDroppedLabel.Text = "Drops $" + invader.GetMoneyDropped().ToString();
+			_moneyDroppedLabel.Text = "Drops " + Utils.MakeMoneyText(invader.GetMoneyDropped());
 		}
 		else
 		{
@@ -538,27 +513,43 @@ public partial class UnitInfoPanel : CanvasLayer
 		{
 			_spawnLabel.Text = "Spawns " + spawner.GetSpawns();
 			_spawnLabel.Show();
+
+			Unit spawnedUnit = UnitManager.GetUnit(spawner._data._units[0]);
+			
+			foreach (var child in _spawnContainer.GetChildren())
+			{
+				child.QueueFree();
+			}
+
+			spawnedUnit._hpMaxModifier += spawner._data._hpBuff;
+			spawnedUnit.IncreaseSpeedModifier(spawner._data._speedBuff);
+			((InvaderUnit)spawnedUnit).IncreaseMoneyModifier(spawner._data._moneyBuff);
+
+			Label name = new();
+			name.Text = spawnedUnit._name;
+			_spawnContainer.AddChild(name);
+
+			Label hpLabel = new();
+			hpLabel.Text = "Max Hp: " + spawnedUnit.GetHpMax().ToString();
+			_spawnContainer.AddChild(hpLabel);
+
+			Label speedLabel = new();
+			speedLabel.Text = "Move speed: " + spawnedUnit.GetSpeed().ToString();
+			_spawnContainer.AddChild(speedLabel);
+
+			RichTextLabel moneyDrop = new();
+			moneyDrop.Text = "Drops " + Utils.MakeMoneyText(((InvaderUnit)spawnedUnit).GetMoneyDropped());
+			moneyDrop.BbcodeEnabled = true;
+			moneyDrop.FitContent = true;
+			_spawnContainer.AddChild(moneyDrop);
+
+			_spawnContainer.Show();
 		}
 		else
 		{
 			_spawnLabel.Hide();
+			_spawnContainer.Hide();
 		}
-
-			//for (int i = _commandContainer.GetChildCount() - 1; i >= 0; i--)
-			//{
-			//	_commandContainer.GetChild(i).QueueFree();
-			//}
-			//Command command = unit._currentCommand;
-			//Label label = new Label();
-			//label.Text = command.GetDescription();
-			//_commandContainer.AddChild(label);
-
-			//for (int i = 0; i < unit._commandQueue.Count; i++)
-			//{
-			//	Label label_ = new Label();
-			//	label_.Text = unit._commandQueue[i].GetDescription();
-			//	_commandContainer.AddChild(label_);
-			//}
 		_tdManager._towerManager.UpdateIncomeDisplay();
 	}
 
@@ -578,8 +569,8 @@ public partial class UnitInfoPanel : CanvasLayer
 		if (_unit._weapon != null)
 		{
 			_damageLabel.Text = "Weapon Damage: " + _unit._weapon.GetDamage().ToString();
-			_cooldownLabel.Text = "Weapon Cooldown: " + _unit._weapon.GetCooldown().ToString();
-			_dpsLabel.Text = "DPS: " + _unit._weapon.GetDPS().ToString();
+			_cooldownLabel.Text = "Weapon Cooldown: " + _unit._weapon.GetCooldown().ToString("F2");
+			_dpsLabel.Text = "DPS: " + _unit._weapon.GetDPS().ToString("F0");
 			_rangeLabel.Text = "Range: " + _unit._weapon.GetRange().ToString();
 		}
 		else
@@ -588,11 +579,11 @@ public partial class UnitInfoPanel : CanvasLayer
 
 		if (_unit is TowerUnit tower)
 		{
-			_totalCostLabel.Text = "Total Cost: $" + tower.GetTotalCost().ToString();
+			_totalCostLabel.Text = "Total Cost: " + Utils.MakeMoneyText(tower.GetTotalCost());
 
-			if (tower.GetIncome() > 0)
+			if (tower.GetIncome() != new Vector4I(0,0,0,0))
 			{
-				_incomeLabel.Text = "Maximum Income: $" + tower.GetIncome();
+				_incomeLabel.Text = "Maximum Income: " + Utils.MakeMoneyText(tower.GetIncome());
 			}
 		}
 		else
@@ -625,7 +616,7 @@ public partial class UnitInfoPanel : CanvasLayer
 
 		if (_unit is InvaderUnit invader)
 		{
-			_moneyDroppedLabel.Text = "Drops $" + invader.GetMoneyDropped().ToString();
+			_moneyDroppedLabel.Text = "Drops " + Utils.MakeMoneyText(invader.GetMoneyDropped());
 		}
 
 		if (_unit is Spawner spawner && spawner._data._units.Count > 0)

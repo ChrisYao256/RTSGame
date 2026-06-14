@@ -9,6 +9,7 @@ public partial class DebuffOnHitResource : EffectResource
 
 	public override void SetDescription()
 	{
+		_displayType = DisplayTypes.Large;
 		_effectDescription = "Every hit inflicts target with ";
 		for (int i = 0; i < _debuffs.Count - 1; i++)
 		{

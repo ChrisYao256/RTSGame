@@ -9,6 +9,7 @@ public partial class SelfHealingResource : EffectResource
 
 	public override void SetDescription()
 	{
+		_displayType = DisplayTypes.Large;
 		_effectDescription = "Regenerates " + _healAmount + " Hp every second.";
 	}
 

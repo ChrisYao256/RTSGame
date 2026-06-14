@@ -26,6 +26,8 @@ public partial class UnitManager : Node2D
 		{ "IceLaserTurret", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/IceLaserTurret.tscn") },
 		{ "FlameTurret", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/FlameTurret.tscn") },
 		{ "FrostTurret", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/FrostTurret.tscn") },
+		{ "DualGunTurret", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/DualGunTurret.tscn") },
+		{ "ExplosiveGunTurret", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/ExplosiveGunTurret.tscn") },
 		{ "TestTurret", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/TestTurret.tscn") },
 
 		{ "SlimeSpawner", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/SlimeSpawner.tscn") },
@@ -434,7 +436,7 @@ public partial class UnitManager : Node2D
 		_unitInfoPanel.UpdateSelectedUnits(newSelection);
 	}
 
-	public Unit SpawnUnit(Vector2 position, int teamId, string unitName, bool aiControlled = true, Vector2I? gridLocation = null)
+	public Unit SpawnUnit(Vector2 position, int teamId, string unitName, bool aiControlled = true, Vector2I? gridLocation = null, bool hasEffects = true)
 	{
 		if (UnitLibrary.TryGetValue(unitName, out PackedScene scene))
 		{
@@ -452,6 +454,8 @@ public partial class UnitManager : Node2D
 			{
 				tower._gridLocation = (Vector2I)gridLocation;
 			}
+
+			newUnit._hasEffects = hasEffects;
 
 			AddChild(newUnit);
 
@@ -480,7 +484,7 @@ public partial class UnitManager : Node2D
 
 	private void OnUnitRemoved(Unit removedUnit)
 	{
-		removedUnit.Died -= OnUnitDied;
+		removedUnit.Removed -= OnUnitRemoved;
 
 		_activeUnits.Remove(removedUnit);
 		if (_selectedUnits.Contains(removedUnit))

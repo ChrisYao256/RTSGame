@@ -1,65 +1,31 @@
 [gd_scene format=3 uid="uid://dae3piaxv0d2h"]
 
 [ext_resource type="PackedScene" uid="uid://yhbw0b164ui2" path="res://_Content/_Scenes/_Prefabs/Units/BaseTower.tscn" id="1_mrw2a"]
-[ext_resource type="Texture2D" uid="uid://c7xr1yb8633dx" path="res://_Assets/LaserTurret.png" id="2_mrw2a"]
+[ext_resource type="Texture2D" uid="uid://ckpo2x2lwwcb5" path="res://_Assets/LaserTurret.png" id="2_mrw2a"]
 [ext_resource type="PackedScene" uid="uid://csclmqhm61enk" path="res://_Content/_Scenes/_Prefabs/Weapons/LaserWeapon.tscn" id="3_7wgq5"]
 [ext_resource type="Script" uid="uid://c7ye5bgfhla5e" path="res://_Source/Effects/StatsIncrease/StatsIncreaseResource.cs" id="3_h0vgu"]
-[ext_resource type="Texture2D" uid="uid://cxb3drleo562g" path="res://_Assets/LaserTurretBase.png" id="4_mrw2a"]
-[ext_resource type="Script" uid="uid://dp6ckxy1qef6o" path="res://_Source/Effects/RampUpDamage/RampUpDamageResource.cs" id="4_odwla"]
-[ext_resource type="PackedScene" uid="uid://bol7o0gl5ji8x" path="res://_Content/_Scenes/_Prefabs/Weapons/TurretTurner.tscn" id="5_7ewp4"]
 [ext_resource type="Script" uid="uid://dtpcxn7d2dqcy" path="res://_Source/Effects/EffectResource.cs" id="5_d4b7m"]
-[ext_resource type="Texture2D" uid="uid://dpq71dqbxcgwo" path="res://_Assets/LaserTurretTurret.png" id="6_7wgq5"]
-[ext_resource type="Script" uid="uid://fdug3yybl4s5" path="res://_Source/Effects/AdjacencyTransform/AdjacencyTransformResource.cs" id="6_h8tlq"]
+[ext_resource type="Texture2D" uid="uid://miulw7p5fqif" path="res://_Assets/RedBase.png" id="7_4io8i"]
 [ext_resource type="Script" uid="uid://dp2y3egpfahx1" path="res://_Source/Effects/StatsIncreasePerNearbyTower/StatsIncreasePerNearbyTowerResource.cs" id="7_h8tlq"]
+[ext_resource type="Texture2D" uid="uid://dswmqssl2idv8" path="res://_Assets/LaserTurretAttacking.png" id="9_4io8i"]
+[ext_resource type="Texture2D" uid="uid://c81t2cos2y8j1" path="res://_Assets/LaserTurretIdle.png" id="9_d4b7m"]
+[ext_resource type="Texture2D" uid="uid://druh6fs01scdp" path="res://_Assets/LaserTurretCharging.png" id="10_ha87b"]
+[ext_resource type="Script" uid="uid://bva1xkjx08h5v" path="res://_Source/_Units/Weapons/TurretTurner.cs" id="12_4io8i"]
 
 [sub_resource type="Resource" id="Resource_ha87b"]
 script = ExtResource("3_h0vgu")
-_damageIncrease = 35
-metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
-
-[sub_resource type="Resource" id="Resource_7ewp4"]
-script = ExtResource("3_h0vgu")
-_damageIncrease = 65
-metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
-
-[sub_resource type="Resource" id="Resource_d4b7m"]
-script = ExtResource("3_h0vgu")
-_attackDelayModifierIncrease = 2.0
-_effectName = "Faster retargeting"
+_damageIncrease = 30
 metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 
 [sub_resource type="Resource" id="Resource_h8tlq"]
-script = ExtResource("4_odwla")
-_increaseAmount = 100
-_increaseInterval = 2.0
-_oneTime = true
-metadata/_custom_type_script = "uid://dp6ckxy1qef6o"
+script = ExtResource("3_h0vgu")
+_damageIncrease = 64
+metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 
 [sub_resource type="Resource" id="Resource_4io8i"]
 script = ExtResource("3_h0vgu")
 _damageIncrease = 150
 metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
-
-[sub_resource type="Resource" id="Resource_3jwxc"]
-script = ExtResource("4_odwla")
-_increaseAmount = 1500
-_increaseInterval = 10.0
-_oneTime = true
-metadata/_custom_type_script = "uid://dp6ckxy1qef6o"
-
-[sub_resource type="Resource" id="Resource_2vm1c"]
-script = ExtResource("6_h8tlq")
-_transformedUnit = "IceLaserTurret"
-_requirements = Array[Dictionary]([{
-Vector2i(1, 0): ["YetiSpawner"]
-}, {
-Vector2i(-1, 0): ["YetiSpawner"]
-}, {
-Vector2i(0, 1): ["YetiSpawner"]
-}, {
-Vector2i(0, -1): ["YetiSpawner"]
-}])
-metadata/_custom_type_script = "uid://fdug3yybl4s5"
 
 [sub_resource type="Resource" id="Resource_rnneq"]
 script = ExtResource("3_h0vgu")
@@ -73,27 +39,243 @@ _area = Array[Vector2i]([Vector2i(1, 1), Vector2i(1, 0), Vector2i(1, -1), Vector
 _towers = Array[String](["Mine"])
 metadata/_custom_type_script = "uid://dp2y3egpfahx1"
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_2vm1c"]
+atlas = ExtResource("10_ha87b")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rnneq"]
+atlas = ExtResource("10_ha87b")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_o7wuf"]
+atlas = ExtResource("10_ha87b")
+region = Rect2(128, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3jwxc"]
+atlas = ExtResource("10_ha87b")
+region = Rect2(192, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_g5hpd"]
+atlas = ExtResource("10_ha87b")
+region = Rect2(256, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xovln"]
+atlas = ExtResource("10_ha87b")
+region = Rect2(320, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_y3jc6"]
+atlas = ExtResource("10_ha87b")
+region = Rect2(384, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ito81"]
+atlas = ExtResource("10_ha87b")
+region = Rect2(448, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hmhqt"]
+atlas = ExtResource("10_ha87b")
+region = Rect2(512, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0lx1y"]
+atlas = ExtResource("10_ha87b")
+region = Rect2(576, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_r2qje"]
+atlas = ExtResource("10_ha87b")
+region = Rect2(640, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ycefv"]
+atlas = ExtResource("10_ha87b")
+region = Rect2(704, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dggx8"]
+atlas = ExtResource("10_ha87b")
+region = Rect2(768, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_its38"]
+atlas = ExtResource("10_ha87b")
+region = Rect2(832, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hgmjp"]
+atlas = ExtResource("10_ha87b")
+region = Rect2(896, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gg8vo"]
+atlas = ExtResource("10_ha87b")
+region = Rect2(960, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ecply"]
+atlas = ExtResource("10_ha87b")
+region = Rect2(1024, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_emssu"]
+atlas = ExtResource("10_ha87b")
+region = Rect2(1088, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_i66q2"]
+atlas = ExtResource("10_ha87b")
+region = Rect2(1152, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hmpom"]
+atlas = ExtResource("10_ha87b")
+region = Rect2(1216, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_j3y2l"]
+atlas = ExtResource("10_ha87b")
+region = Rect2(1280, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6vu05"]
+atlas = ExtResource("10_ha87b")
+region = Rect2(1344, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2d1uc"]
+atlas = ExtResource("10_ha87b")
+region = Rect2(1408, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5mr0o"]
+atlas = ExtResource("10_ha87b")
+region = Rect2(1472, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_n0qo4"]
+atlas = ExtResource("10_ha87b")
+region = Rect2(1536, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_r38ot"]
+atlas = ExtResource("10_ha87b")
+region = Rect2(1600, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tkiwg"]
+atlas = ExtResource("10_ha87b")
+region = Rect2(1664, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_r5lrr"]
+atlas = ExtResource("10_ha87b")
+region = Rect2(1728, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_y2xvk"]
+atlas = ExtResource("10_ha87b")
+region = Rect2(1792, 0, 64, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_ha87b"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("9_4io8i")
+}],
+"loop": false,
+"name": &"Attacking",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2vm1c")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rnneq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_o7wuf")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3jwxc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_g5hpd")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xovln")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_y3jc6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ito81")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hmhqt")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0lx1y")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_r2qje")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ycefv")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dggx8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_its38")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hgmjp")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gg8vo")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ecply")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_emssu")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_i66q2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hmpom")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_j3y2l")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6vu05")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2d1uc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5mr0o")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_n0qo4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_r38ot")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tkiwg")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_r5lrr")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_y2xvk")
+}],
+"loop": false,
+"name": &"Charging",
+"speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("9_d4b7m")
+}],
+"loop": false,
+"name": &"Idle",
+"speed": 1.0
+}]
+
 [node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_mrw2a")]
-_cost = 30
+_cost = Vector4i(20, 0, 0, 10)
 _iconTexture = ExtResource("2_mrw2a")
-_towerType = 0
 _description = "Shoots high damage laser that ignores armor"
 _firstUpgrade = Array[Object]([SubResource("Resource_ha87b")])
-_firstUpgradeCost = 20
-_firstUpgradeName = "Lv 1"
-_secondUpgradeA = SubResource("Resource_7ewp4")
-_secondUpgradeACost = 40
-_secondUpgradeB = SubResource("Resource_d4b7m")
-_secondUpgradeBCost = 40
-_secondUpgradeC = SubResource("Resource_h8tlq")
-_secondUpgradeCCost = 40
+_firstUpgradeCost = Vector4i(15, 0, 0, 7)
+_secondUpgrade = Array[Object]([SubResource("Resource_h8tlq")])
+_secondUpgradeCost = Vector4i(30, 0, 0, 15)
 _thirdUpgrade = Array[Object]([SubResource("Resource_4io8i")])
-_thirdUpgradeCost = 120
-_thirdUpgradeName = "Lv 3"
-_fourthUpgrade = Array[Object]([SubResource("Resource_3jwxc")])
-_fourthUpgradeCost = 600
-_fourthUpgradeName = "Lv 4"
-_transformEffects = Array[ExtResource("5_d4b7m")]([SubResource("Resource_2vm1c")])
+_thirdUpgradeCost = Vector4i(67, 0, 0, 33)
 _hpMax = 1
 _lockOnTarget = true
 _startingEffects = Array[ExtResource("5_d4b7m")]([SubResource("Resource_o7wuf")])
@@ -101,16 +283,26 @@ _internalName = "LaserTurret"
 _name = "Laser Turret"
 _radius = 0.0
 
-[node name="WeaponComponent" parent="." index="0" unique_id=2120452932 instance=ExtResource("3_7wgq5")]
-_damage = 40
-_range = 300.0
-_attackDelayLow = 2.0
-_attackDelayHigh = 2.0
-_useAttackDelay = true
-
-[node name="MainSprite" parent="." index="2" unique_id=701942347]
+[node name="MainSprite" parent="." index="1" unique_id=701942347]
 scale = Vector2(1, 1)
-texture = ExtResource("4_mrw2a")
+texture = ExtResource("7_4io8i")
 
-[node name="TurretTurner" parent="." index="6" unique_id=113202010 instance=ExtResource("5_7ewp4")]
-_turretTexture = ExtResource("6_7wgq5")
+[node name="TurretTurner" type="Node2D" parent="." index="8" unique_id=1660325207]
+script = ExtResource("12_4io8i")
+_turn = true
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="TurretTurner" index="0" unique_id=1265150402]
+sprite_frames = SubResource("SpriteFrames_ha87b")
+animation = &"Attacking"
+
+[node name="Marker2D" type="Marker2D" parent="TurretTurner" index="1" unique_id=13863776]
+position = Vector2(30, 0)
+
+[node name="WeaponComponent" parent="." index="9" unique_id=2120452932 instance=ExtResource("3_7wgq5")]
+_tracerColor = Color(0.46666667, 0.84313726, 0.4392157, 1)
+_damage = 40
+_range = 350.0
+_attackDelayLow = 1.5
+_attackDelayHigh = 1.5
+_useAttackDelay = true
+_damageType = 2

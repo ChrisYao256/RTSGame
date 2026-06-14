@@ -5,14 +5,14 @@
 
 [sub_resource type="Resource" id="Resource_sdwyq"]
 script = ExtResource("2_vr30q")
-_healAmount = 10000
+_healAmount = 1500
 metadata/_custom_type_script = "uid://bwnw1f3ti2dgi"
 
 [node name="BaseUnit" unique_id=481801141 instance=ExtResource("1_bcxgi")]
-_moneyDropped = 50
+_moneyDropped = Vector4i(50, 0, 0, 0)
 _hpDeducted = 20
-_moneyDeducted = 0
-_moveSpeed = 70.0
+_moneyDeducted = Vector4i(0, 0, 0, 0)
+_moveSpeed = 60.0
 _hpMax = 10000
 _armor = 5
 _startingEffects = Array[Object]([SubResource("Resource_sdwyq")])

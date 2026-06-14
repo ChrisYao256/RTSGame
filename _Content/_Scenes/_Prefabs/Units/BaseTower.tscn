@@ -2,10 +2,37 @@
 
 [ext_resource type="PackedScene" uid="uid://7vf0p5478xp8" path="res://_Content/_Scenes/_Prefabs/Units/BaseStationaryUnit.tscn" id="1_q0otc"]
 [ext_resource type="Script" uid="uid://b2ck2c8ddtlw3" path="res://_Source/_Units/TowerUnit.cs" id="2_2i4cj"]
+[ext_resource type="Script" uid="uid://dtpcxn7d2dqcy" path="res://_Source/Effects/EffectResource.cs" id="3_2i4cj"]
 
 [node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_q0otc")]
 script = ExtResource("2_2i4cj")
-_cost = 0
+_cost = Vector4i(0, 0, 0, 0)
+_iconTexture = null
+_towerType = 0
+_description = ""
+_firstUpgrade = null
+_firstUpgradeCost = Vector4i(0, 0, 0, 0)
+_secondUpgrade = null
+_secondUpgradeCost = Vector4i(0, 0, 0, 0)
+_thirdUpgrade = null
+_thirdUpgradeCost = Vector4i(0, 0, 0, 0)
+_fourthUpgradeA = null
+_fourthUpgradeATexture = null
+_fourthUpgradeACost = Vector4i(0, 0, 0, 0)
+_fourthUpgradeB = null
+_fourthUpgradeBTexture = null
+_fourthUpgradeBCost = Vector4i(0, 0, 0, 0)
+_transformEffects = Array[ExtResource("3_2i4cj")]([])
 
-[node name="HealthBar" parent="." index="4" unique_id=640038315]
+[node name="Level" type="Label" parent="." index="2" unique_id=1522381665]
+offset_left = 8.0
+offset_top = 23.0
+offset_right = 77.0
+offset_bottom = 90.0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 12
+theme_override_font_sizes/font_size = 24
+text = "Lv 1"
+
+[node name="HealthBar" parent="." index="5" unique_id=640038315]
 visible = false

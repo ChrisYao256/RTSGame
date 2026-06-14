@@ -18,6 +18,8 @@ public partial class DamageOverTime : Effect
 	int _totalDamage;
 	double _queuedDamage = 0;
 
+	Node2D _visualSceneInstance;
+
 	public DamageOverTime(DamageOverTimeResource resource) : base(resource)
 	{
 		_firstResource = resource;
@@ -26,8 +28,16 @@ public partial class DamageOverTime : Effect
 	public override void ConnectSignals(Unit unit)
 	{
 		base.ConnectSignals(unit);
-		OnCreation();
 		AddResource(_firstResource);
+		OnCreation();
+	}
+
+	protected override void OnCreation()
+	{
+		_visualSceneInstance = ((DamageOverTimeResource)_resource)._burnVisualScene.Instantiate<Node2D>();
+		Utils.ScaleVisualToRadius(_visualSceneInstance.GetNode<AnimatedSprite2D>("AnimatedSprite2D"), _parentUnit._radius);
+		_parentUnit.AddChild(_visualSceneInstance);
+		_visualSceneInstance.GetNode<AnimatedSprite2D>("AnimatedSprite2D").Play();
 	}
 
 	public void AddResource(DamageOverTimeResource newResource)
@@ -62,6 +72,7 @@ public partial class DamageOverTime : Effect
 
 		if (_totalDamage == 0)
 		{
+			_parentUnit.RemoveChild(_visualSceneInstance);
 			RemoveEffectResource();
 			RemoveEffectNode();
 			_parentUnit.Modulate = new Color(1, 1, 1);

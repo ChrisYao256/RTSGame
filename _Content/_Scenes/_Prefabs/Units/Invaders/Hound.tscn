@@ -1,13 +1,22 @@
 [gd_scene format=3 uid="uid://c3v1krfkwbrkk"]
 
 [ext_resource type="PackedScene" uid="uid://bqn4h6d52i52" path="res://_Content/_Scenes/_Prefabs/Units/BaseInvaderUnit.tscn" id="1_dafsc"]
+[ext_resource type="Script" uid="uid://bx5p53eu0mmmn" path="res://_Source/Effects/SpeedUpOnHit/SpeedUpOnHitResource.cs" id="2_u68lq"]
+
+[sub_resource type="Resource" id="Resource_htjgi"]
+script = ExtResource("2_u68lq")
+_speedIncreasePerHit = 2.0
+_speedIncreaseCap = 100.0
+_effectName = "Rush"
+metadata/_custom_type_script = "uid://bx5p53eu0mmmn"
 
 [node name="BaseUnit" unique_id=481801141 instance=ExtResource("1_dafsc")]
-_moneyDropped = 4
-_moneyDeducted = 5
+_moneyDropped = Vector4i(2, 0, 0, 2)
+_hpDeducted = 2
+_moneyDeducted = Vector4i(0, 0, 0, 0)
 _moveSpeed = 100.0
-_hpMax = 250
-_startingEffects = Array[Object]([])
+_hpMax = 200
+_startingEffects = Array[Object]([SubResource("Resource_htjgi")])
 _internalName = "Hound"
 _name = "Goblin"
 _radius = 16.0

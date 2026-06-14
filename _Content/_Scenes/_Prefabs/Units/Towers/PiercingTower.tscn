@@ -1,92 +1,252 @@
 [gd_scene format=3 uid="uid://bg0b7slpwaqty"]
 
 [ext_resource type="PackedScene" uid="uid://yhbw0b164ui2" path="res://_Content/_Scenes/_Prefabs/Units/BaseTower.tscn" id="1_bpy14"]
-[ext_resource type="Texture2D" uid="uid://cyrbqtc037xqg" path="res://_Assets/MachineGunBase.png" id="2_2kx6n"]
+[ext_resource type="Texture2D" uid="uid://cq6cfalfqm4wq" path="res://_Assets/RailgunTurret.png" id="2_4kcl2"]
 [ext_resource type="Script" uid="uid://c7ye5bgfhla5e" path="res://_Source/Effects/StatsIncrease/StatsIncreaseResource.cs" id="3_7mvqi"]
 [ext_resource type="Script" uid="uid://dtpcxn7d2dqcy" path="res://_Source/Effects/EffectResource.cs" id="4_4kcl2"]
-[ext_resource type="Script" uid="uid://l2tsn5punoj6" path="res://_Source/Effects/LowerArmor/LowerArmorResource.cs" id="4_msjep"]
-[ext_resource type="Script" uid="uid://cxg3f5ateuini" path="res://_Source/Effects/DebuffOnHit/DebuffOnHitResource.cs" id="5_7mvqi"]
-[ext_resource type="Texture2D" uid="uid://b4w5wtfxwocy4" path="res://_Assets/MachineGunTurretBase.png" id="7_bpy14"]
+[ext_resource type="Texture2D" uid="uid://bdyjhvsjs67wx" path="res://_Assets/YellowBase.png" id="5_2kx6n"]
+[ext_resource type="Texture2D" uid="uid://b06iomsnrwbvy" path="res://_Assets/RailgunTurretFire.png" id="7_bpy14"]
 [ext_resource type="Texture2D" uid="uid://wswb4au2cnxn" path="res://_Assets/GunShot.png" id="7_msjep"]
 [ext_resource type="PackedScene" uid="uid://bc7mdwf374doj" path="res://_Content/_Scenes/_Prefabs/Weapons/ProjectileWeapon.tscn" id="7_vdetk"]
-[ext_resource type="Texture2D" uid="uid://dexpve2hjmblj" path="res://_Assets/MachineGunTurretTurret.png" id="9_2kx6n"]
-[ext_resource type="PackedScene" uid="uid://bol7o0gl5ji8x" path="res://_Content/_Scenes/_Prefabs/Weapons/TurretTurner.tscn" id="9_sodxo"]
+[ext_resource type="Script" uid="uid://bva1xkjx08h5v" path="res://_Source/_Units/Weapons/TurretTurner.cs" id="8_2kx6n"]
+[ext_resource type="Texture2D" uid="uid://mb44h82gnkel" path="res://_Assets/RailgunTurretIdle.png" id="9_bpy14"]
 
 [sub_resource type="Resource" id="Resource_bpy14"]
 script = ExtResource("3_7mvqi")
-_damageIncrease = 3
-metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
-
-[sub_resource type="Resource" id="Resource_msjep"]
-script = ExtResource("3_7mvqi")
-_damageIncrease = 4
+_damageIncrease = 28
+_pierceCount = 1
 metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 
 [sub_resource type="Resource" id="Resource_2kx6n"]
 script = ExtResource("3_7mvqi")
-_attackSpeedIncrease = 0.6
-metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
-
-[sub_resource type="Resource" id="Resource_4vl6b"]
-script = ExtResource("3_7mvqi")
-_pierceCount = 3
+_damageIncrease = 57
 metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 
 [sub_resource type="Resource" id="Resource_7mvqi"]
 script = ExtResource("3_7mvqi")
-_pierceCount = 3
+_damageIncrease = 100
+_pierceCount = 1
 metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 
-[sub_resource type="Resource" id="Resource_m1b1x"]
-script = ExtResource("4_msjep")
-_change = -8
-_time = 1.0
-metadata/_custom_type_script = "uid://l2tsn5punoj6"
+[sub_resource type="AtlasTexture" id="AtlasTexture_msjep"]
+atlas = ExtResource("7_bpy14")
+region = Rect2(0, 0, 64, 64)
 
-[sub_resource type="Resource" id="Resource_6kf8s"]
-script = ExtResource("5_7mvqi")
-_debuffs = Array[Object]([SubResource("Resource_m1b1x")])
-_effectName = "AP Rounds"
-metadata/_custom_type_script = "uid://cxg3f5ateuini"
+[sub_resource type="AtlasTexture" id="AtlasTexture_7mvqi"]
+atlas = ExtResource("7_bpy14")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_m1b1x"]
+atlas = ExtResource("7_bpy14")
+region = Rect2(128, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6kf8s"]
+atlas = ExtResource("7_bpy14")
+region = Rect2(192, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3qgn4"]
+atlas = ExtResource("7_bpy14")
+region = Rect2(256, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vdetk"]
+atlas = ExtResource("7_bpy14")
+region = Rect2(320, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ts0wj"]
+atlas = ExtResource("7_bpy14")
+region = Rect2(384, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_sodxo"]
+atlas = ExtResource("7_bpy14")
+region = Rect2(448, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0pcct"]
+atlas = ExtResource("7_bpy14")
+region = Rect2(512, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_672ai"]
+atlas = ExtResource("7_bpy14")
+region = Rect2(576, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jfrxq"]
+atlas = ExtResource("7_bpy14")
+region = Rect2(640, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_44m3k"]
+atlas = ExtResource("7_bpy14")
+region = Rect2(704, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tbyey"]
+atlas = ExtResource("7_bpy14")
+region = Rect2(768, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_f0s0i"]
+atlas = ExtResource("7_bpy14")
+region = Rect2(832, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_u8t65"]
+atlas = ExtResource("7_bpy14")
+region = Rect2(896, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6xt6j"]
+atlas = ExtResource("7_bpy14")
+region = Rect2(960, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ytr5s"]
+atlas = ExtResource("7_bpy14")
+region = Rect2(1024, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_su5q0"]
+atlas = ExtResource("7_bpy14")
+region = Rect2(1088, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_64yml"]
+atlas = ExtResource("7_bpy14")
+region = Rect2(1152, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_d0l2p"]
+atlas = ExtResource("7_bpy14")
+region = Rect2(1216, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_v0syb"]
+atlas = ExtResource("7_bpy14")
+region = Rect2(1280, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_j52lt"]
+atlas = ExtResource("7_bpy14")
+region = Rect2(1344, 0, 64, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_msjep"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_msjep")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7mvqi")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_m1b1x")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6kf8s")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3qgn4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vdetk")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ts0wj")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_sodxo")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0pcct")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_672ai")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jfrxq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_44m3k")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tbyey")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_f0s0i")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_u8t65")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6xt6j")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ytr5s")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_su5q0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_64yml")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_d0l2p")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_v0syb")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_j52lt")
+}],
+"loop": false,
+"name": &"Fire",
+"speed": 50.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("9_bpy14")
+}],
+"loop": false,
+"name": &"Idle",
+"speed": 1.0
+}]
 
 [node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_bpy14")]
-_iconTexture = ExtResource("2_2kx6n")
+_cost = Vector4i(40, 0, 0, 0)
+_iconTexture = ExtResource("2_4kcl2")
 _towerType = 0
 _description = "Machine gun that pieces through multiple enemies"
 _firstUpgrade = Array[Object]([SubResource("Resource_bpy14")])
-_firstUpgradeCost = 20
-_firstUpgradeName = "First Upgrade"
-_secondUpgradeA = SubResource("Resource_msjep")
-_secondUpgradeACost = 25
-_secondUpgradeB = SubResource("Resource_2kx6n")
-_secondUpgradeBCost = 25
-_secondUpgradeC = SubResource("Resource_4vl6b")
-_secondUpgradeCCost = 25
-_thirdUpgrade = Array[Object]([SubResource("Resource_7mvqi"), SubResource("Resource_6kf8s")])
-_thirdUpgradeCost = 150
-_thirdUpgradeName = "Third Upgrade"
+_firstUpgradeCost = Vector4i(25, 0, 0, 0)
+_secondUpgrade = Array[Object]([SubResource("Resource_2kx6n")])
+_secondUpgradeCost = Vector4i(50, 0, 0, 0)
+_thirdUpgrade = Array[Object]([SubResource("Resource_7mvqi")])
+_thirdUpgradeCost = Vector4i(90, 0, 0, 0)
+_fourthUpgradeA = null
+_fourthUpgradeATexture = null
+_fourthUpgradeACost = Vector4i(0, 0, 0, 0)
+_fourthUpgradeB = null
+_fourthUpgradeBTexture = null
+_fourthUpgradeBCost = Vector4i(0, 0, 0, 0)
 _transformEffects = Array[ExtResource("4_4kcl2")]([])
 LeashDistance = 200.0
 _startingEffects = Array[ExtResource("4_4kcl2")]([])
 _internalName = "PiercingTower"
-_name = "Machine Gun Turret"
+_name = "Railgun Turret"
 _radius = 0.0
 
-[node name="WeaponComponent" parent="." index="0" unique_id=2120452932 instance=ExtResource("7_vdetk")]
+[node name="MainSprite" parent="." index="1" unique_id=701942347]
+scale = Vector2(1, 1)
+texture = ExtResource("5_2kx6n")
+
+[node name="TurretTurner" type="Node2D" parent="." index="8" unique_id=1640024612]
+script = ExtResource("8_2kx6n")
+_turn = true
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="TurretTurner" index="0" unique_id=317933646]
+sprite_frames = SubResource("SpriteFrames_msjep")
+animation = &"Idle"
+
+[node name="Marker2D" type="Marker2D" parent="TurretTurner" index="1" unique_id=293047182]
+position = Vector2(18, 0)
+
+[node name="WeaponComponent" parent="." index="9" unique_id=2120452932 instance=ExtResource("7_vdetk")]
 _projectileSpeed = 2000.0
 _projectileTexture = ExtResource("7_msjep")
 _lifeTime = 8.0
-_projectileRadius = 5.0
+_projectileRadius = 15.0
 _pierceCount = 3
-_damage = 3
-_range = 200.0
-_attackCooldown = 0.15
+_delayProjectile = 0.06
+_damage = 40
+_range = 275.0
+_attackCooldown = 2.0
 _attackDelayLow = 0.3
 _attackDelayHigh = 0.3
-
-[node name="MainSprite" parent="." index="2" unique_id=701942347]
-scale = Vector2(1, 1)
-texture = ExtResource("7_bpy14")
-
-[node name="TurretTurner" parent="." index="4" unique_id=113202010 instance=ExtResource("9_sodxo")]
-_turretTexture = ExtResource("9_2kx6n")
+_damageType = 1

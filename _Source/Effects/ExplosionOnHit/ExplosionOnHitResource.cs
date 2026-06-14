@@ -10,6 +10,7 @@ public partial class ExplosionOnHitResource : EffectResource
 
 	public override void SetDescription()
 	{
+		_displayType = DisplayTypes.Large;
 		_effectDescription = "Every hit causes an explosion, dealing " + _explosionDamage.ToString() + " damage to all nearby enemies in a " + _explosionRadius + " radius.";
 	}
 

@@ -1,5 +1,6 @@
 using Godot;
 using Godot.Collections;
+using Godot.NativeInterop;
 using RTSGame.Source;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,7 @@ namespace RTSGame.Units;
 public partial class TowerUnit : StationaryUnit
 {
 	[Export]
-	public int _cost;
+	public Vector4I _cost;
 
 	[Export]
 	public Texture2D _iconTexture;
@@ -27,37 +28,42 @@ public partial class TowerUnit : StationaryUnit
 	public Array<EffectResource> _firstUpgrade;
 
 	[Export]
-	public int _firstUpgradeCost;
+	public Vector4I _firstUpgradeCost;
+
+	
+	public readonly string _firstUpgradeName = "Upgrade to Lv 2";
 
 	[Export]
-	public string _firstUpgradeName = "Lv 1";
-
+	public Array<EffectResource> _secondUpgrade;
 	[Export]
-	public EffectResource _secondUpgradeA;
-	[Export]
-	public int _secondUpgradeACost;
-	[Export]
-	public EffectResource _secondUpgradeB;
-	[Export]
-	public int _secondUpgradeBCost;
-	[Export]
-	public EffectResource _secondUpgradeC;
-	[Export]
-	public int _secondUpgradeCCost;
+	public Vector4I _secondUpgradeCost;
+	
+	public readonly string _secondUpgradeName = "Upgrade to Lv 3";
 
 	[Export]
 	public Array<EffectResource> _thirdUpgrade;
 	[Export]
-	public int _thirdUpgradeCost;
-	[Export]
-	public string _thirdUpgradeName = "Lv 3";
+	public Vector4I _thirdUpgradeCost;
+
+	public readonly string _thirdUpgradeName = "Upgrade to Lv 4";
 
 	[Export]
-	public Array<EffectResource> _fourthUpgrade;
+	public Array<EffectResource> _fourthUpgradeA;
 	[Export]
-	public int _fourthUpgradeCost;
+	public Texture2D _fourthUpgradeATexture;
 	[Export]
-	public string _fourthUpgradeName = "Lv 4";
+	public Vector4I _fourthUpgradeACost;
+
+	[Export]
+	public Array<EffectResource> _fourthUpgradeB;
+	[Export]
+	public Texture2D _fourthUpgradeBTexture;
+	[Export]
+	public Vector4I _fourthUpgradeBCost;
+
+	public readonly string _fourthUpgradeAName = "Upgrade to Lv 5";
+
+	public readonly string _fourthUpgradeBName = "Upgrade to Lv 5";
 
 	[Export]
 	private Array<EffectResource> _transformEffects = [];
@@ -83,22 +89,23 @@ public partial class TowerUnit : StationaryUnit
 
 	public bool _hasFirstUpgrade = false;
 
-	public bool _unlockedSecondUpgrades = false;
-	public List<bool> _hasSecondUpgrade = [false, false, false];
+	public bool _unlockedSecondUpgrade = true;
+	public bool _hasSecondUpgrade = false;
 
-	public bool _unlockedThirdUpgrade = false;
+	public bool _unlockedThirdUpgrade = true;
 	public bool _hasThirdUpgrade = false;
 
-	public bool _unlockedFourthUpgrade = false;
+	public bool _unlockedFourthUpgrade = true;
 	public bool _hasFourthUpgrade = false;
 
-	private float _iconSize = TDManager.TileSize / 2f;
+	private float _iconSize = TDManager.TileSize / 4f;
 
 	public TargetPriority _targetPriority;
 
 	public TDManager _tdManager;
 	public Grid _grid;
 	public Vector2I _gridLocation;
+	private Label _lvLabel;
 
 	public override void _Ready()
 	{
@@ -108,6 +115,7 @@ public partial class TowerUnit : StationaryUnit
 		base._Ready();
 		CollisionLayer = UnitManager.TowerLayerMask;
 		_aiControlled = false;
+		_lvLabel = GetNode<Label>("Level");
 	}
 
 	public override void _PhysicsProcess(double delta)
@@ -135,6 +143,10 @@ public partial class TowerUnit : StationaryUnit
 
 	protected override void SetStartingEffects()
 	{
+		if (!_hasEffects)
+		{
+			return;
+		}
 		base.SetStartingEffects();
 		foreach (var effect in _transformEffects)
 		{
@@ -154,7 +166,8 @@ public partial class TowerUnit : StationaryUnit
 		base.SetSize();
 		if (HasNode("TurretTurner"))
 		{
-			TurretTurner turret = GetNode<TurretTurner>("TurretTurner"); Sprite2D sprite = turret.GetNode<Sprite2D>("Sprite2D");
+			TurretTurner turret = GetNode<TurretTurner>("TurretTurner"); 
+			AnimatedSprite2D sprite = turret.GetNode<AnimatedSprite2D>("AnimatedSprite2D");
 			Utils.ScaleVisualToRadius(sprite, _radius);
 		}
 	}
@@ -204,7 +217,7 @@ public partial class TowerUnit : StationaryUnit
 
 	public void UnlockSecondUpgrades()
 	{
-		_unlockedSecondUpgrades = true;
+		_unlockedSecondUpgrade = true;
 		EmitSignal(SignalName.UpdateInfo);
 	}
 
@@ -227,33 +240,17 @@ public partial class TowerUnit : StationaryUnit
 		{
 			AddEffect(effect);
 		}
+		_lvLabel.Text = "Lv 2";
 	}
 
-	public void UpgradeSecondA()
+	public void UpgradeSecond()
 	{
-		_hasSecondUpgrade[0] = true;
-		_secondUpgradeBCost = (int)(_secondUpgradeBCost * _upgradeCostScaling);
-		_secondUpgradeCCost = (int)(_secondUpgradeCCost * _upgradeCostScaling);
-		AddEffect( _secondUpgradeA);
-
-	}
-
-	public void UpgradeSecondB()
-	{
-		_hasSecondUpgrade[1] = true;
-		_secondUpgradeCCost = (int)(_secondUpgradeCCost * _upgradeCostScaling);
-		_secondUpgradeACost = (int)(_secondUpgradeACost * _upgradeCostScaling);
-		AddEffect(_secondUpgradeB);
-
-	}
-
-	public void UpgradeSecondC()
-	{
-		_hasSecondUpgrade[2] = true;
-		_secondUpgradeBCost = (int)(_secondUpgradeBCost * _upgradeCostScaling);
-		_secondUpgradeACost = (int)(_secondUpgradeACost * _upgradeCostScaling);
-		AddEffect(_secondUpgradeC);
-
+		_hasSecondUpgrade = true;
+		foreach (var effect in _secondUpgrade)
+		{
+			AddEffect(effect);
+		}
+		_lvLabel.Text = "Lv 3";
 	}
 
 	public void UpgradeThird()
@@ -263,12 +260,22 @@ public partial class TowerUnit : StationaryUnit
 		{
 			AddEffect(effect);
 		}
+		_lvLabel.Text = "Lv 4";
 	}
 
-	public void UpgradeFourth()
+	public void UpgradeFourthA()
 	{
 		_hasFourthUpgrade = true;
-		foreach (var effect in _fourthUpgrade)
+		foreach (var effect in _fourthUpgradeA)
+		{
+			AddEffect(effect);
+		}
+	}
+
+	public void UpgradeFourthB()
+	{
+		_hasFourthUpgrade = true;
+		foreach (var effect in _fourthUpgradeB)
 		{
 			AddEffect(effect);
 		}
@@ -319,7 +326,9 @@ public partial class TowerUnit : StationaryUnit
 		VBoxContainer vContainer = new VBoxContainer();
 
 		// 4. Create the Description Label
-		Label desc = new Label();
+		RichTextLabel desc = new RichTextLabel();
+		desc.BbcodeEnabled = true;
+		desc.FitContent = true;
 		desc.Text = GetDescription(); 
 		desc.CustomMinimumSize = new Vector2(200, 0); // Limit width
 
@@ -332,14 +341,6 @@ public partial class TowerUnit : StationaryUnit
 
 		vContainer.AddChild(desc);
 
-		//foreach (EffectResource effect in _effects)
-		//{
-		//	VBoxContainer container = new();
-		//	HoverInfoLabel effectName = effect.MakeEffectTooltip(false);
-		//	container.AddChild(effectName);
-		//	vContainer.AddChild(container);
-		//}
-
 		popup.AddChild(vContainer);
 		trigger.AddChild(popup); // Attach popup to trigger for organization
 		trigger._popupBox = popup;
@@ -350,19 +351,27 @@ public partial class TowerUnit : StationaryUnit
 		return trigger;
 	}
 
+	public TextureRect MakeTowerIconBackground()
+	{
+		TextureRect background = new TextureRect();
+		background.Texture = TDTowerManager.TowerBackgroundTexture;
+		Utils.ScaleVisualToRadius(background, _iconSize);
+		return background;
+	}
+
 	public string GetDescription()
 	{
 		string fullDesc = _description + "\n";
 		if (_weapon != null)
 		{
 			fullDesc += "Weapon Damage: " + _weapon.GetDamage().ToString() + "\n";
-			fullDesc += "Weapon Cooldown: " + _weapon.GetCooldown().ToString() + "\n";
-			fullDesc += "DPS: " + _weapon.GetDPS().ToString() + "\n";
+			fullDesc += "Weapon Cooldown: " + _weapon.GetCooldown().ToString("F2") + "\n";
+			fullDesc += "DPS: " + _weapon.GetDPS().ToString("F0") + "\n";
 			fullDesc += "Range: " + _weapon.GetRange().ToString() + "\n";
 		}
-		if (GetIncome() > 0)
+		if (GetIncome() != new Vector4I(0,0,0,0))
 		{
-			fullDesc += "Maximum Income: $" + GetIncome() + "\n";
+			fullDesc += "Maximum Income: " + Utils.MakeMoneyText(GetIncome()) + "\n";
 		}
 		return fullDesc;
 	}
@@ -385,9 +394,9 @@ public partial class TowerUnit : StationaryUnit
 		}
 	}
 
-	public virtual int GetIncome()
+	public virtual Vector4I GetIncome()
 	{
-		int income = 0;
+		Vector4I income = new();
 		foreach (MoneyOnWaveStartResource resource in _effects.OfType<MoneyOnWaveStartResource>())
 		{
 			income += resource._money;
@@ -395,24 +404,16 @@ public partial class TowerUnit : StationaryUnit
 		return income;
 	}
 
-	public int GetTotalCost()
+	public Vector4I GetTotalCost()
 	{
-		int totalCost = _cost;
+		Vector4I totalCost = _cost;
 		if (_hasFirstUpgrade)
 		{
 			totalCost += _firstUpgradeCost;
 		}
-		if (_hasSecondUpgrade[0])
+		if (_hasSecondUpgrade)
 		{
-			totalCost += _secondUpgradeACost;
-		}
-		if (_hasSecondUpgrade[1])
-		{
-			totalCost += _secondUpgradeBCost;
-		}
-		if (_hasSecondUpgrade[2])
-		{
-			totalCost += _secondUpgradeCCost;
+			totalCost += _secondUpgradeCost;
 		}
 		if (_hasThirdUpgrade)
 		{

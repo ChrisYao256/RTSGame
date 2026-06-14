@@ -67,6 +67,11 @@ public abstract partial class Effect : Node2D
 
 	}
 	
+	protected virtual void OnIsHit(Unit source)
+	{
+
+	}
+
 	protected virtual void OnKilledEnemy(Unit target)
 	{
 

@@ -6,7 +6,7 @@ namespace RTSGame.Units;
 public partial class NearbyIncomeIncreaseResource : EffectResource
 {
 	[Export]
-	public int _increaseAmount;
+	public Vector4I _increaseAmount;
 
 	[Export]
 	public Array<Vector2I> _area = new Array<Vector2I>();

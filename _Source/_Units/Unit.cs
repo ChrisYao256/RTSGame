@@ -97,10 +97,16 @@ public partial class Unit : CharacterBody2D
 	public delegate void StopAttackEventHandler(Unit unit, Unit target);
 
 	[Signal]
+	public delegate void ShotFiredEventHandler(Unit unit);
+
+	[Signal]
 	public delegate void HitEnemyEventHandler(Unit unit, Unit target);
 
 	[Signal]
 	public delegate void PlacedTowerEventHandler(TowerUnit tower);
+
+	[Signal]
+	public delegate void IsHitEventHandler(Unit unit);
 
 	[Signal]
 	public delegate void KilledUnitEventHandler(Unit unit, Unit target);
@@ -132,7 +138,7 @@ public partial class Unit : CharacterBody2D
 
 	public float _speedDebuff;
 
-	public float _hpMaxModifier;
+	public int _hpMaxModifier;
 
 	public int _armorModifier;
 
@@ -151,6 +157,8 @@ public partial class Unit : CharacterBody2D
 	protected bool _active = true;
 
 	private bool _navigationPaused = false;
+
+	public bool _hasEffects = true;
 
 	public override void _Ready()
 	{
@@ -176,6 +184,10 @@ public partial class Unit : CharacterBody2D
 
 	protected virtual void SetStartingEffects()
 	{
+		if (!_hasEffects)
+		{
+			return;
+		}
 		_effectsNode = GetNode<Node2D>("Effects");
 		foreach (var effect in _startingEffects)
 		{
@@ -207,7 +219,8 @@ public partial class Unit : CharacterBody2D
 		else
 		{
 			EffectResource oldEffect = _effects.First(e => e.GetType() == resource.GetType());
-			bool addNewEffect = resource.MergeWithOld(oldEffect);
+			List<EffectResource> allMatchingEffects = _effects.FindAll(e => e.GetType() == resource.GetType());
+			bool addNewEffect = resource.MergeWithOld(oldEffect, allMatchingEffects);
 			if (addNewEffect)
 			{
 				EffectResource resourceCopy = (EffectResource)resource.Duplicate();
@@ -220,6 +233,7 @@ public partial class Unit : CharacterBody2D
 			}
 			else
 			{
+				EmitSignal(SignalName.UpdateInfo);
 				return null;
 			}
 		}
@@ -301,7 +315,7 @@ public partial class Unit : CharacterBody2D
 
 		_shieldBar = GetNode<TextureProgressBar>("ShieldBar");
 		_shieldBar.MaxValue = GetHpMax();
-		_shieldBar.Modulate = new Color(0.2f, 0.2f, 1, 0.75f);
+		_shieldBar.Modulate = ThemePalette.Blue;
 		_shieldBar.Size = new Vector2(length, _baseHealthBarHeight);
 		_shieldBar.Position = new Vector2(-length / 2, -48f - _baseHealthBarHeight);
 		UpdateHealthBar(_hp, GetHpMax(), _shield);
@@ -319,7 +333,7 @@ public partial class Unit : CharacterBody2D
 
 	public int GetHpMax()
 	{
-		return  (int)(_hpMax * (1 + _hpMaxModifier));
+		return  (int)(_hpMax + _hpMaxModifier);
 	}
 
 	public float GetSpeed()
@@ -547,6 +561,7 @@ public partial class Unit : CharacterBody2D
 		IncreaseHp(-damage, ignoreArmor);
 		Area2D socialArea = GetNode<Area2D>("AidArea");
 		var nearbyBodies = socialArea.GetOverlappingBodies();
+		EmitSignal(SignalName.IsHit, source);
 
 		foreach (var body in nearbyBodies)
 		{
@@ -763,9 +778,9 @@ public partial class Unit : CharacterBody2D
 		return false;
 	}
 
-	public void SetHpMaxModifier(float hpModifier)
+	public void SetHpMaxModifier(int hpModifier)
 	{
-		int newMax = (int)(_hpMax * (1 + hpModifier));
+		int newMax = _hpMax + hpModifier;
 		int change = newMax - _hpMax;
 		_hp += change;
 		_hpMaxModifier = hpModifier;
@@ -773,7 +788,7 @@ public partial class Unit : CharacterBody2D
 		UpdateHpMax();
 	}
 
-	public void IncreaseHpMaxModifier(float change)
+	public void IncreaseHpMaxModifier(int change)
 	{
 		SetHpMaxModifier(_hpMaxModifier + change);
 	}
@@ -939,11 +954,12 @@ public partial class Unit : CharacterBody2D
 
 		// Transition from Green (0.33) to Red (0.0) using HSV
 		// Or use a simple Lerp between two specific colors:
-		Color healthyColor = new Color(0, 1, 0, 0.75f);
-		Color criticalColor = new Color(1, 0, 0, 0.75f);
+		Color healthyColor = ThemePalette.Green;
+		Color criticalColor = ThemePalette.Red;
 
 		// This blends the two colors based on the health percentage
-		_healthBar.Modulate = criticalColor.Lerp(healthyColor, healthPercent);
+		//_healthBar.Modulate = criticalColor.Lerp(healthyColor, healthPercent);
+		_healthBar.Modulate = healthyColor;
 
 		if (_shield > 0)
 		{

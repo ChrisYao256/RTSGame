@@ -1,0 +1,219 @@
+[gd_scene format=3 uid="uid://iurih3qkicvb"]
+
+[ext_resource type="PackedScene" uid="uid://yhbw0b164ui2" path="res://_Content/_Scenes/_Prefabs/Units/BaseTower.tscn" id="1_prthp"]
+[ext_resource type="Texture2D" uid="uid://1ya6poaby1bi" path="res://_Assets/GunTurret.png" id="2_we67n"]
+[ext_resource type="Script" uid="uid://c7ye5bgfhla5e" path="res://_Source/Effects/StatsIncrease/StatsIncreaseResource.cs" id="3_n8q5b"]
+[ext_resource type="Script" uid="uid://ltp3a1v0hhal" path="res://_Source/Effects/ExplosionOnHit/ExplosionOnHitBuffResource.cs" id="4_n8q5b"]
+[ext_resource type="Script" uid="uid://dtpcxn7d2dqcy" path="res://_Source/Effects/EffectResource.cs" id="5_nb5yh"]
+[ext_resource type="Script" uid="uid://bonjif38a25r3" path="res://_Source/Effects/ExplosionOnHit/ExplosionOnHitResource.cs" id="5_prthp"]
+[ext_resource type="PackedScene" uid="uid://bjudui5jhrtku" path="res://_Content/_Scenes/_Prefabs/Effects/ExplosionVisualEffect.tscn" id="5_we67n"]
+[ext_resource type="Texture2D" uid="uid://bdyjhvsjs67wx" path="res://_Assets/YellowBase.png" id="6_714xp"]
+[ext_resource type="Script" uid="uid://bva1xkjx08h5v" path="res://_Source/_Units/Weapons/TurretTurner.cs" id="7_yt5n5"]
+[ext_resource type="Texture2D" uid="uid://56k5f8f2dyke" path="res://_Assets/GunTurretFire.png" id="8_koeup"]
+[ext_resource type="Texture2D" uid="uid://cmjpp5evevh5r" path="res://_Assets/GunTurretIdle.png" id="9_ah4w8"]
+[ext_resource type="Script" uid="uid://bwav65cg5at1c" path="res://_Source/_Units/Weapons/ProjectileWeapon.cs" id="10_ox4ia"]
+[ext_resource type="Texture2D" uid="uid://wswb4au2cnxn" path="res://_Assets/GunShot.png" id="11_8twvv"]
+
+[sub_resource type="Resource" id="Resource_cmo3r"]
+script = ExtResource("3_n8q5b")
+_damageIncrease = 100
+metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
+
+[sub_resource type="Resource" id="Resource_k5r0l"]
+script = ExtResource("4_n8q5b")
+_explosionDamage = 50
+metadata/_custom_type_script = "uid://ltp3a1v0hhal"
+
+[sub_resource type="Resource" id="Resource_oh15a"]
+script = ExtResource("3_n8q5b")
+_damageIncrease = 190
+metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
+
+[sub_resource type="Resource" id="Resource_n8q5b"]
+script = ExtResource("4_n8q5b")
+_explosionDamage = 100
+metadata/_custom_type_script = "uid://ltp3a1v0hhal"
+
+[sub_resource type="Resource" id="Resource_yglny"]
+script = ExtResource("3_n8q5b")
+_damageIncrease = 370
+metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
+
+[sub_resource type="Resource" id="Resource_nb5yh"]
+script = ExtResource("4_n8q5b")
+_explosionDamage = 200
+metadata/_custom_type_script = "uid://ltp3a1v0hhal"
+
+[sub_resource type="Resource" id="Resource_we67n"]
+script = ExtResource("5_prthp")
+_explosionRadius = 100.0
+_explosionDamage = 150
+ExplosionVisualScene = ExtResource("5_we67n")
+_effectName = "Explosive shells"
+_displayType = 1
+metadata/_custom_type_script = "uid://bonjif38a25r3"
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cmo3r"]
+atlas = ExtResource("8_koeup")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yglny"]
+atlas = ExtResource("8_koeup")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_oh15a"]
+atlas = ExtResource("8_koeup")
+region = Rect2(128, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dnbqd"]
+atlas = ExtResource("8_koeup")
+region = Rect2(192, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_in623"]
+atlas = ExtResource("8_koeup")
+region = Rect2(256, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_d1w5n"]
+atlas = ExtResource("8_koeup")
+region = Rect2(320, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ji5kk"]
+atlas = ExtResource("8_koeup")
+region = Rect2(384, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8bi3n"]
+atlas = ExtResource("8_koeup")
+region = Rect2(448, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_d6qei"]
+atlas = ExtResource("8_koeup")
+region = Rect2(512, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vpldu"]
+atlas = ExtResource("8_koeup")
+region = Rect2(576, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wt4yc"]
+atlas = ExtResource("8_koeup")
+region = Rect2(640, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xhgat"]
+atlas = ExtResource("8_koeup")
+region = Rect2(704, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_j15gn"]
+atlas = ExtResource("8_koeup")
+region = Rect2(768, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_e2eil"]
+atlas = ExtResource("9_ah4w8")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_oh15a"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cmo3r")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yglny")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_oh15a")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dnbqd")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_in623")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_d1w5n")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ji5kk")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8bi3n")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_d6qei")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vpldu")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wt4yc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xhgat")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_j15gn")
+}],
+"loop": false,
+"name": &"Fire",
+"speed": 50.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_e2eil")
+}],
+"loop": false,
+"name": &"Idle",
+"speed": 1.0
+}]
+
+[node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_prthp")]
+_cost = Vector4i(0, 0, 0, 0)
+_iconTexture = ExtResource("2_we67n")
+_towerType = 0
+_description = "Cost-efficient turret that shoots single-target projectiles"
+_firstUpgrade = Array[Object]([SubResource("Resource_cmo3r"), SubResource("Resource_k5r0l")])
+_firstUpgradeCost = Vector4i(60, 30, 0, 0)
+_secondUpgrade = Array[Object]([SubResource("Resource_oh15a"), SubResource("Resource_n8q5b")])
+_secondUpgradeCost = Vector4i(100, 60, 0, 0)
+_thirdUpgrade = Array[Object]([SubResource("Resource_yglny"), SubResource("Resource_nb5yh")])
+_thirdUpgradeCost = Vector4i(200, 100, 0, 0)
+_fourthUpgradeA = null
+_fourthUpgradeATexture = null
+_fourthUpgradeACost = Vector4i(0, 0, 0, 0)
+_fourthUpgradeB = null
+_fourthUpgradeBTexture = null
+_fourthUpgradeBCost = Vector4i(0, 0, 0, 0)
+_transformEffects = Array[ExtResource("5_nb5yh")]([])
+_hpMax = 1
+_startingEffects = Array[Object]([SubResource("Resource_we67n")])
+_internalName = "ExplosiveGunTurret"
+_name = "Cannon Turret"
+_radius = 0.0
+
+[node name="MainSprite" parent="." index="1" unique_id=701942347]
+scale = Vector2(1, 1)
+texture = ExtResource("6_714xp")
+
+[node name="AidAreaCollision" parent="AidArea" parent_id_path=PackedInt32Array(724286163) index="0" unique_id=1952573643]
+position = Vector2(113, -59)
+
+[node name="TurretTurner" type="Node2D" parent="." index="8" unique_id=1158807940]
+script = ExtResource("7_yt5n5")
+_turn = true
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="TurretTurner" index="0" unique_id=849851730]
+sprite_frames = SubResource("SpriteFrames_oh15a")
+animation = &"Idle"
+
+[node name="Marker2D" type="Marker2D" parent="TurretTurner" index="1" unique_id=661621734]
+position = Vector2(18, 0)
+
+[node name="WeaponComponent" type="Node2D" parent="." index="9" unique_id=2120452932]
+script = ExtResource("10_ox4ia")
+_projectileSpeed = 1500.0
+_projectileTexture = ExtResource("11_8twvv")
+_lifeTime = 5.0
+_projectileRadius = 20.0
+_pierceCount = 1
+_damage = 350
+_range = 250.0
+_attackDelayLow = 0.3
+_attackDelayHigh = 0.3

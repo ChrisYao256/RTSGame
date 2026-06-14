@@ -12,12 +12,40 @@ public partial class ProjectileWeapon : BaseWeapon
 	[Export] protected float _projectileRadius;
 	[Export] public int _pierceCount;
 
+	/// <summary>
+	/// Delays the projectile after SignalName.ShotFired is emitted. Use to sync animation
+	/// <summary>
+	[Export] protected float _delayProjectile;
+	
+	private Marker2D _firePoint;
+
 	public override void _Ready()
 	{
 		base._Ready();
+		_firePoint = GetParent().GetNode("TurretTurner").GetNode<Marker2D>("Marker2D");
 	}
 
 	public override void PerformAttack(Unit target, int d)
+	{
+		Projectile projectile = SpawnProjectile(_firePoint.GlobalPosition);
+
+		if (_delayProjectile > 0)
+		{
+			Timer timer = new Timer();
+			timer.WaitTime = _delayProjectile;
+			timer.Timeout += () => AddChild(projectile);
+			timer.OneShot = true;
+			AddChild(timer);
+			timer.Start();
+		}
+		else
+		{
+			AddChild(projectile);
+		}
+		_parent.EmitSignal(Unit.SignalName.ShotFired);
+	}
+
+	protected Projectile SpawnProjectile(Vector2 spawnPosition)
 	{
 		Vector2 targetDir = _attackTarget.GlobalPosition - GlobalPosition;
 		float targetAngle = targetDir.Angle();
@@ -33,10 +61,12 @@ public partial class ProjectileWeapon : BaseWeapon
 			_parent.OnHitEnemy(enemy);
 		});
 
-		Projectile projectile = new(_parent._teamId, _projectileSpeed, _projectileTexture, _lifeTime, _projectileRadius, dealDamage, targetAngle, _pierceCount);
-		AddChild(projectile);
+		return new(_parent._teamId, spawnPosition, _projectileSpeed, _projectileTexture, _lifeTime, _projectileRadius, dealDamage, targetAngle, _pierceCount);
+
 	}
 }
+
+
 
 public partial class Projectile: Area2D
 {
@@ -54,7 +84,9 @@ public partial class Projectile: Area2D
 	private int _pierceCount = 1;
 	private int _hasPierced = 0;
 
-	public Projectile(int teamId, float speed, Texture2D texture, double lifeTime,  float projectileRadius, Action<Unit, Projectile> contact, float targetAngle, int pierceCount = 1, Action timeOut = null)
+	private Vector2 _initialPosition;
+
+	public Projectile(int teamId, Vector2 position, float speed, Texture2D texture, double lifeTime,  float projectileRadius, Action<Unit, Projectile> contact, float targetAngle, int pierceCount = 1, Action timeOut = null)
 	{
 		_teamId = teamId;
 		_projectileSpeed = speed;
@@ -69,7 +101,7 @@ public partial class Projectile: Area2D
 		{
 			_timeOut = (() => { QueueFree(); });
 		}
-			
+		_initialPosition = position;
 		_targetAngle = targetAngle;
 		Rotation = _targetAngle;
 		_pierceCount = pierceCount;
@@ -78,6 +110,8 @@ public partial class Projectile: Area2D
 
 	public override void _Ready()
 	{
+		GlobalPosition = _initialPosition;
+
 		CollisionMask = 3;
 		BodyEntered += OnBodyEntered;
 

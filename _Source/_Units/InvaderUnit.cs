@@ -10,15 +10,15 @@ namespace RTSGame.Units;
 public partial class InvaderUnit : Unit
 {
 	[Export]
-	private int _moneyDropped;
+	private Vector4I _moneyDropped;
 	[Export] 
 	private PackedScene _floatingTextScene;
 	[Export]
 	public int _hpDeducted = 1;
 	[Export]
-	public int _moneyDeducted = 1;
+	public Vector4I _moneyDeducted = new Vector4I();
 
-	public int _moneyModifier;
+	public Vector4I _moneyModifier;
 
 	public override void _Ready()
 	{
@@ -26,12 +26,12 @@ public partial class InvaderUnit : Unit
 		_aiControlled = true;
 	}
 
-	public void SetMoneyModifier(int money)
+	public void SetMoneyModifier(Vector4I money)
 	{
 		_moneyModifier = money;
 	}
 
-	public void IncreaseMoneyModifier(int change)
+	public void IncreaseMoneyModifier(Vector4I change)
 	{
 		_moneyModifier += change;
 	}
@@ -41,10 +41,11 @@ public partial class InvaderUnit : Unit
 		if (_floatingTextScene == null) return;
 
 		var textNode = _floatingTextScene.Instantiate<FloatingText>();
+		textNode.BbcodeEnabled = true;
+		textNode.FitContent = true;
 
 		// Set the text
-		textNode.Text = $"+${GetMoneyDropped()}";
-		textNode.AddThemeColorOverride("font_color", Colors.Gold);
+		textNode.Text = "+" + Utils.MakeMoneyText(GetMoneyDropped());
 
 		// Set the position to the unit's current global position
 		textNode.GlobalPosition = GlobalPosition;
@@ -52,6 +53,9 @@ public partial class InvaderUnit : Unit
 		// VERY IMPORTANT: Add it to the world, not the unit!
 		// If you add it to the unit, it will disappear instantly when the unit is freed.
 		GetTree().Root.AddChild(textNode);
+
+		textNode.StartFloatingAnimation();
+
 		base.Die();
 	}
 
@@ -61,19 +65,22 @@ public partial class InvaderUnit : Unit
 		if (_floatingTextScene == null) return;
 
 		var textNode = _floatingTextScene.Instantiate<FloatingText>();
+		textNode.BbcodeEnabled = true;
+		textNode.FitContent = true;
 
 		// Set the text
-		textNode.Text = $"-${_moneyDeducted}\n" + $"-${_hpDeducted} hp";
-		textNode.AddThemeColorOverride("font_color", Colors.Red);
+		textNode.Text = $"-" + Utils.MakeMoneyText(_moneyDeducted) + $"-${_hpDeducted} hp";
 
 		textNode.GlobalPosition = GlobalPosition;
 
 		GetTree().Root.AddChild(textNode);
 
+		textNode.StartFloatingAnimation();
+
 		RemoveSelf();
 	}
 
-	public int GetMoneyDropped()
+	public Vector4I GetMoneyDropped()
 	{
 		return _moneyDropped + _moneyModifier;
 	}

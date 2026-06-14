@@ -1,0 +1,15 @@
+[remap]
+
+importer="sicilica.import.pixelorama"
+type="SpriteFrames"
+uid="uid://bfpiy66dx5317"
+valid=false
+
+[deps]
+
+source_file="res://_Assets/LaserTurret.pxo"
+
+[params]
+
+include_default_animation=true
+separate_layers=false

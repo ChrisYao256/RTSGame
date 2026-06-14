@@ -1,6 +1,6 @@
 using Godot;
 using Godot.Collections;
-using System.Linq.Expressions;
+using System.Collections.Generic;
 
 namespace RTSGame.Units;
 
@@ -13,6 +13,28 @@ public partial class NearbySpawnerStatsIncreaseResource : EffectResource
 	[Export]
 	public Array<Vector2I> _area = new Array<Vector2I>();
 
+	private NearbySpawnerStatsIncrease _effect;
+
+	public NearbySpawnerStatsIncreaseResource()
+	{
+		_displayType = DisplayTypes.Large;
+	}
+
+	public override bool MergeWithOld(EffectResource oldResource, List<EffectResource> allMatchingResource) 
+	{
+		// this updates the description of the first old resource and then secretly adds the new resource.
+		// So there will be multiple NearbyStatsIncrease Resource, but all their stats get summed when displayed instead of individually displaying.
+		NearbySpawnerStatsIncreaseResource newResource = (NearbySpawnerStatsIncreaseResource)DuplicateDeep();
+		foreach (NearbySpawnerStatsIncreaseResource resource in allMatchingResource)
+		{
+			resource._buffResource.MergeWithOld(newResource._buffResource, []);
+		}
+		newResource.SetDescription();
+		oldResource._effectDescription = newResource._effectDescription;
+
+		_displayType = DisplayTypes.Hidden;
+		return true;
+	}
 
 	public override void SetDescription()
 	{
@@ -32,9 +54,9 @@ public partial class NearbySpawnerStatsIncreaseResource : EffectResource
 			_effectDescription += "Increase spawned enemy speed by " + _buffResource._speedBuff + "\n";
 		}
 
-		if (_buffResource._moneyBuff != 0)
+		if (_buffResource._moneyBuff != new Vector4I(0,0,0,0))
 		{
-			_effectDescription += "Increase spawned enemy gold drop by $" + _buffResource._moneyBuff + "\n";
+			_effectDescription += "Increase spawned enemy gold drop by " + Utils.MakeMoneyText(_buffResource._moneyBuff) + "\n";
 		}
 		if (_buffResource._locations.Count > 0)
 		{
@@ -53,6 +75,7 @@ public partial class NearbySpawnerStatsIncreaseResource : EffectResource
 
 	public override Effect CreateNode()
 	{
-		return new NearbySpawnerStatsIncrease(this);
+		_effect = new NearbySpawnerStatsIncrease(this);
+		return _effect;
 	}
 }

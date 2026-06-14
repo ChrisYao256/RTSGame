@@ -1,0 +1,15 @@
+[remap]
+
+importer="sicilica.import.pixelorama"
+type="SpriteFrames"
+uid="uid://c2pa1nhxxo6yf"
+valid=false
+
+[deps]
+
+source_file="res://_Assets/GunTurret.pxo"
+
+[params]
+
+include_default_animation=true
+separate_layers=false

@@ -3,9 +3,9 @@
 [ext_resource type="PackedScene" uid="uid://bqn4h6d52i52" path="res://_Content/_Scenes/_Prefabs/Units/BaseInvaderUnit.tscn" id="1_4ubmv"]
 
 [node name="BaseUnit" unique_id=481801141 instance=ExtResource("1_4ubmv")]
-_moneyDropped = 50
+_moneyDropped = Vector4i(25, 0, 0, 0)
 _hpDeducted = 20
-_moneyDeducted = 0
+_moneyDeducted = Vector4i(0, 0, 0, 0)
 _moveSpeed = 50.0
 _hpMax = 2000
 _armor = 3

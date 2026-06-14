@@ -4,10 +4,7 @@
 [ext_resource type="Script" uid="uid://b4jva1l23o6su" path="res://_Source/_Units/Spawner.cs" id="2_6on1g"]
 [ext_resource type="Script" uid="uid://cvroohkeaovqw" path="res://_Source/_Units/SpawnerDataResource.cs" id="3_yr0qj"]
 [ext_resource type="Texture2D" uid="uid://b1d72noaqktm1" path="res://_Assets/Armory.png" id="4_bdp7n"]
-[ext_resource type="Script" uid="uid://c7ye5bgfhla5e" path="res://_Source/Effects/StatsIncrease/StatsIncreaseResource.cs" id="5_dctjv"]
-[ext_resource type="Script" uid="uid://dby4w7fetnae6" path="res://_Source/Effects/NearbyTowerStatsIncrease/NearbyTowerStatsIncreaseResource.cs" id="6_x8v7d"]
-[ext_resource type="Script" uid="uid://dj1iuetxsjca2" path="res://_Source/Effects/SpawnerStatsIncrease/SpawnerStatsIncreaseResource.cs" id="7_pl42m"]
-[ext_resource type="Script" uid="uid://c4pph75db2q3s" path="res://_Source/Effects/NearbySpawnerStatsIncrease/NearbySpawnerStatsIncreaseResource.cs" id="8_gcj3l"]
+[ext_resource type="Script" uid="uid://3jtqjsdb22b2" path="res://_Source/Effects/IncreaseSpawnerLimit/IncreaseSpawnerLimitResource.cs" id="7_36j5t"]
 [ext_resource type="Script" uid="uid://dtpcxn7d2dqcy" path="res://_Source/Effects/EffectResource.cs" id="9_3qrjh"]
 [ext_resource type="Script" uid="uid://dldhpdllqo6w7" path="res://_Source/Effects/NearbyUnlockUpgrade/NearbyUnlockUpgradeResource.cs" id="11_6on1g"]
 
@@ -23,50 +20,9 @@ _unlockThirdUpgrades = true
 _area = Array[Vector2i]([Vector2i(1, 1), Vector2i(1, 0), Vector2i(1, -1), Vector2i(0, 1), Vector2i(0, 0), Vector2i(0, -1), Vector2i(-1, 1), Vector2i(-1, 0), Vector2i(-1, -1)])
 metadata/_custom_type_script = "uid://dldhpdllqo6w7"
 
-[sub_resource type="Resource" id="Resource_inayk"]
-script = ExtResource("5_dctjv")
-_attackSpeedIncrease = 0.15
-metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
-
-[sub_resource type="Resource" id="Resource_5x6l2"]
-script = ExtResource("6_x8v7d")
-_buffResource = SubResource("Resource_inayk")
-_area = Array[Vector2i]([Vector2i(1, 1), Vector2i(1, 0), Vector2i(1, -1), Vector2i(0, 1), Vector2i(0, 0), Vector2i(0, -1), Vector2i(-1, 1), Vector2i(-1, 0), Vector2i(-1, -1)])
-metadata/_custom_type_script = "uid://dby4w7fetnae6"
-
-[sub_resource type="Resource" id="Resource_8t0mg"]
-script = ExtResource("7_pl42m")
-_hpBuff = 0.5
-_moneyBuff = 1
-_startingEffects = null
-metadata/_custom_type_script = "uid://dj1iuetxsjca2"
-
-[sub_resource type="Resource" id="Resource_krd5a"]
-script = ExtResource("8_gcj3l")
-_buffResource = SubResource("Resource_8t0mg")
-_area = Array[Vector2i]([Vector2i(1, 1), Vector2i(1, 0), Vector2i(1, -1), Vector2i(0, 1), Vector2i(0, 0), Vector2i(0, -1), Vector2i(-1, 1), Vector2i(-1, 0), Vector2i(-1, -1)])
-_effectName = "+$1, +100% more hp"
-metadata/_custom_type_script = "uid://c4pph75db2q3s"
-
-[sub_resource type="Resource" id="Resource_wh3ql"]
-script = ExtResource("7_pl42m")
-_locations = Array[Vector2i]([Vector2i(1, 1), Vector2i(1, 0), Vector2i(1, -1), Vector2i(0, 1), Vector2i(0, 0), Vector2i(0, -1), Vector2i(-1, 1), Vector2i(-1, 0), Vector2i(-1, -1)])
-_speedBuff = 50.0
-_moneyBuff = 1
-_startingEffects = null
-metadata/_custom_type_script = "uid://dj1iuetxsjca2"
-
-[sub_resource type="Resource" id="Resource_qd4hu"]
-script = ExtResource("8_gcj3l")
-_buffResource = SubResource("Resource_wh3ql")
-_effectName = "+$1, +50% move speed"
-metadata/_custom_type_script = "uid://c4pph75db2q3s"
-
-[sub_resource type="Resource" id="Resource_yr0qj"]
-script = ExtResource("11_6on1g")
-_unlockSecondUpgrades = true
-_area = Array[Vector2i]([Vector2i(1, 1), Vector2i(1, 0), Vector2i(1, -1), Vector2i(0, 1), Vector2i(0, 0), Vector2i(0, -1), Vector2i(-1, 1), Vector2i(-1, 0), Vector2i(-1, -1)])
-metadata/_custom_type_script = "uid://dldhpdllqo6w7"
+[sub_resource type="Resource" id="Resource_56unr"]
+script = ExtResource("7_36j5t")
+metadata/_custom_type_script = "uid://3jtqjsdb22b2"
 
 [node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_qfwbf")]
 script = ExtResource("2_6on1g")
@@ -76,22 +32,22 @@ _isEnemy = true
 _cost = 20
 _iconTexture = ExtResource("4_bdp7n")
 _towerType = 1
-_description = "Nearby towers can be upgraded further"
+_description = "Increase Portal Limit"
 _firstUpgrade = Array[Object]([SubResource("Resource_6on1g")])
 _firstUpgradeCost = 50
 _firstUpgradeName = "First Upgrade"
-_secondUpgradeA = SubResource("Resource_5x6l2")
-_secondUpgradeACost = 5
-_secondUpgradeB = SubResource("Resource_krd5a")
-_secondUpgradeBCost = 10
-_secondUpgradeC = SubResource("Resource_qd4hu")
-_secondUpgradeCCost = 10
+_secondUpgrade = null
+_secondUpgradeCost = 0
+_secondUpgradeName = "Lv 2"
 _thirdUpgrade = null
 _thirdUpgradeCost = 0
 _thirdUpgradeName = "Third Upgrade"
+_fourthUpgrade = null
+_fourthUpgradeCost = 0
+_fourthUpgradeName = "Lv 4"
 _transformEffects = Array[ExtResource("9_3qrjh")]([])
 LeashDistance = 200.0
-_startingEffects = Array[Object]([SubResource("Resource_yr0qj")])
+_startingEffects = Array[Object]([SubResource("Resource_56unr")])
 _internalName = "Lab"
 _name = "Lab"
 _radius = 0.0

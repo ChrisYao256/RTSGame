@@ -7,38 +7,44 @@
 [ext_resource type="PackedScene" uid="uid://cq3t80c5vyoxi" path="res://_Content/_Scenes/_Prefabs/TDManager.tscn" id="3_v6k6q"]
 [ext_resource type="Script" uid="uid://bk7cmv6d4884o" path="res://_Source/_TD/TDTowerManager.cs" id="6_ih04x"]
 [ext_resource type="TileSet" uid="uid://dvtw5c2hlwcre" path="res://_Assets/TileSet.tres" id="7_5ivv1"]
+[ext_resource type="Texture2D" uid="uid://bkm4bqmo50wk3" path="res://_Assets/Panel.png" id="7_dqwu5"]
 [ext_resource type="Script" uid="uid://c4bawx8voikwb" path="res://_Source/_TD/Grid.cs" id="8_r27g4"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_dqwu5"]
-vertices = PackedVector2Array(1294, 991, -318, 991, -318, -45, 1294, -45)
+vertices = PackedVector2Array(1232, 810, -318, 810, -318, -45, 1232, -45)
 polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3)])
-outlines = Array[PackedVector2Array]([PackedVector2Array(1304, -55, 1304, 1001, -328, 1001, -328, -55)])
+outlines = Array[PackedVector2Array]([PackedVector2Array(1242, -55, 1242, 820, -328, 820, -328, -55)])
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_r27g4"]
-bg_color = Color(0.4849202, 0.4849202, 0.4849202, 1)
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_dqwu5"]
+texture = ExtResource("7_dqwu5")
+texture_margin_left = 12.0
+texture_margin_top = 12.0
+texture_margin_right = 12.0
+texture_margin_bottom = 12.0
 
 [node name="TdScene" type="Node2D" unique_id=2097345796]
 script = ExtResource("1_t07i4")
 UnitManager = ExtResource("3_473pp")
-UnitInfoPanel = ExtResource("3_na4n4")
 
 [node name="TileMapLayer" type="TileMapLayer" parent="." unique_id=2102084703]
 texture_filter = 1
-scale = Vector2(5, 5)
-tile_map_data = PackedByteArray("AAATAAYAAAAEAAAAAAAAAAYAAAADAAAAAAABAAYAAAABAAAAAAACAAYAAAABAAAAAAADAAYAAAABAAAAAAAEAAYAAAABAAAAAAAFAAYAAAAAAAAAAAAGAAYAAAAAAAAAAAAHAAYAAAAAAAAAAAAIAAYAAAAAAAAAAAAJAAYAAAAAAAAAAAAKAAYAAAABAAAAAAALAAYAAAAAAAAAAAAMAAYAAAAAAAAAAAANAAYAAAAAAAAAAAAOAAYAAAAAAAAAAAAPAAYAAAABAAAAAAAQAAYAAAABAAAAAAARAAYAAAABAAAAAAASAAYAAAABAAAAAAAAAAAAAAACAAAAAAABAAAAAAACAAAAAAACAAAAAAACAAAAAAADAAEAAAACAAAAAAAEAAEAAAACAAAAAAAFAAEAAAACAAAAAAAGAAEAAAACAAAAAAAHAAIAAAACAAAAAAAIAAIAAAACAAAAAAAJAAIAAAACAAAAAAAKAAIAAAACAAAAAAALAAMAAAAAAAAAAAAMAAMAAAACAAAAAAANAAMAAAACAAAAAAAOAAMAAAAAAAAAAAAPAAMAAAAAAAAAAAAQAAMAAAAAAAAAAAARAAMAAAAAAAAAAAARAAQAAAAAAAAAAAASAAQAAAAAAAAAAAASAAUAAAAAAAAAAAATAAUAAAAAAAAAAAAAAAEAAAACAAAAAAAAAAIAAAACAAAAAAAAAAMAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAUAAAAAAAAAAAABAAEAAAACAAAAAAABAAIAAAACAAAAAAABAAMAAAAAAAAAAAABAAQAAAAAAAAAAAABAAUAAAAAAAAAAAACAAEAAAACAAAAAAACAAIAAAACAAAAAAACAAMAAAAAAAAAAAACAAQAAAAAAAAAAAACAAUAAAAAAAAAAAADAAAAAAACAAAAAAADAAIAAAACAAAAAAADAAMAAAAAAAAAAAADAAQAAAAAAAAAAAADAAUAAAAAAAAAAAAEAAAAAAACAAAAAAAEAAIAAAACAAAAAAAEAAMAAAAAAAAAAAAEAAQAAAABAAAAAAAEAAUAAAABAAAAAAAFAAAAAAACAAAAAAAFAAIAAAACAAAAAAAFAAMAAAAAAAAAAAAFAAQAAAABAAAAAAAFAAUAAAAAAAAAAAAGAAAAAAACAAAAAAAGAAIAAAACAAAAAAAGAAMAAAAAAAAAAAAGAAQAAAABAAAAAAAGAAUAAAAAAAAAAAAHAAAAAAACAAAAAAAHAAEAAAACAAAAAAAHAAMAAAAAAAAAAAAHAAQAAAABAAAAAAAHAAUAAAAAAAAAAAAIAAAAAAACAAAAAAAIAAEAAAACAAAAAAAIAAMAAAAAAAAAAAAIAAQAAAABAAAAAAAIAAUAAAAAAAAAAAAJAAAAAAACAAAAAAAJAAEAAAACAAAAAAAJAAMAAAAAAAAAAAAJAAQAAAABAAAAAAAJAAUAAAAAAAAAAAAKAAAAAAACAAAAAAAKAAEAAAACAAAAAAAKAAMAAAAAAAAAAAAKAAQAAAABAAAAAAAKAAUAAAABAAAAAAALAAAAAAACAAAAAAALAAEAAAACAAAAAAALAAIAAAACAAAAAAALAAQAAAAAAAAAAAALAAUAAAAAAAAAAAAMAAAAAAACAAAAAAAMAAEAAAACAAAAAAAMAAIAAAACAAAAAAAMAAQAAAACAAAAAAAMAAUAAAACAAAAAAANAAAAAAACAAAAAAANAAEAAAACAAAAAAANAAIAAAACAAAAAAANAAQAAAACAAAAAAANAAUAAAACAAAAAAAOAAAAAAACAAAAAAAOAAEAAAACAAAAAAAOAAIAAAACAAAAAAAOAAQAAAAAAAAAAAAOAAUAAAAAAAAAAAAPAAAAAAACAAAAAAAPAAEAAAACAAAAAAAPAAIAAAACAAAAAAAPAAQAAAAAAAAAAAAPAAUAAAAAAAAAAAAQAAAAAAACAAAAAAAQAAEAAAACAAAAAAAQAAIAAAACAAAAAAAQAAQAAAAAAAAAAAAQAAUAAAAAAAAAAAARAAAAAAACAAAAAAARAAEAAAACAAAAAAARAAIAAAACAAAAAAARAAUAAAAAAAAAAAASAAAAAAACAAAAAAASAAEAAAACAAAAAAASAAIAAAACAAAAAAASAAMAAAAAAAAAAAATAAAAAAACAAAAAAATAAEAAAACAAAAAAATAAIAAAACAAAAAAATAAMAAAAAAAAAAAATAAQAAAAAAAAAAAAAAAcAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAkAAAAAAAAAAAAAAAoAAAACAAAAAAAAAAsAAAACAAAAAAAAAAwAAAACAAAAAAABAAcAAAAAAAAAAAABAAgAAAAAAAAAAAABAAkAAAAAAAAAAAABAAoAAAACAAAAAAABAAsAAAACAAAAAAABAAwAAAACAAAAAAACAAcAAAAAAAAAAAACAAgAAAAAAAAAAAACAAkAAAAAAAAAAAACAAoAAAACAAAAAAACAAsAAAACAAAAAAACAAwAAAACAAAAAAADAAcAAAAAAAAAAAADAAgAAAAAAAAAAAADAAkAAAAAAAAAAAADAAoAAAACAAAAAAADAAsAAAACAAAAAAADAAwAAAACAAAAAAAEAAcAAAAAAAAAAAAEAAgAAAAAAAAAAAAEAAkAAAAAAAAAAAAEAAoAAAACAAAAAAAEAAsAAAACAAAAAAAEAAwAAAACAAAAAAAFAAcAAAAAAAAAAAAFAAgAAAAAAAAAAAAFAAkAAAAAAAAAAAAFAAoAAAACAAAAAAAFAAsAAAACAAAAAAAFAAwAAAACAAAAAAAGAAcAAAACAAAAAAAGAAgAAAACAAAAAAAGAAkAAAACAAAAAAAGAAoAAAACAAAAAAAGAAsAAAACAAAAAAAGAAwAAAACAAAAAAAHAAcAAAACAAAAAAAHAAgAAAACAAAAAAAHAAkAAAACAAAAAAAHAAoAAAACAAAAAAAHAAsAAAACAAAAAAAHAAwAAAACAAAAAAAIAAcAAAAAAAAAAAAIAAgAAAAAAAAAAAAIAAkAAAAAAAAAAAAIAAoAAAACAAAAAAAIAAsAAAACAAAAAAAIAAwAAAACAAAAAAAJAAcAAAAAAAAAAAAJAAgAAAAAAAAAAAAJAAkAAAAAAAAAAAAJAAoAAAACAAAAAAAJAAsAAAACAAAAAAAJAAwAAAACAAAAAAAKAAcAAAABAAAAAAAKAAgAAAABAAAAAAAKAAkAAAAAAAAAAAAKAAoAAAACAAAAAAAKAAsAAAACAAAAAAAKAAwAAAACAAAAAAALAAcAAAAAAAAAAAALAAgAAAABAAAAAAALAAkAAAAAAAAAAAALAAoAAAACAAAAAAALAAsAAAACAAAAAAALAAwAAAACAAAAAAAMAAcAAAAAAAAAAAAMAAgAAAABAAAAAAAMAAkAAAAAAAAAAAAMAAoAAAACAAAAAAAMAAsAAAACAAAAAAAMAAwAAAACAAAAAAANAAcAAAAAAAAAAAANAAgAAAABAAAAAAANAAkAAAAAAAAAAAANAAoAAAACAAAAAAANAAsAAAACAAAAAAANAAwAAAACAAAAAAAOAAcAAAAAAAAAAAAOAAgAAAABAAAAAAAOAAkAAAAAAAAAAAAOAAoAAAACAAAAAAAOAAsAAAACAAAAAAAOAAwAAAACAAAAAAAPAAcAAAABAAAAAAAPAAgAAAABAAAAAAAPAAkAAAAAAAAAAAAPAAoAAAACAAAAAAAPAAsAAAACAAAAAAAPAAwAAAACAAAAAAAQAAcAAAAAAAAAAAAQAAgAAAAAAAAAAAAQAAkAAAAAAAAAAAAQAAoAAAACAAAAAAAQAAsAAAACAAAAAAAQAAwAAAACAAAAAAARAAcAAAAAAAAAAAARAAgAAAAAAAAAAAARAAkAAAAAAAAAAAARAAoAAAACAAAAAAARAAsAAAACAAAAAAARAAwAAAACAAAAAAASAAcAAAAAAAAAAAASAAgAAAAAAAAAAAASAAkAAAAAAAAAAAASAAoAAAACAAAAAAASAAsAAAACAAAAAAASAAwAAAACAAAAAAATAAcAAAAAAAAAAAATAAgAAAAAAAAAAAATAAkAAAAAAAAAAAATAAoAAAACAAAAAAATAAsAAAACAAAAAAATAAwAAAACAAAAAAA=")
+scale = Vector2(7.5, 7.5)
+tile_map_data = PackedByteArray("AAAAAAYAAAADAAAAAAABAAYAAAABAAAAAAACAAYAAAAJAAAAAAADAAYAAAAAAAAAAAAEAAYAAAAAAAAAAAAFAAYAAAAAAAAAAAAGAAYAAAAAAAAAAAAHAAYAAAAAAAAAAAAIAAYAAAAAAAAAAAAJAAYAAAAAAAAAAAAKAAYAAAAAAAAAAAAEAAQAAAAAAAAAAAAEAAUAAAAAAAAAAAAFAAQAAAAFAAAAAAAFAAUAAAAIAAAAAAAGAAQAAAAAAAAAAAAGAAUAAAABAAAAAAAHAAQAAAAHAAAAAAAHAAUAAAAJAAAAAAAIAAQAAAABAAAAAAAIAAUAAAAAAAAAAAAJAAQAAAABAAAAAAAJAAUAAAAAAAAAAAAKAAQAAAAGAAAAAAAKAAUAAAAIAAAAAAAMAAAAAAACAAAAAAALAAAAAAACAAAAAAAKAAAAAAAAAAAAAAAJAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAHAAAAAAAAAAAAAAAGAAAAAAAAAAAAAAAFAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAADAAAAAAAAAAAAAAACAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAIAAAAAAAAAAAABAAIAAAAAAAAAAAABAAEAAAAAAAAAAAACAAEAAAAHAAAAAAACAAIAAAAFAAAAAAADAAIAAAAAAAAAAAADAAEAAAABAAAAAAAEAAEAAAABAAAAAAAEAAIAAAAAAAAAAAAFAAIAAAAFAAAAAAAFAAEAAAAGAAAAAAAGAAEAAAAAAAAAAAAGAAIAAAAAAAAAAAAHAAIAAAAAAAAAAAAHAAEAAAAAAAAAAAAIAAEAAAAAAAAAAAAIAAIAAAAAAAAAAAAJAAIAAAAAAAAAAAAJAAEAAAAAAAAAAAAKAAEAAAAAAAAAAAAKAAIAAAAAAAAAAAALAAIAAAAAAAAAAAALAAEAAAACAAAAAAAMAAEAAAACAAAAAAAMAAIAAAAAAAAAAAAMAAMAAAAAAAAAAAAMAAQAAAAAAAAAAAAMAAUAAAAEAAAAAAAMAAYAAAAAAAAAAAALAAYAAAAAAAAAAAALAAUAAAABAAAAAAALAAQAAAAAAAAAAAALAAMAAAAAAAAAAAAKAAMAAAAAAAAAAAAJAAMAAAAAAAAAAAAIAAMAAAAAAAAAAAAHAAMAAAAAAAAAAAAGAAMAAAAAAAAAAAAFAAMAAAAFAAAAAAAEAAMAAAAAAAAAAAADAAMAAAAAAAAAAAACAAMAAAAFAAAAAAABAAMAAAAAAAAAAAAAAAMAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAUAAAAAAAAAAAABAAUAAAAAAAAAAAABAAQAAAAAAAAAAAACAAQAAAAFAAAAAAACAAUAAAAFAAAAAAADAAUAAAAAAAAAAAADAAQAAAAAAAAAAAA=")
 tile_set = ExtResource("7_5ivv1")
 navigation_enabled = false
 script = ExtResource("8_r27g4")
 
 [node name="OverlayLayer" type="TileMapLayer" parent="." unique_id=33268211]
-scale = Vector2(5, 5)
+scale = Vector2(7.5, 7.5)
 tile_set = ExtResource("7_5ivv1")
 
 [node name="TdManager" parent="." unique_id=116729899 instance=ExtResource("3_v6k6q")]
-_availTowerList = Array[String](["GunTurret", "LaserTurret", "FlameTurret", "SlimeSpawner", "HoundSpawner", "PriestSpawner", "YetiSpawner", "SoldierSpawner", "Armory", "Mine", "Lab"])
-_startingMoney = 1500
+_availTowerList = Array[String](["GunTurret", "LaserTurret", "PiercingTower", "FlameTurret", "SlimeSpawner", "HoundSpawner", "PriestSpawner", "YetiSpawner", "SoldierSpawner", "Armory", "Mine", "Lab"])
+_startingMoney = Vector4i(100, 0, 0, 0)
+_startingSpawnerLimit = 5
 
 [node name="NavigationRegion2D" type="NavigationRegion2D" parent="." unique_id=1731619863]
+visible = false
 position = Vector2(328, 55)
 navigation_polygon = SubResource("NavigationPolygon_dqwu5")
 
@@ -46,99 +52,119 @@ navigation_polygon = SubResource("NavigationPolygon_dqwu5")
 position = Vector2(960, 540)
 script = ExtResource("2_473pp")
 
-[node name="RightPanel" type="Panel" parent="." unique_id=1327318761]
-offset_left = 1634.0
+[node name="RightPanel" type="PanelContainer" parent="." unique_id=1020797322]
+texture_filter = 1
+offset_left = 1570.0
 offset_right = 1920.0
 offset_bottom = 1080.0
-theme_override_styles/panel = SubResource("StyleBoxFlat_r27g4")
+theme_override_styles/panel = SubResource("StyleBoxTexture_dqwu5")
 
-[node name="WaveCounter" type="Label" parent="RightPanel" unique_id=1760873018]
-layout_mode = 0
-offset_left = 9.0
-offset_top = 694.0
-offset_right = 120.0
-offset_bottom = 739.0
-theme_override_font_sizes/font_size = 32
+[node name="VBoxContainer" type="VBoxContainer" parent="RightPanel" unique_id=782743368]
+layout_mode = 2
+
+[node name="MoneyLabel" type="RichTextLabel" parent="RightPanel/VBoxContainer" unique_id=1274819536]
+custom_minimum_size = Vector2(250, 50)
+layout_mode = 2
+theme_override_font_sizes/normal_font_size = 24
+theme_override_font_sizes/bold_font_size = 24
+theme_override_font_sizes/bold_italics_font_size = 24
+theme_override_font_sizes/italics_font_size = 24
+theme_override_font_sizes/mono_font_size = 24
+bbcode_enabled = true
+
+[node name="HpLabel" type="Label" parent="RightPanel/VBoxContainer" unique_id=1228266498]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+
+[node name="WaveCounter" type="Label" parent="RightPanel/VBoxContainer" unique_id=1760873018]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
 text = "Wave 0"
 
-[node name="BossWaveLabel" type="Label" parent="RightPanel" unique_id=2051085642]
-layout_mode = 0
-offset_left = 11.0
-offset_top = 784.0
-offset_right = 122.0
-offset_bottom = 829.0
-theme_override_font_sizes/font_size = 32
+[node name="BossWaveLabel" type="Label" parent="RightPanel/VBoxContainer" unique_id=2051085642]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
 
-[node name="Towers" type="GridContainer" parent="RightPanel" unique_id=1478457631]
-layout_mode = 0
-offset_left = 43.0
-offset_top = 60.0
-offset_right = 246.0
-offset_bottom = 860.0
+[node name="HBoxContainer" type="VBoxContainer" parent="RightPanel/VBoxContainer" unique_id=1124233390]
+layout_mode = 2
+
+[node name="SpawnerLimitLabel" type="Label" parent="RightPanel/VBoxContainer/HBoxContainer" unique_id=1135741774]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+
+[node name="Button" type="Button" parent="RightPanel/VBoxContainer/HBoxContainer" unique_id=1894540235]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "
+"
+
+[node name="RichTextLabel" type="RichTextLabel" parent="RightPanel/VBoxContainer/HBoxContainer/Button" unique_id=2058868571]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -150.0
+offset_top = -20.0
+offset_right = 150.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_font_sizes/normal_font_size = 24
+theme_override_font_sizes/bold_font_size = 24
+theme_override_font_sizes/bold_italics_font_size = 24
+theme_override_font_sizes/italics_font_size = 24
+theme_override_font_sizes/mono_font_size = 234
+bbcode_enabled = true
+text = "Increase Portal Limit: $10
+"
+
+[node name="IncomeLabel" type="RichTextLabel" parent="RightPanel/VBoxContainer" unique_id=1319773152]
+layout_mode = 2
+bbcode_enabled = true
+text = "Income: $0"
+fit_content = true
+
+[node name="Tabs" type="HBoxContainer" parent="RightPanel/VBoxContainer" unique_id=1535235636]
+layout_mode = 2
+
+[node name="DefenseTab" type="Button" parent="RightPanel/VBoxContainer/Tabs" unique_id=505616612]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Defenses"
+
+[node name="SpawnerTab" type="Button" parent="RightPanel/VBoxContainer/Tabs" unique_id=827187694]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Portals"
+
+[node name="Towers" type="GridContainer" parent="RightPanel/VBoxContainer" unique_id=1478457631]
+layout_mode = 2
 columns = 2
 
-[node name="HpLabel" type="Label" parent="RightPanel" unique_id=1228266498]
-layout_mode = 0
-offset_left = 16.0
-offset_top = 12.0
-offset_right = 56.0
-offset_bottom = 35.0
-theme_override_font_sizes/font_size = 24
-
-[node name="MoneyLabel" type="Label" parent="RightPanel" unique_id=823248237]
-layout_mode = 0
-offset_left = 165.0
-offset_top = 13.0
-offset_right = 205.0
-offset_bottom = 36.0
-theme_override_font_sizes/font_size = 24
-
-[node name="IncomeLabel" type="Label" parent="RightPanel" unique_id=1510190194]
-layout_mode = 0
-offset_left = 13.0
-offset_top = 752.0
-offset_right = 125.0
-offset_bottom = 786.0
-theme_override_font_sizes/font_size = 24
-text = "Income: $0"
-
-[node name="NextWave" type="Button" parent="RightPanel" unique_id=195529716]
-layout_mode = 0
-offset_left = 135.0
-offset_top = 685.0
-offset_right = 268.0
-offset_bottom = 745.0
+[node name="NextWave" type="Button" parent="RightPanel/VBoxContainer" unique_id=195529716]
+layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "Next Wave
 "
 
-[node name="Tabs" type="VBoxContainer" parent="RightPanel" unique_id=215239085]
-layout_mode = 0
-offset_left = -119.0
-offset_top = 23.0
-offset_right = -10.0
-offset_bottom = 157.0
-
-[node name="DefenseTab" type="Button" parent="RightPanel/Tabs" unique_id=505616612]
+[node name="VBoxContainer" type="VBoxContainer" parent="RightPanel/VBoxContainer" unique_id=1323112993]
 layout_mode = 2
-theme_override_font_sizes/font_size = 24
-text = "Defense"
 
-[node name="SpawnerTab" type="Button" parent="RightPanel/Tabs" unique_id=827187694]
+[node name="RichTextLabel" type="RichTextLabel" parent="RightPanel/VBoxContainer/VBoxContainer" unique_id=296859253]
 layout_mode = 2
-theme_override_font_sizes/font_size = 24
-text = "Spawner"
-
-[node name="SupportTab" type="Button" parent="RightPanel/Tabs" unique_id=432975526]
-layout_mode = 2
-theme_override_font_sizes/font_size = 24
-text = "Support
+text = "asdf
 "
 
 [node name="TowerManager" type="Node2D" parent="." unique_id=1104962410]
 script = ExtResource("6_ih04x")
 
-[connection signal="pressed" from="RightPanel/NextWave" to="." method="OnNextWavePressed"]
-[connection signal="button_down" from="RightPanel/Tabs/DefenseTab" to="TowerManager" method="SwitchDisplayedTabDefense"]
-[connection signal="button_down" from="RightPanel/Tabs/SpawnerTab" to="TowerManager" method="SwitchDisplayedTabSpawner"]
-[connection signal="button_down" from="RightPanel/Tabs/SupportTab" to="TowerManager" method="SwitchDisplayedTabSupport"]
+[node name="UnitInfoPanel" parent="." unique_id=1871383984 instance=ExtResource("3_na4n4")]
+
+[connection signal="pressed" from="RightPanel/VBoxContainer/HBoxContainer/Button" to="TdManager" method="BuyExtraPortalLimit"]
+[connection signal="button_down" from="RightPanel/VBoxContainer/Tabs/DefenseTab" to="TowerManager" method="SwitchDisplayedTabDefense"]
+[connection signal="button_down" from="RightPanel/VBoxContainer/Tabs/SpawnerTab" to="TowerManager" method="SwitchDisplayedTabSpawner"]
+[connection signal="pressed" from="RightPanel/VBoxContainer/NextWave" to="." method="OnNextWavePressed"]
