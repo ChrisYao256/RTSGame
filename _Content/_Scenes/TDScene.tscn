@@ -40,8 +40,7 @@ tile_set = ExtResource("7_5ivv1")
 
 [node name="TdManager" parent="." unique_id=116729899 instance=ExtResource("3_v6k6q")]
 _availTowerList = Array[String](["GunTurret", "LaserTurret", "PiercingTower", "FlameTurret", "SlimeSpawner", "HoundSpawner", "PriestSpawner", "YetiSpawner", "SoldierSpawner", "Armory", "Mine", "Lab"])
-_startingMoney = Vector4i(100, 0, 0, 0)
-_startingSpawnerLimit = 5
+_startingMoney = Vector4i(100, 50, 0, 0)
 
 [node name="NavigationRegion2D" type="NavigationRegion2D" parent="." unique_id=1731619863]
 visible = false
@@ -163,6 +162,27 @@ text = "asdf
 script = ExtResource("6_ih04x")
 
 [node name="UnitInfoPanel" parent="." unique_id=1871383984 instance=ExtResource("3_na4n4")]
+
+[node name="PanelContainer" type="PanelContainer" parent="." unique_id=1240102260]
+offset_right = 24.0
+offset_bottom = 24.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer" unique_id=1349660558]
+layout_mode = 2
+
+[node name="Panel" type="PanelContainer" parent="PanelContainer/HBoxContainer" unique_id=1810832601]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/HBoxContainer/Panel" unique_id=1164611699]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="PanelContainer/HBoxContainer/Panel/VBoxContainer" unique_id=1853663481]
+layout_mode = 2
+text = "asdf"
+
+[node name="Label2" type="Label" parent="PanelContainer/HBoxContainer/Panel/VBoxContainer" unique_id=1245816005]
+layout_mode = 2
+text = "asdf"
 
 [connection signal="pressed" from="RightPanel/VBoxContainer/HBoxContainer/Button" to="TdManager" method="BuyExtraPortalLimit"]
 [connection signal="button_down" from="RightPanel/VBoxContainer/Tabs/DefenseTab" to="TowerManager" method="SwitchDisplayedTabDefense"]

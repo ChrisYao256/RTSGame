@@ -313,38 +313,26 @@ public partial class TowerUnit : StationaryUnit
 
 		// 2. Create the Popup Box (PanelContainer for the background)
 		PanelContainer popup = new PanelContainer();
+		popup.MouseFilter = Control.MouseFilterEnum.Ignore;
 		popup.ZIndex = 100;
 		popup.TopLevel = true; // Essential to avoid parent clipping
 		popup.Visible = false;
 
-		// 3. Style the background (Solid Color)
-		StyleBoxFlat style = new StyleBoxFlat();
-		style.BgColor = new Color(0.2f, 0.2f, 0.2f); // Dark Grey
-		style.SetContentMarginAll(5); // Padding around text
-		popup.AddThemeStyleboxOverride("panel", style);
-
-		VBoxContainer vContainer = new VBoxContainer();
-
-		// 4. Create the Description Label
-		RichTextLabel desc = new RichTextLabel();
-		desc.BbcodeEnabled = true;
-		desc.FitContent = true;
-		desc.Text = GetDescription(); 
-		desc.CustomMinimumSize = new Vector2(200, 0); // Limit width
-
-		if (this is Spawner spawner && spawner._data._units.Count > 0)
+		HBoxContainer popupH = new();
+		
+		if (_towerType == TowerType.Defense)
 		{
-			desc.Text += "Spawns " + spawner.GetSpawns();
+			popupH.AddChild(MakeUnitInfoContainer()["BasicInfo"]);
+			popupH.AddChild(MakeUnitInfoContainer()["WeaponInfo"]);
+		}
+		else if (_towerType == TowerType.Spawner)
+		{
+			popupH.AddChild(MakeUnitInfoContainer()["MoneyInfo"]);
+			popupH.AddChild(MakeUnitInfoContainer()["SpawnedUnitInfo"]);
 		}
 
-		desc.Text = desc.Text.Trim();
-
-		vContainer.AddChild(desc);
-
-		popup.AddChild(vContainer);
-		trigger.AddChild(popup); // Attach popup to trigger for organization
+		popup.AddChild(popupH);
 		trigger._popupBox = popup;
-
 
 		Utils.ScaleTextureButtonToRadius(trigger, _iconSize);
 
@@ -359,7 +347,541 @@ public partial class TowerUnit : StationaryUnit
 		return background;
 	}
 
+	public override Godot.Collections.Dictionary<string, PanelContainer> MakeUnitInfoContainer()
+	{
+		base.MakeUnitInfoContainer();
+
+		PanelContainer moneyInfo = new();
+		moneyInfo.CustomMinimumSize = new (200, 0);
+
+		VBoxContainer moneyInfoV = new();
+		moneyInfoV.Name = "VBoxContainer";
+		_infoContainers.Add("MoneyInfo", moneyInfo);
+
+		if (GetTotalCost() != new Vector4I(0, 0, 0, 0))
+		{
+			RichTextLabel costLabel = new();
+			costLabel.Text = "Total Cost: \n" + Utils.MakeMoneyText(GetTotalCost());
+			costLabel.Name = "CostLabel";
+			costLabel.CustomMinimumSize = new(200, 0);
+			costLabel.BbcodeEnabled = true;
+			costLabel.FitContent = true;
+			moneyInfoV.AddChild(costLabel);
+		}
+
+
+		if (this is Spawner spawner && spawner._data._units.Count() > 0)
+		{
+			RichTextLabel spawnLabel = new();
+			spawnLabel.Text = "Spawns " + spawner.GetSpawns();
+			spawnLabel.Name = "SpawnLabel";
+			spawnLabel.CustomMinimumSize = new(200, 0);
+			spawnLabel.BbcodeEnabled = true;
+			spawnLabel.FitContent = true;
+			moneyInfoV.AddChild(spawnLabel);
+
+			PanelContainer spawnedUnitTotalInfo = new();
+			VBoxContainer spawnedUnitTotalInfoV = new();
+
+			Label spawnedUnitLabel = new();
+			spawnedUnitLabel.Text = "Spawned Unit:";
+			spawnedUnitTotalInfoV.AddChild(spawnedUnitLabel);
+
+			Unit spawnedUnit = UnitManager.GetUnit(spawner._data._units[0]);
+			spawnedUnit._hpMaxModifier += spawner._data._hpBuff;
+			spawnedUnit.IncreaseSpeedModifier(spawner._data._speedBuff);
+			((InvaderUnit)spawnedUnit).IncreaseMoneyModifier(spawner._data._moneyBuff);
+			PanelContainer spawnedUnitInfo = spawnedUnit.MakeUnitInfoContainer()["BasicInfo"];
+			spawnedUnitTotalInfoV.AddChild(spawnedUnitInfo);
+
+			spawnedUnitTotalInfo.AddChild(spawnedUnitTotalInfoV);
+
+			_infoContainers.Add("SpawnedUnitInfo", spawnedUnitTotalInfo);
+		}
+
+		if (GetIncome() != new Vector4I(0,0,0,0))
+		{
+			RichTextLabel incomeLabel = new();
+			incomeLabel.Text = "Maximum Income: \n" + Utils.MakeMoneyText(GetIncome());
+			incomeLabel.Name = "IncomeLabel";
+			incomeLabel.CustomMinimumSize = new(200, 0);
+			incomeLabel.BbcodeEnabled = true;
+			incomeLabel.FitContent = true;
+			moneyInfoV.AddChild(incomeLabel);
+		}
+
+		moneyInfo.AddChild(moneyInfoV);
+
+		if (_weapon != null)
+		{
+			PanelContainer attackPriority = new();
+			attackPriority.CustomMinimumSize = new(100, 0);
+			VBoxContainer attackPriorityV = new VBoxContainer();
+			attackPriorityV.Name = "VBoxContainer";
+			attackPriorityV.Alignment = BoxContainer.AlignmentMode.Center;
+
+			Button upPriorityButton = new();
+			upPriorityButton.Text = "△";
+			upPriorityButton.Pressed += () => LastTargetPriority();
+			attackPriorityV.AddChild(upPriorityButton);
+
+			Label priorityLabel = new();
+			priorityLabel.HorizontalAlignment = HorizontalAlignment.Center;
+			switch (_targetPriority)
+			{
+				case TowerUnit.TargetPriority.First:
+					priorityLabel.Text = "First";
+					break;
+				case TowerUnit.TargetPriority.Last:
+					priorityLabel.Text = "Last";
+					break;
+				case TowerUnit.TargetPriority.Closest:
+					priorityLabel.Text = "Closest";
+					break;
+				case TowerUnit.TargetPriority.Strongest:
+					priorityLabel.Text = "Strongest";
+					break;
+				default:
+					priorityLabel.Text = ((int)_targetPriority).ToString();
+					break;
+			}
+			priorityLabel.Name = "AttackPriorityLabel";
+			attackPriorityV.AddChild(priorityLabel);
+
+			Button downPriorityButton = new();
+			downPriorityButton.Text = "▽";
+			downPriorityButton.Pressed += () => NextTargetPriority();
+			attackPriorityV.AddChild(downPriorityButton);
+
+			attackPriority.AddChild(attackPriorityV);
+			_infoContainers.Add("AttackPriority", attackPriority);
+		}
+		
+
+		PanelContainer upgrades = new();
+
+		HBoxContainer upgradesH = new();
+		upgradesH.Name = "HBoxContainer";
+
+		if (!_hasFirstUpgrade)
+		{
+			if (_firstUpgrade is not null)
+			{
+				VBoxContainer upgrade = new VBoxContainer();
+				RichTextLabel cost = new();
+				cost.HorizontalAlignment = HorizontalAlignment.Center;
+				cost.FitContent = true;
+				cost.BbcodeEnabled = true;
+				cost.Text = Utils.MakeMoneyText(_firstUpgradeCost);
+				upgrade.AddChild(cost);
+
+				foreach (EffectResource effect in _firstUpgrade)
+				{
+					effect.SetDescription();
+				}
+
+				Button upgradeButton = EffectResource.MakeCombinedEffectTooltip(true, _firstUpgradeName, _firstUpgrade);
+				upgradeButton.Pressed += (() =>
+				{
+					if (Utils.VectorLeq(_firstUpgradeCost, _tdManager._money))
+					{
+						_tdManager.SpendMoney(_firstUpgradeCost);
+						UpgradeFirst();
+					}
+				});
+				upgrade.AddChild(upgradeButton);
+				upgradesH.AddChild(upgrade);
+			}
+		}
+		else if ((!_hasSecondUpgrade) && _unlockedSecondUpgrade)
+		{
+			if (_secondUpgrade is not null)
+			{
+				VBoxContainer upgrade = new VBoxContainer();
+				RichTextLabel cost = new();
+				cost.HorizontalAlignment = HorizontalAlignment.Center;
+				cost.FitContent = true;
+				cost.BbcodeEnabled = true;
+				cost.Text = Utils.MakeMoneyText(_secondUpgradeCost);
+				upgrade.AddChild(cost);
+
+				foreach (EffectResource effect in _secondUpgrade)
+				{
+					effect.SetDescription();
+				}
+
+				Button upgradeButton = EffectResource.MakeCombinedEffectTooltip(true, _secondUpgradeName, _secondUpgrade);
+				upgradeButton.Pressed += (() =>
+				{
+					if (Utils.VectorLeq(_secondUpgradeCost, _tdManager._money))
+					{
+						_tdManager.SpendMoney(_secondUpgradeCost);
+						UpgradeSecond();
+					}
+				});
+				upgrade.AddChild(upgradeButton);
+				upgradesH.AddChild(upgrade);
+			}
+			
+		}
+		else if (!_hasThirdUpgrade && _unlockedThirdUpgrade)
+		{
+			if (_thirdUpgrade is not null)
+			{
+				VBoxContainer upgrade = new VBoxContainer();
+				RichTextLabel cost = new();
+				cost.HorizontalAlignment = HorizontalAlignment.Center;
+				cost.FitContent = true;
+				cost.BbcodeEnabled = true;
+				cost.Text = Utils.MakeMoneyText(_thirdUpgradeCost);
+				upgrade.AddChild(cost);
+
+				foreach (EffectResource effect in _thirdUpgrade)
+				{
+					effect.SetDescription();
+				}
+
+				Button upgradeButton = EffectResource.MakeCombinedEffectTooltip(true, _thirdUpgradeName, _thirdUpgrade);
+				upgradeButton.Pressed += (() =>
+				{
+					if (Utils.VectorLeq(_thirdUpgradeCost, _tdManager._money))
+					{
+						_tdManager.SpendMoney(_thirdUpgradeCost);
+						UpgradeThird();
+					}
+
+				});
+				upgrade.AddChild(upgradeButton);
+				upgradesH.AddChild(upgrade);
+			}
+			
+		}
+		else if (!_hasFourthUpgrade && _unlockedFourthUpgrade)
+		{
+			if (_fourthUpgradeA is not null && _fourthUpgradeA.Count != 0)
+			{
+				VBoxContainer upgrade = new VBoxContainer();
+				RichTextLabel cost = new();
+				cost.HorizontalAlignment = HorizontalAlignment.Center;
+				cost.FitContent = true;
+				cost.BbcodeEnabled = true;
+				cost.Text = Utils.MakeMoneyText(_fourthUpgradeACost);
+				upgrade.AddChild(cost);
+
+				foreach (EffectResource effect in _fourthUpgradeA)
+				{
+					effect.SetDescription();
+				}
+
+				Button upgradeButton = EffectResource.MakeCombinedEffectTooltip(true, _fourthUpgradeAName, _fourthUpgradeA);
+				upgradeButton.Pressed += (() =>
+				{
+					if (Utils.VectorLeq(_fourthUpgradeACost, _tdManager._money))
+					{
+						_tdManager.SpendMoney(_fourthUpgradeACost);
+						UpgradeFourthA();
+					}
+
+				});
+				upgrade.AddChild(upgradeButton);
+
+				TextureRect image = new();
+				image.Texture = _fourthUpgradeATexture;
+				image.StretchMode = TextureRect.StretchModeEnum.KeepAspectCentered;
+				upgrade.AddChild(image);
+
+				upgradesH.AddChild(upgrade);
+			}
+			if (_fourthUpgradeB is not null && _fourthUpgradeB.Count != 0)
+			{
+				VBoxContainer upgrade = new VBoxContainer();
+				RichTextLabel cost = new();
+				cost.HorizontalAlignment = HorizontalAlignment.Center;
+				cost.FitContent = true;
+				cost.BbcodeEnabled = true;
+				cost.Text = Utils.MakeMoneyText(_fourthUpgradeBCost);
+				upgrade.AddChild(cost);
+
+				foreach (EffectResource effect in _fourthUpgradeB)
+				{
+					effect.SetDescription();
+				}
+
+				Button upgradeButton = EffectResource.MakeCombinedEffectTooltip(true, _fourthUpgradeBName, _fourthUpgradeB);
+				upgradeButton.Pressed += (() =>
+				{
+					if (Utils.VectorLeq(_fourthUpgradeBCost, _tdManager._money))
+					{
+						_tdManager.SpendMoney(_fourthUpgradeBCost);
+						UpgradeFourthB();
+					}
+
+				});
+				upgrade.AddChild(upgradeButton);
+
+				TextureRect image = new();
+				image.Texture = _fourthUpgradeBTexture;
+				image.StretchMode = TextureRect.StretchModeEnum.KeepAspectCentered;
+				upgrade.AddChild(image);
+
+				upgradesH.AddChild(upgrade);
+			}
+		}
+
+		upgrades.AddChild(upgradesH);
+
+		_infoContainers.Add("Upgrades", upgrades);
+
+		return _infoContainers;
+	}
+
+	public override void UpdateUnitInfoContainer(bool updateEffects)
+	{
+		base.UpdateUnitInfoContainer(updateEffects);
+
+		VBoxContainer moneyInfoV = _infoContainers["MoneyInfo"].GetNode<VBoxContainer>("VBoxContainer");
+
+		if (GetTotalCost() != new Vector4I(0, 0, 0, 0))
+		{
+			RichTextLabel costLabel = moneyInfoV.GetNode<RichTextLabel>("CostLabel");
+			costLabel.Text = "Total Cost: \n" + Utils.MakeMoneyText(GetTotalCost());
+		}
+
+		if (this is Spawner spawner && spawner._data._units.Count() > 0)
+		{
+			RichTextLabel spawnLabel = moneyInfoV.GetNode<RichTextLabel>("SpawnLabel");
+			spawnLabel.Text = "Spawns " + spawner.GetSpawns();
+			if (updateEffects)
+			{
+				foreach (var child in _infoContainers["SpawnedUnitInfo"].GetChildren())
+				{
+					child.QueueFree();
+				}
+				VBoxContainer spawnedUnitTotalInfoV = new();
+
+				Label spawnedUnitLabel = new();
+				spawnedUnitLabel.Text = "Spawned Unit:";
+				spawnedUnitTotalInfoV.AddChild(spawnedUnitLabel);
+
+				Unit spawnedUnit = UnitManager.GetUnit(spawner._data._units[0]);
+				spawnedUnit._hpMaxModifier += spawner._data._hpBuff;
+				spawnedUnit.IncreaseSpeedModifier(spawner._data._speedBuff);
+				((InvaderUnit)spawnedUnit).IncreaseMoneyModifier(spawner._data._moneyBuff);
+				PanelContainer spawnedUnitInfo = spawnedUnit.MakeUnitInfoContainer()["BasicInfo"];
+				spawnedUnitTotalInfoV.AddChild(spawnedUnitInfo);
+
+				_infoContainers["SpawnedUnitInfo"].AddChild(spawnedUnitTotalInfoV);
+			}
+		}
+
+		if (GetIncome() != new Vector4I(0, 0, 0, 0))
+		{
+			RichTextLabel incomeLabel = moneyInfoV.GetNode<RichTextLabel>("IncomeLabel");
+			incomeLabel.Text = "Maximum Income: " + Utils.MakeMoneyText(GetIncome());
+		}
+
+		if (_weapon != null)
+		{
+			VBoxContainer attackPriorityV = _infoContainers["AttackPriority"].GetNode<VBoxContainer>("VBoxContainer");
+
+			Label priorityLabel = attackPriorityV.GetNode<Label>("AttackPriorityLabel");
+			switch (_targetPriority)
+			{
+				case TowerUnit.TargetPriority.First:
+					priorityLabel.Text = "First";
+					break;
+				case TowerUnit.TargetPriority.Last:
+					priorityLabel.Text = "Last";
+					break;
+				case TowerUnit.TargetPriority.Closest:
+					priorityLabel.Text = "Closest";
+					break;
+				case TowerUnit.TargetPriority.Strongest:
+					priorityLabel.Text = "Strongest";
+					break;
+				default:
+					priorityLabel.Text = ((int)_targetPriority).ToString();
+					break;
+			}
+		}
+
+		if (updateEffects)
+		{
+			HBoxContainer upgradesH = _infoContainers["Upgrades"].GetNode<HBoxContainer>("HBoxContainer");
+
+			foreach (var child in upgradesH.GetChildren())
+			{
+				child.QueueFree();
+			}
+
+			if (!_hasFirstUpgrade)
+			{
+				if (_firstUpgrade is not null)
+				{
+					VBoxContainer upgrade = new VBoxContainer();
+					RichTextLabel cost = new();
+					cost.FitContent = true;
+					cost.BbcodeEnabled = true;
+					cost.Text = Utils.MakeMoneyText(_firstUpgradeCost);
+					upgrade.AddChild(cost);
+
+					foreach (EffectResource effect in _firstUpgrade)
+					{
+						effect.SetDescription();
+					}
+
+					Button upgradeButton = EffectResource.MakeCombinedEffectTooltip(true, _firstUpgradeName, _firstUpgrade);
+					upgradeButton.Pressed += (() =>
+					{
+						if (Utils.VectorLeq(_firstUpgradeCost, _tdManager._money))
+						{
+							_tdManager.SpendMoney(_firstUpgradeCost);
+							UpgradeFirst();
+						}
+					});
+					upgrade.AddChild(upgradeButton);
+					upgradesH.AddChild(upgrade);
+				}
+			}
+			else if ((!_hasSecondUpgrade) && _unlockedSecondUpgrade)
+			{
+				if (_secondUpgrade is not null)
+				{
+					VBoxContainer upgrade = new VBoxContainer();
+					RichTextLabel cost = new();
+					cost.FitContent = true;
+					cost.BbcodeEnabled = true;
+					cost.Text = Utils.MakeMoneyText(_secondUpgradeCost);
+					upgrade.AddChild(cost);
+
+					foreach (EffectResource effect in _secondUpgrade)
+					{
+						effect.SetDescription();
+					}
+
+					Button upgradeButton = EffectResource.MakeCombinedEffectTooltip(true, _secondUpgradeName, _secondUpgrade);
+					upgradeButton.Pressed += (() =>
+					{
+						if (Utils.VectorLeq(_secondUpgradeCost, _tdManager._money))
+						{
+							_tdManager.SpendMoney(_secondUpgradeCost);
+							UpgradeSecond();
+						}
+					});
+					upgrade.AddChild(upgradeButton);
+					upgradesH.AddChild(upgrade);
+				}
+
+			}
+			else if (!_hasThirdUpgrade && _unlockedThirdUpgrade)
+			{
+				if (_thirdUpgrade is not null)
+				{
+					VBoxContainer upgrade = new VBoxContainer();
+					RichTextLabel cost = new();
+					cost.FitContent = true;
+					cost.BbcodeEnabled = true;
+					cost.Text = Utils.MakeMoneyText(_thirdUpgradeCost);
+					upgrade.AddChild(cost);
+
+					foreach (EffectResource effect in _thirdUpgrade)
+					{
+						effect.SetDescription();
+					}
+
+					Button upgradeButton = EffectResource.MakeCombinedEffectTooltip(true, _thirdUpgradeName, _thirdUpgrade);
+					upgradeButton.Pressed += (() =>
+					{
+						if (Utils.VectorLeq(_thirdUpgradeCost, _tdManager._money))
+						{
+							_tdManager.SpendMoney(_thirdUpgradeCost);
+							UpgradeThird();
+						}
+
+					});
+					upgrade.AddChild(upgradeButton);
+					upgradesH.AddChild(upgrade);
+				}
+
+			}
+			else if (!_hasFourthUpgrade && _unlockedFourthUpgrade)
+			{
+				if (_fourthUpgradeA is not null && _fourthUpgradeA.Count != 0)
+				{
+					VBoxContainer upgrade = new VBoxContainer();
+					RichTextLabel cost = new();
+					cost.FitContent = true;
+					cost.BbcodeEnabled = true;
+					cost.Text = Utils.MakeMoneyText(_fourthUpgradeACost);
+					upgrade.AddChild(cost);
+
+					foreach (EffectResource effect in _fourthUpgradeA)
+					{
+						effect.SetDescription();
+					}
+
+					Button upgradeButton = EffectResource.MakeCombinedEffectTooltip(true, _fourthUpgradeAName, _fourthUpgradeA);
+					upgradeButton.Pressed += (() =>
+					{
+						if (Utils.VectorLeq(_fourthUpgradeACost, _tdManager._money))
+						{
+							_tdManager.SpendMoney(_fourthUpgradeACost);
+							UpgradeFourthA();
+						}
+
+					});
+					upgrade.AddChild(upgradeButton);
+
+					TextureRect image = new();
+					image.Texture = _fourthUpgradeATexture;
+					image.StretchMode = TextureRect.StretchModeEnum.KeepAspectCentered;
+					upgrade.AddChild(image);
+
+					upgradesH.AddChild(upgrade);
+				}
+				if (_fourthUpgradeB is not null && _fourthUpgradeB.Count != 0)
+				{
+					VBoxContainer upgrade = new VBoxContainer();
+					RichTextLabel cost = new();
+					cost.FitContent = true;
+					cost.BbcodeEnabled = true;
+					cost.Text = Utils.MakeMoneyText(_fourthUpgradeBCost);
+					upgrade.AddChild(cost);
+
+					foreach (EffectResource effect in _fourthUpgradeB)
+					{
+						effect.SetDescription();
+					}
+
+					Button upgradeButton = EffectResource.MakeCombinedEffectTooltip(true, _fourthUpgradeBName, _fourthUpgradeB);
+					upgradeButton.Pressed += (() =>
+					{
+						if (Utils.VectorLeq(_fourthUpgradeBCost, _tdManager._money))
+						{
+							_tdManager.SpendMoney(_fourthUpgradeBCost);
+							UpgradeFourthB();
+						}
+
+					});
+					upgrade.AddChild(upgradeButton);
+
+					TextureRect image = new();
+					image.Texture = _fourthUpgradeBTexture;
+					image.StretchMode = TextureRect.StretchModeEnum.KeepAspectCentered;
+					upgrade.AddChild(image);
+
+					upgradesH.AddChild(upgrade);
+				}
+			}
+		}
+	}
+
 	public string GetDescription()
+	{
+		return _description;
+	}
+
+	public string GetTooltipDescription()
 	{
 		string fullDesc = _description + "\n";
 		if (_weapon != null)

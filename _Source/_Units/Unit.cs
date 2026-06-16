@@ -160,6 +160,8 @@ public partial class Unit : CharacterBody2D
 
 	public bool _hasEffects = true;
 
+	protected Godot.Collections.Dictionary<string, PanelContainer> _infoContainers;
+
 	public override void _Ready()
 	{
 		SetWeapon();
@@ -344,6 +346,234 @@ public partial class Unit : CharacterBody2D
 	public int GetArmor()
 	{
 		return _armor + _armorModifier + _armorDebuff;
+	}
+
+	public virtual Godot.Collections.Dictionary<string, PanelContainer> MakeUnitInfoContainer()
+	{
+		_infoContainers = new();
+
+		HideAttackRange();
+		DisplayAttackRange();
+
+		PanelContainer basicInfo = new();
+		basicInfo.CustomMinimumSize = new(200, 0);
+
+		VBoxContainer basicInfoV = new();
+		basicInfoV.Name = "VBoxContainer";
+		basicInfo.CustomMinimumSize = new(200, 0);
+
+		Label nameLabel = new();
+		nameLabel.Text = _name;
+		nameLabel.Name = "NameLabel";
+		nameLabel.HorizontalAlignment = HorizontalAlignment.Center;
+		basicInfoV.AddChild(nameLabel);
+
+		if (this is not TowerUnit)
+		{
+			Label hpLabel = new();
+			hpLabel.Text = "Hp: " + _hp.ToString() + "/" + GetHpMax().ToString();
+			hpLabel.Name = "HpLabel";
+			basicInfoV.AddChild(hpLabel);
+
+			Label speedLabel = new();
+			speedLabel.Text = "Move speed: " + GetSpeed().ToString();
+			speedLabel.Name = "SpeedLabel";
+			basicInfoV.AddChild(speedLabel);
+		}
+
+
+		if (this is InvaderUnit invader)
+		{
+			RichTextLabel moneyDropLabel = new();
+			moneyDropLabel.Text = "Drops " + Utils.MakeMoneyText(invader.GetMoneyDropped());
+			moneyDropLabel.Name = "MoneyDropLabel";
+			moneyDropLabel.AutowrapMode = TextServer.AutowrapMode.Off;
+			moneyDropLabel.FitContent = true;
+			moneyDropLabel.BbcodeEnabled = true;
+			basicInfoV.AddChild(moneyDropLabel);
+		}
+
+		if (this is TowerUnit tower && tower._towerType == TowerUnit.TowerType.Defense)
+		{
+			RichTextLabel descriptionLabel = new();
+			descriptionLabel.Text = tower.GetDescription();
+			descriptionLabel.Name = "DescriptionLabel";
+			descriptionLabel.CustomMinimumSize = new(200, 0);
+			descriptionLabel.FitContent = true;
+			descriptionLabel.BbcodeEnabled = true;
+			basicInfoV.AddChild(descriptionLabel);
+		}
+
+		basicInfo.AddChild(basicInfoV);
+
+		_infoContainers.Add("BasicInfo", basicInfo);
+
+		if (_weapon != null)
+		{
+			_infoContainers.Add("WeaponInfo", _weapon.MakeWeaponInfoContainer());
+		}
+
+		bool hasDisplayEffects = false;
+		foreach (EffectResource effect in _effects)
+		{
+			if (effect._displayType == EffectResource.DisplayTypes.Large || effect._displayType == EffectResource.DisplayTypes.Small)
+			{
+				hasDisplayEffects = true;
+				break;
+			}
+		}
+
+		PanelContainer effectsInfo = new();
+
+		HBoxContainer allEffectsH = new();
+
+		VBoxContainer smallEffectsV = new();
+
+		HBoxContainer largeEffectsH = new();
+
+		foreach (EffectResource effect in _effects)
+		{
+			switch (effect._displayType)
+			{
+				case (EffectResource.DisplayTypes.Large):
+					VBoxContainer container = new();
+					PanelContainer effectName = effect.MakeFullEffectDescription();
+					container.AddChild(effectName);
+					largeEffectsH.AddChild(container);
+					break;
+				case (EffectResource.DisplayTypes.Small):
+					VBoxContainer container1 = new();
+					HoverInfoLabel effectName1 = effect.MakeEffectTooltip(false);
+					container1.AddChild(effectName1);
+					smallEffectsV.AddChild(container1);
+					break;
+				case (EffectResource.DisplayTypes.Hidden):
+					continue;
+			}
+		}
+
+		if (largeEffectsH.GetChildren().Count != 0)
+		{
+			allEffectsH.AddChild(largeEffectsH);
+		}
+		if (smallEffectsV.GetChildren().Count != 0)
+		{
+			allEffectsH.AddChild(smallEffectsV);
+		}
+		effectsInfo.AddChild(allEffectsH);
+		if (!hasDisplayEffects)
+		{
+			effectsInfo.Visible = false;
+		}
+		else
+		{
+			effectsInfo.Visible = true;
+		}
+
+		_infoContainers.Add("EffectsInfo", effectsInfo);
+
+		return _infoContainers;
+	}
+
+	public virtual void UpdateUnitInfoContainer(bool updateEffects)
+	{
+		HideAttackRange();
+		DisplayAttackRange();
+
+		PanelContainer basicInfo = _infoContainers["BasicInfo"];
+		basicInfo.CustomMinimumSize = new(200, 0);
+		VBoxContainer basicInfoV = basicInfo.GetNode<VBoxContainer>("VBoxContainer");
+
+		if (this is not TowerUnit)
+		{
+			Label hpLabel = basicInfoV.GetNode<Label>("HpLabel");
+			hpLabel.Text = "Hp: " + _hp.ToString() + "/" + GetHpMax().ToString();
+
+			Label speedLabel = basicInfoV.GetNode<Label>("SpeedLabel");
+			speedLabel.Text = "Move speed: " + GetSpeed().ToString();
+		}
+
+		if (this is InvaderUnit invader)
+		{
+			RichTextLabel moneyDropLabel = basicInfoV.GetNode<RichTextLabel>("MoneyDropLabel");
+			moneyDropLabel.Text = "Drops " + Utils.MakeMoneyText(invader.GetMoneyDropped());
+		}
+
+		if (_infoContainers.Keys.Contains("WeaponInfo"))
+		{
+			_weapon.UpdateWeaponInfoContainer();
+		}
+
+		bool hasDisplayEffects = false;
+		foreach (EffectResource effect in _effects)
+		{
+			if (effect._displayType == EffectResource.DisplayTypes.Large || effect._displayType == EffectResource.DisplayTypes.Small)
+			{
+				hasDisplayEffects = true;
+				break;
+			}
+		}
+
+		if (updateEffects)
+		{
+			PanelContainer effectsInfo = _infoContainers["EffectsInfo"];
+			foreach (var child in effectsInfo.GetChildren())
+			{
+				child.QueueFree();
+			}
+
+			HBoxContainer allEffectsH = new();
+
+			VBoxContainer smallEffectsV = new();
+
+			HBoxContainer largeEffectsH = new();
+
+			foreach (EffectResource effect in _effects)
+			{
+				switch (effect._displayType)
+				{
+					case (EffectResource.DisplayTypes.Large):
+						VBoxContainer container = new();
+						PanelContainer effectName = effect.MakeFullEffectDescription();
+						container.AddChild(effectName);
+						largeEffectsH.AddChild(container);
+						break;
+					case (EffectResource.DisplayTypes.Small):
+						VBoxContainer container1 = new();
+						HoverInfoLabel effectName1 = effect.MakeEffectTooltip(false);
+						container1.AddChild(effectName1);
+						smallEffectsV.AddChild(container1);
+						break;
+					case (EffectResource.DisplayTypes.Hidden):
+						continue;
+				}
+			}
+
+			allEffectsH.AddChild(smallEffectsV);
+			allEffectsH.AddChild(largeEffectsH);
+			effectsInfo.AddChild(allEffectsH);
+			if (!hasDisplayEffects)
+			{
+				effectsInfo.Visible = false;
+			}
+			else
+			{
+				effectsInfo.Visible = true;
+			}
+		}
+	}
+
+	public virtual void ResetUnitInfoContainer()
+	{
+		if (_infoContainers is null)
+		{
+			return;
+		}
+		foreach (PanelContainer panelContainer in _infoContainers.Values)
+		{
+			panelContainer.QueueFree();
+		}
+		_infoContainers.Clear();
 	}
 
 	protected void SetInitialCommand()

@@ -66,6 +66,7 @@ public partial class TDTowerManager : Node2D
 
 			Label nameLabel = new Label();
 			nameLabel.Text = unit._name;
+			nameLabel.HorizontalAlignment = HorizontalAlignment.Center;
 			container.AddChild(nameLabel);
 
 			HoverInfoImage towerButton
@@ -78,10 +79,7 @@ public partial class TDTowerManager : Node2D
 				} 
 			});
 
-			TextureRect background = unit.MakeTowerIconBackground();
-
 			PanelContainer panelContainer = new();
-			panelContainer.AddChild(background);
 			panelContainer.AddChild(towerButton);
 			container.AddChild(panelContainer);
 
@@ -89,6 +87,7 @@ public partial class TDTowerManager : Node2D
 			costLabel.FitContent = true;
 			costLabel.BbcodeEnabled = true;
 			costLabel.Text = Utils.MakeMoneyText(unit._cost);
+			costLabel.HorizontalAlignment = HorizontalAlignment.Center;
 			container.AddChild(costLabel);
 			
 			_towersBox.AddChild(container);

@@ -226,13 +226,13 @@ public partial class Spawner : TowerUnit
 			InvaderUnit invader = _tdManager.GetEnemy(name);
 			invader.IncreaseMoneyModifier(_data._moneyBuff);
 			Vector4I income = invader.GetMoneyDropped();
-			spawnText += spawns[name] + " " + UnitManager.InternalNameToName(name) + " (" + Utils.MakeMoneyText(income) + "), ";
+			spawnText += spawns[name] + " " + UnitManager.InternalNameToName(name) + "\n(drops " + Utils.MakeMoneyText(income) + "), ";
 		}
 		string lastName = spawns.Keys.ElementAt(spawns.Keys.Count - 1);
 		InvaderUnit lastInvader = _tdManager.GetEnemy(lastName);
 		lastInvader.IncreaseMoneyModifier(_data._moneyBuff);
 		Vector4I lastIncome = lastInvader.GetMoneyDropped();
-		spawnText += spawns[lastName] + " " + UnitManager.InternalNameToName(lastName) + " (" + Utils.MakeMoneyText(lastIncome) + ")";
+		spawnText += spawns[lastName] + " " + UnitManager.InternalNameToName(lastName) + "\n(drops " + Utils.MakeMoneyText(lastIncome) + ")";
 		return spawnText;
 	}
 }

@@ -24,6 +24,8 @@ public abstract partial class BaseWeapon : Node2D
 
 	[Export] public DamageType _damageType;
 
+	[Export] private string _description;
+
 	protected double _attackTimer = 0;
 
 	protected Unit _parent;
@@ -35,6 +37,8 @@ public abstract partial class BaseWeapon : Node2D
 	public double _attackSpeedModifier = 0;
 	public double _attackSpeedDebuff = 0;
 	public double _attackDelayModifier = 0;
+
+	protected PanelContainer _infoContainer;
 
 	public override void _Ready()
 	{
@@ -76,6 +80,68 @@ public abstract partial class BaseWeapon : Node2D
 	// Abstract method: Every attacker must define HOW they hit
 	public abstract void PerformAttack(Unit target, int damage);
 
+	public virtual PanelContainer MakeWeaponInfoContainer()
+	{
+		_infoContainer = new();
+		_infoContainer.CustomMinimumSize = new(200, 0);
+
+		VBoxContainer infoV = new();
+		infoV.Name = "VBoxContainer";
+
+		Label damageLabel = new();
+		damageLabel.Text = "Weapon Damage: " + GetDamage().ToString();
+		damageLabel.Name = "DamageLabel";
+		infoV.AddChild(damageLabel);
+
+		Label cooldownLabel = new();
+		cooldownLabel.Text = "Weapon Cooldown: " + GetCooldown().ToString("F2");
+		cooldownLabel.Name = "CooldownLabel";
+		infoV.AddChild(cooldownLabel);
+
+		Label dpsLabel = new();
+		dpsLabel.Text = "DPS: " + GetDPS().ToString("F0");
+		dpsLabel.Name = "DPSLabel";
+		infoV.AddChild(dpsLabel);
+
+		Label rangeLabel = new();
+		rangeLabel.Text = "Range: " + GetRange().ToString();
+		rangeLabel.Name = "RangeLabel";
+		infoV.AddChild(rangeLabel);
+
+		if (GetDescription() != "" && GetDescription() is not null)
+		{
+			Label descriptionLabel = new();
+			descriptionLabel.Text = GetDescription();
+			descriptionLabel.Name = "DescriptionLabel";
+			infoV.AddChild(descriptionLabel);
+		}
+
+		_infoContainer.AddChild(infoV);
+		return _infoContainer;
+	}
+
+	public virtual void UpdateWeaponInfoContainer()
+	{
+		VBoxContainer infoV = _infoContainer.GetNode<VBoxContainer>("VBoxContainer");
+
+		Label damageLabel = infoV.GetNode<Label>("DamageLabel");
+		damageLabel.Text = "Weapon Damage: " + GetDamage().ToString();
+
+		Label cooldownLabel = infoV.GetNode<Label>("CooldownLabel");
+		cooldownLabel.Text = "Weapon Cooldown: " + GetCooldown().ToString("F2");
+
+		Label dpsLabel = infoV.GetNode<Label>("DPSLabel");
+		dpsLabel.Text = "DPS: " + GetDPS().ToString("F0");
+
+		Label rangeLabel = infoV.GetNode<Label>("RangeLabel");
+		rangeLabel.Text = "Range: " + GetRange().ToString();
+	}
+
+	public virtual void ResetWeaponInfoContainer()
+	{
+		_infoContainer = null;
+	}
+
 	public float GetRange()
 	{
 		return _range + _rangeModifier;
@@ -99,5 +165,10 @@ public abstract partial class BaseWeapon : Node2D
 	public virtual float GetDPS()
 	{
 		return (GetDamage()) / (float) (GetCooldown());
+	}
+
+	public string GetDescription()
+	{
+		return _description;
 	}
 }

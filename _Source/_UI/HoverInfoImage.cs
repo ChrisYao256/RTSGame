@@ -9,6 +9,7 @@ public partial class HoverInfoImage : TextureButton
 	{
 		MouseEntered += () => SetPopupVisibility(true);
 		MouseExited += () => SetPopupVisibility(false);
+		GetTree().CurrentScene.AddChild(_popupBox);
 	}
 
 	private void SetPopupVisibility(bool visible)
@@ -33,9 +34,9 @@ public partial class HoverInfoImage : TextureButton
 		Vector2 triggerSize = Size;
 		Vector2 popupSize = _popupBox.Size;
 
-		// Default position: Directly below the label
-		float x = triggerPos.X;
-		float y = triggerPos.Y + triggerSize.Y + 5; // 5px gap
+		// Default position: Directly to the left of the label
+		float x = triggerPos.X - popupSize.X - 5;
+		float y = triggerPos.Y;
 
 		// --- Boundary Checks (Clamping) ---
 

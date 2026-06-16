@@ -6,34 +6,34 @@ using System.Collections.Generic;
 
 public partial class UnitInfoPanel : CanvasLayer
 {
-	private Label _nameLabel;
-	private Label _hpLabel;
-	private Label _shieldLabel;
-	private Label _speedLabel;
-	private RichTextLabel _totalCostLabel;
-	private Label _armorLabel;
-	private Label _positionLabel;
-	private Container _weaponContainer;
-	private Label _damageLabel;
-	private Label _cooldownLabel;
-	private Label _dpsLabel;
-	private Label _rangeLabel;
-	private RichTextLabel _incomeLabel;
-	private RichTextLabel _moneyDroppedLabel;
-	private RichTextLabel _spawnLabel;
-	private VBoxContainer _spawnContainer;
+	//private Label _nameLabel;
+	//private Label _hpLabel;
+	//private Label _shieldLabel;
+	//private Label _speedLabel;
+	//private RichTextLabel _totalCostLabel;
+	//private Label _armorLabel;
+	//private Container _weaponContainer;
+	//private Label _damageLabel;
+	//private Label _cooldownLabel;
+	//private Label _dpsLabel;
+	//private Label _rangeLabel;
+	//private RichTextLabel _incomeLabel;
+	//private RichTextLabel _moneyDroppedLabel;
+	//private RichTextLabel _spawnLabel;
+	//private VBoxContainer _spawnContainer;
 
-	private VBoxContainer _priorityContainer;
-	private Label _priorityLabel;
+	//private VBoxContainer _priorityContainer;
+	//private Label _priorityLabel;
 
-	private HBoxContainer _largeEffectsContainer;
-	private VBoxContainer _smallEffectsContainer;
+	//private HBoxContainer _largeEffectsContainer;
+	//private VBoxContainer _smallEffectsContainer;
+
+	//private HBoxContainer _upgradeContainer;
+	//private BoxContainer _unitsContainer;
+	//private HBoxContainer _hBoxContainer;
+	//private PanelContainer _container;
+
 	private HBoxContainer _infoContainer;
-	private VBoxContainer _commandContainer;
-	private HBoxContainer _upgradeContainer;
-	private BoxContainer _unitsContainer;
-	private HBoxContainer _hBoxContainer;
-	private PanelContainer _container;
 
 	private List<Unit> _units;
 	private Unit _unit;
@@ -43,39 +43,36 @@ public partial class UnitInfoPanel : CanvasLayer
 	public override void _Ready()
 	{
 		// Link our C# variables to the nodes in the scene
-		_nameLabel = GetNode<Label>("PanelContainer/HBoxContainer/UnitInfo/BasicInfoContainer/VBoxContainer/UnitNameLabel");
-		_hpLabel = GetNode<Label>("PanelContainer/HBoxContainer/UnitInfo/BasicInfoContainer/VBoxContainer/Hp");
-		_shieldLabel = GetNode<Label>("PanelContainer/HBoxContainer/UnitInfo/BasicInfoContainer/VBoxContainer/Shield");
-		_speedLabel = GetNode<Label>("PanelContainer/HBoxContainer/UnitInfo/BasicInfoContainer/VBoxContainer/SpeedLabel");
-		_armorLabel = GetNode<Label>("PanelContainer/HBoxContainer/UnitInfo/BasicInfoContainer/VBoxContainer/ArmorLabel");
-		_totalCostLabel = GetNode<RichTextLabel>("PanelContainer/HBoxContainer/UnitInfo/IncomeContainer/VBoxContainer/TotalCostLabel");
-		_incomeLabel = GetNode<RichTextLabel>("PanelContainer/HBoxContainer/UnitInfo/IncomeContainer/VBoxContainer/IncomeLabel");
-		_moneyDroppedLabel = GetNode<RichTextLabel>("PanelContainer/HBoxContainer/UnitInfo/IncomeContainer/VBoxContainer/MoneyDroppedLabel");
-		_spawnLabel = GetNode<RichTextLabel>("PanelContainer/HBoxContainer/UnitInfo/IncomeContainer/VBoxContainer/SpawnLabel");
-		_weaponContainer = GetNode<VBoxContainer>("PanelContainer/HBoxContainer/UnitInfo/WeaponContainer/VBoxContainer");
-		_damageLabel = _weaponContainer.GetNode<Label>("DamageLabel");
-		_cooldownLabel = _weaponContainer.GetNode<Label>("CooldownLabel");
-		_rangeLabel = _weaponContainer.GetNode<Label>("DPSLabel");
-		_dpsLabel = _weaponContainer.GetNode<Label>("RangeLabel");
-		_spawnContainer = GetNode<VBoxContainer>("PanelContainer/HBoxContainer/UnitInfo/SpawnContainer/VBoxContainer");
+		//_nameLabel = GetNode<Label>("PanelContainer/HBoxContainer/UnitInfo/BasicInfoContainer/VBoxContainer/UnitNameLabel");
+		//_hpLabel = GetNode<Label>("PanelContainer/HBoxContainer/UnitInfo/BasicInfoContainer/VBoxContainer/Hp");
+		//_shieldLabel = GetNode<Label>("PanelContainer/HBoxContainer/UnitInfo/BasicInfoContainer/VBoxContainer/Shield");
+		//_speedLabel = GetNode<Label>("PanelContainer/HBoxContainer/UnitInfo/BasicInfoContainer/VBoxContainer/SpeedLabel");
+		//_armorLabel = GetNode<Label>("PanelContainer/HBoxContainer/UnitInfo/BasicInfoContainer/VBoxContainer/ArmorLabel");
+		//_totalCostLabel = GetNode<RichTextLabel>("PanelContainer/HBoxContainer/UnitInfo/IncomeContainer/VBoxContainer/TotalCostLabel");
+		//_incomeLabel = GetNode<RichTextLabel>("PanelContainer/HBoxContainer/UnitInfo/IncomeContainer/VBoxContainer/IncomeLabel");
+		//_moneyDroppedLabel = GetNode<RichTextLabel>("PanelContainer/HBoxContainer/UnitInfo/IncomeContainer/VBoxContainer/MoneyDroppedLabel");
+		//_spawnLabel = GetNode<RichTextLabel>("PanelContainer/HBoxContainer/UnitInfo/IncomeContainer/VBoxContainer/SpawnLabel");
+		//_weaponContainer = GetNode<VBoxContainer>("PanelContainer/HBoxContainer/UnitInfo/WeaponContainer/VBoxContainer");
+		//_damageLabel = _weaponContainer.GetNode<Label>("DamageLabel");
+		//_cooldownLabel = _weaponContainer.GetNode<Label>("CooldownLabel");
+		//_rangeLabel = _weaponContainer.GetNode<Label>("DPSLabel");
+		//_dpsLabel = _weaponContainer.GetNode<Label>("RangeLabel");
+		//_spawnContainer = GetNode<VBoxContainer>("PanelContainer/HBoxContainer/UnitInfo/SpawnContainer/VBoxContainer");
 
-		_priorityContainer = GetNode<VBoxContainer>("PanelContainer/HBoxContainer/UnitInfo/TargetPriorityContainer");
-		_priorityLabel = GetNode<Label>("PanelContainer/HBoxContainer/UnitInfo/TargetPriorityContainer/TargetPriority");
-		_largeEffectsContainer = GetNode<HBoxContainer>("PanelContainer/HBoxContainer/UnitInfo/Effects");
-		_smallEffectsContainer = GetNode<VBoxContainer>("PanelContainer/HBoxContainer/UnitInfo/SmallEffects");
+		//_priorityContainer = GetNode<VBoxContainer>("PanelContainer/HBoxContainer/UnitInfo/TargetPriorityContainer");
+		//_priorityLabel = GetNode<Label>("PanelContainer/HBoxContainer/UnitInfo/TargetPriorityContainer/TargetPriority");
+		//_largeEffectsContainer = GetNode<HBoxContainer>("PanelContainer/HBoxContainer/UnitInfo/Effects");
+		//_smallEffectsContainer = GetNode<VBoxContainer>("PanelContainer/HBoxContainer/UnitInfo/SmallEffects");
 
-		_positionLabel = GetNode<Label>("PanelContainer/HBoxContainer/Position");
-		
+		//_upgradeContainer = GetNode<HBoxContainer>("PanelContainer/HBoxContainer/Upgrades/HBoxContainer");
+
+
+		//_unitsContainer = GetNode<BoxContainer>("PanelContainer/HBoxContainer/UnitsContainer");
+
+		//_hBoxContainer = GetNode<HBoxContainer>("PanelContainer/HBoxContainer");
+		//_container = GetNode<PanelContainer>("PanelContainer");
+
 		_infoContainer = GetNode<HBoxContainer>("PanelContainer/HBoxContainer/UnitInfo");
-
-		_upgradeContainer = GetNode<HBoxContainer>("PanelContainer/HBoxContainer/Upgrades/HBoxContainer");
-
-		_commandContainer = GetNode<VBoxContainer>("PanelContainer/HBoxContainer/CommandContainer");
-
-		_unitsContainer = GetNode<BoxContainer>("PanelContainer/HBoxContainer/UnitsContainer");
-
-		_hBoxContainer = GetNode<HBoxContainer>("PanelContainer/HBoxContainer");
-		_container = GetNode<PanelContainer>("PanelContainer");
 
 		_tdManager = GetParent().GetNode<TDManager>("TdManager");
 	}
@@ -83,7 +80,7 @@ public partial class UnitInfoPanel : CanvasLayer
 	// This method will be called by your Selection Manager
 	public void UpdateSelectedUnits(List<Unit> units)
 	{
-		HideUnitInfo();
+		ResetUnitInfo();
 		_units = units;
 		if (_units is null)
 		{
@@ -91,60 +88,75 @@ public partial class UnitInfoPanel : CanvasLayer
 		}
 		if (_units.Count == 1)
 		{
+			ResetUnitInfo();
 			_unit = units[0];
 			_unit.Connect(Unit.SignalName.UpdateInfo, Callable.From(UpdateAllUnitInfo));
 			_unit.Connect(Unit.SignalName.UpdateStatsInfo, Callable.From(UpdateUnitStatsInfo));
-			UpdateAllUnitInfo();
+			MakeNewUnitInfo();
 		}
-		if (_units.Count > 1)
-		{
-			for (int i = _unitsContainer.GetChildCount() - 1; i >= 0; i--)
-			{
-				_unitsContainer.GetChild(i).Free();
-			}
-			Dictionary<string, int> unitTypes = new Dictionary<string, int>();
-			for (int i = 0; i < _units.Count; i++)
-			{
-				if (unitTypes.Keys.Contains(units[i]._internalName))
-				{
-					unitTypes[units[i]._internalName] += 1;
-					_unitsContainer.GetNode(units[i]._internalName).GetNode<Label>("Count").Text = unitTypes[units[i]._internalName].ToString();
-				}
-				else
-				{
-					unitTypes.Add(units[i]._internalName, 1);
-					VBoxContainer container = new();
-					_unitsContainer.AddChild(container);
-					container.Name = units[i]._internalName;
+		//if (_units.Count > 1)
+		//{
+		//	for (int i = _unitsContainer.GetChildCount() - 1; i >= 0; i--)
+		//	{
+		//		_unitsContainer.GetChild(i).Free();
+		//	}
+		//	Dictionary<string, int> unitTypes = new Dictionary<string, int>();
+		//	for (int i = 0; i < _units.Count; i++)
+		//	{
+		//		if (unitTypes.Keys.Contains(units[i]._internalName))
+		//		{
+		//			unitTypes[units[i]._internalName] += 1;
+		//			_unitsContainer.GetNode(units[i]._internalName).GetNode<Label>("Count").Text = unitTypes[units[i]._internalName].ToString();
+		//		}
+		//		else
+		//		{
+		//			unitTypes.Add(units[i]._internalName, 1);
+		//			VBoxContainer container = new();
+		//			_unitsContainer.AddChild(container);
+		//			container.Name = units[i]._internalName;
 
-					Label label_ = new Label();
-					label_.Text = UnitManager.InternalNameToName(_units[i]._internalName);
-					container.AddChild(label_);
+		//			Label label_ = new Label();
+		//			label_.Text = UnitManager.InternalNameToName(_units[i]._internalName);
+		//			container.AddChild(label_);
 
-					Label count = new Label();
-					count.Name = "Count";
-					count.Text = "1";
-					container.AddChild(count);
+		//			Label count = new Label();
+		//			count.Name = "Count";
+		//			count.Text = "1";
+		//			container.AddChild(count);
 
-					TextureRect icon = new TextureRect();
-					icon.Size = new(50, 50);
-					icon.ExpandMode = TextureRect.ExpandModeEnum.FitWidthProportional;
-					icon.Texture = _units[i].GetIconTexture();
-					container.AddChild(icon);
+		//			TextureRect icon = new TextureRect();
+		//			icon.Size = new(50, 50);
+		//			icon.ExpandMode = TextureRect.ExpandModeEnum.FitWidthProportional;
+		//			icon.Texture = _units[i].GetIconTexture();
+		//			container.AddChild(icon);
 
-				}
+		//		}
 					
-			}
-			_unitsContainer.Show();
+		//	}
+		//	_unitsContainer.Show();
+		//}
+	}
+
+	public void MakeNewUnitInfo()
+	{
+		//_infoContainer.Show();
+		Unit unit = _unit;
+		Godot.Collections.Dictionary<string, PanelContainer> infoContainers = _unit.MakeUnitInfoContainer();
+
+		foreach (var infoContainer in infoContainers.Values)
+		{
+			_infoContainer.AddChild(infoContainer);
 		}
 	}
 
-	public void UpdateAllUnitInfo()
+	public void UpdateAllUnitInfo() // does not change selected unit
 	{
-		_infoContainer.Show();
+		
 		//_commandContainer.Show();
 
-		Unit unit = _unit;
+		_unit.UpdateUnitInfoContainer(true);
+
+		/*
 
 		unit.HideAttackRange();
 		unit.DisplayAttackRange();
@@ -182,20 +194,6 @@ public partial class UnitInfoPanel : CanvasLayer
 					continue;
 			}
 		}
-
-		//foreach (Node body in _commandContainer.GetChildren())
-		//{
-		//	body.QueueFree();
-		//}
-
-		//foreach (Command command in _unit._commandQueue)
-		//{
-		//	VBoxContainer container = new();
-		//	Label commandName = new();
-		//	commandName.Text = command.ToString();
-		//	container.AddChild(commandName);
-		//	_commandContainer.AddChild(container);
-		//}
 
 		if (_unit._weapon != null)
 		{
@@ -551,12 +549,14 @@ public partial class UnitInfoPanel : CanvasLayer
 			_spawnContainer.Hide();
 		}
 		_tdManager._towerManager.UpdateIncomeDisplay();
+		*/
 	}
 
 	// updates texts without refreshing upgrade and effect buttons
-	public void UpdateUnitStatsInfo()
+	public void UpdateUnitStatsInfo() // doesn't update effects
 	{
-
+		_unit.UpdateUnitInfoContainer(false);
+		/*
 		Unit unit = _unit;
 
 		unit.HideAttackRange();
@@ -623,16 +623,17 @@ public partial class UnitInfoPanel : CanvasLayer
 		{
 			_spawnLabel.Text = "Spawns " + spawner.GetSpawns();
 		}
+		*/
 	}
 
-	public void HideUnitInfo()
+	public void ResetUnitInfo()
 	{
 		_unit?.Disconnect(Unit.SignalName.UpdateInfo, Callable.From(UpdateAllUnitInfo));
 		_unit?.Disconnect(Unit.SignalName.UpdateStatsInfo, Callable.From(UpdateUnitStatsInfo));
+		_unit?.ResetUnitInfoContainer();
 		_unit = null;
-		_infoContainer.Hide();
-		_upgradeContainer.Hide();
-		//_commandContainer.Hide();
-		_unitsContainer.Hide();
+		//_infoContainer.Hide();
+		//_upgradeContainer.Hide();
+		//_unitsContainer.Hide();
 	}
 }

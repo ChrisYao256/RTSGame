@@ -64,6 +64,30 @@ public partial class ProjectileWeapon : BaseWeapon
 		return new(_parent._teamId, spawnPosition, _projectileSpeed, _projectileTexture, _lifeTime, _projectileRadius, dealDamage, targetAngle, _pierceCount);
 
 	}
+
+	public override PanelContainer MakeWeaponInfoContainer()
+	{
+		base.MakeWeaponInfoContainer();
+
+		VBoxContainer infoV = _infoContainer.GetNode<VBoxContainer>("VBoxContainer");
+
+		Label pierceLabel = new();
+		pierceLabel.Text = "Pierces " + _pierceCount;
+		pierceLabel.Name = "PierceLabel";
+		infoV.AddChild(pierceLabel);
+
+		return _infoContainer;
+	}
+
+	public override void UpdateWeaponInfoContainer()
+	{
+		base.UpdateWeaponInfoContainer();
+
+		VBoxContainer infoV = _infoContainer.GetNode<VBoxContainer>("VBoxContainer");
+
+		Label pierceLabel = infoV.GetNode<Label>("PierceLabel");
+		pierceLabel.Text = "Pierces " + _pierceCount;
+	}
 }
 
 
