@@ -2,11 +2,11 @@
 
 [ext_resource type="PackedScene" uid="uid://bqn4h6d52i52" path="res://_Content/_Scenes/_Prefabs/Units/BaseInvaderUnit.tscn" id="1_ksbbh"]
 [ext_resource type="PackedScene" uid="uid://dxg1cx6w8moqv" path="res://_Content/_Scenes/_Prefabs/Weapons/MeleeWeapon.tscn" id="2_oxx1p"]
+[ext_resource type="Texture2D" uid="uid://bc230321nqto5" path="res://icon.svg" id="3_oxx1p"]
 
 [node name="BaseUnit" unique_id=481801141 instance=ExtResource("1_ksbbh")]
 _moneyDropped = Vector4i(6, 4, 0, 0)
 _hpDeducted = 2
-_moneyDeducted = Vector4i(0, 0, 0, 0)
 _moveSpeed = 50.0
 _hpMax = 600
 _startingEffects = Array[Object]([])
@@ -16,8 +16,9 @@ _radius = 24.0
 
 [node name="WeaponComponent" parent="." index="0" unique_id=2120452932 instance=ExtResource("2_oxx1p")]
 
-[node name="MainSprite" parent="." index="2" unique_id=701942347]
+[node name="MainSprite" parent="." index="2" unique_id=597948513]
 scale = Vector2(1, 1)
+texture = ExtResource("3_oxx1p")
 
 [node name="HealthBar" parent="." index="6" unique_id=640038315]
 offset_left = -24.0

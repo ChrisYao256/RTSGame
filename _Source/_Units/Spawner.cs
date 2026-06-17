@@ -31,6 +31,16 @@ public partial class Spawner : TowerUnit
 		base._Ready();
 		_tdManager = GetTree().CurrentScene.GetNode<TDManager>("TdManager");
 		_spawnArea = GetNode<Area2D>("AttackArea");
+
+		if (_data._units.Count > 0)
+		{
+			Unit unit = UnitManager.GetUnit(_data._units[0]);
+			Texture2D icon = unit.GetIconTexture();
+			Sprite2D sprite = new();
+			sprite.Texture = icon;
+			Utils.ScaleVisualToRadius(sprite, _radius / 2f);
+			AddChild(sprite);
+		}
 	}
 
 	public override void DisplayAttackRange()

@@ -6,10 +6,14 @@
 
 [node name="BaseUnit" unique_id=481801141 instance=ExtResource("1_hdosh")]
 script = ExtResource("2_l4a7x")
-_moneyDropped = 0
+_moneyDropped = Vector4i(0, 0, 0, 0)
 _floatingTextScene = ExtResource("3_l4a7x")
 _hpDeducted = 1
-_moneyDeducted = 1
+_moneyDeducted = Vector4i(0, 0, 0, 0)
+
+[node name="HealthBar" parent="." index="5" unique_id=640038315]
+offset_right = 48.0
+offset_bottom = 48.0
 
 [node name="AidArea" parent="." index="7" unique_id=818912131]
 visible = false

@@ -311,7 +311,6 @@ public partial class TowerUnit : StationaryUnit
 		trigger.AddThemeStyleboxOverride("hover", btnStyle);
 		trigger.AddThemeStyleboxOverride("pressed", btnStyle);
 
-		// 2. Create the Popup Box (PanelContainer for the background)
 		PanelContainer popup = new PanelContainer();
 		popup.MouseFilter = Control.MouseFilterEnum.Ignore;
 		popup.ZIndex = 100;
@@ -319,7 +318,7 @@ public partial class TowerUnit : StationaryUnit
 		popup.Visible = false;
 
 		HBoxContainer popupH = new();
-		
+
 		if (_towerType == TowerType.Defense)
 		{
 			popupH.AddChild(MakeUnitInfoContainer()["BasicInfo"]);
@@ -330,7 +329,6 @@ public partial class TowerUnit : StationaryUnit
 			popupH.AddChild(MakeUnitInfoContainer()["MoneyInfo"]);
 			popupH.AddChild(MakeUnitInfoContainer()["SpawnedUnitInfo"]);
 		}
-
 		popup.AddChild(popupH);
 		trigger._popupBox = popup;
 

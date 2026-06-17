@@ -7,15 +7,23 @@ _moneyDropped = Vector4i(25, 0, 0, 0)
 _hpDeducted = 20
 _moneyDeducted = Vector4i(0, 0, 0, 0)
 _moveSpeed = 50.0
-_hpMax = 2000
-_armor = 3
+_hpMax = 2500
 _startingEffects = Array[Object]([])
 _internalName = "MegaSlime"
 _name = "MegaSlime"
 _radius = 40.0
 
 [node name="HealthBar" parent="." index="5" unique_id=640038315]
+texture_filter = 0
 offset_left = -24.0
 offset_top = -32.0
 offset_right = 24.0
 offset_bottom = -20.0
+stretch_margin_left = 0
+stretch_margin_top = 0
+stretch_margin_right = 0
+stretch_margin_bottom = 0
+texture_over = null
+
+[node name="AidAreaCollision" parent="AidArea" parent_id_path=PackedInt32Array(818912131) index="0" unique_id=1883932864]
+texture_filter = 0

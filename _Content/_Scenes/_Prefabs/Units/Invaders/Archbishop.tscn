@@ -2,6 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://bqn4h6d52i52" path="res://_Content/_Scenes/_Prefabs/Units/BaseInvaderUnit.tscn" id="1_sdwyq"]
 [ext_resource type="Script" uid="uid://bwnw1f3ti2dgi" path="res://_Source/Effects/SelfHealing/SelfHealingResource.cs" id="2_fief7"]
+[ext_resource type="Texture2D" uid="uid://bc230321nqto5" path="res://icon.svg" id="3_sdwyq"]
 
 [sub_resource type="Resource" id="Resource_sdwyq"]
 script = ExtResource("2_fief7")
@@ -11,7 +12,6 @@ metadata/_custom_type_script = "uid://bwnw1f3ti2dgi"
 [node name="BaseUnit" unique_id=481801141 instance=ExtResource("1_sdwyq")]
 _moneyDropped = Vector4i(50, 0, 0, 0)
 _hpDeducted = 20
-_moneyDeducted = Vector4i(0, 0, 0, 0)
 _moveSpeed = 60.0
 _hpMax = 4000
 _armor = 2
@@ -19,6 +19,9 @@ _startingEffects = Array[Object]([SubResource("Resource_sdwyq")])
 _internalName = "Archbishop"
 _name = "Archbishop"
 _radius = 32.0
+
+[node name="MainSprite" parent="." index="1" unique_id=597948513]
+texture = ExtResource("3_sdwyq")
 
 [node name="HealthBar" parent="." index="5" unique_id=640038315]
 offset_left = -24.0

@@ -57,7 +57,7 @@ public partial class Unit : CharacterBody2D
 	public float _radius = 100f;
 
 	[Export]
-	public float _baseHealthBarWidth = 24f;
+	public float _baseHealthBarWidth = 48f;
 	[Export]
 	public float _baseHealthBarHeight = 12f;
 
@@ -178,6 +178,11 @@ public partial class Unit : CharacterBody2D
 	{
 		Sprite2D sprite = GetNode<Sprite2D>("MainSprite");
 		Utils.ScaleVisualToRadius(sprite, _radius);
+		if (HasNode("AnimatedSprite2D") )
+		{
+			AnimatedSprite2D animatedSprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
+			Utils.ScaleVisualToRadius(animatedSprite, _radius);
+		}
 		CollisionShape2D collision = GetNode<CollisionShape2D>("CollisionShape2D");
 		CircleShape2D collisionCircle = new CircleShape2D();
 		collisionCircle.Radius = _radius;
@@ -311,9 +316,9 @@ public partial class Unit : CharacterBody2D
 		_healthBar = GetNode<TextureProgressBar>("HealthBar");
 		_hp = GetHpMax();
 		_healthBar.MaxValue = GetHpMax();
-		float length = _baseHealthBarWidth + Math.Min(2 * _baseHealthBarWidth, 5f * Mathf.Log(_hp + 1));
+		float length = Math.Max(_baseHealthBarWidth, 13f * (float)Math.Pow(_hp, 1.0 / 4.0));
 		_healthBar.Size = new Vector2(length, _baseHealthBarHeight);
-		_healthBar.Position = new Vector2(-length / 2, -48f);
+		_healthBar.Position = new Vector2(-length / 2, -24f);
 
 		_shieldBar = GetNode<TextureProgressBar>("ShieldBar");
 		_shieldBar.MaxValue = GetHpMax();
@@ -1189,7 +1194,7 @@ public partial class Unit : CharacterBody2D
 
 		// This blends the two colors based on the health percentage
 		//_healthBar.Modulate = criticalColor.Lerp(healthyColor, healthPercent);
-		_healthBar.Modulate = healthyColor;
+		_healthBar.TintProgress = healthyColor;
 
 		if (_shield > 0)
 		{
@@ -1284,6 +1289,13 @@ public partial class Unit : CharacterBody2D
 
 	public virtual Texture2D GetIconTexture()
 	{
-		return GetNode<Sprite2D>("MainSprite").Texture;
+		if (HasNode("AnimatedSprite2D"))
+		{
+			return GetNode<AnimatedSprite2D>("AnimatedSprite2D").SpriteFrames.GetFrameTexture("default", 0);
+		}
+		else
+		{
+			return GetNode<Sprite2D>("MainSprite").Texture;
+		}
 	}
 }
