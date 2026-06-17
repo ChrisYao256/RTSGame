@@ -1,6 +1,5 @@
 using Godot;
 using Godot.Collections;
-using Godot.NativeInterop;
 using RTSGame.Source;
 using System;
 using System.Collections.Generic;
@@ -96,7 +95,7 @@ public partial class TowerUnit : StationaryUnit
 	public bool _hasThirdUpgrade = false;
 
 	public bool _unlockedFourthUpgrade = true;
-	public bool _hasFourthUpgrade = false;
+	public Array<bool> _hasFourthUpgrade = [false, false];
 
 	private float _iconSize = TDManager.TileSize / 4f;
 
@@ -265,7 +264,7 @@ public partial class TowerUnit : StationaryUnit
 
 	public void UpgradeFourthA()
 	{
-		_hasFourthUpgrade = true;
+		_hasFourthUpgrade[0] = true;
 		foreach (var effect in _fourthUpgradeA)
 		{
 			AddEffect(effect);
@@ -274,7 +273,7 @@ public partial class TowerUnit : StationaryUnit
 
 	public void UpgradeFourthB()
 	{
-		_hasFourthUpgrade = true;
+		_hasFourthUpgrade[1] = true;
 		foreach (var effect in _fourthUpgradeB)
 		{
 			AddEffect(effect);
@@ -413,7 +412,7 @@ public partial class TowerUnit : StationaryUnit
 		if (_weapon != null)
 		{
 			PanelContainer attackPriority = new();
-			attackPriority.CustomMinimumSize = new(100, 0);
+			attackPriority.CustomMinimumSize = new(200, 0);
 			VBoxContainer attackPriorityV = new VBoxContainer();
 			attackPriorityV.Name = "VBoxContainer";
 			attackPriorityV.Alignment = BoxContainer.AlignmentMode.Center;
@@ -554,7 +553,7 @@ public partial class TowerUnit : StationaryUnit
 			}
 			
 		}
-		else if (!_hasFourthUpgrade && _unlockedFourthUpgrade)
+		else if (!_hasFourthUpgrade[0] && !_hasFourthUpgrade[1] && _unlockedFourthUpgrade)
 		{
 			if (_fourthUpgradeA is not null && _fourthUpgradeA.Count != 0)
 			{
@@ -718,6 +717,7 @@ public partial class TowerUnit : StationaryUnit
 				{
 					VBoxContainer upgrade = new VBoxContainer();
 					RichTextLabel cost = new();
+					cost.HorizontalAlignment = HorizontalAlignment.Center;
 					cost.FitContent = true;
 					cost.BbcodeEnabled = true;
 					cost.Text = Utils.MakeMoneyText(_firstUpgradeCost);
@@ -747,6 +747,7 @@ public partial class TowerUnit : StationaryUnit
 				{
 					VBoxContainer upgrade = new VBoxContainer();
 					RichTextLabel cost = new();
+					cost.HorizontalAlignment = HorizontalAlignment.Center;
 					cost.FitContent = true;
 					cost.BbcodeEnabled = true;
 					cost.Text = Utils.MakeMoneyText(_secondUpgradeCost);
@@ -777,6 +778,7 @@ public partial class TowerUnit : StationaryUnit
 				{
 					VBoxContainer upgrade = new VBoxContainer();
 					RichTextLabel cost = new();
+					cost.HorizontalAlignment = HorizontalAlignment.Center;
 					cost.FitContent = true;
 					cost.BbcodeEnabled = true;
 					cost.Text = Utils.MakeMoneyText(_thirdUpgradeCost);
@@ -802,12 +804,13 @@ public partial class TowerUnit : StationaryUnit
 				}
 
 			}
-			else if (!_hasFourthUpgrade && _unlockedFourthUpgrade)
+			else if (!_hasFourthUpgrade[0] && !_hasFourthUpgrade[1] && _unlockedFourthUpgrade)
 			{
 				if (_fourthUpgradeA is not null && _fourthUpgradeA.Count != 0)
 				{
 					VBoxContainer upgrade = new VBoxContainer();
 					RichTextLabel cost = new();
+					cost.HorizontalAlignment = HorizontalAlignment.Center;
 					cost.FitContent = true;
 					cost.BbcodeEnabled = true;
 					cost.Text = Utils.MakeMoneyText(_fourthUpgradeACost);
@@ -841,6 +844,7 @@ public partial class TowerUnit : StationaryUnit
 				{
 					VBoxContainer upgrade = new VBoxContainer();
 					RichTextLabel cost = new();
+					cost.HorizontalAlignment = HorizontalAlignment.Center;
 					cost.FitContent = true;
 					cost.BbcodeEnabled = true;
 					cost.Text = Utils.MakeMoneyText(_fourthUpgradeBCost);
@@ -872,28 +876,13 @@ public partial class TowerUnit : StationaryUnit
 				}
 			}
 		}
+
+		_tdManager._towerManager.UpdateIncomeDisplay();
 	}
 
 	public string GetDescription()
 	{
 		return _description;
-	}
-
-	public string GetTooltipDescription()
-	{
-		string fullDesc = _description + "\n";
-		if (_weapon != null)
-		{
-			fullDesc += "Weapon Damage: " + _weapon.GetDamage().ToString() + "\n";
-			fullDesc += "Weapon Cooldown: " + _weapon.GetCooldown().ToString("F2") + "\n";
-			fullDesc += "DPS: " + _weapon.GetDPS().ToString("F0") + "\n";
-			fullDesc += "Range: " + _weapon.GetRange().ToString() + "\n";
-		}
-		if (GetIncome() != new Vector4I(0,0,0,0))
-		{
-			fullDesc += "Maximum Income: " + Utils.MakeMoneyText(GetIncome()) + "\n";
-		}
-		return fullDesc;
 	}
 
 	public override Texture2D GetIconTexture()
@@ -938,6 +927,14 @@ public partial class TowerUnit : StationaryUnit
 		if (_hasThirdUpgrade)
 		{
 			totalCost += _thirdUpgradeCost;
+		}
+		if (_hasFourthUpgrade[0])
+		{
+			totalCost += _fourthUpgradeACost;
+		}
+		if (_hasFourthUpgrade[1])
+		{
+			totalCost += _fourthUpgradeBCost;
 		}
 		return totalCost;
 	}

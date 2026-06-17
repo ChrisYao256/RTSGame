@@ -59,7 +59,7 @@ public partial class Unit : CharacterBody2D
 	[Export]
 	public float _baseHealthBarWidth = 48f;
 	[Export]
-	public float _baseHealthBarHeight = 12f;
+	public float _baseHealthBarHeight = 14f;
 
 	[Export]
 	public int DebugTeamId
@@ -313,10 +313,10 @@ public partial class Unit : CharacterBody2D
 
 	protected void SetHealthBar()
 	{
-		_healthBar = GetNode<TextureProgressBar>("HealthBar");
 		_hp = GetHpMax();
+		_healthBar = GetNode<TextureProgressBar>("HealthBar");
 		_healthBar.MaxValue = GetHpMax();
-		float length = Math.Max(_baseHealthBarWidth, 13f * (float)Math.Pow(_hp, 1.0 / 4.0));
+		float length = Math.Max(_baseHealthBarWidth, 8.5f * (float)Math.Pow(_hp, 1.0 / 3.0));
 		_healthBar.Size = new Vector2(length, _baseHealthBarHeight);
 		_healthBar.Position = new Vector2(-length / 2, -24f);
 
@@ -324,7 +324,7 @@ public partial class Unit : CharacterBody2D
 		_shieldBar.MaxValue = GetHpMax();
 		_shieldBar.Modulate = ThemePalette.Blue;
 		_shieldBar.Size = new Vector2(length, _baseHealthBarHeight);
-		_shieldBar.Position = new Vector2(-length / 2, -48f - _baseHealthBarHeight);
+		_shieldBar.Position = new Vector2(-length / 2, -24f - _baseHealthBarHeight);
 		UpdateHealthBar(_hp, GetHpMax(), _shield);
 
 		
@@ -375,6 +375,14 @@ public partial class Unit : CharacterBody2D
 
 		if (this is not TowerUnit)
 		{
+			if (_shield > 0)
+			{
+				Label shieldLabel = new();
+				shieldLabel.Text = "Shield: " + _shield.ToString() + "/" + GetHpMax().ToString();
+				shieldLabel.Name = "ShieldLabel";
+				basicInfoV.AddChild(shieldLabel);
+			}
+
 			Label hpLabel = new();
 			hpLabel.Text = "Hp: " + _hp.ToString() + "/" + GetHpMax().ToString();
 			hpLabel.Name = "HpLabel";
@@ -398,7 +406,7 @@ public partial class Unit : CharacterBody2D
 			basicInfoV.AddChild(moneyDropLabel);
 		}
 
-		if (this is TowerUnit tower && tower._towerType == TowerUnit.TowerType.Defense)
+		if (this is TowerUnit tower)
 		{
 			RichTextLabel descriptionLabel = new();
 			descriptionLabel.Text = tower.GetDescription();
@@ -494,7 +502,32 @@ public partial class Unit : CharacterBody2D
 			Label hpLabel = basicInfoV.GetNode<Label>("HpLabel");
 			hpLabel.Text = "Hp: " + _hp.ToString() + "/" + GetHpMax().ToString();
 
-			Label speedLabel = basicInfoV.GetNode<Label>("SpeedLabel");
+			if (_shield > 0)
+			{
+				if (basicInfoV.HasNode("ShieldLabel"))
+				{
+					Label shieldLabel = basicInfoV.GetNode<Label>("ShieldLabel");
+					shieldLabel.Text = "Shield: " + _shield.ToString() + "/" + GetHpMax().ToString();
+				}
+				else
+				{
+					Label shieldLabel = new();
+					shieldLabel.Text = "Shield: " + _shield.ToString() + "/" + GetHpMax().ToString();
+					shieldLabel.Name = "ShieldLabel";
+					basicInfoV.AddChild(shieldLabel);
+					basicInfoV.MoveChild(shieldLabel, 1);
+				}
+			}
+			else
+			{
+				if (basicInfoV.HasNode("ShieldLabel"))
+				{
+					Label shieldLabel = basicInfoV.GetNode<Label>("ShieldLabel");
+					shieldLabel.QueueFree();
+				}
+			}
+
+				Label speedLabel = basicInfoV.GetNode<Label>("SpeedLabel");
 			speedLabel.Text = "Move speed: " + GetSpeed().ToString();
 		}
 

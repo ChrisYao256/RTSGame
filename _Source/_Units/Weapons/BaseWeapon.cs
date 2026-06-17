@@ -88,6 +88,11 @@ public abstract partial class BaseWeapon : Node2D
 		VBoxContainer infoV = new();
 		infoV.Name = "VBoxContainer";
 
+		Label dpsLabel = new();
+		dpsLabel.Text = "DPS: " + GetDPS().ToString("F0");
+		dpsLabel.Name = "DPSLabel";
+		infoV.AddChild(dpsLabel);
+
 		Label damageLabel = new();
 		damageLabel.Text = "Weapon Damage: " + GetDamage().ToString();
 		damageLabel.Name = "DamageLabel";
@@ -97,11 +102,6 @@ public abstract partial class BaseWeapon : Node2D
 		cooldownLabel.Text = "Weapon Cooldown: " + GetCooldown().ToString("F2");
 		cooldownLabel.Name = "CooldownLabel";
 		infoV.AddChild(cooldownLabel);
-
-		Label dpsLabel = new();
-		dpsLabel.Text = "DPS: " + GetDPS().ToString("F0");
-		dpsLabel.Name = "DPSLabel";
-		infoV.AddChild(dpsLabel);
 
 		Label rangeLabel = new();
 		rangeLabel.Text = "Range: " + GetRange().ToString();

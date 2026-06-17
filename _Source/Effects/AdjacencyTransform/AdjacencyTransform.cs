@@ -73,7 +73,7 @@ public partial class AdjacencyTransform : Effect
 				parentTower._tdManager._towerManager.RemoveTower(position);
 			}
 		}
-		parentTower._tdManager._towerManager.TransformTower(parentTower._gridLocation, _resource._transformedUnit);
+		parentTower._tdManager._towerManager.TransformTower(parentTower._gridLocation, _resource._transformedUnit, true);
 	}
 
 	protected override void OnPlacedTower(TowerUnit tower)

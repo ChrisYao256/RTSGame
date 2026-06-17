@@ -4,7 +4,6 @@
 [ext_resource type="Texture2D" uid="uid://1ya6poaby1bi" path="res://_Assets/GunTurret.png" id="2_7kxbi"]
 [ext_resource type="Script" uid="uid://c7ye5bgfhla5e" path="res://_Source/Effects/StatsIncrease/StatsIncreaseResource.cs" id="3_dbttg"]
 [ext_resource type="Script" uid="uid://be80c57wd06d0" path="res://_Source/Effects/ImmediateTransform/ImmediateTransformResource.cs" id="4_7kxbi"]
-[ext_resource type="Script" uid="uid://dtpcxn7d2dqcy" path="res://_Source/Effects/EffectResource.cs" id="4_ibxbu"]
 [ext_resource type="Texture2D" uid="uid://4s8818rs7ags" path="res://_Assets/DualGunTurretIdle.png" id="5_3pddp"]
 [ext_resource type="Texture2D" uid="uid://bdyjhvsjs67wx" path="res://_Assets/YellowBase.png" id="6_7kxbi"]
 [ext_resource type="Script" uid="uid://bwav65cg5at1c" path="res://_Source/_Units/Weapons/ProjectileWeapon.cs" id="6_n37es"]
@@ -156,8 +155,7 @@ animations = [{
 [node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_e5a7y")]
 _cost = Vector4i(20, 0, 0, 0)
 _iconTexture = ExtResource("2_7kxbi")
-_towerType = 0
-_description = "Cost-efficient turret that shoots single-target projectiles"
+_description = "Simple turret that shoots bullets at enemies."
 _firstUpgrade = Array[Object]([SubResource("Resource_cmo3r")])
 _firstUpgradeCost = Vector4i(12, 0, 0, 0)
 _secondUpgrade = Array[Object]([SubResource("Resource_oh15a")])
@@ -170,7 +168,6 @@ _fourthUpgradeACost = Vector4i(150, 0, 0, 0)
 _fourthUpgradeB = Array[Object]([SubResource("Resource_7kxbi")])
 _fourthUpgradeBTexture = ExtResource("2_7kxbi")
 _fourthUpgradeBCost = Vector4i(125, 75, 0, 0)
-_transformEffects = Array[ExtResource("4_ibxbu")]([])
 _hpMax = 1
 _internalName = "GunTurret"
 _name = "Gun Turret"

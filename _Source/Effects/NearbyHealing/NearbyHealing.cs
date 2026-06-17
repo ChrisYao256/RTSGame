@@ -25,10 +25,20 @@ public partial class NearbyHealing : Effect
 		OnCreation();
 	}
 
+	public void UpdateResource(NearbyHealingResource newResource)
+	{
+		_resource = newResource;
+		if (HasNode("Timer"))
+		{
+			GetNode("Timer").Free();
+		}
+		OnCreation();
+	}
+
 	protected override void OnCreation()
 	{
-
 		_timer = new Timer();
+		_timer.Name = "Timer";
 		AddChild(_timer);
 		_timer.WaitTime = _resource._healInterval;
 		_timer.OneShot = false;

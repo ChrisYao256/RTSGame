@@ -4,7 +4,6 @@
 [ext_resource type="Texture2D" uid="uid://1ya6poaby1bi" path="res://_Assets/GunTurret.png" id="2_we67n"]
 [ext_resource type="Script" uid="uid://c7ye5bgfhla5e" path="res://_Source/Effects/StatsIncrease/StatsIncreaseResource.cs" id="3_n8q5b"]
 [ext_resource type="Script" uid="uid://ltp3a1v0hhal" path="res://_Source/Effects/ExplosionOnHit/ExplosionOnHitBuffResource.cs" id="4_n8q5b"]
-[ext_resource type="Script" uid="uid://dtpcxn7d2dqcy" path="res://_Source/Effects/EffectResource.cs" id="5_nb5yh"]
 [ext_resource type="Script" uid="uid://bonjif38a25r3" path="res://_Source/Effects/ExplosionOnHit/ExplosionOnHitResource.cs" id="5_prthp"]
 [ext_resource type="PackedScene" uid="uid://bjudui5jhrtku" path="res://_Content/_Scenes/_Prefabs/Effects/ExplosionVisualEffect.tscn" id="5_we67n"]
 [ext_resource type="Texture2D" uid="uid://bdyjhvsjs67wx" path="res://_Assets/YellowBase.png" id="6_714xp"]
@@ -165,23 +164,13 @@ animations = [{
 }]
 
 [node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_prthp")]
-_cost = Vector4i(0, 0, 0, 0)
 _iconTexture = ExtResource("2_we67n")
-_towerType = 0
-_description = "Cost-efficient turret that shoots single-target projectiles"
 _firstUpgrade = Array[Object]([SubResource("Resource_cmo3r"), SubResource("Resource_k5r0l")])
 _firstUpgradeCost = Vector4i(60, 30, 0, 0)
 _secondUpgrade = Array[Object]([SubResource("Resource_oh15a"), SubResource("Resource_n8q5b")])
 _secondUpgradeCost = Vector4i(100, 60, 0, 0)
 _thirdUpgrade = Array[Object]([SubResource("Resource_yglny"), SubResource("Resource_nb5yh")])
 _thirdUpgradeCost = Vector4i(200, 100, 0, 0)
-_fourthUpgradeA = null
-_fourthUpgradeATexture = null
-_fourthUpgradeACost = Vector4i(0, 0, 0, 0)
-_fourthUpgradeB = null
-_fourthUpgradeBTexture = null
-_fourthUpgradeBCost = Vector4i(0, 0, 0, 0)
-_transformEffects = Array[ExtResource("5_nb5yh")]([])
 _hpMax = 1
 _startingEffects = Array[Object]([SubResource("Resource_we67n")])
 _internalName = "ExplosiveGunTurret"

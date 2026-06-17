@@ -4,10 +4,7 @@
 [ext_resource type="Script" uid="uid://b4jva1l23o6su" path="res://_Source/_Units/Spawner.cs" id="2_3vt3u"]
 [ext_resource type="Script" uid="uid://cvroohkeaovqw" path="res://_Source/_Units/SpawnerDataResource.cs" id="3_etttv"]
 [ext_resource type="Texture2D" uid="uid://iocgjnp7i8td" path="res://_Assets/Portal.png" id="4_hxyu6"]
-[ext_resource type="Script" uid="uid://of8d3f3k7s7j" path="res://_Source/Effects/NearbyHealing/NearbyHealingResource.cs" id="5_e58j6"]
 [ext_resource type="Script" uid="uid://dj1iuetxsjca2" path="res://_Source/Effects/SpawnerStatsIncrease/SpawnerStatsIncreaseResource.cs" id="6_c637a"]
-[ext_resource type="Script" uid="uid://bwnw1f3ti2dgi" path="res://_Source/Effects/SelfHealing/SelfHealingResource.cs" id="7_31608"]
-[ext_resource type="Script" uid="uid://c4pph75db2q3s" path="res://_Source/Effects/NearbySpawnerStatsIncrease/NearbySpawnerStatsIncreaseResource.cs" id="8_bwpgn"]
 [ext_resource type="Script" uid="uid://dtpcxn7d2dqcy" path="res://_Source/Effects/EffectResource.cs" id="9_ijkv7"]
 [ext_resource type="Script" uid="uid://fdug3yybl4s5" path="res://_Source/Effects/AdjacencyTransform/AdjacencyTransformResource.cs" id="10_lnwpx"]
 
@@ -20,52 +17,8 @@ metadata/_custom_type_script = "uid://cvroohkeaovqw"
 
 [sub_resource type="Resource" id="Resource_j3hqu"]
 script = ExtResource("6_c637a")
-_hpBuff = 0.5
-_moneyBuff = 3
 _startingEffects = null
 metadata/_custom_type_script = "uid://dj1iuetxsjca2"
-
-[sub_resource type="Resource" id="Resource_cotg0"]
-script = ExtResource("5_e58j6")
-_healAmount = 25
-_healInterval = 2.0
-_radius = 200.0
-_effectName = "Stronger healing"
-metadata/_custom_type_script = "uid://of8d3f3k7s7j"
-
-[sub_resource type="Resource" id="Resource_7mgh1"]
-script = ExtResource("6_c637a")
-_moneyBuff = 3
-_startingEffects = Array[Object]([SubResource("Resource_cotg0")])
-_effectName = "+$3, Stronger heal"
-metadata/_custom_type_script = "uid://dj1iuetxsjca2"
-
-[sub_resource type="Resource" id="Resource_dolah"]
-script = ExtResource("6_c637a")
-_hpBuff = 0.5
-_moneyBuff = 3
-_startingEffects = null
-_effectName = "+$3, HpBuff"
-metadata/_custom_type_script = "uid://dj1iuetxsjca2"
-
-[sub_resource type="Resource" id="Resource_eh4s5"]
-script = ExtResource("7_31608")
-_healAmount = 1
-metadata/_custom_type_script = "uid://bwnw1f3ti2dgi"
-
-[sub_resource type="Resource" id="Resource_q6qux"]
-script = ExtResource("6_c637a")
-_moneyBuff = 1
-_startingEffects = Array[Object]([SubResource("Resource_eh4s5")])
-_effectName = "Blessed"
-metadata/_custom_type_script = "uid://dj1iuetxsjca2"
-
-[sub_resource type="Resource" id="Resource_i7vgs"]
-script = ExtResource("8_bwpgn")
-_buffResource = SubResource("Resource_q6qux")
-_area = Array[Vector2i]([Vector2i(1, 1), Vector2i(1, 0), Vector2i(1, -1), Vector2i(0, 1), Vector2i(0, 0), Vector2i(0, -1), Vector2i(-1, 1), Vector2i(-1, 0), Vector2i(-1, -1)])
-_effectName = "Units from nearby towers heal themselves, but drop $1 more. "
-metadata/_custom_type_script = "uid://c4pph75db2q3s"
 
 [sub_resource type="Resource" id="Resource_fjsrn"]
 script = ExtResource("10_lnwpx")
@@ -78,24 +31,11 @@ metadata/_custom_type_script = "uid://fdug3yybl4s5"
 [node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_j3hqu")]
 script = ExtResource("2_3vt3u")
 _data = SubResource("Resource_ogl47")
-_spawnJitterRadius = 15.0
+_spawnInterval = 1.0
 _isEnemy = true
-_cost = 12
 _iconTexture = ExtResource("4_hxyu6")
 _towerType = 2
-_description = "Spawns 1 yeti every turn. Yetis slows nearby towers"
 _firstUpgrade = Array[Object]([SubResource("Resource_j3hqu")])
-_firstUpgradeCost = 10
-_firstUpgradeName = "First Upgrade"
-_secondUpgradeA = SubResource("Resource_7mgh1")
-_secondUpgradeACost = 3
-_secondUpgradeB = SubResource("Resource_dolah")
-_secondUpgradeBCost = 3
-_secondUpgradeC = SubResource("Resource_i7vgs")
-_secondUpgradeCCost = 5
-_thirdUpgrade = null
-_thirdUpgradeCost = 0
-_thirdUpgradeName = "Third Upgrade"
 _transformEffects = Array[ExtResource("9_ijkv7")]([SubResource("Resource_fjsrn")])
 LeashDistance = 200.0
 _startingEffects = Array[Object]([])

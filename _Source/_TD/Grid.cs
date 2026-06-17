@@ -3,6 +3,7 @@ using RTSGame.Units;
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace RTSGame.Source;
 
@@ -117,6 +118,30 @@ public partial class Grid : TileMapLayer
 		foreach (Vector2I cell in path)
 		{
 			waypoints.Add(ToGlobal(MapToLocal(cell)));
+		}
+		return waypoints;
+	}
+
+	public List<Vector2> GetPath(Vector2I startMap, Vector2 endWorld)
+	{
+		TileData data = GetCellTileData(startMap);
+		bool startedFromPath = (bool)data.GetCustomData("Path");
+		if (!startedFromPath)
+		{
+			_astar.SetPointSolid(startMap, false);
+		}
+		Vector2I endMap = LocalToMap(ToLocal(endWorld));
+
+		// This returns a list of world positions for the enemy to follow
+		Godot.Collections.Array<Vector2I> path = _astar.GetIdPath(startMap, endMap);
+		List<Vector2> waypoints = [];
+		foreach (Vector2I cell in path)
+		{
+			waypoints.Add(ToGlobal(MapToLocal(cell)));
+		}
+		if (!startedFromPath)
+		{
+			_astar.SetPointSolid(startMap, true);
 		}
 		return waypoints;
 	}

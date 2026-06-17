@@ -269,7 +269,7 @@ animations = [{
 [node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_mrw2a")]
 _cost = Vector4i(20, 0, 0, 10)
 _iconTexture = ExtResource("2_mrw2a")
-_description = "Shoots high damage laser that ignores armor"
+_description = "Shoots high damage laser. Requires time to charge up."
 _firstUpgrade = Array[Object]([SubResource("Resource_ha87b")])
 _firstUpgradeCost = Vector4i(15, 0, 0, 7)
 _secondUpgrade = Array[Object]([SubResource("Resource_h8tlq")])

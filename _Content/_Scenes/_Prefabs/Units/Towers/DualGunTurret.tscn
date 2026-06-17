@@ -2,7 +2,6 @@
 
 [ext_resource type="PackedScene" uid="uid://yhbw0b164ui2" path="res://_Content/_Scenes/_Prefabs/Units/BaseTower.tscn" id="1_ief3i"]
 [ext_resource type="Script" uid="uid://c7ye5bgfhla5e" path="res://_Source/Effects/StatsIncrease/StatsIncreaseResource.cs" id="3_sssbq"]
-[ext_resource type="Script" uid="uid://dtpcxn7d2dqcy" path="res://_Source/Effects/EffectResource.cs" id="5_owq5e"]
 [ext_resource type="Texture2D" uid="uid://bdyjhvsjs67wx" path="res://_Assets/YellowBase.png" id="6_vw763"]
 [ext_resource type="Script" uid="uid://bva1xkjx08h5v" path="res://_Source/_Units/Weapons/TurretTurner.cs" id="7_hfhul"]
 [ext_resource type="Texture2D" uid="uid://b2drxuvsgsmdo" path="res://_Assets/DualGunTurretFire.png" id="8_ief3i"]
@@ -170,23 +169,13 @@ animations = [{
 }]
 
 [node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_ief3i")]
-_cost = Vector4i(0, 0, 0, 0)
 _iconTexture = ExtResource("8_vw763")
-_towerType = 0
-_description = "Cost-efficient turret that shoots single-target projectiles"
 _firstUpgrade = Array[Object]([SubResource("Resource_cmo3r")])
 _firstUpgradeCost = Vector4i(60, 0, 0, 0)
 _secondUpgrade = Array[Object]([SubResource("Resource_oh15a")])
 _secondUpgradeCost = Vector4i(120, 0, 0, 0)
 _thirdUpgrade = Array[Object]([SubResource("Resource_yglny")])
 _thirdUpgradeCost = Vector4i(250, 0, 0, 0)
-_fourthUpgradeA = null
-_fourthUpgradeATexture = null
-_fourthUpgradeACost = Vector4i(0, 0, 0, 0)
-_fourthUpgradeB = null
-_fourthUpgradeBTexture = null
-_fourthUpgradeBCost = Vector4i(0, 0, 0, 0)
-_transformEffects = Array[ExtResource("5_owq5e")]([])
 _hpMax = 1
 _internalName = "DualGunTurret"
 _name = "Sentry Turret"

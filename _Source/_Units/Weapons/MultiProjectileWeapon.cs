@@ -46,6 +46,10 @@ public partial class MultiProjectileWeapon : ProjectileWeapon
 	{
 		for (int i = 0; i < _hitCount; i++)
 		{
+			if (_attackTarget == null)
+			{
+				return;
+			}
 			if (i % 2 == 0 || _firePoint2 is null)
 			{
 				Projectile projectile = SpawnProjectile(_firePoint1.GlobalPosition);

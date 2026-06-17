@@ -200,7 +200,7 @@ public partial class TDTowerManager : Node2D
 	}
 
 	// for automatically placing tower
-	public void PlaceTower(Vector2I gridCoords, string towerName)
+	public TowerUnit PlaceTower(Vector2I gridCoords, string towerName)
 	{
 		Vector2 position = _grid.ToGlobal(_grid.MapToLocal(gridCoords));
 		TowerUnit newTower = (TowerUnit)_unitManager.SpawnUnit(position, 0, towerName, false, gridCoords);
@@ -222,6 +222,7 @@ public partial class TDTowerManager : Node2D
 		
 		newTower.EmitSignal(Unit.SignalName.Creation);
 		UpdateIncomeDisplay();
+		return newTower;
 	}
 
 	// for dragging tower from right panel to place
@@ -263,10 +264,13 @@ public partial class TDTowerManager : Node2D
 		tower.QueueFree();
 	}
 
-	public void TransformTower(Vector2I gridCoords, string newTower)
+	public void TransformTower(Vector2I gridCoords, string newTower, bool inheritTotalCost)
 	{
+		TowerUnit tower = _grid.GetTowerOnCell(gridCoords);
+		Vector4I oldCost = tower.GetTotalCost();
 		RemoveTower(gridCoords);
-		PlaceTower(gridCoords, newTower);
+		TowerUnit newTowerNode = PlaceTower(gridCoords, newTower);
+		newTowerNode._cost = oldCost;
 	}
 
 	public void UpdateIncomeDisplay()

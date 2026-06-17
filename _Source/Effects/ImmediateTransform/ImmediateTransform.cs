@@ -27,6 +27,6 @@ public partial class ImmediateTransform : Effect
 	protected void TransformTower()
 	{
 		TowerUnit parentTower = (TowerUnit)_parentUnit;
-		parentTower._tdManager._towerManager.TransformTower(parentTower._gridLocation, _resource._transformedUnit);
+		parentTower._tdManager._towerManager.TransformTower(parentTower._gridLocation, _resource._transformedUnit, true);
 	}
 }

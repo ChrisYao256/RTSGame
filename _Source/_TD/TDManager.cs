@@ -68,8 +68,8 @@ public partial class TDManager : Node
 		_towerManager.InitializeTowersPanel(_availTowerList, _unitManager, TowerUnit.TowerType.Defense);
 
 		_waveList = new System.Collections.Generic.Dictionary<int, List<(List<string>, float)>>{
-			{ 7, [(["MegaSlime"], 1f)]},
-			{ 15, [(["Archbishop"], 1f)]},
+			{ 6, [(["MegaSlime"], 1f)]},
+			{ 12, [(["Archbishop"], 1f)]},
 			{ 20, [(["BigArchbishop"], 1f)]},
 		};
 
@@ -152,7 +152,7 @@ public partial class TDManager : Node
 		SpendMoney(new Vector4I(cost, 0, 0, 0));
 		IncreaseSpawnerLimit(1);
 		cost = 10 * (int)Math.Pow(2, (double)(_spawnerLimit - _startingSpawnerLimit));
-		_spawnerLimitIncreaseButtonText.Text = "Increase Portal Limit: " + Utils.MakeMoneyText(new Vector4I(cost, 0,0,0));
+		_spawnerLimitIncreaseButtonText.Text = "Increase Portal Limit: \n" + Utils.MakeMoneyText(new Vector4I(cost, 0,0,0));
 	}
 
 	private void SpawnEnemyAtEntrance(string name)
@@ -172,6 +172,18 @@ public partial class TDManager : Node
 		Unit unit = _unitManager.SpawnUnit(position, 1, name, true);
 		GD.Print(name + " Spawned");
 		List<Vector2> waypoints = _grid.GetPath(position, _grid.GetExitLocation());
+		foreach (Vector2 waypoint in waypoints)
+		{
+			unit.AddCommand(new AttackMove(unit, waypoint));
+		}
+		unit.Connect(Unit.SignalName.Died, Callable.From<Unit>(OnUnitDied));
+		return (InvaderUnit)unit;
+	}
+
+	public InvaderUnit SpawnEnemyFromTower(string name, Vector2I gridPosition)
+	{
+		Unit unit = _unitManager.SpawnUnit(_grid.MapToGlobal(gridPosition), 1, name, true);
+		List<Vector2> waypoints = _grid.GetPath(gridPosition, _grid.GetExitLocation());
 		foreach (Vector2 waypoint in waypoints)
 		{
 			unit.AddCommand(new AttackMove(unit, waypoint));

@@ -11,20 +11,20 @@
 [sub_resource type="CircleShape2D" id="CircleShape2D_k5ggm"]
 radius = 20.0
 
-[sub_resource type="Gradient" id="Gradient_jwvwn"]
+[sub_resource type="Gradient" id="Gradient_02llj"]
 offsets = PackedFloat32Array(1)
 colors = PackedColorArray(0.4117647, 0.22352941, 0.19215687, 1)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_02llj"]
-gradient = SubResource("Gradient_jwvwn")
+gradient = SubResource("Gradient_02llj")
 fill_from = Vector2(0, 0.025641026)
 
-[sub_resource type="Gradient" id="Gradient_7tvxj"]
+[sub_resource type="Gradient" id="Gradient_md5sk"]
 offsets = PackedFloat32Array(0)
 colors = PackedColorArray(1, 1, 1, 0.9843137)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_ax2jd"]
-gradient = SubResource("Gradient_7tvxj")
+gradient = SubResource("Gradient_md5sk")
 width = 48
 height = 12
 
@@ -101,8 +101,20 @@ offset_top = -45.0
 offset_right = 24.0
 offset_bottom = -33.0
 nine_patch_stretch = true
+stretch_margin_left = 3
+stretch_margin_top = 3
+stretch_margin_right = 3
+stretch_margin_bottom = 3
 texture_under = SubResource("GradientTexture2D_ls3yt")
+texture_over = ExtResource("5_md5sk")
 texture_progress = SubResource("GradientTexture2D_ax2jd")
+
+[node name="StripeManager" type="Control" parent="ShieldBar" unique_id=117599454]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("5_02llj")
+StripeColor = Color(0, 0, 0, 1)
 
 [node name="AidArea" type="Area2D" parent="." unique_id=818912131]
 collision_layer = 0

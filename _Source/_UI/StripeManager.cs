@@ -8,11 +8,13 @@ public partial class StripeManager : Control
 	// How much HP does each vertical segment represent?
 	[Export] public float HpPerSmallStripe { get; set; } = 100.0f;
 
-	[Export] public float HpPerBigStripe { get; set; } = 1000.0f;
+	[Export] public float HpPerBigStripe { get; set; } = 500.0f;
 	[Export] public Color StripeColor { get; set; } = new Color(0, 0, 0, 0.4f); // Semi-transparent black
 	[Export] public float StripeWidth { get; set; } = 2.0f;
 
-	[Export] public float BigStripeWidth { get; set; } = 3.0f;
+	[Export] public float BigStripeWidth { get; set; } = 4.0f;
+
+	private float MinimumSmallIntervalWidth = 5;
 
 	public override void _Ready()
 	{
@@ -46,7 +48,7 @@ public partial class StripeManager : Control
 		float pixelsPerHp = barWidth / (float)maxHp;
 
 		// Don't draw small stripes if they are too dense
-		if (pixelsPerHp * HpPerSmallStripe > 5)
+		if (pixelsPerHp * HpPerSmallStripe > MinimumSmallIntervalWidth)
 		{
 			// Loop and draw each vertical line
 			for (int i = 1; i < totalStripes + 1; i++)
@@ -70,7 +72,7 @@ public partial class StripeManager : Control
 		if (totalBigStripes <= 0) return;
 
 		// Loop and draw each vertical line
-		for (int i = 1; i < totalBigStripes; i++)
+		for (int i = 1; i < totalBigStripes + 1; i++)
 		{
 			float hpMilestone = i * HpPerBigStripe;
 			float xPos = hpMilestone * pixelsPerHp;

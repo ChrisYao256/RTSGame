@@ -39,8 +39,8 @@ scale = Vector2(7.5, 7.5)
 tile_set = ExtResource("7_5ivv1")
 
 [node name="TdManager" parent="." unique_id=116729899 instance=ExtResource("3_v6k6q")]
-_availTowerList = Array[String](["GunTurret", "LaserTurret", "PiercingTower", "FlameTurret", "SlimeSpawner", "HoundSpawner", "PriestSpawner", "YetiSpawner", "SoldierSpawner", "Armory", "Mine", "Lab"])
-_startingMoney = Vector4i(100, 50, 0, 0)
+_availTowerList = Array[String](["GunTurret", "LaserTurret", "PiercingTower", "FlameTurret", "SlimeSpawner", "HoundSpawner", "PriestSpawner", "SoldierSpawner", "Armory", "Mine", "Lab"])
+_startingMoney = Vector4i(1000, 0, 0, 0)
 
 [node name="NavigationRegion2D" type="NavigationRegion2D" parent="." unique_id=1731619863]
 visible = false
@@ -92,12 +92,13 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 24
 
 [node name="Button" type="Button" parent="RightPanel/VBoxContainer/HBoxContainer" unique_id=1894540235]
+custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "
 "
 
-[node name="RichTextLabel" type="RichTextLabel" parent="RightPanel/VBoxContainer/HBoxContainer/Button" unique_id=2058868571]
+[node name="RichTextLabel" type="RichTextLabel" parent="RightPanel/VBoxContainer/HBoxContainer/Button" unique_id=1561365142]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 1
 anchors_preset = 8
@@ -118,11 +119,18 @@ theme_override_font_sizes/bold_italics_font_size = 24
 theme_override_font_sizes/italics_font_size = 24
 theme_override_font_sizes/mono_font_size = 234
 bbcode_enabled = true
-text = "Increase Portal Limit: $10
+text = "Increase Portal Limit: 
+$10
 "
+fit_content = true
 
 [node name="IncomeLabel" type="RichTextLabel" parent="RightPanel/VBoxContainer" unique_id=1319773152]
 layout_mode = 2
+theme_override_font_sizes/normal_font_size = 24
+theme_override_font_sizes/bold_font_size = 24
+theme_override_font_sizes/bold_italics_font_size = 24
+theme_override_font_sizes/italics_font_size = 24
+theme_override_font_sizes/mono_font_size = 24
 bbcode_enabled = true
 text = "Income: $0"
 fit_content = true

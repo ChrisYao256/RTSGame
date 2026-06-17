@@ -14,6 +14,7 @@ _radius = 200.0
 _healingVisualScene = ExtResource("2_3co78")
 _isShield = true
 _effectName = "Healing Aura"
+_displayType = 1
 metadata/_custom_type_script = "uid://of8d3f3k7s7j"
 
 [node name="BaseUnit" unique_id=481801141 instance=ExtResource("1_k3h8r")]

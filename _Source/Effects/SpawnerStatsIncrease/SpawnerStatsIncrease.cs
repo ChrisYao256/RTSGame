@@ -37,6 +37,7 @@ public partial class SpawnerStatsIncrease : Effect
 		parentSpawner.IncreaseSpawnerSpeedBuff(-_resource._speedBuff);
 		parentSpawner.IncreaseSpawnerArmorBuff(-_resource._armorBuff);
 		parentSpawner.IncreaseSpawnerMoneyBuff(-_resource._moneyBuff);
+		parentSpawner._data._startingEffects = [];
 		if (_resource._locations.Count > 0)
 		{
 			parentSpawner.ResetSpawnerArea();
@@ -54,6 +55,7 @@ public partial class SpawnerStatsIncrease : Effect
 		{
 			parentSpawner.UpdateSpawnerArea(_resource._locations);
 		}
+		parentSpawner.AddStartingEffect(_resource._startingEffects);
 		_parentUnit._effects.Add(_resource);
 	}
 

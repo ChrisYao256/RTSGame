@@ -14,12 +14,12 @@
 [sub_resource type="Resource" id="Resource_bpy14"]
 script = ExtResource("3_7mvqi")
 _damageIncrease = 28
-_pierceCount = 1
 metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 
 [sub_resource type="Resource" id="Resource_2kx6n"]
 script = ExtResource("3_7mvqi")
 _damageIncrease = 57
+_pierceCount = 1
 metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 
 [sub_resource type="Resource" id="Resource_7mvqi"]
@@ -201,21 +201,13 @@ animations = [{
 [node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_bpy14")]
 _cost = Vector4i(40, 0, 0, 0)
 _iconTexture = ExtResource("2_4kcl2")
-_towerType = 0
-_description = "Machine gun that pieces through multiple enemies"
+_description = "Shoots piercing projectiles that can damage multiple enemies on a line."
 _firstUpgrade = Array[Object]([SubResource("Resource_bpy14")])
 _firstUpgradeCost = Vector4i(25, 0, 0, 0)
 _secondUpgrade = Array[Object]([SubResource("Resource_2kx6n")])
 _secondUpgradeCost = Vector4i(50, 0, 0, 0)
 _thirdUpgrade = Array[Object]([SubResource("Resource_7mvqi")])
 _thirdUpgradeCost = Vector4i(90, 0, 0, 0)
-_fourthUpgradeA = null
-_fourthUpgradeATexture = null
-_fourthUpgradeACost = Vector4i(0, 0, 0, 0)
-_fourthUpgradeB = null
-_fourthUpgradeBTexture = null
-_fourthUpgradeBCost = Vector4i(0, 0, 0, 0)
-_transformEffects = Array[ExtResource("4_4kcl2")]([])
 LeashDistance = 200.0
 _startingEffects = Array[ExtResource("4_4kcl2")]([])
 _internalName = "PiercingTower"

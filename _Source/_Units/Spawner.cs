@@ -15,7 +15,7 @@ public partial class Spawner : TowerUnit
   public SpawnerDataResource _data;
 
 	[Export]
-	private double _spawnJitterRadius = 15;
+	private double _spawnInterval = 1f;
 
 	[Export]
 	private bool _isEnemy = true;
@@ -38,8 +38,13 @@ public partial class Spawner : TowerUnit
 			Texture2D icon = unit.GetIconTexture();
 			Sprite2D sprite = new();
 			sprite.Texture = icon;
-			Utils.ScaleVisualToRadius(sprite, _radius / 2f);
+			Utils.ScaleVisualToRadius(sprite, unit._radius);
 			AddChild(sprite);
+		}
+
+		if (_description == null || _description == "")
+		{
+			_description = "Enemies enter the battlefield through this portal each turn. Kill them to earn resources. ";
 		}
 	}
 
@@ -53,12 +58,13 @@ public partial class Spawner : TowerUnit
 		HideSpawnRange();
 	}
 
-	public void SpawnWave()
+	public async void SpawnWave()
 	{
 		foreach (string unit in _data._units)
 		{
 			List<Vector2I> validSpawnLocations = [];
-			foreach (Vector2I relativeMapPos in _data._locations)
+			Array<Vector2I> nearbyLocations = [new(1,1), new(1, 0), new(1, -1), new(0, 1), new(0, -1), new(-1, 1), new(-1, 0), new(-1, -1)];
+			foreach (Vector2I relativeMapPos in nearbyLocations)
 			{
 				TileData data = _grid.GetCellTileData(_gridLocation + relativeMapPos);
 				if (data != null && (bool)data.GetCustomData("Path"))
@@ -71,15 +77,9 @@ public partial class Spawner : TowerUnit
 				OnNoValidSpawn(unit);
 				return;
 			}
-			int random = GD.RandRange(0, validSpawnLocations.Count - 1);
-			Vector2I gridLocation = validSpawnLocations[random];
-			Vector2 position = _grid.MapToGlobal(gridLocation);
-			float dx = (float)GD.RandRange(-_spawnJitterRadius, _spawnJitterRadius);
-			float dy = (float)GD.RandRange(-_spawnJitterRadius, _spawnJitterRadius);
-			Vector2 jitter = new(dx, dy);
 			if (_isEnemy)
 			{
-				InvaderUnit invader = _tdManager.SpawnEnemyFromTower(unit, position + jitter);
+				InvaderUnit invader = _tdManager.SpawnEnemyFromTower(unit, _gridLocation);
 				invader.IncreaseHpMaxModifier(_data._hpBuff);
 				invader.IncreaseSpeedModifier(_data._speedBuff);
 				invader.IncreaseArmorModifier(_data._armorBuff);
@@ -88,17 +88,19 @@ public partial class Spawner : TowerUnit
 				{
 					invader.AddEffect(effect);
 				}
+				await ToSignal(GetTree().CreateTimer(_spawnInterval), SceneTreeTimer.SignalName.Timeout);
 			}
 			else
 			{
-				Unit ally = _tdManager.SpawnAllyFromTower(unit, position + jitter);
+				Unit ally = _tdManager.SpawnAllyFromTower(unit, GlobalPosition);
 			}
+
 		}
 	}
 
 	public void OnNoValidSpawn(string unit)
 	{
-		_tdManager._towerManager.TransformTower(_gridLocation, "DepoweredSpawner");
+		_tdManager._towerManager.TransformTower(_gridLocation, "DepoweredSpawner", false);
 		//_tdManager.AddEnemyToQueue(unit);
 	}
 
@@ -244,6 +246,19 @@ public partial class Spawner : TowerUnit
 		Vector4I lastIncome = lastInvader.GetMoneyDropped();
 		spawnText += spawns[lastName] + " " + UnitManager.InternalNameToName(lastName) + "\n(drops " + Utils.MakeMoneyText(lastIncome) + ")";
 		return spawnText;
+	}
+
+	public override Texture2D GetIconTexture()
+	{
+		if (_data._units.Count > 0)
+		{
+			Unit unit = UnitManager.GetUnit(_data._units[0]);
+			return unit.GetIconTexture();
+		}
+		else
+		{
+			return _iconTexture;
+		}
 	}
 }
 

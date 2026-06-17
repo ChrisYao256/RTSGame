@@ -5,13 +5,11 @@
 [ext_resource type="Script" uid="uid://cvroohkeaovqw" path="res://_Source/_Units/SpawnerDataResource.cs" id="3_y4xig"]
 [ext_resource type="Texture2D" uid="uid://iocgjnp7i8td" path="res://_Assets/Portal.png" id="4_uw73y"]
 [ext_resource type="Script" uid="uid://dj1iuetxsjca2" path="res://_Source/Effects/SpawnerStatsIncrease/SpawnerStatsIncreaseResource.cs" id="5_12xii"]
-[ext_resource type="Script" uid="uid://dtpcxn7d2dqcy" path="res://_Source/Effects/EffectResource.cs" id="6_y4xig"]
 [ext_resource type="Script" uid="uid://jqenopfjll3e" path="res://_Source/Effects/SpawnerStatsIncreasePerNearbyTower/SpawnerStatsIncreasePerNearbyTowerResource.cs" id="8_4imld"]
 
 [sub_resource type="Resource" id="Resource_uw73y"]
 script = ExtResource("3_y4xig")
 _units = Array[String](["Hound"])
-_locations = Array[Vector2i]([Vector2i(1, 1), Vector2i(1, 0), Vector2i(1, -1), Vector2i(0, 1), Vector2i(0, 0), Vector2i(0, -1), Vector2i(-1, 1), Vector2i(-1, 0), Vector2i(-1, -1), Vector2i(2, 0), Vector2i(-2, 0), Vector2i(0, 2), Vector2i(0, -2)])
 _startingEffects = null
 metadata/_custom_type_script = "uid://cvroohkeaovqw"
 
@@ -53,25 +51,13 @@ metadata/_custom_type_script = "uid://jqenopfjll3e"
 [node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_hr2c0")]
 script = ExtResource("2_531wn")
 _data = SubResource("Resource_uw73y")
-_spawnJitterRadius = 15.0
+_spawnInterval = 1.0
 _isEnemy = true
-_cost = Vector4i(0, 0, 0, 0)
 _iconTexture = ExtResource("4_uw73y")
 _towerType = 2
-_description = "Spawns 1 goblin. "
 _firstUpgrade = Array[Object]([SubResource("Resource_hdwh2")])
-_firstUpgradeCost = Vector4i(0, 0, 0, 0)
 _secondUpgrade = Array[Object]([SubResource("Resource_4imld")])
-_secondUpgradeCost = Vector4i(0, 0, 0, 0)
 _thirdUpgrade = Array[Object]([SubResource("Resource_puj6i")])
-_thirdUpgradeCost = Vector4i(0, 0, 0, 0)
-_fourthUpgradeA = null
-_fourthUpgradeATexture = null
-_fourthUpgradeACost = Vector4i(0, 0, 0, 0)
-_fourthUpgradeB = null
-_fourthUpgradeBTexture = null
-_fourthUpgradeBCost = Vector4i(0, 0, 0, 0)
-_transformEffects = Array[ExtResource("6_y4xig")]([])
 LeashDistance = 200.0
 _startingEffects = Array[Object]([SubResource("Resource_htg75")])
 _internalName = "HoundSpawner"
