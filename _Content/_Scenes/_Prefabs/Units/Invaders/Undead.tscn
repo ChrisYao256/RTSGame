@@ -1,0 +1,70 @@
+[gd_scene format=3 uid="uid://bjfjywdqtpu8n"]
+
+[ext_resource type="PackedScene" uid="uid://bqn4h6d52i52" path="res://_Content/_Scenes/_Prefabs/Units/BaseInvaderUnit.tscn" id="1_6y76g"]
+[ext_resource type="Script" uid="uid://wbm6klgk5am8" path="res://_Source/Effects/Revive/ReviveResource.cs" id="2_6kbot"]
+[ext_resource type="Texture2D" uid="uid://dgki3rdi8d7fo" path="res://_Assets/Slime.png" id="3_6kbot"]
+[ext_resource type="Texture2D" uid="uid://bc230321nqto5" path="res://icon.svg" id="4_2pfbi"]
+
+[sub_resource type="Resource" id="Resource_2pfbi"]
+script = ExtResource("2_6kbot")
+_effectName = "Revive"
+_displayType = 1
+metadata/_custom_type_script = "uid://wbm6klgk5am8"
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4dwqt"]
+atlas = ExtResource("3_6kbot")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8pwuo"]
+atlas = ExtResource("3_6kbot")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pgkd3"]
+atlas = ExtResource("3_6kbot")
+region = Rect2(128, 0, 64, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_t3irf"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4dwqt")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8pwuo")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pgkd3")
+}],
+"loop": true,
+"name": &"default",
+"speed": 6.0
+}]
+
+[node name="BaseUnit" unique_id=481801141 instance=ExtResource("1_6y76g")]
+_moneyDropped = Vector4i(2, 0, 0, 0)
+_moveSpeed = 75.0
+_hpMax = 150
+_startingEffects = Array[Object]([SubResource("Resource_2pfbi")])
+_internalName = "Undead"
+_name = "Undead"
+_radius = 30.0
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." index="1" unique_id=113917100]
+texture_filter = 1
+sprite_frames = SubResource("SpriteFrames_t3irf")
+autoplay = "default"
+frame_progress = 0.69199115
+
+[node name="MainSprite" parent="." index="2" unique_id=597948513]
+visible = false
+scale = Vector2(1, 1)
+texture = ExtResource("4_2pfbi")
+
+[node name="HealthBar" parent="." index="6" unique_id=640038315]
+offset_left = -24.0
+offset_top = -24.0
+offset_right = 24.0
+offset_bottom = -12.0
+
+[node name="AidAreaCollision" parent="AidArea" parent_id_path=PackedInt32Array(818912131) index="0" unique_id=1883932864]
+texture_filter = 0

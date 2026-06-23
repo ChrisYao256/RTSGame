@@ -25,7 +25,7 @@ public partial class TDTowerManager : Node2D
 
 	public override void _Ready()
 	{
-		_rightPanel = GetParent().GetNode("RightPanel").GetNode<VBoxContainer>("VBoxContainer");
+		_rightPanel = GetParent().GetNode("RightPanelCanvasLayer").GetNode("RightPanel").GetNode<VBoxContainer>("VBoxContainer");
 		_towersBox = _rightPanel.GetNode<GridContainer>("Towers");
 		_grid = GetParent().GetNode<Grid>("TileMapLayer");
 		_tdManager = GetParent().GetNode<TDManager>("TdManager");
@@ -53,21 +53,20 @@ public partial class TDTowerManager : Node2D
 			VBoxContainer container = new VBoxContainer();
 
 			string name_ = name;
-			TowerUnit unit = (TowerUnit)UnitManager.GetUnit(name);
+			TowerUnit unit = (TowerUnit)UnitManager.GetUnit(name, true);
 
 			if (unit._towerType != tab)
 			{
+				unit.QueueFree();
 				continue;
 			}
-
-			unit._hasEffects = false;
-
-			AddChild(unit);
 
 			Label nameLabel = new Label();
 			nameLabel.Text = unit._name;
 			nameLabel.HorizontalAlignment = HorizontalAlignment.Center;
 			container.AddChild(nameLabel);
+
+			AddChild(unit);
 
 			HoverInfoImage towerButton
 				= unit.MakeTowerTooltip(true);
@@ -76,14 +75,16 @@ public partial class TDTowerManager : Node2D
 				if (Utils.VectorLeq(unit._cost, _tdManager._money))
 				{
 					EnterPlacementMode(name_); 
-				} 
+				}
 			});
+			towerButton.MouseEntered += () => nameLabel.AddThemeColorOverride("font_color", ThemePalette.White);
+			towerButton.MouseExited += () => nameLabel.AddThemeColorOverride("font_color", ThemePalette.Yellow);
 
 			PanelContainer panelContainer = new();
 			panelContainer.AddChild(towerButton);
 			container.AddChild(panelContainer);
 
-			RichTextLabel costLabel = new RichTextLabel();
+			TooltipRichTextLabel costLabel = new TooltipRichTextLabel();
 			costLabel.FitContent = true;
 			costLabel.BbcodeEnabled = true;
 			costLabel.Text = Utils.MakeMoneyText(unit._cost);
@@ -161,11 +162,6 @@ public partial class TDTowerManager : Node2D
 		_previewTower.GlobalPosition = _grid.ToGlobal(_grid.MapToLocal(gridCoords));
 		_previewTower._gridLocation = gridCoords;
 
-		if (_previewTower is Spawner spawner)
-		{
-			spawner.ShowSpawnRange();
-		}
-
 		// Check if the tile allows building
 		TileData data = _grid.GetCellTileData(gridCoords);
 		bool canBuild = false;
@@ -204,10 +200,7 @@ public partial class TDTowerManager : Node2D
 	{
 		Vector2 position = _grid.ToGlobal(_grid.MapToLocal(gridCoords));
 		TowerUnit newTower = (TowerUnit)_unitManager.SpawnUnit(position, 0, towerName, false, gridCoords);
-		if (newTower is Spawner spawner)
-		{
-			_tdManager.Connect(TDManager.SignalName.NewWave, Callable.From(spawner.OnNewWave));
-		}
+		_tdManager.Connect(TDManager.SignalName.NewWave, Callable.From(newTower.OnNewWave));
 		if (newTower._towerType == TowerUnit.TowerType.Spawner)
 		{
 			_tdManager.IncreaseSpawnerCount(1);
@@ -231,10 +224,7 @@ public partial class TDTowerManager : Node2D
 		Vector2 position = _grid.ToGlobal(_grid.MapToLocal(gridCoords));
 		TowerUnit newTower = (TowerUnit)_unitManager.SpawnUnit(position, 0, _towerToPlace, false, gridCoords);
 		_tdManager.SpendMoney(((TowerUnit)newTower)._cost);
-		if (newTower is Spawner spawner)
-		{
-			_tdManager.Connect(TDManager.SignalName.NewWave, Callable.From(spawner.OnNewWave));
-		}
+		_tdManager.Connect(TDManager.SignalName.NewWave, Callable.From(newTower.OnNewWave));
 		if (newTower._towerType == TowerUnit.TowerType.Spawner)
 		{
 			_tdManager.IncreaseSpawnerCount(1);
@@ -257,6 +247,10 @@ public partial class TDTowerManager : Node2D
 			return;
 		}
 		TowerUnit tower = _grid.GetTowerOnCell(gridCoords);
+		if (tower._towerType == TowerUnit.TowerType.Spawner)
+		{
+			_tdManager.IncreaseSpawnerCount(-1);
+		}
 		_allTowers.Remove(tower);
 		tower.EmitSignal(Unit.SignalName.Removed, tower);
 		tower.RemoveAllEffects();
@@ -275,7 +269,7 @@ public partial class TDTowerManager : Node2D
 
 	public void UpdateIncomeDisplay()
 	{
-		RichTextLabel incomeLabel = _rightPanel.GetNode<RichTextLabel>("IncomeLabel");
+		TooltipRichTextLabel incomeLabel = _rightPanel.GetNode<TooltipRichTextLabel>("IncomeLabel");
 
 		Vector4I income = new Vector4I(0,0,0,0);
 

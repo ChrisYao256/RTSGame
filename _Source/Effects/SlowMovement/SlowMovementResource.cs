@@ -25,8 +25,12 @@ public partial class SlowMovementResource : EffectResource
 
 	public override void SetDescription()
 	{
-		_effectName = "Slowed";
+		if (_effectName == "")
+		{
+			_effectName = "Slowed";
+		}
 		_effectDescription = "Move speed slowed by " + Math.Truncate(_percentDecrease * 100) + "%";
+		_effectTopRightString = _time + "::duration::";
 	}
 
 	public override Effect CreateNode()

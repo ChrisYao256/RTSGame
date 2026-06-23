@@ -5,11 +5,8 @@ using System;
 public partial class ExplosionOnHit : Effect
 {
 	ExplosionOnHitResource _resource;
-	//public SelfHealing(int healAmount, double healInterval)
-	//{
-	//	_healAmount = healAmount;
-	//	_healInterval = healInterval;
-	//}
+
+	int _hitCounter = 0;
 
 	public ExplosionOnHit(ExplosionOnHitResource resource) : base(resource)
 	{
@@ -24,7 +21,13 @@ public partial class ExplosionOnHit : Effect
 
 	protected override void OnHitEnemy(Unit enemy)
 	{
-		CircleShape2D explosionCircle = new CircleShape2D();
+		_hitCounter++;
+		if (_resource._explosiveHitInterval != _hitCounter)
+		{
+			return;
+		}
+		_hitCounter = 0;
+			CircleShape2D explosionCircle = new CircleShape2D();
 		explosionCircle.Radius = _resource._explosionRadius;
 
 		var spaceState = enemy.GetWorld2D().DirectSpaceState;

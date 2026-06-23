@@ -9,7 +9,7 @@ public partial class DebuffOnHitBuffResource : EffectResource
 
 	public override void SetDescription()
 	{
-		_effectDescription = "";
+		return;
 
 	}
 

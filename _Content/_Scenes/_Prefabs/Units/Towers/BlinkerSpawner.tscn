@@ -1,0 +1,45 @@
+[gd_scene format=3 uid="uid://bwtjvscqy2o52"]
+
+[ext_resource type="PackedScene" uid="uid://yhbw0b164ui2" path="res://_Content/_Scenes/_Prefabs/Units/BaseTower.tscn" id="1_a57la"]
+[ext_resource type="Script" uid="uid://b4jva1l23o6su" path="res://_Source/_Units/Spawner.cs" id="2_mbfsc"]
+[ext_resource type="Script" uid="uid://iamaod4iivlq" path="res://_Source/Effects/InvaderStatsIncrease/InvaderStatsIncreaseResource.cs" id="3_a57la"]
+[ext_resource type="Script" uid="uid://cvroohkeaovqw" path="res://_Source/_Units/SpawnerDataResource.cs" id="3_kacn2"]
+[ext_resource type="Texture2D" uid="uid://iocgjnp7i8td" path="res://_Assets/Portal.png" id="4_peh64"]
+
+[sub_resource type="Resource" id="Resource_a57la"]
+script = ExtResource("3_a57la")
+_unitName = "Blinker"
+_startingEffects = null
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_mbfsc"]
+script = ExtResource("3_a57la")
+_unitName = "Hound"
+_hpBuff = 825
+_speedBuff = 25.0
+_moneyBuff = Vector4i(6, 0, 0, 6)
+_startingEffects = null
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_uw73y"]
+script = ExtResource("3_kacn2")
+_units = Array[ExtResource("3_a57la")]([SubResource("Resource_a57la"), SubResource("Resource_mbfsc")])
+metadata/_custom_type_script = "uid://cvroohkeaovqw"
+
+[node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_a57la")]
+script = ExtResource("2_mbfsc")
+_data = SubResource("Resource_uw73y")
+_spawnInterval = 1.0
+_isEnemy = true
+_iconTexture = ExtResource("4_peh64")
+_towerType = 2
+_firstUpgrade = Array[Object]([])
+_secondUpgrade = Array[Object]([])
+_thirdUpgrade = Array[Object]([])
+LeashDistance = 200.0
+_startingEffects = Array[Object]([])
+_internalName = "BlinkerSpawner"
+_name = "Blinker Portal"
+
+[node name="MainSprite" parent="." index="1" unique_id=701942347]
+texture = ExtResource("4_peh64")

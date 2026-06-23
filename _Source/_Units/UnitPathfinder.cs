@@ -43,55 +43,6 @@ public partial class UnitPathfinder : Node
 		_speed = speed;
 	}
 
-	//public void SetMoveTarget(Vector2 target)
-	//{
-	//	StopAttackingTarget();
-	//	_state = State.ForceMoving;
-	//	_navAgent.TargetPosition = target;
-	//}
-
-	//public void SetAttackMoveTarget(Vector2 target)
-	//{
-	//	_state = State.AttackMoving;
-	//	_navAgent.TargetPosition = target;
-	//	ScanForEnemies();
-	//}
-
-	//public void SetForceAttackTarget(Unit unit)
-	//{
-	//	StopAttackingTarget();
-	//	_state = State.ForceAttacking;
-	//	_chaseTarget = unit;
-	//	_navAgent.TargetPosition = unit.GlobalPosition;
-	//	ScanForTarget(unit);
-	//}
-
-	//public void SetChaseTarget(Unit unit)
-	//{
-	//	_state = State.Chasing;
-	//	_chaseTarget = unit;
-	//	_navAgent.TargetPosition = unit.GlobalPosition;
-	//	ScanForTarget(unit);
-	//}
-
-	//private void BeginAttackingTarget(Unit unit)
-	//{
-	//	if (_state == State.ForceAttacking)
-	//	{
-	//		_forceAttackQueued = true;
-	//	}
-	//	_state = State.Attacking;
-	//	_attackTarget = unit;
-	//	((Unit)_parentBody).BeginAttackingTarget(unit);
-	//}
-
-	//private void StopAttackingTarget()
-	//{
-	//	_state = State.Idle;
-	//	_attackTarget = null;
-	//	((Unit)_parentBody).BeginAttackingTarget(null);
-	//}
-
 	public void SetTargetPosition(Vector2 position)
 	{
 		_navAgent.TargetPosition = position;

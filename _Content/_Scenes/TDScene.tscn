@@ -8,7 +8,12 @@
 [ext_resource type="Script" uid="uid://bk7cmv6d4884o" path="res://_Source/_TD/TDTowerManager.cs" id="6_ih04x"]
 [ext_resource type="TileSet" uid="uid://dvtw5c2hlwcre" path="res://_Assets/TileSet.tres" id="7_5ivv1"]
 [ext_resource type="Texture2D" uid="uid://bkm4bqmo50wk3" path="res://_Assets/Panel.png" id="7_dqwu5"]
+[ext_resource type="Script" uid="uid://btuej683nli5d" path="res://_Source/_UI/UpgradeButton.cs" id="8_5ivv1"]
 [ext_resource type="Script" uid="uid://c4bawx8voikwb" path="res://_Source/_TD/Grid.cs" id="8_r27g4"]
+[ext_resource type="Script" uid="uid://dmsd1wjc5yk5v" path="res://_Source/_UI/TooltipRichTextLabel.cs" id="10_2i1sm"]
+[ext_resource type="FontFile" uid="uid://cbsqj8u26ju8q" path="res://_Assets/Fonts/edit-undo.brk.ttf" id="11_hcr7m"]
+[ext_resource type="Script" uid="uid://b88b1wxtshdjv" path="res://_Source/_UI/TooltipManager.cs" id="12_j46br"]
+[ext_resource type="Script" uid="uid://cs2l33e6ilduw" path="res://_Source/Debug.gd" id="15_d7nqx"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_dqwu5"]
 vertices = PackedVector2Array(1232, 810, -318, 810, -318, -45, 1232, -45)
@@ -21,6 +26,14 @@ texture_margin_left = 12.0
 texture_margin_top = 12.0
 texture_margin_right = 12.0
 texture_margin_bottom = 12.0
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_j46br"]
+
+[sub_resource type="InputEventAction" id="InputEventAction_hcr7m"]
+action = &"Space"
+
+[sub_resource type="Shortcut" id="Shortcut_j46br"]
+events = [SubResource("InputEventAction_hcr7m")]
 
 [node name="TdScene" type="Node2D" unique_id=2097345796]
 script = ExtResource("1_t07i4")
@@ -39,8 +52,8 @@ scale = Vector2(7.5, 7.5)
 tile_set = ExtResource("7_5ivv1")
 
 [node name="TdManager" parent="." unique_id=116729899 instance=ExtResource("3_v6k6q")]
-_availTowerList = Array[String](["GunTurret", "LaserTurret", "PiercingTower", "FlameTurret", "SlimeSpawner", "HoundSpawner", "PriestSpawner", "SoldierSpawner", "Armory", "Mine", "Lab"])
-_startingMoney = Vector4i(1000, 0, 0, 0)
+_availTowerList = Array[String](["GunTurret", "LaserTurret", "PiercingTower", "FlameTurret", "MoneyTurret", "SlimeSpawner", "HoundSpawner", "PriestSpawner", "SoldierSpawner", "DisablerSpawner"])
+_startingMoney = Vector4i(150, 0, 100, 0)
 
 [node name="NavigationRegion2D" type="NavigationRegion2D" parent="." unique_id=1731619863]
 visible = false
@@ -51,17 +64,27 @@ navigation_polygon = SubResource("NavigationPolygon_dqwu5")
 position = Vector2(960, 540)
 script = ExtResource("2_473pp")
 
-[node name="RightPanel" type="PanelContainer" parent="." unique_id=1020797322]
+[node name="TowerManager" type="Node2D" parent="." unique_id=1104962410]
+process_mode = 3
+script = ExtResource("6_ih04x")
+
+[node name="UnitInfoPanel" parent="." unique_id=1871383984 instance=ExtResource("3_na4n4")]
+process_mode = 3
+
+[node name="RightPanelCanvasLayer" type="CanvasLayer" parent="." unique_id=1178357369]
+
+[node name="RightPanel" type="PanelContainer" parent="RightPanelCanvasLayer" unique_id=1020797322]
+process_mode = 3
 texture_filter = 1
-offset_left = 1570.0
+offset_left = 1560.0
 offset_right = 1920.0
 offset_bottom = 1080.0
 theme_override_styles/panel = SubResource("StyleBoxTexture_dqwu5")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="RightPanel" unique_id=782743368]
+[node name="VBoxContainer" type="VBoxContainer" parent="RightPanelCanvasLayer/RightPanel" unique_id=782743368]
 layout_mode = 2
 
-[node name="MoneyLabel" type="RichTextLabel" parent="RightPanel/VBoxContainer" unique_id=1274819536]
+[node name="MoneyLabel" type="RichTextLabel" parent="RightPanelCanvasLayer/RightPanel/VBoxContainer" unique_id=1274819536]
 custom_minimum_size = Vector2(250, 50)
 layout_mode = 2
 theme_override_font_sizes/normal_font_size = 24
@@ -70,35 +93,39 @@ theme_override_font_sizes/bold_italics_font_size = 24
 theme_override_font_sizes/italics_font_size = 24
 theme_override_font_sizes/mono_font_size = 24
 bbcode_enabled = true
+script = ExtResource("10_2i1sm")
 
-[node name="HpLabel" type="Label" parent="RightPanel/VBoxContainer" unique_id=1228266498]
+[node name="HpLabel" type="Label" parent="RightPanelCanvasLayer/RightPanel/VBoxContainer" unique_id=1228266498]
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
 
-[node name="WaveCounter" type="Label" parent="RightPanel/VBoxContainer" unique_id=1760873018]
+[node name="WaveCounter" type="Label" parent="RightPanelCanvasLayer/RightPanel/VBoxContainer" unique_id=1760873018]
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "Wave 0"
 
-[node name="BossWaveLabel" type="Label" parent="RightPanel/VBoxContainer" unique_id=2051085642]
+[node name="BossWaveLabel" type="Label" parent="RightPanelCanvasLayer/RightPanel/VBoxContainer" unique_id=2051085642]
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
 
-[node name="HBoxContainer" type="VBoxContainer" parent="RightPanel/VBoxContainer" unique_id=1124233390]
+[node name="HBoxContainer" type="VBoxContainer" parent="RightPanelCanvasLayer/RightPanel/VBoxContainer" unique_id=1124233390]
 layout_mode = 2
 
-[node name="SpawnerLimitLabel" type="Label" parent="RightPanel/VBoxContainer/HBoxContainer" unique_id=1135741774]
-layout_mode = 2
-theme_override_font_sizes/font_size = 24
-
-[node name="Button" type="Button" parent="RightPanel/VBoxContainer/HBoxContainer" unique_id=1894540235]
-custom_minimum_size = Vector2(0, 60)
+[node name="SpawnerLimitLabel" type="Label" parent="RightPanelCanvasLayer/RightPanel/VBoxContainer/HBoxContainer" unique_id=1135741774]
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
-text = "
-"
 
-[node name="RichTextLabel" type="RichTextLabel" parent="RightPanel/VBoxContainer/HBoxContainer/Button" unique_id=1561365142]
+[node name="Button" type="Button" parent="RightPanelCanvasLayer/RightPanel/VBoxContainer/HBoxContainer" unique_id=2068678590]
+custom_minimum_size = Vector2(314, 88)
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+theme_override_styles/normal = SubResource("StyleBoxEmpty_j46br")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_j46br")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_j46br")
+script = ExtResource("8_5ivv1")
+metadata/_custom_type_script = "uid://btuej683nli5d"
+
+[node name="RichTextLabel" type="RichTextLabel" parent="RightPanelCanvasLayer/RightPanel/VBoxContainer/HBoxContainer/Button" unique_id=1561365142]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 1
 anchors_preset = 8
@@ -119,12 +146,10 @@ theme_override_font_sizes/bold_italics_font_size = 24
 theme_override_font_sizes/italics_font_size = 24
 theme_override_font_sizes/mono_font_size = 234
 bbcode_enabled = true
-text = "Increase Portal Limit: 
-$10
-"
 fit_content = true
+script = ExtResource("10_2i1sm")
 
-[node name="IncomeLabel" type="RichTextLabel" parent="RightPanel/VBoxContainer" unique_id=1319773152]
+[node name="IncomeLabel" type="RichTextLabel" parent="RightPanelCanvasLayer/RightPanel/VBoxContainer" unique_id=1319773152]
 layout_mode = 2
 theme_override_font_sizes/normal_font_size = 24
 theme_override_font_sizes/bold_font_size = 24
@@ -134,44 +159,96 @@ theme_override_font_sizes/mono_font_size = 24
 bbcode_enabled = true
 text = "Income: $0"
 fit_content = true
+script = ExtResource("10_2i1sm")
 
-[node name="Tabs" type="HBoxContainer" parent="RightPanel/VBoxContainer" unique_id=1535235636]
+[node name="Tabs" type="HBoxContainer" parent="RightPanelCanvasLayer/RightPanel/VBoxContainer" unique_id=1535235636]
 layout_mode = 2
 
-[node name="DefenseTab" type="Button" parent="RightPanel/VBoxContainer/Tabs" unique_id=505616612]
+[node name="DefenseTab" type="Button" parent="RightPanelCanvasLayer/RightPanel/VBoxContainer/Tabs" unique_id=505616612]
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "Defenses"
 
-[node name="SpawnerTab" type="Button" parent="RightPanel/VBoxContainer/Tabs" unique_id=827187694]
+[node name="SpawnerTab" type="Button" parent="RightPanelCanvasLayer/RightPanel/VBoxContainer/Tabs" unique_id=827187694]
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "Portals"
 
-[node name="Towers" type="GridContainer" parent="RightPanel/VBoxContainer" unique_id=1478457631]
+[node name="Towers" type="GridContainer" parent="RightPanelCanvasLayer/RightPanel/VBoxContainer" unique_id=1478457631]
 layout_mode = 2
 columns = 2
 
-[node name="NextWave" type="Button" parent="RightPanel/VBoxContainer" unique_id=195529716]
+[node name="NextWave" type="Button" parent="RightPanelCanvasLayer/RightPanel/VBoxContainer" unique_id=195529716]
+process_mode = 1
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "Next Wave
 "
 
-[node name="VBoxContainer" type="VBoxContainer" parent="RightPanel/VBoxContainer" unique_id=1323112993]
+[node name="VBoxContainer" type="VBoxContainer" parent="RightPanelCanvasLayer/RightPanel/VBoxContainer" unique_id=1323112993]
 layout_mode = 2
 
-[node name="RichTextLabel" type="RichTextLabel" parent="RightPanel/VBoxContainer/VBoxContainer" unique_id=296859253]
+[node name="RichTextLabel" type="RichTextLabel" parent="RightPanelCanvasLayer/RightPanel/VBoxContainer/VBoxContainer" unique_id=296859253]
 layout_mode = 2
-text = "asdf
+text = "
+"
+script = ExtResource("10_2i1sm")
+
+[node name="Exit" type="Button" parent="." unique_id=571441518]
+process_mode = 3
+offset_right = 24.0
+offset_bottom = 24.0
+text = "Exit
 "
 
-[node name="TowerManager" type="Node2D" parent="." unique_id=1104962410]
-script = ExtResource("6_ih04x")
+[node name="Pause" type="Button" parent="." unique_id=1527826559]
+process_mode = 3
+offset_left = -2.0
+offset_top = 47.0
+offset_right = 82.0
+offset_bottom = 93.0
+shortcut = SubResource("Shortcut_j46br")
+text = "Pause
+"
 
-[node name="UnitInfoPanel" parent="." unique_id=1871383984 instance=ExtResource("3_na4n4")]
+[node name="FullscreenOverlay" type="Control" parent="." unique_id=952040268]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 1920.0
+offset_bottom = 1080.0
+mouse_filter = 2
 
-[connection signal="pressed" from="RightPanel/VBoxContainer/HBoxContainer/Button" to="TdManager" method="BuyExtraPortalLimit"]
-[connection signal="button_down" from="RightPanel/VBoxContainer/Tabs/DefenseTab" to="TowerManager" method="SwitchDisplayedTabDefense"]
-[connection signal="button_down" from="RightPanel/VBoxContainer/Tabs/SpawnerTab" to="TowerManager" method="SwitchDisplayedTabSpawner"]
-[connection signal="pressed" from="RightPanel/VBoxContainer/NextWave" to="." method="OnNextWavePressed"]
+[node name="Paused" type="Label" parent="FullscreenOverlay" unique_id=1189567247]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -72.5
+offset_top = -21.5
+offset_right = 72.5
+offset_bottom = 21.5
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+theme_override_fonts/font = ExtResource("11_hcr7m")
+theme_override_font_sizes/font_size = 64
+text = "Paused"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TooltipManager" type="CanvasLayer" parent="." unique_id=375257420]
+process_mode = 3
+script = ExtResource("12_j46br")
+
+[node name="Node" type="Node" parent="." unique_id=510760044]
+script = ExtResource("15_d7nqx")
+
+[connection signal="pressed" from="RightPanelCanvasLayer/RightPanel/VBoxContainer/HBoxContainer/Button" to="TdManager" method="BuyExtraPortalLimit"]
+[connection signal="button_down" from="RightPanelCanvasLayer/RightPanel/VBoxContainer/Tabs/DefenseTab" to="TowerManager" method="SwitchDisplayedTabDefense"]
+[connection signal="button_down" from="RightPanelCanvasLayer/RightPanel/VBoxContainer/Tabs/SpawnerTab" to="TowerManager" method="SwitchDisplayedTabSpawner"]
+[connection signal="pressed" from="RightPanelCanvasLayer/RightPanel/VBoxContainer/NextWave" to="." method="OnNextWavePressed"]
+[connection signal="pressed" from="Exit" to="TdManager" method="EndTD"]
+[connection signal="pressed" from="Pause" to="TdManager" method="SwitchPauseState"]

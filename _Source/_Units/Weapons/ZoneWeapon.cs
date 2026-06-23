@@ -72,7 +72,8 @@ public partial class ZoneWeapon : BaseWeapon
         // Example: If you use an interface for your entities
         if (entity is InvaderUnit invader)
         {
-          invader.Hit(GetDamage(), _parent);
+					_parent.OnBeforeHitEnemy(target);
+					invader.Hit(GetDamage(), _parent);
 					_parent.OnHitEnemy(invader);
 				}
       }

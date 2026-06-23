@@ -12,7 +12,7 @@ public partial class SpeedUpOnHitResource : EffectResource
 	public override void SetDescription()
 	{
 		_displayType = DisplayTypes.Large;
-		_effectDescription = "Speeds up every time it is hit. Maximum increase: "+ _speedIncreaseCap;
+		_effectDescription = "Speeds up by " + _speedIncreasePerHit + " when hit. Max:"+ _speedIncreaseCap;
 	}
 
 	public override Effect CreateNode()

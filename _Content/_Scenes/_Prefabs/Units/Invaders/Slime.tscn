@@ -1,7 +1,6 @@
 [gd_scene format=3 uid="uid://cnfn84xm8m5mv"]
 
 [ext_resource type="PackedScene" uid="uid://bqn4h6d52i52" path="res://_Content/_Scenes/_Prefabs/Units/BaseInvaderUnit.tscn" id="1_d12es"]
-[ext_resource type="PackedScene" uid="uid://dxg1cx6w8moqv" path="res://_Content/_Scenes/_Prefabs/Weapons/MeleeWeapon.tscn" id="2_drv2e"]
 [ext_resource type="Texture2D" uid="uid://dgki3rdi8d7fo" path="res://_Assets/Slime.png" id="3_tclxa"]
 [ext_resource type="Texture2D" uid="uid://bc230321nqto5" path="res://icon.svg" id="4_1sere"]
 
@@ -43,20 +42,18 @@ _internalName = "Slime"
 _name = "Slime"
 _radius = 30.0
 
-[node name="WeaponComponent" parent="." index="0" unique_id=2120452932 instance=ExtResource("2_drv2e")]
-
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." index="2" unique_id=113917100]
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." index="1" unique_id=113917100]
 texture_filter = 1
 sprite_frames = SubResource("SpriteFrames_t3irf")
 autoplay = "default"
 frame_progress = 0.69199115
 
-[node name="MainSprite" parent="." index="3" unique_id=597948513]
+[node name="MainSprite" parent="." index="2" unique_id=597948513]
 visible = false
 scale = Vector2(1, 1)
 texture = ExtResource("4_1sere")
 
-[node name="HealthBar" parent="." index="7" unique_id=640038315]
+[node name="HealthBar" parent="." index="6" unique_id=640038315]
 offset_left = -24.0
 offset_top = -24.0
 offset_right = 24.0

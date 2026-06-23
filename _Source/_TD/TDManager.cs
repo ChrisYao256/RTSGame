@@ -31,14 +31,16 @@ public partial class TDManager : Node
 	private UnitManager _unitManager;
 	public TDTowerManager _towerManager;
 	private VBoxContainer _rightPanel;
+	private UnitInfoPanel _infoPanel;
 	private Label _hpLabel;
-	private RichTextLabel _moneyLabel;
+	private TooltipRichTextLabel _moneyLabel;
 	private Grid _grid;
 	private Label _waveCounter;
 	private Label _bossWaveLabel;
 	private Label _spawnerLimitLabel;
-	public Button _spawnerLimitIncreaseButton;
-	private RichTextLabel _spawnerLimitIncreaseButtonText;
+	public UpgradeButton _spawnerLimitIncreaseButton;
+	private TooltipRichTextLabel _spawnerLimitIncreaseButtonText;
+	private Control _fullscreenOverlay;
 
 	private Exit _base;
 
@@ -50,15 +52,20 @@ public partial class TDManager : Node
 
 	public override void _Ready()
 	{
-		_rightPanel = GetParent().GetNode("RightPanel").GetNode<VBoxContainer>("VBoxContainer");
+		_rightPanel = GetParent().GetNode("RightPanelCanvasLayer").GetNode("RightPanel").GetNode<VBoxContainer>("VBoxContainer");
 		_hpLabel = _rightPanel.GetNode<Label>("HpLabel");
-		_moneyLabel = _rightPanel.GetNode<RichTextLabel>("MoneyLabel");
+		_moneyLabel = _rightPanel.GetNode<TooltipRichTextLabel>("MoneyLabel");
 		_grid = GetParent().GetNode<Grid>("TileMapLayer");
 		_waveCounter = _rightPanel.GetNode<Label>("WaveCounter");
 		_bossWaveLabel = _rightPanel.GetNode<Label>("BossWaveLabel");
 		_spawnerLimitLabel = _rightPanel.GetNode("HBoxContainer").GetNode<Label>("SpawnerLimitLabel");
-		_spawnerLimitIncreaseButton = _rightPanel.GetNode("HBoxContainer").GetNode<Button>("Button");
-		_spawnerLimitIncreaseButtonText = _spawnerLimitIncreaseButton.GetNode<RichTextLabel>("RichTextLabel");
+		_spawnerLimitIncreaseButton = _rightPanel.GetNode("HBoxContainer").GetNode<UpgradeButton>("Button");
+		_spawnerLimitIncreaseButtonText = _spawnerLimitIncreaseButton.GetNode<TooltipRichTextLabel>("RichTextLabel");
+		_spawnerLimitIncreaseButton.MouseEntered += () => _spawnerLimitIncreaseButtonText.AddThemeColorOverride("default_color", ThemePalette.White);
+		_spawnerLimitIncreaseButton.MouseExited += () => _spawnerLimitIncreaseButtonText.AddThemeColorOverride("default_color",  GetSpawnerLimitIncreaseButtonTextColor());
+
+		_fullscreenOverlay = GetParent().GetNode<Control>("FullscreenOverlay");
+		_infoPanel = GetParent().GetNode<UnitInfoPanel>("UnitInfoPanel");
 	}
 
 	public void Initialize()
@@ -81,9 +88,10 @@ public partial class TDManager : Node
 
 		UpdateHp(20);
 
+		IncreaseSpawnerLimit(_startingSpawnerLimit);
 		UpdateMoney(_startingMoney);
 		UpdateWaveIndexCounter();
-		IncreaseSpawnerLimit(_startingSpawnerLimit);
+		UpdatePortalLimitButtonText();
 	}
 
 	public async void SpawnNextWave()
@@ -144,21 +152,31 @@ public partial class TDManager : Node
 
 	public void BuyExtraPortalLimit()
 	{
-		int cost = 10 * (int)Math.Pow(2, (double)(_spawnerLimit - _startingSpawnerLimit));
+		int cost = GetPortalLimitUpgradeCost();
 		if (_money[0] < cost)
 		{
 			return;
 		}
-		SpendMoney(new Vector4I(cost, 0, 0, 0));
 		IncreaseSpawnerLimit(1);
-		cost = 10 * (int)Math.Pow(2, (double)(_spawnerLimit - _startingSpawnerLimit));
-		_spawnerLimitIncreaseButtonText.Text = "Increase Portal Limit: \n" + Utils.MakeMoneyText(new Vector4I(cost, 0,0,0));
+		SpendMoney(new Vector4I(cost, 0, 0, 0));
+		UpdatePortalLimitButtonText();
+	}
+
+	public void UpdatePortalLimitButtonText()
+	{
+		int cost = 10 * (int)Math.Pow(2, (double)(_spawnerLimit - _startingSpawnerLimit));
+		_spawnerLimitIncreaseButtonText.Text = "Increase Portal Limit: \n" + Utils.MakeMoneyText(new Vector4I(cost, 0, 0, 0));
+		_spawnerLimitIncreaseButtonText.AddThemeColorOverride("default_color", GetSpawnerLimitIncreaseButtonTextColor());
+	}
+
+	public int GetPortalLimitUpgradeCost()
+	{
+		return 10 * (int)Math.Pow(2, (double)(_spawnerLimit - _startingSpawnerLimit));
 	}
 
 	private void SpawnEnemyAtEntrance(string name)
 	{
 		Unit unit = _unitManager.SpawnUnit(_grid.GetEntrancePosition(), 1, name, true);
-		GD.Print(name+ " Spawned");
 		List<Vector2> waypoints = _grid.GetPath(_grid.GetEntrancePosition(), _grid.GetExitLocation());
 		foreach (Vector2 waypoint in waypoints)
 		{
@@ -167,14 +185,25 @@ public partial class TDManager : Node
 		unit.Connect(Unit.SignalName.Died, Callable.From<Unit>(OnUnitDied));
 	}
 
+	public InvaderUnit SpawnEnemyAtGlobalPosition(string name, Vector2 position)
+	{
+		Unit unit = _unitManager.SpawnUnit(position, 1, name, true);
+		List<Vector2> waypoints = _grid.GetPath(position, _grid.GetExitLocation());
+		if (unit is InvaderUnit invader)
+		{
+			invader._pathToExit = new Godot.Collections.Array<Vector2>(waypoints);
+		}
+		unit.Connect(Unit.SignalName.Died, Callable.From<Unit>(OnUnitDied));
+		return (InvaderUnit)unit;
+	}
+
 	public InvaderUnit SpawnEnemyFromTower(string name, Vector2 position)
 	{
 		Unit unit = _unitManager.SpawnUnit(position, 1, name, true);
-		GD.Print(name + " Spawned");
 		List<Vector2> waypoints = _grid.GetPath(position, _grid.GetExitLocation());
-		foreach (Vector2 waypoint in waypoints)
+		if (unit is InvaderUnit invader)
 		{
-			unit.AddCommand(new AttackMove(unit, waypoint));
+			invader._pathToExit = new Godot.Collections.Array<Vector2>(waypoints);
 		}
 		unit.Connect(Unit.SignalName.Died, Callable.From<Unit>(OnUnitDied));
 		return (InvaderUnit)unit;
@@ -184,17 +213,17 @@ public partial class TDManager : Node
 	{
 		Unit unit = _unitManager.SpawnUnit(_grid.MapToGlobal(gridPosition), 1, name, true);
 		List<Vector2> waypoints = _grid.GetPath(gridPosition, _grid.GetExitLocation());
-		foreach (Vector2 waypoint in waypoints)
+		if (unit is InvaderUnit invader)
 		{
-			unit.AddCommand(new AttackMove(unit, waypoint));
+			invader._pathToExit = new Godot.Collections.Array<Vector2>(waypoints);
 		}
 		unit.Connect(Unit.SignalName.Died, Callable.From<Unit>(OnUnitDied));
 		return (InvaderUnit)unit;
 	}
 
-	public InvaderUnit GetEnemy(string name)
+	public static InvaderUnit GetEnemy(string name, bool setUnit)
 	{
-		InvaderUnit unit = (InvaderUnit) UnitManager.GetUnit(name);
+		InvaderUnit unit = (InvaderUnit) UnitManager.GetUnit(name, setUnit);
 		return unit;
 	}
 
@@ -240,10 +269,52 @@ public partial class TDManager : Node
 		GetTree().CallDeferred(SceneTree.MethodName.ChangeSceneToFile, MenuPath);
 	}
 
+	private void SwitchPauseState()
+	{
+		if (GetTree().Paused)
+		{
+			UnpauseTD();
+		}
+		else
+		{
+			PauseTD();
+		}
+	}
+
+	private void PauseTD()
+	{
+		GetTree().Paused = true;
+		_fullscreenOverlay.GetNode<Label>("Paused").Visible = true;
+	}
+
+	private void UnpauseTD()
+	{
+		GetTree().Paused = false;
+		_fullscreenOverlay.GetNode<Label>("Paused").Visible = false;
+	}
+
 	private void UpdateMoney(Vector4I newMoney)
 	{
 		_money = newMoney;
 		_moneyLabel.Text = Utils.MakeMoneyText(_money, true);
+		if (_infoPanel.GetSelectedUnit() is not null)
+		{
+			_infoPanel.GetSelectedUnit().EmitSignal(Unit.SignalName.UpdateInfo);
+		}
+		_spawnerLimitIncreaseButton.UpdateAffordabilityDisplay(Utils.VectorDivision(newMoney, new(GetPortalLimitUpgradeCost(),0,0,0)));
+		_spawnerLimitIncreaseButtonText.AddThemeColorOverride("default_color", GetSpawnerLimitIncreaseButtonTextColor());
+	}
+
+	private Color GetSpawnerLimitIncreaseButtonTextColor()
+	{
+		if (Utils.VectorDivision(_money, new(GetPortalLimitUpgradeCost(), 0, 0, 0)) >= 1f)
+		{
+			return ThemePalette.Green;
+		}
+		else
+		{
+			return ThemePalette.Red;
+		}
 	}
 
 	public void GainMoney(Vector4I gain)

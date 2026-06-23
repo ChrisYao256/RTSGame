@@ -15,11 +15,11 @@ public partial class DebuffOnHitResource : EffectResource
 		{
 			EffectResource resource = _debuffs[i];
 			resource.SetDescription();
-			_effectDescription += resource._effectName + ", ";
+			_effectDescription += $"[url={TooltipRichTextLabel.EncodeMetaString(resource._effectDescription, resource._effectTopRightString)}]{resource._effectName}[/url]" + ", ";
 		}
 		EffectResource lastResource = _debuffs[_debuffs.Count - 1];
 		lastResource.SetDescription();
-		_effectDescription += lastResource._effectName;
+		_effectDescription += $"[url={TooltipRichTextLabel.EncodeMetaString(lastResource._effectDescription, lastResource._effectTopRightString)}]{lastResource._effectName}[/url]";
 
 	}
 

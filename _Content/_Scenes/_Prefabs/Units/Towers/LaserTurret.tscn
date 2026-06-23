@@ -4,6 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://ckpo2x2lwwcb5" path="res://_Assets/LaserTurret.png" id="2_mrw2a"]
 [ext_resource type="PackedScene" uid="uid://csclmqhm61enk" path="res://_Content/_Scenes/_Prefabs/Weapons/LaserWeapon.tscn" id="3_7wgq5"]
 [ext_resource type="Script" uid="uid://c7ye5bgfhla5e" path="res://_Source/Effects/StatsIncrease/StatsIncreaseResource.cs" id="3_h0vgu"]
+[ext_resource type="Script" uid="uid://be80c57wd06d0" path="res://_Source/Effects/ImmediateTransform/ImmediateTransformResource.cs" id="4_4io8i"]
 [ext_resource type="Script" uid="uid://dtpcxn7d2dqcy" path="res://_Source/Effects/EffectResource.cs" id="5_d4b7m"]
 [ext_resource type="Texture2D" uid="uid://miulw7p5fqif" path="res://_Assets/RedBase.png" id="7_4io8i"]
 [ext_resource type="Script" uid="uid://dp2y3egpfahx1" path="res://_Source/Effects/StatsIncreasePerNearbyTower/StatsIncreasePerNearbyTowerResource.cs" id="7_h8tlq"]
@@ -26,6 +27,12 @@ metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 script = ExtResource("3_h0vgu")
 _damageIncrease = 150
 metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
+
+[sub_resource type="Resource" id="Resource_2vm1c"]
+script = ExtResource("4_4io8i")
+_transformedUnit = "TeslaTurret"
+_description = "Zaps random targets. Increases damage when multiple strikes hit the same target."
+metadata/_custom_type_script = "uid://be80c57wd06d0"
 
 [sub_resource type="Resource" id="Resource_rnneq"]
 script = ExtResource("3_h0vgu")
@@ -276,6 +283,8 @@ _secondUpgrade = Array[Object]([SubResource("Resource_h8tlq")])
 _secondUpgradeCost = Vector4i(30, 0, 0, 15)
 _thirdUpgrade = Array[Object]([SubResource("Resource_4io8i")])
 _thirdUpgradeCost = Vector4i(67, 0, 0, 33)
+_fourthUpgradeA = Array[Object]([SubResource("Resource_2vm1c")])
+_fourthUpgradeACost = Vector4i(100, 0, 0, 100)
 _hpMax = 1
 _lockOnTarget = true
 _startingEffects = Array[ExtResource("5_d4b7m")]([SubResource("Resource_o7wuf")])

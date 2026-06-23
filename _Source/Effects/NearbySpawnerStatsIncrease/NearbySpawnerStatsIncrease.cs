@@ -7,7 +7,7 @@ using RTSGame.Source;
 public partial class NearbySpawnerStatsIncrease : Effect
 {
 	private NearbySpawnerStatsIncreaseResource _resource;
-	private List<Effect> _createdEffects = [];
+	private List<Spawner> _affectedSpawners = [];
 
 	public NearbySpawnerStatsIncrease(NearbySpawnerStatsIncreaseResource resource) : base(resource)
 	{
@@ -34,8 +34,11 @@ public partial class NearbySpawnerStatsIncrease : Effect
 				TowerUnit tower = parentTower._grid.GetTowerOnCell(position);
 				if (tower is Spawner spawner)
 				{
-					Effect addedEffect = spawner.AddEffect(_resource._buffResource);
-					_createdEffects.Add(addedEffect);
+					for (int i = 0; i < spawner._data._units.Count; i++)
+					{
+						spawner.AddSpawnerUnitStatsIncrease(i, (InvaderStatsIncreaseResource)_resource._buffResource.DuplicateDeep());
+					}
+					_affectedSpawners.Add(spawner);
 				}
 			}
 		}
@@ -49,8 +52,39 @@ public partial class NearbySpawnerStatsIncrease : Effect
 		{
 			if (tower is Spawner spawner)
 			{
-				Effect addedEffect = spawner.AddEffect(_resource._buffResource);
-				_createdEffects.Add(addedEffect);
+				for (int i = 0; i < spawner._data._units.Count; i++)
+				{
+					spawner.AddSpawnerUnitStatsIncrease(i, (InvaderStatsIncreaseResource)_resource._buffResource.DuplicateDeep());
+				}
+				if (!_affectedSpawners.Contains(spawner))
+				{
+					_affectedSpawners.Add(spawner);
+				}
+			}
+		}
+	}
+
+	public void AddNewBuffResource(InvaderStatsIncreaseResource resource)
+	{
+		TowerUnit parentTower = (TowerUnit)_parentUnit;
+		Vector2I location = parentTower._gridLocation;
+		foreach (Vector2I relativePos in _resource._area)
+		{
+			Vector2I position = relativePos + location;
+			if (!parentTower._grid.IsCellVacant(position) && relativePos != new Vector2I(0, 0))
+			{
+				TowerUnit tower = parentTower._grid.GetTowerOnCell(position);
+				if (tower is Spawner spawner)
+				{
+					for (int i = 0; i < spawner._data._units.Count; i++)
+					{
+						spawner.AddSpawnerUnitStatsIncrease(i, (InvaderStatsIncreaseResource)resource.DuplicateDeep());
+					}
+					if (!_affectedSpawners.Contains(spawner))
+					{
+						_affectedSpawners.Add(spawner);
+					}
+				}
 			}
 		}
 	}
@@ -62,11 +96,13 @@ public partial class NearbySpawnerStatsIncrease : Effect
 			QueueFree();
 			return;
 		}
-		foreach (Effect effect in _createdEffects)
+		foreach (Spawner spawner in _affectedSpawners)
 		{
-			effect.RemoveEffectNode();
+			for (int i = 0; i < spawner._data._units.Count; i++)
+			{
+				spawner.RemoveSpawnerUnitStatsIncrease(i, (InvaderStatsIncreaseResource)_resource._buffResource.DuplicateDeep());
+			}
 		}
-		_parentUnit._effects.Remove(_resource);
 		QueueFree();
 	}
 }

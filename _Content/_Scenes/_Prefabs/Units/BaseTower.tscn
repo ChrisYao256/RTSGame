@@ -3,6 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://7vf0p5478xp8" path="res://_Content/_Scenes/_Prefabs/Units/BaseStationaryUnit.tscn" id="1_q0otc"]
 [ext_resource type="Script" uid="uid://b2ck2c8ddtlw3" path="res://_Source/_Units/TowerUnit.cs" id="2_2i4cj"]
 [ext_resource type="Script" uid="uid://dtpcxn7d2dqcy" path="res://_Source/Effects/EffectResource.cs" id="3_2i4cj"]
+[ext_resource type="FontFile" uid="uid://cbsqj8u26ju8q" path="res://_Assets/Fonts/edit-undo.brk.ttf" id="4_l3ce5"]
 
 [node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_q0otc")]
 script = ExtResource("2_2i4cj")
@@ -31,6 +32,7 @@ offset_right = 77.0
 offset_bottom = 90.0
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 12
+theme_override_fonts/font = ExtResource("4_l3ce5")
 theme_override_font_sizes/font_size = 24
 text = "Lv 1"
 

@@ -6,7 +6,7 @@
 
 [sub_resource type="Resource" id="Resource_htjgi"]
 script = ExtResource("2_u68lq")
-_speedIncreasePerHit = 2.0
+_speedIncreasePerHit = 5.0
 _speedIncreaseCap = 100.0
 _effectName = "Rush"
 metadata/_custom_type_script = "uid://bx5p53eu0mmmn"

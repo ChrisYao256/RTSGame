@@ -5,7 +5,7 @@ public partial class FloatingText : RichTextLabel
 {
 	public FloatingText() : base()
 	{
-		CustomMinimumSize = new Vector2(100, 0);
+		CustomMinimumSize = new Vector2(300, 0);
 	}
 
 	public void StartFloatingAnimation()

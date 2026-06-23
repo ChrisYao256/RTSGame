@@ -1,10 +1,7 @@
 [gd_scene format=3 uid="uid://clx6sk7mljed3"]
 
 [ext_resource type="Script" uid="uid://bt35bfnw1pvej" path="res://_Source/_Units/UnitManager.cs" id="1_jtl5s"]
-[ext_resource type="PackedScene" uid="uid://dmsbjumdn15rg" path="res://_Content/_Scenes/_Prefabs/Units/Shooter.tscn" id="2_f67u0"]
-[ext_resource type="PackedScene" uid="uid://boowl0qtdgk8g" path="res://_Content/_Scenes/_Prefabs/Units/Fighter.tscn" id="3_isygt"]
 
 [node name="UnitManager" type="Node2D" unique_id=2028122986]
+process_mode = 3
 script = ExtResource("1_jtl5s")
-ShooterTemplate = ExtResource("2_f67u0")
-FighterTemplate = ExtResource("3_isygt")

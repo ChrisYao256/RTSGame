@@ -135,6 +135,33 @@ namespace RTSGame.Units
 			return true;
 		}
 
+		public static int VectorSum(Vector4I a)
+		{
+			return a[0] + a[1] + a[2] + a[3];
+		}
+
+		public static Vector4I VectorScalarMultiplication(Vector4I a, float b)
+		{
+			for (int i = 0; i < 4; i++)
+			{
+				a[i] = (int)(a[i] * b);
+			}
+			return a;
+		}
+
+		public static float VectorDivision(Vector4I top, Vector4I bot)
+		{
+			if (bot == new Vector4I(0, 0, 0, 0))
+			{
+				return 1f;
+			}
+			for (int i =0; i < 4; i++)
+			{
+				top[i] = Math.Clamp(top[i], 0, bot[i]);
+			}
+			return (float)VectorSum(top) / (float)VectorSum(bot);
+		}
+
 		public static string MakeMoneyText(Vector4I money, bool displayAll = false)
 		{
 			string yellowHex = ThemePalette.Yellow.ToHtml(false);
@@ -142,22 +169,34 @@ namespace RTSGame.Units
 			string blueHex = ThemePalette.Blue.ToHtml(false);
 			string greenHex = ThemePalette.Green.ToHtml(false);
 			string output = "";
-			if (money[0]!= 0 || displayAll)
+			if (displayAll)
 			{
-				output += $"[color=#{yellowHex}]${money[0]}[/color]  ";
+				output += $"[color=#{yellowHex}][url={StringDB.Entries["YellowMoneyDescription"]}][img=24x24]res://_Assets/Electricity.png[/img]{money[0]}[/url][/color]  ";
+				output += $"[color=#{redHex}][url={StringDB.Entries["RedMoneyDescription"]}][img=24x24]res://_Assets/Steel.png[/img]{money[1]}[/url][/color]  ";
+				output += $"[color=#{blueHex}][url={StringDB.Entries["BlueMoneyDescription"]}][img=24x24]res://_Assets/Water.png[/img]{money[2]}[/url][/color]  ";
+				output += $"[color=#{greenHex}][url={StringDB.Entries["GreenMoneyDescription"]}][img=24x24]res://_Assets/Gas.png[/img]{money[3]}[/url][/color]  ";
 			}
-			if (money[1] != 0 || displayAll)
+			else
 			{
-				output += $"[color=#{redHex}]■{money[1]}[/color]  ";
+				if (money[0] != 0)
+				{
+					output += $"[color=#{yellowHex}][img=24x24]res://_Assets/Electricity.png[/img]{money[0]}[/color]  ";
+				}
+
+				if (money[1] != 0 || displayAll)
+				{
+					output += $"[color=#{redHex}][img=24x24]res://_Assets/Steel.png[/img]{money[1]}[/color]  ";
+				}
+				if (money[2] != 0 || displayAll)
+				{
+					output += $"[color=#{blueHex}][img=24x24]res://_Assets/Water.png[/img]{money[2]}[/color]  ";
+				}
+				if (money[3] != 0 || displayAll)
+				{
+					output += $"[color=#{greenHex}][img=24x24]res://_Assets/Gas.png[/img] {money[3]} [/color]  ";
+				}
 			}
-			if (money[2] != 0 || displayAll)
-			{
-				output += $"[color=#{blueHex}]●{money[2]}[/color]  ";
-			}
-			if (money[3] != 0 || displayAll)
-			{
-				output += $"[color=#{greenHex}]▲{money[3]}[/color]  ";
-			}
+
 			return output.Trim();
 		}
 	}

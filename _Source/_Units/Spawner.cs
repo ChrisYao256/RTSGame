@@ -4,6 +4,7 @@ using RTSGame.Source;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Xml.Linq;
 using static Godot.OpenXRCompositionLayer;
 
@@ -20,26 +21,40 @@ public partial class Spawner : TowerUnit
 	[Export]
 	private bool _isEnemy = true;
 
-	private Array<Vector2I> _defaultLocations;
-
 	private Area2D _spawnArea;
 
 	public override void _Ready()
 	{
-		_defaultLocations = _data._locations;
 		_data = (SpawnerDataResource)_data.Duplicate(true);
 		base._Ready();
 		_tdManager = GetTree().CurrentScene.GetNode<TDManager>("TdManager");
 		_spawnArea = GetNode<Area2D>("AttackArea");
 
-		if (_data._units.Count > 0)
+		if (_data._units.Count == 1)
 		{
-			Unit unit = UnitManager.GetUnit(_data._units[0]);
+			Unit unit = UnitManager.GetUnit(_data._units[0]._unitName, true);
 			Texture2D icon = unit.GetIconTexture();
 			Sprite2D sprite = new();
 			sprite.Texture = icon;
 			Utils.ScaleVisualToRadius(sprite, unit._radius);
 			AddChild(sprite);
+			unit.QueueFree();
+		}
+		else
+		{
+			for (int i =0; i < _data._units.Count; i++)
+			{
+				InvaderStatsIncreaseResource unitResource = _data._units[i];
+				Unit unit = UnitManager.GetUnit(unitResource._unitName, true);
+				Texture2D icon = unit.GetIconTexture();
+				Sprite2D sprite = new();
+				sprite.Texture = icon;
+				float x = (float)Enumerable.Range(0, _data._units.Count).Select(i => (i - (_data._units.Count - 1) / 2.0) * unit._radius).ToArray()[i];
+				sprite.Position = new Vector2(x, 0);
+				Utils.ScaleVisualToRadius(sprite, unit._radius);
+				AddChild(sprite);
+				unit.QueueFree();
+			}
 		}
 
 		if (_description == null || _description == "")
@@ -48,22 +63,13 @@ public partial class Spawner : TowerUnit
 		}
 	}
 
-	public override void DisplayAttackRange()
-	{
-		ShowSpawnRange();
-	}
-
-	public override void HideAttackRange()
-	{
-		HideSpawnRange();
-	}
-
 	public async void SpawnWave()
 	{
-		foreach (string unit in _data._units)
+		foreach (InvaderStatsIncreaseResource unitResource in _data._units)
 		{
+			string unit = unitResource._unitName;
 			List<Vector2I> validSpawnLocations = [];
-			Array<Vector2I> nearbyLocations = [new(1,1), new(1, 0), new(1, -1), new(0, 1), new(0, -1), new(-1, 1), new(-1, 0), new(-1, -1)];
+			Array<Vector2I> nearbyLocations = [new(1, 0), new(0, 1), new(0, -1), new(-1, 0)];
 			foreach (Vector2I relativeMapPos in nearbyLocations)
 			{
 				TileData data = _grid.GetCellTileData(_gridLocation + relativeMapPos);
@@ -80,14 +86,7 @@ public partial class Spawner : TowerUnit
 			if (_isEnemy)
 			{
 				InvaderUnit invader = _tdManager.SpawnEnemyFromTower(unit, _gridLocation);
-				invader.IncreaseHpMaxModifier(_data._hpBuff);
-				invader.IncreaseSpeedModifier(_data._speedBuff);
-				invader.IncreaseArmorModifier(_data._armorBuff);
-				invader.IncreaseMoneyModifier(_data._moneyBuff);
-				foreach (EffectResource effect in _data._startingEffects)
-				{
-					invader.AddEffect(effect);
-				}
+				invader.AddEffect(unitResource);
 				await ToSignal(GetTree().CreateTimer(_spawnInterval), SceneTreeTimer.SignalName.Timeout);
 			}
 			else
@@ -104,100 +103,98 @@ public partial class Spawner : TowerUnit
 		//_tdManager.AddEnemyToQueue(unit);
 	}
 
-	public void SetSpawnerEnemies(Array<string> enemies)
+	public void SetSpawnerEnemies(Array<InvaderStatsIncreaseResource> enemies)
 	{
 		_data._units = enemies;
 		EmitSignal(SignalName.UpdateStatsInfo);
 	}
 
-	public void AddSpawnerEnemies(Array<string> enemies)
+	public void AddSpawnerEnemies(Array<InvaderStatsIncreaseResource> enemies)
 	{
 		SetSpawnerEnemies(_data._units + enemies);
 	}
 
-	public void RemoveSpawnerEnemies(Array<string> enemies)
+	public void RemoveSpawnerEnemies(Array<InvaderStatsIncreaseResource> enemies)
 	{
-		foreach (string name in enemies)
+		foreach (var resource in enemies)
 		{
-			_data._units.Remove(name);
+			_data._units.Remove(resource);
 		}
 		SetSpawnerEnemies(_data._units);
 	}
 
-	public void SetSpawnerHpBuff(int hpBuff)
+	public void AddSpawnerUnitStatsIncrease(int index, InvaderStatsIncreaseResource resource)
 	{
-		_data._hpBuff = hpBuff;
-		EmitSignal(SignalName.UpdateStatsInfo);
+		resource.MergeWithOld(_data._units[index], []);
 	}
 
-	public void IncreaseSpawnerHpBuff(int change)
+	public void RemoveSpawnerUnitStatsIncrease(int index, InvaderStatsIncreaseResource resource)
 	{
-		SetSpawnerHpBuff(_data._hpBuff + change);
+		resource.RemoveFromOld(_data._units[index]);
 	}
 
-	public void SetSpawnerSpeedBuff(float speedBuff)
-	{
-		_data._speedBuff = speedBuff;
-		EmitSignal(SignalName.UpdateStatsInfo);
-	}
+	//public void SetSpawnerHpBuff(int hpBuff)
+	//{
+	//	_data._hpBuff = hpBuff;
+	//	EmitSignal(SignalName.UpdateStatsInfo);
+	//}
 
-	public void IncreaseSpawnerSpeedBuff(float change)
-	{
-		SetSpawnerSpeedBuff(_data._speedBuff + change);
-	}
+	//public void IncreaseSpawnerHpBuff(int change)
+	//{
+	//	SetSpawnerHpBuff(_data._hpBuff + change);
+	//}
 
-	public void SetSpawnerArmorBuff(int armorBuff)
-	{
-		_data._armorBuff = armorBuff;
-		EmitSignal(SignalName.UpdateStatsInfo);
-	}
+	//public void SetSpawnerSpeedBuff(float speedBuff)
+	//{
+	//	_data._speedBuff = speedBuff;
+	//	EmitSignal(SignalName.UpdateStatsInfo);
+	//}
 
-	public void IncreaseSpawnerArmorBuff(int change)
-	{
-		SetSpawnerArmorBuff(_data._armorBuff + change);
-	}
+	//public void IncreaseSpawnerSpeedBuff(float change)
+	//{
+	//	SetSpawnerSpeedBuff(_data._speedBuff + change);
+	//}
 
-	public void UpdateSpawnerArea(Array<Vector2I> newArea)
-	{
-		_data._locations = newArea;
-		EmitSignal(SignalName.UpdateStatsInfo);
-	}
+	//public void SetSpawnerArmorBuff(int armorBuff)
+	//{
+	//	_data._armorBuff = armorBuff;
+	//	EmitSignal(SignalName.UpdateStatsInfo);
+	//}
 
-	public void ResetSpawnerArea()
-	{
-		_data._locations = _defaultLocations;
-		EmitSignal(SignalName.UpdateStatsInfo);
-	}
+	//public void IncreaseSpawnerArmorBuff(int change)
+	//{
+	//	SetSpawnerArmorBuff(_data._armorBuff + change);
+	//}
 
-	public void AddStartingEffect(Array<EffectResource> effects)
-	{
-		foreach (EffectResource effect in effects)
-		{
-			_data._startingEffects.Add(effect);
-		}
-		EmitSignal(SignalName.UpdateInfo);
-	}
+	//public void AddStartingEffect(Array<EffectResource> effects)
+	//{
+	//	foreach (EffectResource effect in effects)
+	//	{
+	//		_data._startingEffects.Add(effect);
+	//	}
+	//	EmitSignal(SignalName.UpdateInfo);
+	//}
 
-	public void SetSpawnerMoneyBuff(Vector4I change)
-	{
-		_data._moneyBuff = change;
-		EmitSignal(SignalName.UpdateStatsInfo);
-	}
+	//public void SetSpawnerMoneyBuff(Vector4I change)
+	//{
+	//	_data._moneyBuff = change;
+	//	EmitSignal(SignalName.UpdateStatsInfo);
+	//}
 
-	public void IncreaseSpawnerMoneyBuff(Vector4I change)
-	{
-		SetSpawnerMoneyBuff(_data._moneyBuff + change);
-	}
+	//public void IncreaseSpawnerMoneyBuff(Vector4I change)
+	//{
+	//	SetSpawnerMoneyBuff(_data._moneyBuff + change);
+	//}
 
-	public void OnNewWave()
+	public override void OnNewWave()
 	{
 		SpawnWave();
 	}
 
-	public void ShowSpawnRange()
-	{
-		_grid.DrawVisualTiles(_data._locations.ToList(), _gridLocation);
-	}
+	//public void ShowSpawnRange()
+	//{
+	//	_grid.DrawVisualTiles(_data._locations.ToList(), _gridLocation);
+	//}
 
 	public void HideSpawnRange()
 	{
@@ -208,43 +205,45 @@ public partial class Spawner : TowerUnit
 	{
 		Vector4I income = base.GetIncome();
 
-		foreach (string unit in _data._units)
+		foreach (InvaderStatsIncreaseResource unitResource in _data._units)
 		{
-			InvaderUnit invader = _tdManager.GetEnemy(unit);
-			invader.IncreaseMoneyModifier(_data._moneyBuff);
+			InvaderUnit invader = unitResource.GetInvader();
 			income += invader.GetMoneyDropped();
+			invader.QueueFree();
 		}
 		return income;
 	}
 
-	public string GetSpawns()
+	public string GetSpawns() // Assumes all units of the same name have the same money drop
 	{
-		Godot.Collections.Dictionary<string, int> spawns = new Godot.Collections.Dictionary<string, int>();
-		foreach (string unit in _data._units)
+		Godot.Collections.Dictionary<string, int> nameCountDict = new Godot.Collections.Dictionary<string, int>();
+		List<InvaderUnit> invaders = [];
+		foreach (InvaderStatsIncreaseResource unit in _data._units)
 		{
-			if (!spawns.Keys.Contains(unit))
+			if (!nameCountDict.Keys.Contains(unit._unitName))
 			{
-				spawns.Add(unit, 1);
+				nameCountDict.Add(unit._unitName, 1);
+				invaders.Add(unit.GetInvader());
 			}
 			else
 			{
-				spawns[unit] += 1;
+				nameCountDict[unit._unitName] += 1;
 			}
 		}
 		string spawnText = "";
-		for (int i = 0; i < spawns.Keys.Count - 1; i++)
+		for (int i = 0; i < nameCountDict.Keys.Count - 1; i++)
 		{
-			string name = spawns.Keys.ElementAt(i);
-			InvaderUnit invader = _tdManager.GetEnemy(name);
-			invader.IncreaseMoneyModifier(_data._moneyBuff);
-			Vector4I income = invader.GetMoneyDropped();
-			spawnText += spawns[name] + " " + UnitManager.InternalNameToName(name) + "\n(drops " + Utils.MakeMoneyText(income) + "), ";
+			string name = nameCountDict.Keys.ElementAt(i);
+			Vector4I income = invaders[i].GetMoneyDropped();
+			spawnText += nameCountDict[name] + " " + UnitManager.InternalNameToName(name) + "\n(drops " + Utils.MakeMoneyText(income) + "), ";
 		}
-		string lastName = spawns.Keys.ElementAt(spawns.Keys.Count - 1);
-		InvaderUnit lastInvader = _tdManager.GetEnemy(lastName);
-		lastInvader.IncreaseMoneyModifier(_data._moneyBuff);
-		Vector4I lastIncome = lastInvader.GetMoneyDropped();
-		spawnText += spawns[lastName] + " " + UnitManager.InternalNameToName(lastName) + "\n(drops " + Utils.MakeMoneyText(lastIncome) + ")";
+		string lastName = nameCountDict.Keys.ElementAt(nameCountDict.Keys.Count - 1);
+		Vector4I lastIncome = invaders[nameCountDict.Keys.Count - 1].GetMoneyDropped();
+		spawnText += nameCountDict[lastName] + " " + UnitManager.InternalNameToName(lastName) + "\n(drops " + Utils.MakeMoneyText(lastIncome) + "), ";
+		foreach (Node var in invaders)
+		{
+			var.QueueFree();
+		}
 		return spawnText;
 	}
 
@@ -252,8 +251,10 @@ public partial class Spawner : TowerUnit
 	{
 		if (_data._units.Count > 0)
 		{
-			Unit unit = UnitManager.GetUnit(_data._units[0]);
-			return unit.GetIconTexture();
+			Unit unit = UnitManager.GetUnit(_data._units[0]._unitName, false);
+			Texture2D texture = unit.GetIconTexture();
+			unit.QueueFree();
+			return texture;
 		}
 		else
 		{

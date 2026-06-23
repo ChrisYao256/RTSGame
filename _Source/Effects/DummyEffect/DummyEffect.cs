@@ -5,7 +5,7 @@ using RTSGame.Units;
 
 public partial class DummyEffect : Effect
 {
-	public DummyEffect(DummyEffectResource resource) : base(resource)
+	public DummyEffect(EffectResource resource) : base(resource)
 	{
 	}
 }

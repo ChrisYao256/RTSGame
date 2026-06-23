@@ -33,7 +33,6 @@ public partial class NearbyHealingResource : EffectResource
 		else
 		{
 			typedOldResource._healAmount += _healAmount;
-			typedOldResource._effect.UpdateResource(typedOldResource);
 			typedOldResource.SetDescription();
 			return false;
 		}

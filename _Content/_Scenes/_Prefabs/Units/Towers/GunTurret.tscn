@@ -26,7 +26,6 @@ metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 [sub_resource type="Resource" id="Resource_yglny"]
 script = ExtResource("3_dbttg")
 _damageIncrease = 70
-_attackSpeedIncrease = 0.18
 metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 
 [sub_resource type="Resource" id="Resource_n37es"]
@@ -161,13 +160,13 @@ _firstUpgradeCost = Vector4i(12, 0, 0, 0)
 _secondUpgrade = Array[Object]([SubResource("Resource_oh15a")])
 _secondUpgradeCost = Vector4i(30, 0, 0, 0)
 _thirdUpgrade = Array[Object]([SubResource("Resource_yglny")])
-_thirdUpgradeCost = Vector4i(80, 0, 0, 0)
+_thirdUpgradeCost = Vector4i(60, 0, 0, 0)
 _fourthUpgradeA = Array[Object]([SubResource("Resource_n37es")])
 _fourthUpgradeATexture = ExtResource("5_3pddp")
-_fourthUpgradeACost = Vector4i(150, 0, 0, 0)
+_fourthUpgradeACost = Vector4i(100, 0, 0, 50)
 _fourthUpgradeB = Array[Object]([SubResource("Resource_7kxbi")])
 _fourthUpgradeBTexture = ExtResource("2_7kxbi")
-_fourthUpgradeBCost = Vector4i(125, 75, 0, 0)
+_fourthUpgradeBCost = Vector4i(100, 75, 0, 0)
 _hpMax = 1
 _internalName = "GunTurret"
 _name = "Gun Turret"

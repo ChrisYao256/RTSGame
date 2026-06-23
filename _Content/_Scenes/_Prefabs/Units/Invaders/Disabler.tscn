@@ -1,0 +1,44 @@
+[gd_scene format=3 uid="uid://d30jaqpnrrkl2"]
+
+[ext_resource type="PackedScene" uid="uid://bqn4h6d52i52" path="res://_Content/_Scenes/_Prefabs/Units/BaseInvaderUnit.tscn" id="1_cvtdm"]
+[ext_resource type="Script" uid="uid://dlf3d2oy6u4uv" path="res://_Source/Effects/SlowAttack/SlowAttackResource.cs" id="2_4wpwn"]
+[ext_resource type="Texture2D" uid="uid://bc230321nqto5" path="res://icon.svg" id="3_irswb"]
+[ext_resource type="Script" uid="uid://d1m1yhs64wcoj" path="res://_Source/Effects/ApplyEffectToTower/ApplyEffectToTowerResource.cs" id="3_xjb3u"]
+
+[sub_resource type="Resource" id="Resource_tx0d7"]
+script = ExtResource("2_4wpwn")
+_percentDecrease = 1.0
+_time = 3.0
+_effectName = "Depowered"
+metadata/_custom_type_script = "uid://dlf3d2oy6u4uv"
+
+[sub_resource type="Resource" id="Resource_34mel"]
+script = ExtResource("3_xjb3u")
+_debuffs = Array[Object]([SubResource("Resource_tx0d7")])
+_interval = 5.0
+_range = 300.0
+_tracerWidth = 2.0
+_tracerDuration = 0.5
+_effectName = "Power Syphon"
+_displayType = 1
+metadata/_custom_type_script = "uid://d1m1yhs64wcoj"
+
+[node name="BaseUnit" unique_id=481801141 instance=ExtResource("1_cvtdm")]
+_moneyDropped = Vector4i(2, 0, 0, 2)
+_hpDeducted = 2
+_moveSpeed = 100.0
+_hpMax = 200
+_startingEffects = Array[Object]([SubResource("Resource_34mel")])
+_internalName = "Disabler"
+_name = "Disabler"
+_radius = 16.0
+
+[node name="MainSprite" parent="." index="1" unique_id=597948513]
+scale = Vector2(1, 1)
+texture = ExtResource("3_irswb")
+
+[node name="HealthBar" parent="." index="5" unique_id=640038315]
+offset_left = -24.0
+offset_top = -32.0
+offset_right = 24.0
+offset_bottom = -20.0

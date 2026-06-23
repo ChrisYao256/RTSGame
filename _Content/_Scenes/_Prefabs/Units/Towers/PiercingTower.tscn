@@ -4,6 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://cq6cfalfqm4wq" path="res://_Assets/RailgunTurret.png" id="2_4kcl2"]
 [ext_resource type="Script" uid="uid://c7ye5bgfhla5e" path="res://_Source/Effects/StatsIncrease/StatsIncreaseResource.cs" id="3_7mvqi"]
 [ext_resource type="Script" uid="uid://dtpcxn7d2dqcy" path="res://_Source/Effects/EffectResource.cs" id="4_4kcl2"]
+[ext_resource type="Script" uid="uid://be80c57wd06d0" path="res://_Source/Effects/ImmediateTransform/ImmediateTransformResource.cs" id="4_msjep"]
 [ext_resource type="Texture2D" uid="uid://bdyjhvsjs67wx" path="res://_Assets/YellowBase.png" id="5_2kx6n"]
 [ext_resource type="Texture2D" uid="uid://b06iomsnrwbvy" path="res://_Assets/RailgunTurretFire.png" id="7_bpy14"]
 [ext_resource type="Texture2D" uid="uid://wswb4au2cnxn" path="res://_Assets/GunShot.png" id="7_msjep"]
@@ -27,6 +28,12 @@ script = ExtResource("3_7mvqi")
 _damageIncrease = 100
 _pierceCount = 1
 metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
+
+[sub_resource type="Resource" id="Resource_m1b1x"]
+script = ExtResource("4_msjep")
+_transformedUnit = "StunPiercingTower"
+_description = "Hits stun enemies."
+metadata/_custom_type_script = "uid://be80c57wd06d0"
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_msjep"]
 atlas = ExtResource("7_bpy14")
@@ -208,6 +215,9 @@ _secondUpgrade = Array[Object]([SubResource("Resource_2kx6n")])
 _secondUpgradeCost = Vector4i(50, 0, 0, 0)
 _thirdUpgrade = Array[Object]([SubResource("Resource_7mvqi")])
 _thirdUpgradeCost = Vector4i(90, 0, 0, 0)
+_fourthUpgradeA = Array[Object]([SubResource("Resource_m1b1x")])
+_fourthUpgradeATexture = ExtResource("2_4kcl2")
+_fourthUpgradeACost = Vector4i(100, 0, 100, 0)
 LeashDistance = 200.0
 _startingEffects = Array[ExtResource("4_4kcl2")]([])
 _internalName = "PiercingTower"

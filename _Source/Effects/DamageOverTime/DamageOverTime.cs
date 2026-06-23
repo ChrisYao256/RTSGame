@@ -20,6 +20,8 @@ public partial class DamageOverTime : Effect
 
 	Node2D _visualSceneInstance;
 
+	Timer _longestTimer;
+
 	public DamageOverTime(DamageOverTimeResource resource) : base(resource)
 	{
 		_firstResource = resource;
@@ -55,6 +57,15 @@ public partial class DamageOverTime : Effect
 		RecalculateDebuff();
 	}
 
+	protected override void UpdateTempDebuffIcon(UpgradeButton button)
+	{
+		if (_longestTimer is null)
+		{
+			return;
+		}
+		button.UpdateAffordabilityDisplay((float)_longestTimer.TimeLeft / _firstResource._time);
+	}
+
 	public void RecalculateDebuff()
 	{
 		_totalDamage = 0;
@@ -66,8 +77,32 @@ public partial class DamageOverTime : Effect
 		_firstResource._damage = _totalDamage;
 		_firstResource.SetDescription();
 		_parentUnit.EmitSignal(Unit.SignalName.UpdateInfo);
-		_firstResource._damage = firstDamage;
+		
+		float maxDuration = 0;
+		foreach (var e in _debuffs)
+		{
+			if (e.Item2.TimeLeft > maxDuration)
+			{
+				maxDuration = (float)e.Item2.TimeLeft;
+			}
+		}
+		if (_longestTimer is null)
+		{
+			_longestTimer = new Timer();
+			_longestTimer.OneShot = true;
+			AddChild(_longestTimer);
+			_longestTimer.Start(maxDuration);
+		}
+		else if (maxDuration > _longestTimer.TimeLeft)
+		{
+			_longestTimer.QueueFree();
+			_longestTimer = new Timer();
+			_longestTimer.OneShot = true;
+			AddChild(_longestTimer);
+			_longestTimer.Start(maxDuration);
+		}
 
+		_firstResource._damage = firstDamage;
 		_totalDamage = Math.Min(MaxDamage, _totalDamage);
 
 		if (_totalDamage == 0)
@@ -75,12 +110,7 @@ public partial class DamageOverTime : Effect
 			_parentUnit.RemoveChild(_visualSceneInstance);
 			RemoveEffectResource();
 			RemoveEffectNode();
-			_parentUnit.Modulate = new Color(1, 1, 1);
 			_parentUnit.EmitSignal(Unit.SignalName.UpdateInfo);
-		}
-		else
-		{
-			_parentUnit.Modulate = new Color(1f, 0.6f, 0.2f);
 		}
 	}
 

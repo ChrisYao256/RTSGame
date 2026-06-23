@@ -4,7 +4,7 @@ using RTSGame.Units;
 public partial class HitscanWeapon : BaseWeapon
 {
 	[Export] public double _tracerDuration = 0.1f;
-	[Export] public Color _tracerColor = Colors.Red;
+	[Export] public Color _tracerColor = ThemePalette.Yellow;
 	[Export] public float _tracerWidth = 2.0f;
 
 	private Line2D _tracerLine;
@@ -20,6 +20,7 @@ public partial class HitscanWeapon : BaseWeapon
 		_tracerLine.DefaultColor = _tracerColor;
 		_tracerLine.Width = _tracerWidth;
 		_tracerTimer = GetNode<Timer>("TracerLine/Timer");
+		_tracerTimer.OneShot = true;
 		_tracerTimer.Timeout += () => _tracerLine.Visible = false;
 		base._Ready();
 	}
@@ -34,6 +35,7 @@ public partial class HitscanWeapon : BaseWeapon
 		// Start (or restart) the timer for the set duration
 		_tracerTimer.Start(_tracerDuration);
 
+		_parent.OnBeforeHitEnemy(target);
 		target.Hit(GetDamage(), _parent);
 		_parent.OnHitEnemy(target);
 	}

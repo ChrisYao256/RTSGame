@@ -57,6 +57,7 @@ public partial class ProjectileWeapon : BaseWeapon
 
 		dealDamage = new Action<Unit, Projectile>((Unit enemy, Projectile projectile) =>
 		{
+			_parent.OnBeforeHitEnemy(enemy);
 			enemy.Hit(GetDamage(), _parent);
 			_parent.OnHitEnemy(enemy);
 		});

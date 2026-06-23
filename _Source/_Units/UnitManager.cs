@@ -28,6 +28,9 @@ public partial class UnitManager : Node2D
 		{ "FrostTurret", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/FrostTurret.tscn") },
 		{ "DualGunTurret", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/DualGunTurret.tscn") },
 		{ "ExplosiveGunTurret", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/ExplosiveGunTurret.tscn") },
+		{ "MoneyTurret", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/MoneyTurret.tscn") },
+		{ "StunPiercingTower", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/StunPiercingTower.tscn") },
+		{ "TeslaTurret", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/TeslaTurret.tscn") },
 		{ "TestTurret", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/TestTurret.tscn") },
 
 		{ "SlimeSpawner", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/SlimeSpawner.tscn") },
@@ -35,6 +38,10 @@ public partial class UnitManager : Node2D
 		{ "PriestSpawner", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/PriestSpawner.tscn") },
 		{ "YetiSpawner", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/YetiSpawner.tscn") },
 		{ "SoldierSpawner", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/SoldierSpawner.tscn") },
+		{ "UndeadSpawner", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/UndeadSpawner.tscn") },
+		{ "LargeSlimeSpawner", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/LargeSlimeSpawner.tscn") },
+		{ "BlinkerSpawner", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/BlinkerSpawner.tscn") },
+		{ "DisablerSpawner", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/DisablerSpawner.tscn") },
 
 		{ "DepoweredSpawner", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/DepoweredSpawner.tscn") },
 
@@ -47,6 +54,7 @@ public partial class UnitManager : Node2D
 
 		// invaders
 		{ "Slime", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Invaders/Slime.tscn") },
+		{ "Undead", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Invaders/Undead.tscn") },
 		{ "Hound", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Invaders/Hound.tscn") },
 		{ "MegaSlime",GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Invaders/MegaSlime.tscn")},
 		{ "Priest", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Invaders/Priest.tscn")},
@@ -55,16 +63,23 @@ public partial class UnitManager : Node2D
 		{ "Soldier", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Invaders/Soldier.tscn")},
 		{ "BigArchbishop", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Invaders/BigArchbishop.tscn")},
 		{ "Bonus", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Invaders/Bonus.tscn")},
+		{ "LargeSlime", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Invaders/LargeSlime.tscn")},
+		{ "Blinker", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Invaders/Blinker.tscn")},
+		{ "Disabler", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Invaders/Disabler.tscn")},
 	};
 
 	public static uint UnitLayerMask = 2;
 	public static uint TowerLayerMask = 4;
 
-	public static Unit GetUnit(string unitName)
+	public static Unit GetUnit(string unitName, bool setUnit) // if setUnit is false, then return unit has no _weapon, _hp, _startingEffect, etc.
 	{
 		if (UnitLibrary.TryGetValue(unitName, out PackedScene scene))
 		{
-			Unit newUnit = scene.Instantiate<Unit>();
+			Unit newUnit = (Unit)scene.Instantiate<Unit>();
+			if (setUnit)
+			{
+				newUnit.SetDisplayUnit();
+			}
 			return newUnit;
 		}
 		else
@@ -76,7 +91,10 @@ public partial class UnitManager : Node2D
 
 	public static string InternalNameToName(string internalName)
 	{
-		return UnitManager.GetUnit(internalName)._name;
+		Unit unit = UnitManager.GetUnit(internalName, false);
+		string name = unit._name;
+		unit.QueueFree();
+		return name;
 	}
 
 	private UnitInfoPanel _unitInfoPanel;
@@ -457,7 +475,7 @@ public partial class UnitManager : Node2D
 
 			newUnit._hasEffects = hasEffects;
 
-			AddChild(newUnit);
+			GetParent().AddChild(newUnit);
 
 			_activeUnits.Add(newUnit);
 

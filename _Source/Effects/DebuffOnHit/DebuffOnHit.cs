@@ -14,10 +14,10 @@ public partial class DebuffOnHit : Effect
 	public override void ConnectSignals(Unit unit)
 	{
 		base.ConnectSignals(unit);
-		unit.Connect(Unit.SignalName.HitEnemy, Callable.From<Unit>(OnHitEnemy));
+		unit.Connect(Unit.SignalName.BeforeHitEnemy, Callable.From<Unit>(OnBeforeHitEnemy));
 	}
 
-	protected override void OnHitEnemy(Unit enemy)
+	protected override void OnBeforeHitEnemy(Unit enemy)
 	{
 		foreach (EffectResource debuff in _resource._debuffs)
 		{

@@ -15,7 +15,7 @@
 
 [sub_resource type="Resource" id="Resource_cmo3r"]
 script = ExtResource("3_n8q5b")
-_damageIncrease = 100
+_damageIncrease = 125
 metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 
 [sub_resource type="Resource" id="Resource_k5r0l"]
@@ -25,7 +25,7 @@ metadata/_custom_type_script = "uid://ltp3a1v0hhal"
 
 [sub_resource type="Resource" id="Resource_oh15a"]
 script = ExtResource("3_n8q5b")
-_damageIncrease = 190
+_damageIncrease = 300
 metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 
 [sub_resource type="Resource" id="Resource_n8q5b"]
@@ -35,7 +35,7 @@ metadata/_custom_type_script = "uid://ltp3a1v0hhal"
 
 [sub_resource type="Resource" id="Resource_yglny"]
 script = ExtResource("3_n8q5b")
-_damageIncrease = 370
+_damageIncrease = 650
 metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 
 [sub_resource type="Resource" id="Resource_nb5yh"]
@@ -48,6 +48,7 @@ script = ExtResource("5_prthp")
 _explosionRadius = 100.0
 _explosionDamage = 150
 ExplosionVisualScene = ExtResource("5_we67n")
+_explosiveHitInterval = 3
 _effectName = "Explosive shells"
 _displayType = 1
 metadata/_custom_type_script = "uid://bonjif38a25r3"
@@ -168,9 +169,9 @@ _iconTexture = ExtResource("2_we67n")
 _firstUpgrade = Array[Object]([SubResource("Resource_cmo3r"), SubResource("Resource_k5r0l")])
 _firstUpgradeCost = Vector4i(60, 30, 0, 0)
 _secondUpgrade = Array[Object]([SubResource("Resource_oh15a"), SubResource("Resource_n8q5b")])
-_secondUpgradeCost = Vector4i(100, 60, 0, 0)
+_secondUpgradeCost = Vector4i(125, 75, 0, 0)
 _thirdUpgrade = Array[Object]([SubResource("Resource_yglny"), SubResource("Resource_nb5yh")])
-_thirdUpgradeCost = Vector4i(200, 100, 0, 0)
+_thirdUpgradeCost = Vector4i(300, 100, 0, 0)
 _hpMax = 1
 _startingEffects = Array[Object]([SubResource("Resource_we67n")])
 _internalName = "ExplosiveGunTurret"

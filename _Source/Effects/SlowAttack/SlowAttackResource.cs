@@ -45,8 +45,16 @@ public partial class SlowAttackResource : EffectResource
 
 	public override void SetDescription()
 	{
-		_effectName = "Slowed";
-		_effectDescription = "Attack speed slowed by " + Math.Truncate(_percentDecrease * 100) + "%";
+		_displayType = DisplayTypes.Small;
+		if (_effectName == "")
+		{
+			_effectName = "Slowed";
+		}
+		if (_effectDescription == "")
+		{
+			_effectDescription = "Attack speed slowed by " + Math.Truncate(_percentDecrease * 100) + "%";
+		}
+		_effectTopRightString = _time + "::duration::";
 	}
 
 	public override Effect CreateNode()

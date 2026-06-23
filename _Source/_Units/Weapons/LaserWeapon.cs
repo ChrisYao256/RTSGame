@@ -85,6 +85,7 @@ public partial class LaserWeapon : BaseWeapon
 
 	public override void PerformAttack(Unit target, int d)
 	{
+		_parent.OnBeforeHitEnemy(target);
 		target.Hit(d , _parent, true);
 		_parent.OnHitEnemy(target);
 	}

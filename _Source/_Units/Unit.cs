@@ -91,19 +91,25 @@ public partial class Unit : CharacterBody2D
 	public delegate void RemovedEffectEventHandler(Unit unit, Effect effect);
 
 	[Signal]
-	public delegate void BeginAttackEventHandler(Unit unit, Unit target);
+	public delegate void BeginAttackEventHandler(Unit target);
 
 	[Signal]
-	public delegate void StopAttackEventHandler(Unit unit, Unit target);
+	public delegate void StopAttackEventHandler(Unit target);
 
 	[Signal]
 	public delegate void ShotFiredEventHandler(Unit unit);
 
 	[Signal]
-	public delegate void HitEnemyEventHandler(Unit unit, Unit target);
+	public delegate void BeforeHitEnemyEventHandler(Unit target);
+
+	[Signal]
+	public delegate void HitEnemyEventHandler(Unit target);
 
 	[Signal]
 	public delegate void PlacedTowerEventHandler(TowerUnit tower);
+
+	[Signal]
+	public delegate void BeforeIsHitEventHandler(Unit unit);
 
 	[Signal]
 	public delegate void IsHitEventHandler(Unit unit);
@@ -148,7 +154,7 @@ public partial class Unit : CharacterBody2D
 
 	public float _damageTakenDebuff;
 
-	public List<EffectResource> _effects = [];
+	public Array<EffectResource> _effects = [];
 
 	protected CollisionShape2D _attackCollisionShape;
 
@@ -156,21 +162,41 @@ public partial class Unit : CharacterBody2D
 
 	protected bool _active = true;
 
-	private bool _navigationPaused = false;
+	protected bool _navigationPaused = false;
 
 	public bool _hasEffects = true;
 
 	protected Godot.Collections.Dictionary<string, PanelContainer> _infoContainers;
 
+	protected bool _isDisplayUnit = false;
+
+	public int _currentFloatingAnimationCount = 0;
+
+	public float _damageDealt = 0;
+
 	public override void _Ready()
 	{
+		if (_isDisplayUnit)
+		{
+			return;
+		}
 		SetWeapon();
 		SetSelectionVisual();
 		SetAttackRange();
 		SetPathFinder();
 		SetHealthBar();
 		SetInitialCommand();
-		SetStartingEffects();
+		SetStartingEffects(false);
+		SetSize();
+	}
+
+	public virtual void SetDisplayUnit()
+	{
+		_isDisplayUnit = true;
+		_hp = GetHpMax();
+		SetWeapon();
+		SetAttackRange();
+		SetStartingEffects(true);
 		SetSize();
 	}
 
@@ -187,15 +213,22 @@ public partial class Unit : CharacterBody2D
 		CircleShape2D collisionCircle = new CircleShape2D();
 		collisionCircle.Radius = _radius;
 		collision.Shape = collisionCircle;
+		Sprite2D selectionCircle = GetNode<Sprite2D>("SelectionCircle");
+		Utils.ScaleVisualToRadius(selectionCircle, _radius);
 	}
 
-	protected virtual void SetStartingEffects()
+	protected virtual void SetStartingEffects(bool addResourceOnly)
 	{
-		if (!_hasEffects)
+		_effectsNode = GetNode<Node2D>("Effects");
+		if (addResourceOnly)
 		{
+			foreach (var effect in _startingEffects)
+			{
+				_effects.Add((EffectResource)effect.DuplicateDeep());
+			}
+			
 			return;
 		}
-		_effectsNode = GetNode<Node2D>("Effects");
 		foreach (var effect in _startingEffects)
 		{
 			AddEffect(effect);
@@ -226,7 +259,7 @@ public partial class Unit : CharacterBody2D
 		else
 		{
 			EffectResource oldEffect = _effects.First(e => e.GetType() == resource.GetType());
-			List<EffectResource> allMatchingEffects = _effects.FindAll(e => e.GetType() == resource.GetType());
+			List<EffectResource> allMatchingEffects = (_effects.Where(e => e.GetType() == resource.GetType()).ToList());
 			bool addNewEffect = resource.MergeWithOld(oldEffect, allMatchingEffects);
 			if (addNewEffect)
 			{
@@ -315,16 +348,7 @@ public partial class Unit : CharacterBody2D
 	{
 		_hp = GetHpMax();
 		_healthBar = GetNode<TextureProgressBar>("HealthBar");
-		_healthBar.MaxValue = GetHpMax();
-		float length = Math.Max(_baseHealthBarWidth, 8.5f * (float)Math.Pow(_hp, 1.0 / 3.0));
-		_healthBar.Size = new Vector2(length, _baseHealthBarHeight);
-		_healthBar.Position = new Vector2(-length / 2, -24f);
 
-		_shieldBar = GetNode<TextureProgressBar>("ShieldBar");
-		_shieldBar.MaxValue = GetHpMax();
-		_shieldBar.Modulate = ThemePalette.Blue;
-		_shieldBar.Size = new Vector2(length, _baseHealthBarHeight);
-		_shieldBar.Position = new Vector2(-length / 2, -24f - _baseHealthBarHeight);
 		UpdateHealthBar(_hp, GetHpMax(), _shield);
 
 		
@@ -332,10 +356,10 @@ public partial class Unit : CharacterBody2D
 
 	private void UpdateHpMax()
 	{
-		_healthBar = GetNode<TextureProgressBar>("HealthBar");
-		_healthBar.MaxValue = GetHpMax();
-		_shieldBar.MaxValue = GetHpMax();
-		UpdateHealthBar(_hp, GetHpMax(), _shield);
+		if (_healthBar != null)
+		{
+			UpdateHealthBar(_hp, GetHpMax(), _shield);
+		}
 	}
 
 	public int GetHpMax()
@@ -357,69 +381,72 @@ public partial class Unit : CharacterBody2D
 	{
 		_infoContainers = new();
 
-		HideAttackRange();
-		DisplayAttackRange();
+		//HideAttackRange();
+		//DisplayAttackRange();
 
-		PanelContainer basicInfo = new();
-		basicInfo.CustomMinimumSize = new(200, 0);
-
-		VBoxContainer basicInfoV = new();
-		basicInfoV.Name = "VBoxContainer";
-		basicInfo.CustomMinimumSize = new(200, 0);
-
-		Label nameLabel = new();
-		nameLabel.Text = _name;
-		nameLabel.Name = "NameLabel";
-		nameLabel.HorizontalAlignment = HorizontalAlignment.Center;
-		basicInfoV.AddChild(nameLabel);
-
-		if (this is not TowerUnit)
+		if (this is not Spawner)
 		{
-			if (_shield > 0)
+			PanelContainer basicInfo = new();
+			basicInfo.CustomMinimumSize = new(200, 0);
+
+			VBoxContainer basicInfoV = new();
+			basicInfoV.Name = "VBoxContainer";
+			basicInfo.CustomMinimumSize = new(200, 0);
+
+			Label nameLabel = new();
+			nameLabel.Text = _name;
+			nameLabel.Name = "NameLabel";
+			nameLabel.HorizontalAlignment = HorizontalAlignment.Center;
+			basicInfoV.AddChild(nameLabel);
+
+			if (this is not TowerUnit)
 			{
-				Label shieldLabel = new();
-				shieldLabel.Text = "Shield: " + _shield.ToString() + "/" + GetHpMax().ToString();
-				shieldLabel.Name = "ShieldLabel";
-				basicInfoV.AddChild(shieldLabel);
+				if (_shield > 0)
+				{
+					Label shieldLabel = new();
+					shieldLabel.Text = "Shield: " + _shield.ToString() + "/" + GetHpMax().ToString();
+					shieldLabel.Name = "ShieldLabel";
+					basicInfoV.AddChild(shieldLabel);
+				}
+
+				Label hpLabel = new();
+				hpLabel.Text = "Hp: " + _hp.ToString() + "/" + GetHpMax().ToString();
+				hpLabel.Name = "HpLabel";
+				basicInfoV.AddChild(hpLabel);
+
+				Label speedLabel = new();
+				speedLabel.Text = "Move speed: " + GetSpeed().ToString();
+				speedLabel.Name = "SpeedLabel";
+				basicInfoV.AddChild(speedLabel);
 			}
 
-			Label hpLabel = new();
-			hpLabel.Text = "Hp: " + _hp.ToString() + "/" + GetHpMax().ToString();
-			hpLabel.Name = "HpLabel";
-			basicInfoV.AddChild(hpLabel);
 
-			Label speedLabel = new();
-			speedLabel.Text = "Move speed: " + GetSpeed().ToString();
-			speedLabel.Name = "SpeedLabel";
-			basicInfoV.AddChild(speedLabel);
+			if (this is InvaderUnit invader)
+			{
+				TooltipRichTextLabel moneyDropLabel = new();
+				moneyDropLabel.Text = "Drops " + Utils.MakeMoneyText(invader.GetMoneyDropped());
+				moneyDropLabel.Name = "MoneyDropLabel";
+				moneyDropLabel.AutowrapMode = TextServer.AutowrapMode.Off;
+				moneyDropLabel.FitContent = true;
+				moneyDropLabel.BbcodeEnabled = true;
+				basicInfoV.AddChild(moneyDropLabel);
+			}
+
+			if (this is TowerUnit tower)
+			{
+				TooltipRichTextLabel descriptionLabel = new();
+				descriptionLabel.Text = tower.GetDescription();
+				descriptionLabel.Name = "DescriptionLabel";
+				descriptionLabel.CustomMinimumSize = new(250, 0);
+				descriptionLabel.FitContent = true;
+				descriptionLabel.BbcodeEnabled = true;
+				basicInfoV.AddChild(descriptionLabel);
+			}
+
+			basicInfo.AddChild(basicInfoV);
+
+			_infoContainers.Add("BasicInfo", basicInfo);
 		}
-
-
-		if (this is InvaderUnit invader)
-		{
-			RichTextLabel moneyDropLabel = new();
-			moneyDropLabel.Text = "Drops " + Utils.MakeMoneyText(invader.GetMoneyDropped());
-			moneyDropLabel.Name = "MoneyDropLabel";
-			moneyDropLabel.AutowrapMode = TextServer.AutowrapMode.Off;
-			moneyDropLabel.FitContent = true;
-			moneyDropLabel.BbcodeEnabled = true;
-			basicInfoV.AddChild(moneyDropLabel);
-		}
-
-		if (this is TowerUnit tower)
-		{
-			RichTextLabel descriptionLabel = new();
-			descriptionLabel.Text = tower.GetDescription();
-			descriptionLabel.Name = "DescriptionLabel";
-			descriptionLabel.CustomMinimumSize = new(200, 0);
-			descriptionLabel.FitContent = true;
-			descriptionLabel.BbcodeEnabled = true;
-			basicInfoV.AddChild(descriptionLabel);
-		}
-
-		basicInfo.AddChild(basicInfoV);
-
-		_infoContainers.Add("BasicInfo", basicInfo);
 
 		if (_weapon != null)
 		{
@@ -429,6 +456,7 @@ public partial class Unit : CharacterBody2D
 		bool hasDisplayEffects = false;
 		foreach (EffectResource effect in _effects)
 		{
+			effect.SetDescription();
 			if (effect._displayType == EffectResource.DisplayTypes.Large || effect._displayType == EffectResource.DisplayTypes.Small)
 			{
 				hasDisplayEffects = true;
@@ -493,67 +521,73 @@ public partial class Unit : CharacterBody2D
 		HideAttackRange();
 		DisplayAttackRange();
 
-		PanelContainer basicInfo = _infoContainers["BasicInfo"];
-		basicInfo.CustomMinimumSize = new(200, 0);
-		VBoxContainer basicInfoV = basicInfo.GetNode<VBoxContainer>("VBoxContainer");
-
-		if (this is not TowerUnit)
+		if (this is not Spawner)
 		{
-			Label hpLabel = basicInfoV.GetNode<Label>("HpLabel");
-			hpLabel.Text = "Hp: " + _hp.ToString() + "/" + GetHpMax().ToString();
+			PanelContainer basicInfo = _infoContainers["BasicInfo"];
+			basicInfo.CustomMinimumSize = new(200, 0);
+			VBoxContainer basicInfoV = basicInfo.GetNode<VBoxContainer>("VBoxContainer");
 
-			if (_shield > 0)
+			if (this is not TowerUnit)
 			{
-				if (basicInfoV.HasNode("ShieldLabel"))
+				Label hpLabel = basicInfoV.GetNode<Label>("HpLabel");
+				hpLabel.Text = "Hp: " + _hp.ToString() + "/" + GetHpMax().ToString();
+
+				if (_shield > 0)
 				{
-					Label shieldLabel = basicInfoV.GetNode<Label>("ShieldLabel");
-					shieldLabel.Text = "Shield: " + _shield.ToString() + "/" + GetHpMax().ToString();
+					if (basicInfoV.HasNode("ShieldLabel"))
+					{
+						Label shieldLabel = basicInfoV.GetNode<Label>("ShieldLabel");
+						shieldLabel.Text = "Shield: " + _shield.ToString() + "/" + GetHpMax().ToString();
+					}
+					else
+					{
+						Label shieldLabel = new();
+						shieldLabel.Text = "Shield: " + _shield.ToString() + "/" + GetHpMax().ToString();
+						shieldLabel.Name = "ShieldLabel";
+						basicInfoV.AddChild(shieldLabel);
+						basicInfoV.MoveChild(shieldLabel, 1);
+					}
 				}
 				else
 				{
-					Label shieldLabel = new();
-					shieldLabel.Text = "Shield: " + _shield.ToString() + "/" + GetHpMax().ToString();
-					shieldLabel.Name = "ShieldLabel";
-					basicInfoV.AddChild(shieldLabel);
-					basicInfoV.MoveChild(shieldLabel, 1);
+					if (basicInfoV.HasNode("ShieldLabel"))
+					{
+						Label shieldLabel = basicInfoV.GetNode<Label>("ShieldLabel");
+						shieldLabel.QueueFree();
+					}
 				}
-			}
-			else
-			{
-				if (basicInfoV.HasNode("ShieldLabel"))
-				{
-					Label shieldLabel = basicInfoV.GetNode<Label>("ShieldLabel");
-					shieldLabel.QueueFree();
-				}
-			}
 
 				Label speedLabel = basicInfoV.GetNode<Label>("SpeedLabel");
-			speedLabel.Text = "Move speed: " + GetSpeed().ToString();
-		}
+				speedLabel.Text = "Move speed: " + GetSpeed().ToString();
+			}
 
-		if (this is InvaderUnit invader)
-		{
-			RichTextLabel moneyDropLabel = basicInfoV.GetNode<RichTextLabel>("MoneyDropLabel");
-			moneyDropLabel.Text = "Drops " + Utils.MakeMoneyText(invader.GetMoneyDropped());
+			if (this is InvaderUnit invader)
+			{
+				TooltipRichTextLabel moneyDropLabel = basicInfoV.GetNode<TooltipRichTextLabel>("MoneyDropLabel");
+				moneyDropLabel.Text = "Drops " + Utils.MakeMoneyText(invader.GetMoneyDropped());
+			}
 		}
+		
 
 		if (_infoContainers.Keys.Contains("WeaponInfo"))
 		{
 			_weapon.UpdateWeaponInfoContainer();
 		}
 
-		bool hasDisplayEffects = false;
-		foreach (EffectResource effect in _effects)
-		{
-			if (effect._displayType == EffectResource.DisplayTypes.Large || effect._displayType == EffectResource.DisplayTypes.Small)
-			{
-				hasDisplayEffects = true;
-				break;
-			}
-		}
+
 
 		if (updateEffects)
 		{
+			bool hasDisplayEffects = false;
+			foreach (EffectResource effect in _effects)
+			{
+				if (effect._displayType == EffectResource.DisplayTypes.Large || effect._displayType == EffectResource.DisplayTypes.Small)
+				{
+					hasDisplayEffects = true;
+					break;
+				}
+			}
+
 			PanelContainer effectsInfo = _infoContainers["EffectsInfo"];
 			foreach (var child in effectsInfo.GetChildren())
 			{
@@ -587,8 +621,14 @@ public partial class Unit : CharacterBody2D
 				}
 			}
 
-			allEffectsH.AddChild(smallEffectsV);
-			allEffectsH.AddChild(largeEffectsH);
+			if (largeEffectsH.GetChildren().Count != 0)
+			{
+				allEffectsH.AddChild(largeEffectsH);
+			}
+			if (smallEffectsV.GetChildren().Count != 0)
+			{
+				allEffectsH.AddChild(smallEffectsV);
+			}
 			effectsInfo.AddChild(allEffectsH);
 			if (!hasDisplayEffects)
 			{
@@ -612,6 +652,17 @@ public partial class Unit : CharacterBody2D
 			panelContainer.QueueFree();
 		}
 		_infoContainers.Clear();
+	}
+
+	public PanelContainer GetUnitInfoContainerWithString(string name)
+	{
+		Godot.Collections.Dictionary<string, PanelContainer> dict = MakeUnitInfoContainer();
+		PanelContainer dictCopy = (PanelContainer)dict[name].Duplicate();
+		foreach (PanelContainer panelContainer in dict.Values)
+		{
+			panelContainer.QueueFree();
+		}
+		return dictCopy;
 	}
 
 	protected void SetInitialCommand()
@@ -678,7 +729,7 @@ public partial class Unit : CharacterBody2D
 		}
 	}
 
-	public void ProcessNextCommand()
+	public virtual void ProcessNextCommand()
 	{
 		Command command = new NoCommand(this);
 		if (_commandQueue.Count > 0)
@@ -813,6 +864,11 @@ public partial class Unit : CharacterBody2D
 		}
 	}
 
+	public void OnBeforeHitEnemy(Unit enemy)
+	{
+		EmitSignal(SignalName.BeforeHitEnemy, enemy);
+	}
+
 	public void OnHitEnemy(Unit enemy)
 	{
 		EmitSignal(SignalName.HitEnemy, enemy);
@@ -825,7 +881,12 @@ public partial class Unit : CharacterBody2D
 
 	public void Hit(int damage, Unit source, bool ignoreArmor = false)
 	{
+		EmitSignal(SignalName.BeforeIsHit, source);
 		damage = (int)(damage * (1f + _damageTakenDebuff + _damageTakenModifier));
+		if (source is TowerUnit tower)
+		{
+			source.IncreaseDamageDealtStat(damage);
+		}
 		IncreaseHp(-damage, ignoreArmor);
 		Area2D socialArea = GetNode<Area2D>("AidArea");
 		var nearbyBodies = socialArea.GetOverlappingBodies();
@@ -898,6 +959,17 @@ public partial class Unit : CharacterBody2D
 	public void SetDamageTakenDebuff(float debuff)
 	{
 		_damageTakenDebuff = debuff;
+	}
+
+	public void IncreaseDamageTakenDebuff(float debuff)
+	{
+		SetDamageTakenDebuff(debuff + _damageTakenDebuff);
+	}
+
+	public void IncreaseDamageDealtStat(float change)
+	{
+		_damageDealt += change;
+		EmitSignal(SignalName.UpdateStatsInfo);
 	}
 
 	public virtual void Retaliate(Unit unit)
@@ -1022,6 +1094,29 @@ public partial class Unit : CharacterBody2D
 		.ToList();
 	}
 
+	public Array<Unit> GetEnemiesInRange()
+	{
+		var scanArea = GetNode<Area2D>("AttackArea");
+
+		// Get all overlapping physics bodies
+		var bodies = scanArea.GetOverlappingBodies();
+		if (!bodies.Any(body => body is Unit))
+		{
+			return [];
+		}
+		Array<Unit> units = new Godot.Collections.Array<Unit>(bodies.OfType<Unit>());
+
+		Array<Unit> enemies = [];
+		foreach (Unit unit in units)
+		{
+			if (unit._teamId != _teamId)
+			{
+				enemies.Add(unit);
+			}
+		}
+		return enemies;
+	}
+
 	protected void CheckTargetAlive()
 	{
 		if (!IsInstanceValid(_attackTarget))
@@ -1053,12 +1148,12 @@ public partial class Unit : CharacterBody2D
 		_hp += change;
 		_hpMaxModifier = hpModifier;
 		EmitSignal(SignalName.UpdateStatsInfo);
-		UpdateHpMax();
 	}
 
 	public void IncreaseHpMaxModifier(int change)
 	{
 		SetHpMaxModifier(_hpMaxModifier + change);
+		UpdateHpMax();
 	}
 
 	public void SetWeaponModifier(int damageModifier)
@@ -1142,6 +1237,7 @@ public partial class Unit : CharacterBody2D
 	{
 		_weapon._attackSpeedModifier = speed;
 		EmitSignal(SignalName.UpdateStatsInfo);
+		_weapon.ResetCooldown();
 	}
 
 	public void IncreaseAttackSpeedModifier(double change)
@@ -1161,6 +1257,7 @@ public partial class Unit : CharacterBody2D
 		}
 		_weapon._attackSpeedDebuff = debuff;
 		EmitSignal(SignalName.UpdateStatsInfo);
+		_weapon.ResetCooldown();
 	}
 
 	public void SetAttackDelayModifier(double speed)
@@ -1218,6 +1315,18 @@ public partial class Unit : CharacterBody2D
 	private void UpdateHealthBar(float currentHp, float maxHp, float shield)
 	{
 		float healthPercent = currentHp / maxHp;
+
+		_healthBar.MaxValue = GetHpMax();
+		float length = Math.Max(_baseHealthBarWidth, 8.5f * (float)Math.Pow(GetHpMax(), 1.0 / 3.0));
+		_healthBar.Size = new Vector2(length, _baseHealthBarHeight);
+		_healthBar.Position = new Vector2(-length / 2, -24f);
+
+		_shieldBar = GetNode<TextureProgressBar>("ShieldBar");
+		_shieldBar.MaxValue = GetHpMax();
+		_shieldBar.Modulate = ThemePalette.Blue;
+		_shieldBar.Size = new Vector2(length, _baseHealthBarHeight);
+		_shieldBar.Position = new Vector2(-length / 2, -24f - _baseHealthBarHeight);
+
 		_healthBar.Value = currentHp;
 
 		// Transition from Green (0.33) to Red (0.0) using HSV

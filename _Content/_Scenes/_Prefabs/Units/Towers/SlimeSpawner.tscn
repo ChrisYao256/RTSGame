@@ -3,35 +3,69 @@
 [ext_resource type="PackedScene" uid="uid://yhbw0b164ui2" path="res://_Content/_Scenes/_Prefabs/Units/BaseTower.tscn" id="1_gjvjw"]
 [ext_resource type="Script" uid="uid://b4jva1l23o6su" path="res://_Source/_Units/Spawner.cs" id="2_jar8h"]
 [ext_resource type="Script" uid="uid://cvroohkeaovqw" path="res://_Source/_Units/SpawnerDataResource.cs" id="3_38tks"]
+[ext_resource type="Script" uid="uid://iamaod4iivlq" path="res://_Source/Effects/InvaderStatsIncrease/InvaderStatsIncreaseResource.cs" id="3_jssxb"]
 [ext_resource type="Texture2D" uid="uid://iocgjnp7i8td" path="res://_Assets/Portal.png" id="4_jssxb"]
-[ext_resource type="Script" uid="uid://dj1iuetxsjca2" path="res://_Source/Effects/SpawnerStatsIncrease/SpawnerStatsIncreaseResource.cs" id="5_jssxb"]
+[ext_resource type="Script" uid="uid://be80c57wd06d0" path="res://_Source/Effects/ImmediateTransform/ImmediateTransformResource.cs" id="6_jssxb"]
+[ext_resource type="Script" uid="uid://djbu8krhjrjib" path="res://_Source/Effects/SpawnerUpgradeResource/SpawnerUpgradeResource.cs" id="6_q3hbh"]
+
+[sub_resource type="Resource" id="Resource_1tabr"]
+script = ExtResource("3_jssxb")
+_unitName = "Slime"
+_startingEffects = null
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_34is0"]
+script = ExtResource("3_jssxb")
+_unitName = "Slime"
+_startingEffects = null
+metadata/_custom_type_script = "uid://iamaod4iivlq"
 
 [sub_resource type="Resource" id="Resource_jssxb"]
 script = ExtResource("3_38tks")
-_units = Array[String](["Slime", "Slime"])
-_startingEffects = null
+_units = Array[ExtResource("3_jssxb")]([SubResource("Resource_1tabr"), SubResource("Resource_34is0")])
 metadata/_custom_type_script = "uid://cvroohkeaovqw"
 
-[sub_resource type="Resource" id="Resource_q3hbh"]
-script = ExtResource("5_jssxb")
+[sub_resource type="Resource" id="Resource_45p1p"]
+script = ExtResource("3_jssxb")
 _hpBuff = 100
 _moneyBuff = Vector4i(1, 0, 0, 0)
 _startingEffects = null
-metadata/_custom_type_script = "uid://dj1iuetxsjca2"
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_fflv8"]
+script = ExtResource("6_q3hbh")
+_units = Array[ExtResource("3_jssxb")]([SubResource("Resource_45p1p")])
+metadata/_custom_type_script = "uid://djbu8krhjrjib"
 
 [sub_resource type="Resource" id="Resource_0bcix"]
-script = ExtResource("5_jssxb")
+script = ExtResource("3_jssxb")
 _hpBuff = 250
 _moneyBuff = Vector4i(2, 0, 0, 0)
 _startingEffects = null
-metadata/_custom_type_script = "uid://dj1iuetxsjca2"
+metadata/_custom_type_script = "uid://iamaod4iivlq"
 
 [sub_resource type="Resource" id="Resource_lh454"]
-script = ExtResource("5_jssxb")
+script = ExtResource("6_q3hbh")
+_units = Array[ExtResource("3_jssxb")]([SubResource("Resource_0bcix")])
+metadata/_custom_type_script = "uid://djbu8krhjrjib"
+
+[sub_resource type="Resource" id="Resource_q3hbh"]
+script = ExtResource("3_jssxb")
 _hpBuff = 400
 _moneyBuff = Vector4i(3, 0, 0, 0)
 _startingEffects = null
-metadata/_custom_type_script = "uid://dj1iuetxsjca2"
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_02mu3"]
+script = ExtResource("6_q3hbh")
+_units = Array[ExtResource("3_jssxb")]([SubResource("Resource_q3hbh")])
+metadata/_custom_type_script = "uid://djbu8krhjrjib"
+
+[sub_resource type="Resource" id="Resource_uquhd"]
+script = ExtResource("6_jssxb")
+_transformedUnit = "LargeSlimeSpawner"
+_description = "Spawns a large ooze that breaks into two slimes instead."
+metadata/_custom_type_script = "uid://be80c57wd06d0"
 
 [node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_gjvjw")]
 script = ExtResource("2_jar8h")
@@ -40,9 +74,11 @@ _spawnInterval = 1.0
 _isEnemy = true
 _iconTexture = ExtResource("4_jssxb")
 _towerType = 2
-_firstUpgrade = Array[Object]([SubResource("Resource_q3hbh")])
-_secondUpgrade = Array[Object]([SubResource("Resource_0bcix")])
-_thirdUpgrade = Array[Object]([SubResource("Resource_lh454")])
+_firstUpgrade = Array[Object]([SubResource("Resource_fflv8")])
+_secondUpgrade = Array[Object]([SubResource("Resource_lh454")])
+_thirdUpgrade = Array[Object]([SubResource("Resource_02mu3")])
+_fourthUpgradeA = Array[Object]([SubResource("Resource_uquhd")])
+_fourthUpgradeATexture = ExtResource("4_jssxb")
 LeashDistance = 200.0
 _internalName = "SlimeSpawner"
 _name = "Slime Portal"

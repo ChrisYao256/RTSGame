@@ -8,29 +8,5 @@ namespace RTSGame.Units;
 public partial class SpawnerDataResource : Resource
 {
 	[Export]
-	public Array<string> _units = new Array<string>();
-
-	[Export]
-	public Array<Vector2I> _locations = new Array<Vector2I>();
-
-	[Export]
-	public int _hpBuff;
-
-	[Export]
-	public float _speedBuff;
-
-	[Export]
-	public int _armorBuff;
-
-	[Export]
-	public Vector4I _moneyBuff;
-
-	[Export]
-	public int _hpLossBuff;
-
-	[Export]
-	public Vector4I _moneyLossBuff;
-
-	[Export]
-	public Array<EffectResource> _startingEffects;
+	public Array<InvaderStatsIncreaseResource> _units = new Array<InvaderStatsIncreaseResource>();
 }

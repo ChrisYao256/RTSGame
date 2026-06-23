@@ -13,6 +13,8 @@ public partial class SlowMovement : Effect
 
 	List<(SlowMovementResource, Timer)> _debuffs = [];
 
+	private Timer _longestTimer;
+
 	public SlowMovement(SlowMovementResource resource) : base(resource)
 	{
 		_firstResource = resource;
@@ -40,6 +42,15 @@ public partial class SlowMovement : Effect
 		RecalculateDebuff();
 	}
 
+	protected override void UpdateTempDebuffIcon(UpgradeButton button)
+	{
+		if (_longestTimer is null)
+		{
+			return;
+		}
+		button.UpdateAffordabilityDisplay((float)_longestTimer.TimeLeft / _firstResource._time);
+	}
+
 	public void RecalculateDebuff()
 	{
 		float maxReduction = 0;
@@ -54,6 +65,30 @@ public partial class SlowMovement : Effect
 		_firstResource.SetDescription();
 		_parentUnit.EmitSignal(Unit.SignalName.UpdateInfo);
 
+		float maxDuration = 0;
+		foreach (var e in _debuffs)
+		{
+			if (e.Item2.TimeLeft > maxDuration)
+			{
+				maxDuration = (float)e.Item2.TimeLeft;
+			}
+		}
+		if (_longestTimer is null)
+		{
+			_longestTimer = new Timer();
+			_longestTimer.OneShot = true;
+			AddChild(_longestTimer);
+			_longestTimer.Start(maxDuration);
+		}
+		else if (maxDuration > _longestTimer.TimeLeft)
+		{
+			_longestTimer.QueueFree();
+			_longestTimer = new Timer();
+			_longestTimer.OneShot = true;
+			AddChild(_longestTimer);
+			_longestTimer.Start(maxDuration);
+		}
+
 		_parentUnit.SetSpeedDebuff(maxReduction);
 		if (maxReduction == 0)
 		{
@@ -64,7 +99,7 @@ public partial class SlowMovement : Effect
 		}
 		else
 		{
-			_parentUnit.Modulate = new Color(0.4f, 0.4f, 1.0f);
+			_parentUnit.Modulate = ThemePalette.Blue;
 		}
 	}
 }

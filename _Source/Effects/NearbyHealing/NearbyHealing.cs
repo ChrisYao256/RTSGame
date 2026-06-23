@@ -84,6 +84,7 @@ public partial class NearbyHealing : Effect
 				float radius = _resource._radius; // Get this from your shape
 				Utils.ScaleVisualToRadius(viz.GetNode<Sprite2D>("Sprite2D"), radius);
 			}
+			MakeFloatingAnimation();
 		};
 		_timer.Start();
 	}

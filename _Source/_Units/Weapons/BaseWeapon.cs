@@ -13,10 +13,10 @@ public abstract partial class BaseWeapon : Node2D
 		Explosive
 	}
 
-	[Export] private int _damage;
-	[Export] private float _range;
+	[Export] protected int _damage;
+	[Export] protected float _range;
 
-	[Export] private double _attackCooldown = 1.0;
+	[Export] protected double _attackCooldown = 1.0;
 	[Export] private double _attackDelayLow = 0.1;
 	[Export] private double _attackDelayHigh = 0.2;
 
@@ -54,7 +54,7 @@ public abstract partial class BaseWeapon : Node2D
 			if (_attackTimer < 0)
 			{
 				_attackTimer = GetCooldown();
-				PerformAttack(_attackTarget, (int)((_damage + _damageModifier) * _damagePercentModifier));
+				PerformAttack(_attackTarget, GetDamage());
 			}
 		}
 	}
@@ -135,6 +135,11 @@ public abstract partial class BaseWeapon : Node2D
 
 		Label rangeLabel = infoV.GetNode<Label>("RangeLabel");
 		rangeLabel.Text = "Range: " + GetRange().ToString();
+	}
+
+	public virtual void ResetCooldown()
+	{
+		_attackTimer = GetCooldown();
 	}
 
 	public virtual void ResetWeaponInfoContainer()

@@ -1,0 +1,36 @@
+[gd_scene format=3 uid="uid://migpj3rj3pyn"]
+
+[ext_resource type="PackedScene" uid="uid://yhbw0b164ui2" path="res://_Content/_Scenes/_Prefabs/Units/BaseTower.tscn" id="1_nrico"]
+[ext_resource type="Script" uid="uid://b4jva1l23o6su" path="res://_Source/_Units/Spawner.cs" id="2_t2tss"]
+[ext_resource type="Script" uid="uid://cvroohkeaovqw" path="res://_Source/_Units/SpawnerDataResource.cs" id="3_0lcyp"]
+[ext_resource type="Script" uid="uid://iamaod4iivlq" path="res://_Source/Effects/InvaderStatsIncrease/InvaderStatsIncreaseResource.cs" id="3_nrico"]
+[ext_resource type="Texture2D" uid="uid://iocgjnp7i8td" path="res://_Assets/Portal.png" id="4_tknkj"]
+
+[sub_resource type="Resource" id="Resource_t2tss"]
+script = ExtResource("3_nrico")
+_unitName = "Undead"
+_startingEffects = null
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_uw73y"]
+script = ExtResource("3_0lcyp")
+_units = Array[ExtResource("3_nrico")]([SubResource("Resource_t2tss")])
+metadata/_custom_type_script = "uid://cvroohkeaovqw"
+
+[node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_nrico")]
+script = ExtResource("2_t2tss")
+_data = SubResource("Resource_uw73y")
+_spawnInterval = 1.0
+_isEnemy = true
+_iconTexture = ExtResource("4_tknkj")
+_towerType = 2
+_firstUpgrade = Array[Object]([])
+_secondUpgrade = Array[Object]([])
+_thirdUpgrade = Array[Object]([])
+LeashDistance = 200.0
+_startingEffects = Array[Object]([])
+_internalName = "UndeadSpawner"
+_name = "Undead Portal"
+
+[node name="MainSprite" parent="." index="1" unique_id=701942347]
+texture = ExtResource("4_tknkj")

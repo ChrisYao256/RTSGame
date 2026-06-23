@@ -2,111 +2,29 @@
 
 [ext_resource type="PackedScene" uid="uid://yhbw0b164ui2" path="res://_Content/_Scenes/_Prefabs/Units/BaseTower.tscn" id="1_ptlwv"]
 [ext_resource type="Script" uid="uid://b4jva1l23o6su" path="res://_Source/_Units/Spawner.cs" id="2_ke578"]
+[ext_resource type="Script" uid="uid://iamaod4iivlq" path="res://_Source/Effects/InvaderStatsIncrease/InvaderStatsIncreaseResource.cs" id="3_nddti"]
 [ext_resource type="Script" uid="uid://cvroohkeaovqw" path="res://_Source/_Units/SpawnerDataResource.cs" id="3_sy0ym"]
 [ext_resource type="Texture2D" uid="uid://bc230321nqto5" path="res://icon.svg" id="4_cehgp"]
-[ext_resource type="Script" uid="uid://dj1iuetxsjca2" path="res://_Source/Effects/SpawnerStatsIncrease/SpawnerStatsIncreaseResource.cs" id="5_oaqm5"]
-[ext_resource type="Script" uid="uid://c4pph75db2q3s" path="res://_Source/Effects/NearbySpawnerStatsIncrease/NearbySpawnerStatsIncreaseResource.cs" id="6_ut8ig"]
-[ext_resource type="Script" uid="uid://dtpcxn7d2dqcy" path="res://_Source/Effects/EffectResource.cs" id="7_8g2v6"]
 
 [sub_resource type="Resource" id="Resource_jssxb"]
 script = ExtResource("3_sy0ym")
-_locations = Array[Vector2i]([Vector2i(1, 1), Vector2i(1, 0), Vector2i(1, -1), Vector2i(0, 1), Vector2i(0, 0), Vector2i(0, -1), Vector2i(-1, 1), Vector2i(-1, 0), Vector2i(-1, -1)])
-_startingEffects = null
 metadata/_custom_type_script = "uid://cvroohkeaovqw"
-
-[sub_resource type="Resource" id="Resource_ke578"]
-script = ExtResource("5_oaqm5")
-_hpBuff = 1.0
-_speedBuff = 0.3
-_moneyBuff = 1
-_startingEffects = null
-metadata/_custom_type_script = "uid://dj1iuetxsjca2"
-
-[sub_resource type="Resource" id="Resource_ptlwv"]
-script = ExtResource("6_ut8ig")
-_buffResource = SubResource("Resource_ke578")
-_area = Array[Vector2i]([Vector2i(1, 1), Vector2i(1, 0), Vector2i(1, -1), Vector2i(0, 1), Vector2i(0, 0), Vector2i(0, -1), Vector2i(-1, 1), Vector2i(-1, 0), Vector2i(-1, -1)])
-metadata/_custom_type_script = "uid://c4pph75db2q3s"
-
-[sub_resource type="Resource" id="Resource_inayk"]
-script = ExtResource("5_oaqm5")
-_hpBuff = -0.2
-_startingEffects = null
-metadata/_custom_type_script = "uid://dj1iuetxsjca2"
-
-[sub_resource type="Resource" id="Resource_5x6l2"]
-script = ExtResource("6_ut8ig")
-_buffResource = SubResource("Resource_inayk")
-_effectName = "Less Hp"
-metadata/_custom_type_script = "uid://c4pph75db2q3s"
-
-[sub_resource type="Resource" id="Resource_8t0mg"]
-script = ExtResource("5_oaqm5")
-_hpBuff = 0.5
-_moneyBuff = 1
-_startingEffects = null
-metadata/_custom_type_script = "uid://dj1iuetxsjca2"
-
-[sub_resource type="Resource" id="Resource_krd5a"]
-script = ExtResource("6_ut8ig")
-_buffResource = SubResource("Resource_8t0mg")
-_area = Array[Vector2i]([Vector2i(1, 1), Vector2i(1, 0), Vector2i(1, -1), Vector2i(0, 1), Vector2i(0, 0), Vector2i(0, -1), Vector2i(-1, 1), Vector2i(-1, 0), Vector2i(-1, -1)])
-_effectName = "+$1, +100% more hp"
-metadata/_custom_type_script = "uid://c4pph75db2q3s"
-
-[sub_resource type="Resource" id="Resource_wh3ql"]
-script = ExtResource("5_oaqm5")
-_locations = Array[Vector2i]([Vector2i(1, 1), Vector2i(1, 0), Vector2i(1, -1), Vector2i(0, 1), Vector2i(0, 0), Vector2i(0, -1), Vector2i(-1, 1), Vector2i(-1, 0), Vector2i(-1, -1)])
-_speedBuff = 50.0
-_moneyBuff = 1
-_startingEffects = null
-metadata/_custom_type_script = "uid://dj1iuetxsjca2"
-
-[sub_resource type="Resource" id="Resource_qd4hu"]
-script = ExtResource("6_ut8ig")
-_buffResource = SubResource("Resource_wh3ql")
-_effectName = "+$1, +50% move speed"
-metadata/_custom_type_script = "uid://c4pph75db2q3s"
-
-[sub_resource type="Resource" id="Resource_d1644"]
-script = ExtResource("5_oaqm5")
-_hpBuff = 1.0
-_moneyBuff = 1
-_startingEffects = null
-_effectName = "Enhanced armor"
-metadata/_custom_type_script = "uid://dj1iuetxsjca2"
-
-[sub_resource type="Resource" id="Resource_hewn2"]
-script = ExtResource("6_ut8ig")
-_buffResource = SubResource("Resource_d1644")
-_area = Array[Vector2i]([Vector2i(1, 1), Vector2i(1, 0), Vector2i(1, -1), Vector2i(0, 1), Vector2i(0, 0), Vector2i(0, -1), Vector2i(-1, 1), Vector2i(-1, 0), Vector2i(-1, -1)])
-_effectName = "Destabilize"
-metadata/_custom_type_script = "uid://c4pph75db2q3s"
 
 [node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_ptlwv")]
 script = ExtResource("2_ke578")
 _data = SubResource("Resource_jssxb")
-_spawnJitterRadius = 15.0
+_spawnInterval = 1.0
 _isEnemy = true
-_cost = 15
 _iconTexture = ExtResource("4_cehgp")
 _towerType = 1
 _description = "Units from nearby spawners drop $1 more, but have more Hp"
-_firstUpgrade = Array[Object]([SubResource("Resource_ptlwv")])
-_firstUpgradeCost = 15
-_firstUpgradeName = "First Upgrade"
-_secondUpgradeA = SubResource("Resource_5x6l2")
-_secondUpgradeACost = 5
-_secondUpgradeB = SubResource("Resource_krd5a")
-_secondUpgradeBCost = 10
-_secondUpgradeC = SubResource("Resource_qd4hu")
-_secondUpgradeCCost = 10
-_thirdUpgrade = null
-_thirdUpgradeCost = 0
-_thirdUpgradeName = "Third Upgrade"
-_transformEffects = Array[ExtResource("7_8g2v6")]([])
+_firstUpgrade = Array[Object]([])
+_secondUpgrade = Array[Object]([])
+_thirdUpgrade = Array[Object]([])
+_fourthUpgradeA = Array[Object]([])
+_fourthUpgradeB = Array[Object]([])
 LeashDistance = 200.0
-_startingEffects = Array[Object]([SubResource("Resource_hewn2")])
+_startingEffects = Array[Object]([])
 _internalName = "PortalAmplifier"
 _name = "Portal Destabilizer"
 _radius = 0.0

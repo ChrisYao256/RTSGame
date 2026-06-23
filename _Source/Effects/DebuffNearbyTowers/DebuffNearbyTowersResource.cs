@@ -19,7 +19,7 @@ public partial class DebuffNearbyTowersResource : EffectResource
 	public override void SetDescription()
 	{
 		_debuff.SetDescription();
-		_effectDescription = "Debuff all towers in a " + _radius + " radius with " + _debuff._effectName;
+		_effectDescription = "Debuff all towers in a " + _radius + " radius with " + $"[url={TooltipRichTextLabel.EncodeMetaString(_debuff._effectDescription, _debuff._effectTopRightString)}]{_debuff._effectName}[/url]";
 	}
 
 	public override Effect CreateNode()

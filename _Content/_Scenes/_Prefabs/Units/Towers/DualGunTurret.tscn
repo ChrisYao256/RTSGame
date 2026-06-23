@@ -11,19 +11,18 @@
 
 [sub_resource type="Resource" id="Resource_cmo3r"]
 script = ExtResource("3_sssbq")
-_damageIncrease = 13
+_damageIncrease = 62
 _rangeIncrease = 25.0
 metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 
 [sub_resource type="Resource" id="Resource_oh15a"]
 script = ExtResource("3_sssbq")
-_damageIncrease = 34
+_damageIncrease = 148
 metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 
 [sub_resource type="Resource" id="Resource_yglny"]
 script = ExtResource("3_sssbq")
-_damageIncrease = 70
-_attackSpeedIncrease = 0.18
+_damageIncrease = 305
 metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_437tk"]
@@ -171,11 +170,11 @@ animations = [{
 [node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_ief3i")]
 _iconTexture = ExtResource("8_vw763")
 _firstUpgrade = Array[Object]([SubResource("Resource_cmo3r")])
-_firstUpgradeCost = Vector4i(60, 0, 0, 0)
+_firstUpgradeCost = Vector4i(50, 0, 0, 30)
 _secondUpgrade = Array[Object]([SubResource("Resource_oh15a")])
-_secondUpgradeCost = Vector4i(120, 0, 0, 0)
+_secondUpgradeCost = Vector4i(120, 0, 0, 60)
 _thirdUpgrade = Array[Object]([SubResource("Resource_yglny")])
-_thirdUpgradeCost = Vector4i(250, 0, 0, 0)
+_thirdUpgradeCost = Vector4i(230, 0, 0, 120)
 _hpMax = 1
 _internalName = "DualGunTurret"
 _name = "Sentry Turret"
@@ -214,6 +213,6 @@ _projectileTexture = ExtResource("11_fq23n")
 _lifeTime = 5.0
 _projectileRadius = 10.0
 _pierceCount = 1
-_damage = 100
+_damage = 180
 _range = 300.0
 _damageType = 1

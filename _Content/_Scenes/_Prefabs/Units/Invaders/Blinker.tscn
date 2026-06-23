@@ -1,0 +1,31 @@
+[gd_scene format=3 uid="uid://bu22mualsxif"]
+
+[ext_resource type="PackedScene" uid="uid://bqn4h6d52i52" path="res://_Content/_Scenes/_Prefabs/Units/BaseInvaderUnit.tscn" id="1_k4t0j"]
+[ext_resource type="Script" uid="uid://cr1syn4vsu42" path="res://_Source/Effects/Blink/BlinkResource.cs" id="2_k4t0j"]
+[ext_resource type="Texture2D" uid="uid://bc230321nqto5" path="res://icon.svg" id="3_ay1c4"]
+
+[sub_resource type="Resource" id="Resource_qj3l2"]
+script = ExtResource("2_k4t0j")
+_distance = 300.0
+_effectName = "Blink"
+metadata/_custom_type_script = "uid://cr1syn4vsu42"
+
+[node name="BaseUnit" unique_id=481801141 instance=ExtResource("1_k4t0j")]
+_moneyDropped = Vector4i(12, 0, 0, 12)
+_hpDeducted = 2
+_moveSpeed = 100.0
+_hpMax = 1500
+_startingEffects = Array[Object]([SubResource("Resource_qj3l2")])
+_internalName = "Blinker"
+_name = "Blinker"
+_radius = 16.0
+
+[node name="MainSprite" parent="." index="1" unique_id=597948513]
+scale = Vector2(1, 1)
+texture = ExtResource("3_ay1c4")
+
+[node name="HealthBar" parent="." index="5" unique_id=640038315]
+offset_left = -24.0
+offset_top = -32.0
+offset_right = 24.0
+offset_bottom = -20.0

@@ -11,13 +11,17 @@ public partial class StationaryUnit : Unit
 {
 	public override void _Ready()
 	{
+		if (_isDisplayUnit)
+		{
+			return;
+		}
 		_moveSpeed = 0;
 		SetWeapon();
 		SetSelectionVisual();
 		SetAttackRange();
 		SetHealthBar();
 		SetInitialCommand();
-		SetStartingEffects();
+		SetStartingEffects(false);
 		SetSize();
 	}
 

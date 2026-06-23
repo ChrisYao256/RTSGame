@@ -9,7 +9,7 @@ public partial class HoverInfoImage : TextureButton
 	{
 		MouseEntered += () => SetPopupVisibility(true);
 		MouseExited += () => SetPopupVisibility(false);
-		GetTree().CurrentScene.AddChild(_popupBox);
+		AddChild(_popupBox);
 	}
 
 	private void SetPopupVisibility(bool visible)

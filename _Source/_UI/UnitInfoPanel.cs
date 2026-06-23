@@ -6,33 +6,6 @@ using System.Collections.Generic;
 
 public partial class UnitInfoPanel : CanvasLayer
 {
-	//private Label _nameLabel;
-	//private Label _hpLabel;
-	//private Label _shieldLabel;
-	//private Label _speedLabel;
-	//private RichTextLabel _totalCostLabel;
-	//private Label _armorLabel;
-	//private Container _weaponContainer;
-	//private Label _damageLabel;
-	//private Label _cooldownLabel;
-	//private Label _dpsLabel;
-	//private Label _rangeLabel;
-	//private RichTextLabel _incomeLabel;
-	//private RichTextLabel _moneyDroppedLabel;
-	//private RichTextLabel _spawnLabel;
-	//private VBoxContainer _spawnContainer;
-
-	//private VBoxContainer _priorityContainer;
-	//private Label _priorityLabel;
-
-	//private HBoxContainer _largeEffectsContainer;
-	//private VBoxContainer _smallEffectsContainer;
-
-	//private HBoxContainer _upgradeContainer;
-	//private BoxContainer _unitsContainer;
-	//private HBoxContainer _hBoxContainer;
-	//private PanelContainer _container;
-
 	private HBoxContainer _infoContainer;
 
 	private List<Unit> _units;
@@ -135,6 +108,19 @@ public partial class UnitInfoPanel : CanvasLayer
 		//	}
 		//	_unitsContainer.Show();
 		//}
+	}
+
+	public Unit GetSelectedUnit()
+	{
+		if (_units is not null && _units.Count == 1)
+		{
+			return _units[0];
+		}
+		else
+		{
+			return null;
+		}
+		
 	}
 
 	public void MakeNewUnitInfo()

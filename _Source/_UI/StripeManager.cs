@@ -15,6 +15,7 @@ public partial class StripeManager : Control
 	[Export] public float BigStripeWidth { get; set; } = 4.0f;
 
 	private float MinimumSmallIntervalWidth = 5;
+	private float MinimumBigIntervalWidth = 5;
 
 	public override void _Ready()
 	{
@@ -71,18 +72,22 @@ public partial class StripeManager : Control
 		// If max HP is too low for even one stripe, don't draw anything
 		if (totalBigStripes <= 0) return;
 
-		// Loop and draw each vertical line
-		for (int i = 1; i < totalBigStripes + 1; i++)
+		if (pixelsPerHp * HpPerBigStripe > MinimumBigIntervalWidth)
 		{
-			float hpMilestone = i * HpPerBigStripe;
-			float xPos = hpMilestone * pixelsPerHp;
+			// Loop and draw each vertical line
+			for (int i = 1; i < totalBigStripes + 1; i++)
+			{
+				float hpMilestone = i * HpPerBigStripe;
+				float xPos = hpMilestone * pixelsPerHp;
 
-			// Draw a line from the top of the bar to the bottom
-			Vector2 startPoint = new Vector2(xPos, 0);
-			Vector2 endPoint = new Vector2(xPos, barHeight);
+				// Draw a line from the top of the bar to the bottom
+				Vector2 startPoint = new Vector2(xPos, 0);
+				Vector2 endPoint = new Vector2(xPos, barHeight);
 
-			DrawLine(startPoint, endPoint, StripeColor, BigStripeWidth);
+				DrawLine(startPoint, endPoint, StripeColor, BigStripeWidth);
+			}
 		}
+			
 	}
 
 	// Clean up event subscription when the node leaves the scene tree
