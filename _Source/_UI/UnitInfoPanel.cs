@@ -65,6 +65,7 @@ public partial class UnitInfoPanel : CanvasLayer
 			_unit = units[0];
 			_unit.Connect(Unit.SignalName.UpdateInfo, Callable.From(UpdateAllUnitInfo));
 			_unit.Connect(Unit.SignalName.UpdateStatsInfo, Callable.From(UpdateUnitStatsInfo));
+			_unit.Connect(Unit.SignalName.UpdateDamageDealtInfo, Callable.From(UpdateDamageDealtInfo));
 			MakeNewUnitInfo();
 		}
 		//if (_units.Count > 1)
@@ -612,10 +613,16 @@ public partial class UnitInfoPanel : CanvasLayer
 		*/
 	}
 
+	public void UpdateDamageDealtInfo()
+	{
+		_unit.UpdateUnitDamageDealtInfo();
+	}
+
 	public void ResetUnitInfo()
 	{
 		_unit?.Disconnect(Unit.SignalName.UpdateInfo, Callable.From(UpdateAllUnitInfo));
 		_unit?.Disconnect(Unit.SignalName.UpdateStatsInfo, Callable.From(UpdateUnitStatsInfo));
+		_unit?.Disconnect(Unit.SignalName.UpdateDamageDealtInfo, Callable.From(UpdateDamageDealtInfo));
 		_unit?.ResetUnitInfoContainer();
 		_unit = null;
 		//_infoContainer.Hide();

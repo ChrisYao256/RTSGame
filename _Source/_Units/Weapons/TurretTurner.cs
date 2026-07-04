@@ -14,6 +14,8 @@ public partial class TurretTurner : Node2D
 {
 	[Export] public float _rotationSpeed = 20.0f;
 	[Export] public bool _turn;
+	[Export] public float _knockbackDistance = 10f;
+	[Export] public float _knockbackRecoveryDuration = 0.3f;
 
 	private BaseWeapon _parentWeapon;
 	private TowerUnit _baseTower;
@@ -102,6 +104,26 @@ public partial class TurretTurner : Node2D
 		{
 			_animatedSprite.Play("Fire");
 		}
+		PlayShotFiredTweenReaction();
+	}
+
+	private void PlayShotFiredTweenReaction()
+	{
+		if (_knockbackRecoveryDuration == 0)
+		{
+			return;
+		}
+		Tween tween = CreateTween();
+
+		// 2. Animate the position property relatively
+		tween.TweenProperty(_animatedSprite, "position", -_animatedSprite.Transform.X * _knockbackDistance, 0.05f)
+				 .AsRelative()
+				 .SetTrans(Tween.TransitionType.Linear)  // Smooth acceleration/deceleration
+				 .SetEase(Tween.EaseType.InOut);
+		tween.TweenProperty(_animatedSprite, "position", _animatedSprite.Transform.X * _knockbackDistance, _knockbackRecoveryDuration)
+		 .AsRelative()
+		 .SetTrans(Tween.TransitionType.Quad)  // Smooth acceleration/deceleration
+		 .SetEase(Tween.EaseType.InOut);
 	}
 
 	private void OnStopAttack(Unit target)

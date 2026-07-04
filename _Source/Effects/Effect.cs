@@ -15,7 +15,6 @@ public abstract partial class Effect : Node2D
 	protected Unit _parentUnit;
 
 	protected EffectResource _resource;
-
 	public Effect(EffectResource resource)
 	{
 		resource.SetDescription();
@@ -25,23 +24,30 @@ public abstract partial class Effect : Node2D
 	public virtual void ConnectSignals(Unit unit)
 	{
 		_parentUnit = unit;
-		MakeFloatingAnimation();
+		//MakeFloatingAnimation();
 	}
 
-	protected void MakeFloatingAnimation()
+	protected void MakeFloatingAnimation(string text = "")
 	{
-		if (_resource._effectName != "")
+		if (_resource._effectName != "" || text != "")
 		{
 			_parentUnit._currentFloatingAnimationCount++;
 			var textNode = GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/UI/FloatingText.tscn").Instantiate<FloatingText>();
 			textNode.BbcodeEnabled = true;
 			textNode.FitContent = true;
 
-			// Set the text
-			textNode.Text = "+" + _resource._effectName;
+			if (text == "")
+			{
+				// Set the text
+				textNode.Text = "+" + _resource._effectName;
+			}
+			else
+			{
+				textNode.Text = text;
+			}
 
-			// Set the position to the unit's current global position
-			textNode.GlobalPosition = GlobalPosition + new Vector2(0, 30) * (_parentUnit._currentFloatingAnimationCount - 1);
+				// Set the position to the unit's current global position
+				textNode.GlobalPosition = GlobalPosition + new Vector2(0, 30) * (_parentUnit._currentFloatingAnimationCount - 1);
 
 			Timer timer = new();
 			timer.Timeout += () => _parentUnit._currentFloatingAnimationCount--;
@@ -86,7 +92,7 @@ public abstract partial class Effect : Node2D
 
 	}
 
-	protected virtual void OnUnitDied(Unit unit)
+	protected virtual void OnUnitDied()
 	{
 
 	}
@@ -116,6 +122,11 @@ public abstract partial class Effect : Node2D
 
 	}
 	
+	protected virtual void OnVolleyEnded()
+	{
+
+	}
+
 	protected virtual void OnBeforeIsHit(Unit source)
 	{
 

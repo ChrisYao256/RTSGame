@@ -1,77 +1,67 @@
 [gd_scene format=3 uid="uid://cpaytkok16du2"]
 
 [ext_resource type="PackedScene" uid="uid://yhbw0b164ui2" path="res://_Content/_Scenes/_Prefabs/Units/BaseTower.tscn" id="1_e4c1j"]
-[ext_resource type="Texture2D" uid="uid://cq6cfalfqm4wq" path="res://_Assets/RailgunTurret.png" id="2_bafjt"]
+[ext_resource type="Texture2D" uid="uid://t1lqgec5deqv" path="res://_Assets/StunRailgunTurret.png" id="2_bafjt"]
 [ext_resource type="Script" uid="uid://c7ye5bgfhla5e" path="res://_Source/Effects/StatsIncrease/StatsIncreaseResource.cs" id="3_w6qd3"]
 [ext_resource type="Script" uid="uid://dtpcxn7d2dqcy" path="res://_Source/Effects/EffectResource.cs" id="4_e2toe"]
 [ext_resource type="Texture2D" uid="uid://bdyjhvsjs67wx" path="res://_Assets/YellowBase.png" id="5_d7kk5"]
-[ext_resource type="Script" uid="uid://cwdxtjh8yj1wq" path="res://_Source/Effects/SlowMovement/SlowMovementBuffResource.cs" id="5_w6qd3"]
-[ext_resource type="Script" uid="uid://6ysk040uxhpj" path="res://_Source/Effects/DebuffOnHit/DebuffOnHitBuffResource.cs" id="5_y5ry5"]
 [ext_resource type="Script" uid="uid://cxg3f5ateuini" path="res://_Source/Effects/DebuffOnHit/DebuffOnHitResource.cs" id="6_e2toe"]
 [ext_resource type="Script" uid="uid://bva1xkjx08h5v" path="res://_Source/_Units/Weapons/TurretTurner.cs" id="6_y5ry5"]
-[ext_resource type="Texture2D" uid="uid://b06iomsnrwbvy" path="res://_Assets/RailgunTurretFire.png" id="7_exuq6"]
 [ext_resource type="Script" uid="uid://y1enulr4b71h" path="res://_Source/Effects/SlowMovement/SlowMovementResource.cs" id="7_p50xu"]
-[ext_resource type="Texture2D" uid="uid://mb44h82gnkel" path="res://_Assets/RailgunTurretIdle.png" id="8_p50xu"]
 [ext_resource type="PackedScene" uid="uid://bc7mdwf374doj" path="res://_Content/_Scenes/_Prefabs/Weapons/ProjectileWeapon.tscn" id="9_c2kqo"]
-[ext_resource type="Texture2D" uid="uid://wswb4au2cnxn" path="res://_Assets/GunShot.png" id="10_rf4ew"]
+[ext_resource type="Texture2D" uid="uid://gt1mwsdlce7x" path="res://_Assets/BlueGunShot.png" id="10_e4c1j"]
 
 [sub_resource type="Resource" id="Resource_bpy14"]
 script = ExtResource("3_w6qd3")
-_damageIncrease = 60
+_damageIncrease = 95
 metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 
 [sub_resource type="Resource" id="Resource_c2kqo"]
-script = ExtResource("5_w6qd3")
-_time = 0.05
-metadata/_custom_type_script = "uid://cwdxtjh8yj1wq"
+script = ExtResource("7_p50xu")
+_time = 0.03
+metadata/_custom_type_script = "uid://y1enulr4b71h"
 
 [sub_resource type="Resource" id="Resource_6yrhm"]
-script = ExtResource("5_y5ry5")
+script = ExtResource("6_e2toe")
 _debuffs = Array[Object]([SubResource("Resource_c2kqo")])
-_effectDescription = "Increases stun duration"
-metadata/_custom_type_script = "uid://6ysk040uxhpj"
+metadata/_custom_type_script = "uid://cxg3f5ateuini"
 
 [sub_resource type="Resource" id="Resource_2kx6n"]
 script = ExtResource("3_w6qd3")
-_damageIncrease = 120
-_pierceCount = 1
+_damageIncrease = 205
 metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 
 [sub_resource type="Resource" id="Resource_exuq6"]
-script = ExtResource("5_w6qd3")
-_time = 0.1
-metadata/_custom_type_script = "uid://cwdxtjh8yj1wq"
+script = ExtResource("7_p50xu")
+_time = 0.04
+metadata/_custom_type_script = "uid://y1enulr4b71h"
 
 [sub_resource type="Resource" id="Resource_p50xu"]
-script = ExtResource("5_y5ry5")
+script = ExtResource("6_e2toe")
 _debuffs = Array[Object]([SubResource("Resource_exuq6")])
-_effectDescription = "Increases stun duration"
-metadata/_custom_type_script = "uid://6ysk040uxhpj"
+metadata/_custom_type_script = "uid://cxg3f5ateuini"
 
 [sub_resource type="Resource" id="Resource_7mvqi"]
 script = ExtResource("3_w6qd3")
-_damageIncrease = 210
-_pierceCount = 1
+_damageIncrease = 350
 metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 
-[sub_resource type="Resource" id="Resource_d7kk5"]
-script = ExtResource("5_w6qd3")
-_time = 0.15
-metadata/_custom_type_script = "uid://cwdxtjh8yj1wq"
+[sub_resource type="Resource" id="Resource_w6qd3"]
+script = ExtResource("7_p50xu")
+_time = 0.08
+metadata/_custom_type_script = "uid://y1enulr4b71h"
 
-[sub_resource type="Resource" id="Resource_rf4ew"]
-script = ExtResource("5_y5ry5")
-_debuffs = Array[Object]([SubResource("Resource_d7kk5")])
-_effectDescription = "Increases stun duration"
-metadata/_custom_type_script = "uid://6ysk040uxhpj"
+[sub_resource type="Resource" id="Resource_d7kk5"]
+script = ExtResource("6_e2toe")
+_debuffs = Array[Object]([SubResource("Resource_w6qd3")])
+metadata/_custom_type_script = "uid://cxg3f5ateuini"
 
 [sub_resource type="Resource" id="Resource_e2toe"]
 script = ExtResource("7_p50xu")
 _percentDecrease = 1.0
-_time = 0.1
+_time = 0.15
 _effectName = "Stunned"
 _displayType = 2
-_effectApplicationText = "Stunned"
 metadata/_custom_type_script = "uid://y1enulr4b71h"
 
 [sub_resource type="Resource" id="Resource_y5ry5"]
@@ -79,170 +69,11 @@ script = ExtResource("6_e2toe")
 _debuffs = Array[Object]([SubResource("Resource_e2toe")])
 metadata/_custom_type_script = "uid://cxg3f5ateuini"
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_msjep"]
-atlas = ExtResource("7_exuq6")
-region = Rect2(0, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_7mvqi"]
-atlas = ExtResource("7_exuq6")
-region = Rect2(64, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_m1b1x"]
-atlas = ExtResource("7_exuq6")
-region = Rect2(128, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_6kf8s"]
-atlas = ExtResource("7_exuq6")
-region = Rect2(192, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_3qgn4"]
-atlas = ExtResource("7_exuq6")
-region = Rect2(256, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_vdetk"]
-atlas = ExtResource("7_exuq6")
-region = Rect2(320, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_ts0wj"]
-atlas = ExtResource("7_exuq6")
-region = Rect2(384, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_sodxo"]
-atlas = ExtResource("7_exuq6")
-region = Rect2(448, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_0pcct"]
-atlas = ExtResource("7_exuq6")
-region = Rect2(512, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_672ai"]
-atlas = ExtResource("7_exuq6")
-region = Rect2(576, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_jfrxq"]
-atlas = ExtResource("7_exuq6")
-region = Rect2(640, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_44m3k"]
-atlas = ExtResource("7_exuq6")
-region = Rect2(704, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_tbyey"]
-atlas = ExtResource("7_exuq6")
-region = Rect2(768, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_f0s0i"]
-atlas = ExtResource("7_exuq6")
-region = Rect2(832, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_u8t65"]
-atlas = ExtResource("7_exuq6")
-region = Rect2(896, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_6xt6j"]
-atlas = ExtResource("7_exuq6")
-region = Rect2(960, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_ytr5s"]
-atlas = ExtResource("7_exuq6")
-region = Rect2(1024, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_su5q0"]
-atlas = ExtResource("7_exuq6")
-region = Rect2(1088, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_64yml"]
-atlas = ExtResource("7_exuq6")
-region = Rect2(1152, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_d0l2p"]
-atlas = ExtResource("7_exuq6")
-region = Rect2(1216, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_v0syb"]
-atlas = ExtResource("7_exuq6")
-region = Rect2(1280, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_j52lt"]
-atlas = ExtResource("7_exuq6")
-region = Rect2(1344, 0, 64, 64)
-
 [sub_resource type="SpriteFrames" id="SpriteFrames_msjep"]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_msjep")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_7mvqi")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_m1b1x")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_6kf8s")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_3qgn4")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_vdetk")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_ts0wj")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_sodxo")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_0pcct")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_672ai")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_jfrxq")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_44m3k")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_tbyey")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_f0s0i")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_u8t65")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_6xt6j")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_ytr5s")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_su5q0")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_64yml")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_d0l2p")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_v0syb")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_j52lt")
-}],
-"loop": false,
-"name": &"Fire",
-"speed": 50.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": ExtResource("8_p50xu")
+"texture": ExtResource("2_bafjt")
 }],
 "loop": false,
 "name": &"Idle",
@@ -251,18 +82,19 @@ animations = [{
 
 [node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_e4c1j")]
 _iconTexture = ExtResource("2_bafjt")
-_description = "Shoots piercing projectiles that can damage multiple enemies on a line."
+_description = "Shoots piercing projectiles that stuns and damages multiple enemies on a line."
 _firstUpgrade = Array[Object]([SubResource("Resource_bpy14"), SubResource("Resource_6yrhm")])
 _firstUpgradeCost = Vector4i(60, 0, 60, 0)
 _secondUpgrade = Array[Object]([SubResource("Resource_2kx6n"), SubResource("Resource_p50xu")])
 _secondUpgradeCost = Vector4i(120, 0, 120, 0)
-_thirdUpgrade = Array[Object]([SubResource("Resource_7mvqi"), SubResource("Resource_rf4ew")])
+_thirdUpgrade = Array[Object]([SubResource("Resource_7mvqi"), SubResource("Resource_d7kk5")])
 _thirdUpgradeCost = Vector4i(190, 0, 190, 0)
 LeashDistance = 200.0
 _startingEffects = Array[ExtResource("4_e2toe")]([SubResource("Resource_y5ry5")])
 _internalName = "StunPiercingTower"
-_name = "Stun Railgun Turret"
+_name = "Stun Piercer"
 _radius = 0.0
+_baseHealthBarWidth = 48.0
 
 [node name="MainSprite" parent="." index="1" unique_id=701942347]
 scale = Vector2(1, 1)
@@ -281,13 +113,13 @@ position = Vector2(18, 0)
 
 [node name="WeaponComponent" parent="." index="9" unique_id=2120452932 instance=ExtResource("9_c2kqo")]
 _projectileSpeed = 2000.0
-_projectileTexture = ExtResource("10_rf4ew")
+_projectileTexture = ExtResource("10_e4c1j")
 _lifeTime = 8.0
-_projectileRadius = 15.0
-_pierceCount = 3
+_projectileRadius = 30.0
+_pierceCount = 5
 _delayProjectile = 0.06
-_damage = 210
-_range = 275.0
+_damage = 300
+_range = 260.0
 _attackDelayLow = 0.3
 _attackDelayHigh = 0.3
 _damageType = 1

@@ -1,71 +1,82 @@
 [gd_scene format=3 uid="uid://crai3pkbvuf7q"]
 
 [ext_resource type="PackedScene" uid="uid://yhbw0b164ui2" path="res://_Content/_Scenes/_Prefabs/Units/BaseTower.tscn" id="1_mfd6i"]
-[ext_resource type="Texture2D" uid="uid://1ya6poaby1bi" path="res://_Assets/GunTurret.png" id="2_87nd2"]
-[ext_resource type="Script" uid="uid://d13efa7kqpme3" path="res://_Source/Effects/DropMoreMoney/DropMoreMoneyBuffResource.cs" id="3_fvb8t"]
-[ext_resource type="Script" uid="uid://6ysk040uxhpj" path="res://_Source/Effects/DebuffOnHit/DebuffOnHitBuffResource.cs" id="3_hmhb3"]
+[ext_resource type="Texture2D" uid="uid://c3sxubmlnevj3" path="res://_Assets/Scanner.png" id="2_0m3ok"]
 [ext_resource type="Script" uid="uid://c7ye5bgfhla5e" path="res://_Source/Effects/StatsIncrease/StatsIncreaseResource.cs" id="3_lrbnb"]
-[ext_resource type="Texture2D" uid="uid://4s8818rs7ags" path="res://_Assets/DualGunTurretIdle.png" id="5_fvb8t"]
-[ext_resource type="Texture2D" uid="uid://bdyjhvsjs67wx" path="res://_Assets/YellowBase.png" id="6_bvd4s"]
+[ext_resource type="Script" uid="uid://be80c57wd06d0" path="res://_Source/Effects/ImmediateTransform/ImmediateTransformResource.cs" id="6_dpnr0"]
 [ext_resource type="Script" uid="uid://dey8y5bpmxnim" path="res://_Source/Effects/DropMoreMoney/DropMoreMoneyResource.cs" id="6_lrbnb"]
+[ext_resource type="Texture2D" uid="uid://s1ywp7jtyat" path="res://_Assets/BlueBase.png" id="6_svvsf"]
 [ext_resource type="Script" uid="uid://bva1xkjx08h5v" path="res://_Source/_Units/Weapons/TurretTurner.cs" id="7_5cain"]
 [ext_resource type="Script" uid="uid://cxg3f5ateuini" path="res://_Source/Effects/DebuffOnHit/DebuffOnHitResource.cs" id="7_hmhb3"]
-[ext_resource type="Texture2D" uid="uid://56k5f8f2dyke" path="res://_Assets/GunTurretFire.png" id="8_c4lc3"]
-[ext_resource type="Texture2D" uid="uid://cmjpp5evevh5r" path="res://_Assets/GunTurretIdle.png" id="9_52hpo"]
 [ext_resource type="PackedScene" uid="uid://bwym8b0opf06j" path="res://_Content/_Scenes/_Prefabs/Weapons/ScannerWeapon.tscn" id="12_87nd2"]
 
 [sub_resource type="Resource" id="Resource_5cain"]
 script = ExtResource("3_lrbnb")
-_damageIncrease = 19
+_damageIncrease = 18
 _attackSpeedIncrease = 0.05
+_attackDelayModifierIncrease = 0.05
 metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 
 [sub_resource type="Resource" id="Resource_vxrr4"]
-script = ExtResource("3_fvb8t")
-_increase = Vector4i(1, 0, 1, 0)
-metadata/_custom_type_script = "uid://d13efa7kqpme3"
+script = ExtResource("6_lrbnb")
+_percentIncrease = 0.03
+metadata/_custom_type_script = "uid://dey8y5bpmxnim"
 
 [sub_resource type="Resource" id="Resource_j4w61"]
-script = ExtResource("3_hmhb3")
+script = ExtResource("7_hmhb3")
 _debuffs = Array[Object]([SubResource("Resource_vxrr4")])
-metadata/_custom_type_script = "uid://6ysk040uxhpj"
+metadata/_custom_type_script = "uid://cxg3f5ateuini"
 
 [sub_resource type="Resource" id="Resource_oh15a"]
 script = ExtResource("3_lrbnb")
 _damageIncrease = 42
 _attackSpeedIncrease = 0.1
+_attackDelayModifierIncrease = 0.1
 metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 
 [sub_resource type="Resource" id="Resource_hmhb3"]
-script = ExtResource("3_fvb8t")
-_increase = Vector4i(3, 0, 1, 0)
-metadata/_custom_type_script = "uid://d13efa7kqpme3"
+script = ExtResource("6_lrbnb")
+_percentIncrease = 0.04
+metadata/_custom_type_script = "uid://dey8y5bpmxnim"
 
 [sub_resource type="Resource" id="Resource_c4lc3"]
-script = ExtResource("3_hmhb3")
+script = ExtResource("7_hmhb3")
 _debuffs = Array[Object]([SubResource("Resource_hmhb3")])
-metadata/_custom_type_script = "uid://6ysk040uxhpj"
+metadata/_custom_type_script = "uid://cxg3f5ateuini"
 
 [sub_resource type="Resource" id="Resource_yglny"]
 script = ExtResource("3_lrbnb")
-_damageIncrease = 59
+_damageIncrease = 50
 _attackSpeedIncrease = 0.2
+_attackDelayModifierIncrease = 0.2
 metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 
-[sub_resource type="Resource" id="Resource_lrbnb"]
-script = ExtResource("3_fvb8t")
-_increase = Vector4i(5, 0, 2, 0)
-metadata/_custom_type_script = "uid://d13efa7kqpme3"
+[sub_resource type="Resource" id="Resource_mfd6i"]
+script = ExtResource("6_lrbnb")
+_percentIncrease = 0.06
+_time = 1.0
+metadata/_custom_type_script = "uid://dey8y5bpmxnim"
 
-[sub_resource type="Resource" id="Resource_52hpo"]
-script = ExtResource("3_hmhb3")
-_debuffs = Array[Object]([SubResource("Resource_lrbnb")])
-_effectDescription = "Improves effectiveness of Marked"
-metadata/_custom_type_script = "uid://6ysk040uxhpj"
+[sub_resource type="Resource" id="Resource_87nd2"]
+script = ExtResource("7_hmhb3")
+_debuffs = Array[Object]([SubResource("Resource_mfd6i")])
+metadata/_custom_type_script = "uid://cxg3f5ateuini"
+
+[sub_resource type="Resource" id="Resource_0m3ok"]
+script = ExtResource("6_dpnr0")
+_transformedUnit = "GunScannerTurret"
+_description = "Shoots capsules that instantly scans unit. Analyzed lasts longer and give more resources. "
+metadata/_custom_type_script = "uid://be80c57wd06d0"
+
+[sub_resource type="Resource" id="Resource_dpnr0"]
+script = ExtResource("6_dpnr0")
+_transformedUnit = "VulnerableScannerTurret"
+_description = "Scanned enemies take more damage, but no longer drop more resources."
+metadata/_custom_type_script = "uid://be80c57wd06d0"
 
 [sub_resource type="Resource" id="Resource_fvb8t"]
 script = ExtResource("6_lrbnb")
-_increase = Vector4i(2, 0, 1, 0)
+_percentIncrease = 0.12
 _time = 5.0
 metadata/_custom_type_script = "uid://dey8y5bpmxnim"
 
@@ -76,141 +87,45 @@ _effectName = "Yield Booster"
 _displayType = 1
 metadata/_custom_type_script = "uid://cxg3f5ateuini"
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_cmo3r"]
-atlas = ExtResource("8_c4lc3")
-region = Rect2(0, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_yglny"]
-atlas = ExtResource("8_c4lc3")
-region = Rect2(64, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_oh15a"]
-atlas = ExtResource("8_c4lc3")
-region = Rect2(128, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_dnbqd"]
-atlas = ExtResource("8_c4lc3")
-region = Rect2(192, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_in623"]
-atlas = ExtResource("8_c4lc3")
-region = Rect2(256, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_d1w5n"]
-atlas = ExtResource("8_c4lc3")
-region = Rect2(320, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_ji5kk"]
-atlas = ExtResource("8_c4lc3")
-region = Rect2(384, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_8bi3n"]
-atlas = ExtResource("8_c4lc3")
-region = Rect2(448, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_d6qei"]
-atlas = ExtResource("8_c4lc3")
-region = Rect2(512, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_vpldu"]
-atlas = ExtResource("8_c4lc3")
-region = Rect2(576, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_wt4yc"]
-atlas = ExtResource("8_c4lc3")
-region = Rect2(640, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_xhgat"]
-atlas = ExtResource("8_c4lc3")
-region = Rect2(704, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_j15gn"]
-atlas = ExtResource("8_c4lc3")
-region = Rect2(768, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_e2eil"]
-atlas = ExtResource("9_52hpo")
-region = Rect2(0, 0, 64, 64)
-
 [sub_resource type="SpriteFrames" id="SpriteFrames_oh15a"]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_cmo3r")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_yglny")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_oh15a")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_dnbqd")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_in623")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_d1w5n")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_ji5kk")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_8bi3n")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_d6qei")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_vpldu")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_wt4yc")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_xhgat")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_j15gn")
-}],
-"loop": false,
-"name": &"Fire",
-"speed": 50.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_e2eil")
+"texture": ExtResource("2_0m3ok")
 }],
 "loop": false,
 "name": &"Idle",
 "speed": 1.0
 }]
 
+[sub_resource type="Resource" id="Resource_gg4dm"]
+script = ExtResource("6_lrbnb")
+metadata/_custom_type_script = "uid://dey8y5bpmxnim"
+
 [node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_mfd6i")]
 _cost = Vector4i(28, 0, 12, 0)
-_iconTexture = ExtResource("2_87nd2")
+_iconTexture = ExtResource("2_0m3ok")
 _description = "Scans enemies to increase their resources yield. Deals damage when scan finishes."
 _firstUpgrade = Array[Object]([SubResource("Resource_5cain"), SubResource("Resource_j4w61")])
-_firstUpgradeCost = Vector4i(18, 0, 6, 0)
+_firstUpgradeCost = Vector4i(18, 0, 7, 0)
 _secondUpgrade = Array[Object]([SubResource("Resource_oh15a"), SubResource("Resource_c4lc3")])
-_secondUpgradeCost = Vector4i(39, 0, 15, 0)
-_thirdUpgrade = Array[Object]([SubResource("Resource_yglny"), SubResource("Resource_52hpo")])
-_thirdUpgradeCost = Vector4i(73, 0, 27, 0)
-_fourthUpgradeA = Array[Object]([])
-_fourthUpgradeATexture = ExtResource("5_fvb8t")
-_fourthUpgradeB = Array[Object]([])
-_fourthUpgradeBTexture = ExtResource("2_87nd2")
-_fourthUpgradeBCost = Vector4i(0, 75, 0, 0)
+_secondUpgradeCost = Vector4i(45, 0, 15, 0)
+_thirdUpgrade = Array[Object]([SubResource("Resource_yglny"), SubResource("Resource_87nd2")])
+_thirdUpgradeCost = Vector4i(69, 0, 24, 0)
+_fourthUpgradeA = Array[Object]([SubResource("Resource_0m3ok")])
+_fourthUpgradeACost = Vector4i(90, 0, 90, 0)
+_fourthUpgradeB = Array[Object]([SubResource("Resource_dpnr0")])
+_fourthUpgradeBCost = Vector4i(0, 100, 100, 0)
 _hpMax = 1
 _startingEffects = Array[Object]([SubResource("Resource_bvd4s")])
 _internalName = "MoneyTurret"
-_name = "Scan Turret"
+_name = "Scanner"
 _radius = 0.0
+_baseHealthBarWidth = 48.0
 
 [node name="MainSprite" parent="." index="1" unique_id=701942347]
 scale = Vector2(1, 1)
-texture = ExtResource("6_bvd4s")
+texture = ExtResource("6_svvsf")
 
 [node name="AidAreaCollision" parent="AidArea" parent_id_path=PackedInt32Array(724286163) index="0" unique_id=1952573643]
 position = Vector2(113, -59)
@@ -218,17 +133,19 @@ position = Vector2(113, -59)
 [node name="TurretTurner" type="Node2D" parent="." index="8" unique_id=1158807940]
 script = ExtResource("7_5cain")
 _turn = true
+_knockbackDistance = 0.0
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="TurretTurner" index="0" unique_id=849851730]
 sprite_frames = SubResource("SpriteFrames_oh15a")
 animation = &"Idle"
 
 [node name="Marker2D" type="Marker2D" parent="TurretTurner" index="1" unique_id=661621734]
-position = Vector2(18, 0)
+position = Vector2(20, 0)
 
 [node name="WeaponComponent" parent="." index="9" unique_id=2120452932 instance=ExtResource("12_87nd2")]
 _tracerColor = Color(0.54509807, 0.7411765, 0.8784314, 0.7058824)
 _tracerWidth = 12.0
+_prioritizeEnemyWithoutThisEffect = SubResource("Resource_gg4dm")
 _damage = 30
 _range = 300.0
 _attackDelayLow = 0.5

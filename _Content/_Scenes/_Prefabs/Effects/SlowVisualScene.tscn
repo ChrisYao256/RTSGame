@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://clrw6q0tvt2a8"]
+[gd_scene format=3 uid="uid://b71h3hqnay7o3"]
 
 [ext_resource type="Script" uid="uid://dltrnewg5aqrv" path="res://_Source/ExplosionVisualEffect.cs" id="1_46pkk"]
 [ext_resource type="Texture2D" uid="uid://c60ob3y2f4n88" path="res://_Assets/IceCircle.png" id="2_46pkk"]

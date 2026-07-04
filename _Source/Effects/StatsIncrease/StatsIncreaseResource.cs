@@ -1,8 +1,10 @@
 using Godot;
+using RTSGame._Source.Units;
+using System.Collections.Generic;
 namespace RTSGame.Units;
 
 [GlobalClass]
-public partial class StatsIncreaseResource : EffectResource
+public partial class StatsIncreaseResource : EffectResource, IStackable
 {
 	[Export]
 	public int _damageIncrease;
@@ -34,7 +36,7 @@ public partial class StatsIncreaseResource : EffectResource
 	[Export]
 	public ConvexPolygonShape2D _newZone;
 
-	public virtual StatsIncreaseResource MultiplyEffect(int n)
+	public EffectResource MultiplyEffect(int n)
 	{
 		StatsIncreaseResource newResource = (StatsIncreaseResource)Duplicate();
 		newResource._damageIncrease *= n;
@@ -48,6 +50,32 @@ public partial class StatsIncreaseResource : EffectResource
 		return newResource;
 	}
 
+	public override bool MergeWithOld(EffectResource oldResource, List<EffectResource> allMatchingResource)
+	{
+		StatsIncreaseResource typedOldResource = (StatsIncreaseResource)oldResource;
+
+		typedOldResource._damageIncrease += _damageIncrease;
+		typedOldResource._damagePercentIncrease += _damagePercentIncrease;
+		typedOldResource._rangeIncrease += _rangeIncrease;
+		typedOldResource._attackSpeedIncrease += _attackSpeedIncrease;
+		typedOldResource._attackDelayModifierIncrease += _attackDelayModifierIncrease;
+		typedOldResource._pierceCount += _pierceCount;
+
+		return false;
+	}
+
+	public void RemoveFromOld(EffectResource oldResource)
+	{
+		StatsIncreaseResource typedOldResource = (StatsIncreaseResource)oldResource;
+
+		typedOldResource._damageIncrease -= _damageIncrease;
+		typedOldResource._damagePercentIncrease -= _damagePercentIncrease;
+		typedOldResource._rangeIncrease -= _rangeIncrease;
+		typedOldResource._attackSpeedIncrease -= _attackSpeedIncrease;
+		typedOldResource._attackDelayModifierIncrease -= _attackDelayModifierIncrease;
+		typedOldResource._pierceCount -= _pierceCount;
+	}
+
 	public override void SetDescription()
 	{
 		_effectDescription = "";
@@ -58,7 +86,7 @@ public partial class StatsIncreaseResource : EffectResource
 
 		if (_damagePercentIncrease != 0)
 		{
-			_effectDescription += "Increase damage by " + _damagePercentIncrease + "%\n";
+			_effectDescription += $"Increase damage by {_damagePercentIncrease * 100:F2}%\n";
 		}
 
 
@@ -99,6 +127,11 @@ public partial class StatsIncreaseResource : EffectResource
 		{
 			_effectDescription += "Changes attack area \n";
 		}
+	}
+
+	public override void SetUpgradeDescription()
+	{
+		SetDescription();
 	}
 
 	public override Effect CreateNode()

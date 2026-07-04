@@ -6,6 +6,7 @@ public class EffectManager
 	public static Effect Apply(EffectResource res, Node2D target)
 	{
 		Effect effectNode = res.CreateNode();
+		res._effect = effectNode;
 		target.AddChild(effectNode);
 		return effectNode;
 	}

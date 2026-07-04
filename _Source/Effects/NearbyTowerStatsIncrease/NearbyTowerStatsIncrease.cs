@@ -7,7 +7,7 @@ using RTSGame.Source;
 public partial class NearbyTowerStatsIncrease : Effect
 {
 	private NearbyTowerStatsIncreaseResource _resource;
-	private List<Effect> _createdEffects = [];
+	private List<TowerUnit> _affectedTowers = [];
 
 	public NearbyTowerStatsIncrease(NearbyTowerStatsIncreaseResource resource) : base(resource)
 	{
@@ -29,11 +29,14 @@ public partial class NearbyTowerStatsIncrease : Effect
 		foreach (Vector2I relativePos in _resource._area)
 		{
 			Vector2I position = relativePos + location;
-			if (!parentTower._grid.IsCellVacant(position))
+			if (!parentTower._grid.IsCellVacant(position) && relativePos != new Vector2I(0, 0))
 			{
 				TowerUnit tower = parentTower._grid.GetTowerOnCell(position);
-				Effect addedEffect = tower.AddEffect(_resource._buffResource);
-				_createdEffects.Add(addedEffect);
+				tower.AddEffect(_resource._buffResource);
+				if (!_affectedTowers.Contains(tower))
+				{
+					_affectedTowers.Add(tower);
+				}
 			}
 		}
 	}
@@ -42,10 +45,32 @@ public partial class NearbyTowerStatsIncrease : Effect
 	{
 		TowerUnit parentTower = (TowerUnit)_parentUnit;
 		Vector2I delta = tower._gridLocation - parentTower._gridLocation;
-		if (_resource._area.Contains(delta))
+		if (_resource._area.Contains(delta) && delta != new Vector2I(0, 0))
 		{
-			Effect addedEffect = tower.AddEffect(_resource._buffResource);
-			_createdEffects.Add(addedEffect);
+			tower.AddEffect(_resource._buffResource);
+			if (!_affectedTowers.Contains(tower))
+			{
+				_affectedTowers.Add(tower);
+			}
+		}
+	}
+
+	public void AddNewBuffResource(StatsIncreaseResource resource)
+	{
+		TowerUnit parentTower = (TowerUnit)_parentUnit;
+		Vector2I location = parentTower._gridLocation;
+		foreach (Vector2I relativePos in _resource._area)
+		{
+			Vector2I position = relativePos + location;
+			if (!parentTower._grid.IsCellVacant(position) && relativePos != new Vector2I(0, 0))
+			{
+				TowerUnit tower = parentTower._grid.GetTowerOnCell(position);
+				tower.AddEffect(resource);
+				if (!_affectedTowers.Contains(tower))
+				{
+					_affectedTowers.Add(tower);
+				}
+			}
 		}
 	}
 
@@ -56,11 +81,10 @@ public partial class NearbyTowerStatsIncrease : Effect
 			QueueFree();
 			return;
 		}
-		foreach (Effect effect in _createdEffects)
+		foreach (TowerUnit tower in _affectedTowers)
 		{
-			effect.RemoveEffectNode();
+			tower.RemoveTowerStatsIncrease((StatsIncreaseResource)_resource._buffResource.DuplicateDeep());
 		}
-		_parentUnit._effects.Remove(_resource);
 		QueueFree();
 	}
 }

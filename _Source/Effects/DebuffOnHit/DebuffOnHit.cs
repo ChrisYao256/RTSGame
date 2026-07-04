@@ -21,8 +21,8 @@ public partial class DebuffOnHit : Effect
 	{
 		foreach (EffectResource debuff in _resource._debuffs)
 		{
+			debuff._source = _parentUnit;
 			enemy.AddEffect(debuff);
 		}
-		
 	}
 }

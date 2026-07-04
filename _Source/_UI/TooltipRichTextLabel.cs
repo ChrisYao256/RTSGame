@@ -15,7 +15,7 @@ public partial class TooltipRichTextLabel : RichTextLabel
 {
 	private static Dictionary<string, string> _imageAliases = new()
 		{
-				{ "::duration::", "[img=24x24]res://_Assets/Duration.png[/img]" },
+				{ "::duration::", "[img=18x18]res://_Assets/Duration.png[/img]" },
 		};
 
 	public override void _Ready()

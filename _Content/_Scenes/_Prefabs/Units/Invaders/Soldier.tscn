@@ -1,21 +1,22 @@
 [gd_scene format=3 uid="uid://ctgpqpcl3e2kb"]
 
 [ext_resource type="PackedScene" uid="uid://bqn4h6d52i52" path="res://_Content/_Scenes/_Prefabs/Units/BaseInvaderUnit.tscn" id="1_ksbbh"]
-[ext_resource type="Script" uid="uid://wbm6klgk5am8" path="res://_Source/Effects/Revive/ReviveResource.cs" id="2_oxx1p"]
+[ext_resource type="Script" uid="uid://bwnw1f3ti2dgi" path="res://_Source/Effects/SelfHealing/SelfHealingResource.cs" id="2_oxx1p"]
 [ext_resource type="Texture2D" uid="uid://bc230321nqto5" path="res://icon.svg" id="3_oxx1p"]
 
 [sub_resource type="Resource" id="Resource_0mepk"]
 script = ExtResource("2_oxx1p")
-metadata/_custom_type_script = "uid://wbm6klgk5am8"
+_healAmount = 25
+_effectName = "Regenerative"
+metadata/_custom_type_script = "uid://bwnw1f3ti2dgi"
 
 [node name="BaseUnit" unique_id=481801141 instance=ExtResource("1_ksbbh")]
-_moneyDropped = Vector4i(6, 4, 0, 0)
 _hpDeducted = 2
-_moveSpeed = 50.0
-_hpMax = 300
+_moveSpeed = 45.0
+_hpMax = 0
 _startingEffects = Array[Object]([SubResource("Resource_0mepk")])
 _internalName = "Soldier"
-_name = "Soldier"
+_name = "Golem"
 _radius = 24.0
 
 [node name="MainSprite" parent="." index="1" unique_id=597948513]

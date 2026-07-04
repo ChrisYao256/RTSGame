@@ -43,7 +43,6 @@ public partial class UpgradeButton : HoverInfoLabel
 
 		//Size = new Vector2(Size.X + 24, Size.Y + 24);
 		CustomMinimumSize = Size;
-		_borderProgress.Size = Size;
 		QueueRedraw();
 		base._Ready();
 	}

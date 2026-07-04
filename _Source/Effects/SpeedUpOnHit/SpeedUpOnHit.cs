@@ -26,7 +26,7 @@ public partial class SpeedUpOnHit : Effect
 
 	protected override void OnIsHit(Unit unit)
 	{
-		if (_speedIncrease >= _resource._speedIncreaseCap)
+		if (_speedIncrease >= _resource._speedIncreaseCap || unit is null)
 		{
 			return;
 		}

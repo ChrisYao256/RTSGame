@@ -5,37 +5,128 @@
 [ext_resource type="Script" uid="uid://iamaod4iivlq" path="res://_Source/Effects/InvaderStatsIncrease/InvaderStatsIncreaseResource.cs" id="3_a57la"]
 [ext_resource type="Script" uid="uid://cvroohkeaovqw" path="res://_Source/_Units/SpawnerDataResource.cs" id="3_kacn2"]
 [ext_resource type="Texture2D" uid="uid://iocgjnp7i8td" path="res://_Assets/Portal.png" id="4_peh64"]
+[ext_resource type="Script" uid="uid://cr1syn4vsu42" path="res://_Source/Effects/Blink/BlinkResource.cs" id="6_kacn2"]
+[ext_resource type="Script" uid="uid://djbu8krhjrjib" path="res://_Source/Effects/SpawnerUpgradeResource/SpawnerUpgradeResource.cs" id="6_mbfsc"]
+[ext_resource type="Script" uid="uid://bx5p53eu0mmmn" path="res://_Source/Effects/SpeedUpOnHit/SpeedUpOnHitResource.cs" id="8_peh64"]
 
-[sub_resource type="Resource" id="Resource_a57la"]
+[sub_resource type="Resource" id="Resource_yhq7s"]
 script = ExtResource("3_a57la")
 _unitName = "Blinker"
+_hpBuff = 1800
+_moneyBuff = Vector4i(12, 0, 0, 12)
 _startingEffects = null
 metadata/_custom_type_script = "uid://iamaod4iivlq"
 
-[sub_resource type="Resource" id="Resource_mbfsc"]
+[sub_resource type="Resource" id="Resource_uwadj"]
+script = ExtResource("8_peh64")
+_speedIncreasePerHit = 3.0
+_speedIncreaseCap = 50.0
+metadata/_custom_type_script = "uid://bx5p53eu0mmmn"
+
+[sub_resource type="Resource" id="Resource_b3x0s"]
 script = ExtResource("3_a57la")
 _unitName = "Hound"
-_hpBuff = 825
-_speedBuff = 25.0
+_hpBuff = 1825
+_moneyBuff = Vector4i(13, 0, 0, 13)
+_startingEffects = Array[Object]([SubResource("Resource_uwadj")])
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_6axyd"]
+script = ExtResource("3_kacn2")
+_units = Array[ExtResource("3_a57la")]([SubResource("Resource_yhq7s"), SubResource("Resource_b3x0s")])
+metadata/_custom_type_script = "uid://cvroohkeaovqw"
+
+[sub_resource type="Resource" id="Resource_7oyax"]
+script = ExtResource("6_kacn2")
+_distance = 25.0
+metadata/_custom_type_script = "uid://cr1syn4vsu42"
+
+[sub_resource type="Resource" id="Resource_di7nh"]
+script = ExtResource("3_a57la")
+_hpBuff = 1025
 _moneyBuff = Vector4i(6, 0, 0, 6)
+_startingEffects = Array[Object]([SubResource("Resource_7oyax")])
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_kacn2"]
+script = ExtResource("3_a57la")
+_hpBuff = 1500
+_moneyBuff = Vector4i(8, 0, 0, 8)
 _startingEffects = null
 metadata/_custom_type_script = "uid://iamaod4iivlq"
 
-[sub_resource type="Resource" id="Resource_uw73y"]
-script = ExtResource("3_kacn2")
-_units = Array[ExtResource("3_a57la")]([SubResource("Resource_a57la"), SubResource("Resource_mbfsc")])
-metadata/_custom_type_script = "uid://cvroohkeaovqw"
+[sub_resource type="Resource" id="Resource_peh64"]
+script = ExtResource("6_mbfsc")
+_units = Array[ExtResource("3_a57la")]([SubResource("Resource_di7nh"), SubResource("Resource_kacn2")])
+_applySameUpgradeForAllUnits = false
+metadata/_custom_type_script = "uid://djbu8krhjrjib"
+
+[sub_resource type="Resource" id="Resource_ppvhm"]
+script = ExtResource("6_kacn2")
+_distance = 25.0
+metadata/_custom_type_script = "uid://cr1syn4vsu42"
+
+[sub_resource type="Resource" id="Resource_ni5fl"]
+script = ExtResource("3_a57la")
+_hpBuff = 2325
+_moneyBuff = Vector4i(14, 0, 0, 14)
+_startingEffects = Array[Object]([SubResource("Resource_ppvhm")])
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_hf4y4"]
+script = ExtResource("3_a57la")
+_hpBuff = 2800
+_moneyBuff = Vector4i(13, 0, 0, 13)
+_startingEffects = null
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_2odrv"]
+script = ExtResource("6_mbfsc")
+_units = Array[ExtResource("3_a57la")]([SubResource("Resource_ni5fl"), SubResource("Resource_hf4y4")])
+_applySameUpgradeForAllUnits = false
+metadata/_custom_type_script = "uid://djbu8krhjrjib"
+
+[sub_resource type="Resource" id="Resource_gmomp"]
+script = ExtResource("6_kacn2")
+_distance = 50.0
+metadata/_custom_type_script = "uid://cr1syn4vsu42"
+
+[sub_resource type="Resource" id="Resource_w477o"]
+script = ExtResource("3_a57la")
+_hpBuff = 3100
+_moneyBuff = Vector4i(22, 0, 0, 22)
+_startingEffects = Array[Object]([SubResource("Resource_gmomp")])
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_40xo7"]
+script = ExtResource("8_peh64")
+_speedIncreasePerHit = 5.0
+_speedIncreaseCap = 50.0
+metadata/_custom_type_script = "uid://bx5p53eu0mmmn"
+
+[sub_resource type="Resource" id="Resource_k686b"]
+script = ExtResource("3_a57la")
+_hpBuff = 4875
+_moneyBuff = Vector4i(20, 0, 0, 20)
+_startingEffects = Array[Object]([SubResource("Resource_40xo7")])
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_njhij"]
+script = ExtResource("6_mbfsc")
+_units = Array[ExtResource("3_a57la")]([SubResource("Resource_w477o"), SubResource("Resource_k686b")])
+_applySameUpgradeForAllUnits = false
+metadata/_custom_type_script = "uid://djbu8krhjrjib"
 
 [node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_a57la")]
 script = ExtResource("2_mbfsc")
-_data = SubResource("Resource_uw73y")
-_spawnInterval = 1.0
+_spawnerData = SubResource("Resource_6axyd")
+_spawnInterval = 0.5
 _isEnemy = true
 _iconTexture = ExtResource("4_peh64")
 _towerType = 2
-_firstUpgrade = Array[Object]([])
-_secondUpgrade = Array[Object]([])
-_thirdUpgrade = Array[Object]([])
+_firstUpgrade = Array[Object]([SubResource("Resource_peh64")])
+_secondUpgrade = Array[Object]([SubResource("Resource_2odrv")])
+_thirdUpgrade = Array[Object]([SubResource("Resource_njhij")])
 LeashDistance = 200.0
 _startingEffects = Array[Object]([])
 _internalName = "BlinkerSpawner"

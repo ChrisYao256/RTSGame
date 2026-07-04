@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 public partial class TeslaWeapon : BaseWeapon
 {
 	[Export] public double _tracerDuration = 0.1f;
-	[Export] public Color _tracerColor = ThemePalette.Blue;
+	[Export] public Color _tracerColor = ThemePalette.Green;
 	[Export] public float _tracerWidth = 2.0f;
 	[Export] public int _hitCount;
 	[Export] public float _shotInterval;
@@ -43,10 +43,17 @@ public partial class TeslaWeapon : BaseWeapon
 		{
 			if (_attackTarget == null)
 			{
+				_parent.OnVolleyEnded();
 				return;
 			}
 
 			Godot.Collections.Array<Unit> enemies = _parent.GetEnemiesInRange();
+
+			if (enemies.Count == 0)
+			{
+				_parent.OnVolleyEnded();
+				return;
+			}
 
 			Random random = new Random();
 			int index = random.Next(0, enemies.Count);
@@ -54,7 +61,7 @@ public partial class TeslaWeapon : BaseWeapon
 
 			_tracerLine.Visible = true;
 
-			_tracerLine.SetPointPosition(0, GlobalPosition);
+			_tracerLine.SetPointPosition(0, _firePoint.GlobalPosition);
 			_tracerLine.SetPointPosition(1, target.GlobalPosition);
 
 			// Start (or restart) the timer for the set duration
@@ -70,6 +77,7 @@ public partial class TeslaWeapon : BaseWeapon
 				await Task.Delay(TimeSpan.FromSeconds(_shotInterval));
 			}
 		}
+		_parent.OnVolleyEnded();
 	}
 
 	public override float GetDPS()

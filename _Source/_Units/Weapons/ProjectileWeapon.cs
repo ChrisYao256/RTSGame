@@ -1,4 +1,5 @@
 using Godot;
+using Godot.NativeInterop;
 using RTSGame.Units;
 using System;
 using System.Runtime.CompilerServices;
@@ -16,14 +17,6 @@ public partial class ProjectileWeapon : BaseWeapon
 	/// Delays the projectile after SignalName.ShotFired is emitted. Use to sync animation
 	/// <summary>
 	[Export] protected float _delayProjectile;
-	
-	private Marker2D _firePoint;
-
-	public override void _Ready()
-	{
-		base._Ready();
-		_firePoint = GetParent().GetNode("TurretTurner").GetNode<Marker2D>("Marker2D");
-	}
 
 	public override void PerformAttack(Unit target, int d)
 	{
@@ -62,7 +55,7 @@ public partial class ProjectileWeapon : BaseWeapon
 			_parent.OnHitEnemy(enemy);
 		});
 
-		return new(_parent._teamId, spawnPosition, _projectileSpeed, _projectileTexture, _lifeTime, _projectileRadius, dealDamage, targetAngle, _pierceCount);
+		return new(_parent._teamId, spawnPosition, _projectileSpeed, _projectileTexture, _lifeTime, _projectileRadius, dealDamage, targetAngle, GetPierceCount());
 
 	}
 
@@ -87,7 +80,12 @@ public partial class ProjectileWeapon : BaseWeapon
 		VBoxContainer infoV = _infoContainer.GetNode<VBoxContainer>("VBoxContainer");
 
 		Label pierceLabel = infoV.GetNode<Label>("PierceLabel");
-		pierceLabel.Text = "Pierces " + _pierceCount;
+		pierceLabel.Text = "Pierces " + GetPierceCount();
+	}
+
+	public int GetPierceCount()
+	{
+		return _parent._data._pierceCount + _pierceCount;
 	}
 }
 

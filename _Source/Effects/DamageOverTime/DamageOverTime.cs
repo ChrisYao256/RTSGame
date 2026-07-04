@@ -44,6 +44,7 @@ public partial class DamageOverTime : Effect
 
 	public void AddResource(DamageOverTimeResource newResource)
 	{
+		_parentUnit.IncreaseDamageDealtStat(newResource._damage * newResource._time);
 		Timer timer = new Timer();
 		AddChild(timer);
 		timer.WaitTime = newResource._time;

@@ -22,7 +22,16 @@ public partial class DamageOverTimeResource : EffectResource
 	{
 		DamageOverTimeResource typedOldResource = (DamageOverTimeResource)oldResource;
 
-		typedOldResource._effect.AddResource(this);
+		if (typedOldResource._effect is not null)
+		{
+			typedOldResource._effect.AddResource(this);
+		}
+		else
+		{
+			typedOldResource._damage += _damage;
+			typedOldResource._time += _time;
+			typedOldResource.SetDescription();
+		}
 		return false;
 	}
 
@@ -32,6 +41,20 @@ public partial class DamageOverTimeResource : EffectResource
 		_effectName = "Burning";
 		_effectDescription = "Taking " + _damage.ToString() + " every second";
 		_effectTopRightString = _time + "::duration::";
+	}
+
+	public override void SetUpgradeDescription()
+	{
+		_effectName = "Burning";
+		_effectDescription = "";
+		if (_damage != 0)
+		{
+			_effectDescription += $"{_effectName} damage +{_damage}";
+		}
+		if (_time != 0)
+		{
+			_effectDescription += $"{_effectName} duration +{_time}::duration::";
+		}
 	}
 
 	public override Effect CreateNode()

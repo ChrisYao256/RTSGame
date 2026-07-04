@@ -4,147 +4,52 @@
 [ext_resource type="Texture2D" uid="uid://1ya6poaby1bi" path="res://_Assets/GunTurret.png" id="2_pnulm"]
 [ext_resource type="Script" uid="uid://c7ye5bgfhla5e" path="res://_Source/Effects/StatsIncrease/StatsIncreaseResource.cs" id="3_rmeo8"]
 [ext_resource type="Texture2D" uid="uid://4s8818rs7ags" path="res://_Assets/DualGunTurretIdle.png" id="5_i4ir4"]
-[ext_resource type="Texture2D" uid="uid://bdyjhvsjs67wx" path="res://_Assets/YellowBase.png" id="6_o6khd"]
-[ext_resource type="Script" uid="uid://b5giynokl02x7" path="res://_Source/Effects/TeslaTakeMoreDamage/TeslaTakeMoreDamageResource.cs" id="6_pnulm"]
-[ext_resource type="Script" uid="uid://cxg3f5ateuini" path="res://_Source/Effects/DebuffOnHit/DebuffOnHitResource.cs" id="7_rmeo8"]
+[ext_resource type="Script" uid="uid://7kboh56vfc8d" path="res://_Source/Effects/MultiHitRampUpDamage/MultiHitRampUpDamageResource.cs" id="5_nrj0v"]
+[ext_resource type="Texture2D" uid="uid://0q0kbyhyvbk" path="res://_Assets/GreenBase.png" id="6_kl5bj"]
 [ext_resource type="Script" uid="uid://bva1xkjx08h5v" path="res://_Source/_Units/Weapons/TurretTurner.cs" id="7_wawl5"]
-[ext_resource type="Texture2D" uid="uid://56k5f8f2dyke" path="res://_Assets/GunTurretFire.png" id="8_likot"]
-[ext_resource type="Texture2D" uid="uid://cmjpp5evevh5r" path="res://_Assets/GunTurretIdle.png" id="9_vdwaf"]
+[ext_resource type="Texture2D" uid="uid://bkbs4q4eo7cwa" path="res://_Assets/TeslaTurret.png" id="8_kl5bj"]
 [ext_resource type="Script" uid="uid://0gv27ggit1x6" path="res://_Source/_Units/Weapons/TeslaWeapon.cs" id="10_nrj0v"]
 
 [sub_resource type="Resource" id="Resource_cmo3r"]
 script = ExtResource("3_rmeo8")
-_damageIncrease = 100
+_damageIncrease = 85
 metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
+
+[sub_resource type="Resource" id="Resource_nrj0v"]
+script = ExtResource("5_nrj0v")
+_increaseAmount = 0.05
+metadata/_custom_type_script = "uid://7kboh56vfc8d"
 
 [sub_resource type="Resource" id="Resource_oh15a"]
 script = ExtResource("3_rmeo8")
-_damageIncrease = 265
+_damageIncrease = 220
 metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
+
+[sub_resource type="Resource" id="Resource_pnulm"]
+script = ExtResource("5_nrj0v")
+_increaseAmount = 0.05
+metadata/_custom_type_script = "uid://7kboh56vfc8d"
 
 [sub_resource type="Resource" id="Resource_yglny"]
 script = ExtResource("3_rmeo8")
-_damageIncrease = 485
+_damageIncrease = 345
 metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 
-[sub_resource type="Resource" id="Resource_drrds"]
-script = ExtResource("6_pnulm")
-_damageIncrease = 0.3
-_duration = 1.0
-_effectName = "Resonant"
-metadata/_custom_type_script = "uid://b5giynokl02x7"
+[sub_resource type="Resource" id="Resource_rmeo8"]
+script = ExtResource("5_nrj0v")
+_increaseAmount = 0.1
+metadata/_custom_type_script = "uid://7kboh56vfc8d"
 
-[sub_resource type="Resource" id="Resource_i4ir4"]
-script = ExtResource("7_rmeo8")
-_debuffs = Array[Object]([SubResource("Resource_drrds")])
-_effectName = "Resonanator"
-metadata/_custom_type_script = "uid://cxg3f5ateuini"
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_cmo3r"]
-atlas = ExtResource("8_likot")
-region = Rect2(0, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_yglny"]
-atlas = ExtResource("8_likot")
-region = Rect2(64, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_oh15a"]
-atlas = ExtResource("8_likot")
-region = Rect2(128, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_dnbqd"]
-atlas = ExtResource("8_likot")
-region = Rect2(192, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_in623"]
-atlas = ExtResource("8_likot")
-region = Rect2(256, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_d1w5n"]
-atlas = ExtResource("8_likot")
-region = Rect2(320, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_ji5kk"]
-atlas = ExtResource("8_likot")
-region = Rect2(384, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_8bi3n"]
-atlas = ExtResource("8_likot")
-region = Rect2(448, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_d6qei"]
-atlas = ExtResource("8_likot")
-region = Rect2(512, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_vpldu"]
-atlas = ExtResource("8_likot")
-region = Rect2(576, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_wt4yc"]
-atlas = ExtResource("8_likot")
-region = Rect2(640, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_xhgat"]
-atlas = ExtResource("8_likot")
-region = Rect2(704, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_j15gn"]
-atlas = ExtResource("8_likot")
-region = Rect2(768, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_e2eil"]
-atlas = ExtResource("9_vdwaf")
-region = Rect2(0, 0, 64, 64)
+[sub_resource type="Resource" id="Resource_gpgta"]
+script = ExtResource("5_nrj0v")
+_increaseAmount = 0.2
+metadata/_custom_type_script = "uid://7kboh56vfc8d"
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_oh15a"]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_cmo3r")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_yglny")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_oh15a")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_dnbqd")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_in623")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_d1w5n")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_ji5kk")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_8bi3n")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_d6qei")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_vpldu")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_wt4yc")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_xhgat")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_j15gn")
-}],
-"loop": false,
-"name": &"Fire",
-"speed": 50.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_e2eil")
+"texture": ExtResource("8_kl5bj")
 }],
 "loop": false,
 "name": &"Idle",
@@ -153,54 +58,57 @@ animations = [{
 
 [node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_gpgta")]
 _iconTexture = ExtResource("2_pnulm")
-_description = "Shoots rays at random enemies. "
-_firstUpgrade = Array[Object]([SubResource("Resource_cmo3r")])
-_firstUpgradeCost = Vector4i(60, 0, 0, 60)
-_secondUpgrade = Array[Object]([SubResource("Resource_oh15a")])
-_secondUpgradeCost = Vector4i(150, 0, 0, 150)
-_thirdUpgrade = Array[Object]([SubResource("Resource_yglny")])
-_thirdUpgradeCost = Vector4i(250, 0, 0, 250)
+_description = "Shoots rays at random enemies. Increase damage when multiple rays hit the same enemy."
+_firstUpgrade = Array[Object]([SubResource("Resource_cmo3r"), SubResource("Resource_nrj0v")])
+_firstUpgradeCost = Vector4i(77, 0, 0, 77)
+_secondUpgrade = Array[Object]([SubResource("Resource_oh15a"), SubResource("Resource_pnulm")])
+_secondUpgradeCost = Vector4i(178, 0, 0, 178)
+_thirdUpgrade = Array[Object]([SubResource("Resource_yglny"), SubResource("Resource_rmeo8")])
+_thirdUpgradeCost = Vector4i(300, 0, 0, 300)
 _fourthUpgradeA = Array[Object]([])
 _fourthUpgradeATexture = ExtResource("5_i4ir4")
 _fourthUpgradeB = Array[Object]([])
 _fourthUpgradeBTexture = ExtResource("2_pnulm")
 _fourthUpgradeBCost = Vector4i(0, 75, 0, 0)
 _hpMax = 1
-_startingEffects = Array[Object]([SubResource("Resource_i4ir4")])
+_startingEffects = Array[Object]([SubResource("Resource_gpgta")])
 _internalName = "TeslaTurret"
-_name = "Tesla Turret"
+_name = "Tesla"
 _radius = 0.0
+_baseHealthBarWidth = 48.0
 
 [node name="MainSprite" parent="." index="1" unique_id=701942347]
 scale = Vector2(1, 1)
-texture = ExtResource("6_o6khd")
+texture = ExtResource("6_kl5bj")
 
 [node name="AidAreaCollision" parent="AidArea" parent_id_path=PackedInt32Array(724286163) index="0" unique_id=1952573643]
 position = Vector2(113, -59)
 
 [node name="TurretTurner" type="Node2D" parent="." index="8" unique_id=1158807940]
 script = ExtResource("7_wawl5")
+_knockbackDistance = 0.0
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="TurretTurner" index="0" unique_id=849851730]
 sprite_frames = SubResource("SpriteFrames_oh15a")
 animation = &"Idle"
 
 [node name="Marker2D" type="Marker2D" parent="TurretTurner" index="1" unique_id=661621734]
+position = Vector2(0, -23)
 
 [node name="WeaponComponent" type="Node2D" parent="." index="9" unique_id=2120452932]
 script = ExtResource("10_nrj0v")
 _tracerDuration = 0.08
 _hitCount = 6
 _shotInterval = 0.15
-_damage = 300
-_range = 250.0
+_damage = 250
+_range = 255.0
 _attackCooldown = 3.0
 _damageType = 2
+_description = "Shoots 6 times each volley."
 
 [node name="TracerLine" type="Line2D" parent="WeaponComponent" index="0" unique_id=1706206416]
 visible = false
 top_level = true
 width = 2.0
-default_color = Color(0.80784315, 0, 0.15294118, 0.5294118)
 
 [node name="Timer" type="Timer" parent="WeaponComponent/TracerLine" index="0" unique_id=184735397]

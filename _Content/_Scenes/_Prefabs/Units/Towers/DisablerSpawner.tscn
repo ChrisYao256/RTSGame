@@ -5,30 +5,132 @@
 [ext_resource type="Script" uid="uid://cvroohkeaovqw" path="res://_Source/_Units/SpawnerDataResource.cs" id="3_35fnd"]
 [ext_resource type="Script" uid="uid://iamaod4iivlq" path="res://_Source/Effects/InvaderStatsIncrease/InvaderStatsIncreaseResource.cs" id="3_k4a1k"]
 [ext_resource type="Texture2D" uid="uid://iocgjnp7i8td" path="res://_Assets/Portal.png" id="4_yphip"]
+[ext_resource type="Script" uid="uid://djbu8krhjrjib" path="res://_Source/Effects/SpawnerUpgradeResource/SpawnerUpgradeResource.cs" id="6_o7dds"]
+[ext_resource type="Script" uid="uid://c7ye5bgfhla5e" path="res://_Source/Effects/StatsIncrease/StatsIncreaseResource.cs" id="7_yphip"]
+[ext_resource type="Script" uid="uid://dby4w7fetnae6" path="res://_Source/Effects/NearbyTowerStatsIncrease/NearbyTowerStatsIncreaseResource.cs" id="8_bmmis"]
+[ext_resource type="Script" uid="uid://7ugg3ogqpxk7" path="res://_Source/Effects/DecreaseRange/DecreaseRangeResource.cs" id="9_xjdfn"]
+[ext_resource type="Script" uid="uid://d1m1yhs64wcoj" path="res://_Source/Effects/ApplyEffectToTower/ApplyEffectToTowerResource.cs" id="10_xjdfn"]
+[ext_resource type="Script" uid="uid://be80c57wd06d0" path="res://_Source/Effects/ImmediateTransform/ImmediateTransformResource.cs" id="11_jhx8r"]
 
 [sub_resource type="Resource" id="Resource_o7dds"]
 script = ExtResource("3_k4a1k")
 _unitName = "Disabler"
+_hpBuff = 400
+_moneyBuff = Vector4i(4, 0, 4, 0)
 _startingEffects = null
 metadata/_custom_type_script = "uid://iamaod4iivlq"
 
-[sub_resource type="Resource" id="Resource_uw73y"]
+[sub_resource type="Resource" id="Resource_ufs7f"]
 script = ExtResource("3_35fnd")
 _units = Array[ExtResource("3_k4a1k")]([SubResource("Resource_o7dds")])
 metadata/_custom_type_script = "uid://cvroohkeaovqw"
 
+[sub_resource type="Resource" id="Resource_35fnd"]
+script = ExtResource("3_k4a1k")
+_hpBuff = 225
+_moneyBuff = Vector4i(2, 0, 2, 0)
+_startingEffects = null
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_yphip"]
+script = ExtResource("6_o7dds")
+_units = Array[ExtResource("3_k4a1k")]([SubResource("Resource_35fnd")])
+metadata/_custom_type_script = "uid://djbu8krhjrjib"
+
+[sub_resource type="Resource" id="Resource_r5rbk"]
+script = ExtResource("7_yphip")
+_damagePercentIncrease = 0.02
+metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
+
+[sub_resource type="Resource" id="Resource_axp60"]
+script = ExtResource("8_bmmis")
+_buffResource = SubResource("Resource_r5rbk")
+metadata/_custom_type_script = "uid://dby4w7fetnae6"
+
+[sub_resource type="Resource" id="Resource_shgte"]
+script = ExtResource("9_xjdfn")
+_time = 0.5
+metadata/_custom_type_script = "uid://7ugg3ogqpxk7"
+
+[sub_resource type="Resource" id="Resource_6yfum"]
+script = ExtResource("10_xjdfn")
+_debuffs = Array[Object]([SubResource("Resource_shgte")])
+metadata/_custom_type_script = "uid://d1m1yhs64wcoj"
+
+[sub_resource type="Resource" id="Resource_bmmis"]
+script = ExtResource("3_k4a1k")
+_hpBuff = 500
+_moneyBuff = Vector4i(4, 0, 4, 0)
+_startingEffects = Array[Object]([SubResource("Resource_6yfum")])
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_xjdfn"]
+script = ExtResource("6_o7dds")
+_units = Array[ExtResource("3_k4a1k")]([SubResource("Resource_bmmis")])
+metadata/_custom_type_script = "uid://djbu8krhjrjib"
+
+[sub_resource type="Resource" id="Resource_gpktb"]
+script = ExtResource("7_yphip")
+_damagePercentIncrease = 0.04
+metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
+
+[sub_resource type="Resource" id="Resource_inaiy"]
+script = ExtResource("8_bmmis")
+_buffResource = SubResource("Resource_gpktb")
+metadata/_custom_type_script = "uid://dby4w7fetnae6"
+
+[sub_resource type="Resource" id="Resource_jhx8r"]
+script = ExtResource("3_k4a1k")
+_hpBuff = 800
+_moneyBuff = Vector4i(6, 0, 6, 0)
+_startingEffects = null
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_rvo7w"]
+script = ExtResource("6_o7dds")
+_units = Array[ExtResource("3_k4a1k")]([SubResource("Resource_jhx8r")])
+metadata/_custom_type_script = "uid://djbu8krhjrjib"
+
+[sub_resource type="Resource" id="Resource_bnhoi"]
+script = ExtResource("7_yphip")
+_damagePercentIncrease = 0.1
+metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
+
+[sub_resource type="Resource" id="Resource_dye5b"]
+script = ExtResource("8_bmmis")
+_buffResource = SubResource("Resource_bnhoi")
+metadata/_custom_type_script = "uid://dby4w7fetnae6"
+
+[sub_resource type="Resource" id="Resource_e3okh"]
+script = ExtResource("11_jhx8r")
+_transformedUnit = "YetiSpawner"
+_description = "Spawns an extra ice mage"
+metadata/_custom_type_script = "uid://be80c57wd06d0"
+
+[sub_resource type="Resource" id="Resource_tjgg6"]
+script = ExtResource("7_yphip")
+_damagePercentIncrease = 0.04
+metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
+
+[sub_resource type="Resource" id="Resource_mp780"]
+script = ExtResource("8_bmmis")
+_buffResource = SubResource("Resource_tjgg6")
+_area = Array[Vector2i]([Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, -1), Vector2i(0, 1)])
+metadata/_custom_type_script = "uid://dby4w7fetnae6"
+
 [node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_k4a1k")]
 script = ExtResource("2_o7dds")
-_data = SubResource("Resource_uw73y")
+_spawnerData = SubResource("Resource_ufs7f")
 _spawnInterval = 1.0
 _isEnemy = true
 _iconTexture = ExtResource("4_yphip")
 _towerType = 2
-_firstUpgrade = Array[Object]([])
-_secondUpgrade = Array[Object]([])
-_thirdUpgrade = Array[Object]([])
+_firstUpgrade = Array[Object]([SubResource("Resource_yphip"), SubResource("Resource_axp60")])
+_secondUpgrade = Array[Object]([SubResource("Resource_xjdfn"), SubResource("Resource_inaiy")])
+_thirdUpgrade = Array[Object]([SubResource("Resource_rvo7w"), SubResource("Resource_dye5b")])
+_fourthUpgradeA = Array[Object]([SubResource("Resource_e3okh")])
 LeashDistance = 200.0
-_startingEffects = Array[Object]([])
+_startingEffects = Array[Object]([SubResource("Resource_mp780")])
 _internalName = "DisablerSpawner"
 _name = "Disabler Portal"
 

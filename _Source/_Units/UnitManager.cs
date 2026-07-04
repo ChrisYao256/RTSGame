@@ -1,4 +1,5 @@
 using Godot;
+using RTSGame.Source;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -20,18 +21,18 @@ public partial class UnitManager : Node2D
 		// towers
 		{ "GunTurret", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/GunTurret.tscn") },
 		{ "LaserTurret", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/LaserTurret.tscn") },
-		{ "BombTurret", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/BombTurret.tscn") },
 		{ "PiercingTower", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/PiercingTower.tscn") },
-		{ "BigLaserTurret", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/BigLaserTurret.tscn") },
-		{ "IceLaserTurret", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/IceLaserTurret.tscn") },
 		{ "FlameTurret", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/FlameTurret.tscn") },
-		{ "FrostTurret", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/FrostTurret.tscn") },
 		{ "DualGunTurret", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/DualGunTurret.tscn") },
 		{ "ExplosiveGunTurret", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/ExplosiveGunTurret.tscn") },
 		{ "MoneyTurret", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/MoneyTurret.tscn") },
+		{ "GunScannerTurret", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/GunScannerTurret.tscn") },
+		{ "VulnerableScannerTurret", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/VulnerableScannerTurret.tscn") },
 		{ "StunPiercingTower", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/StunPiercingTower.tscn") },
 		{ "TeslaTurret", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/TeslaTurret.tscn") },
 		{ "TestTurret", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/TestTurret.tscn") },
+		{ "BatteryLaserTurret", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/BatteryLaserTurret.tscn") },
+		{ "InfinitePiercingTower", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/InfinitePiercingTower.tscn") },
 
 		{ "SlimeSpawner", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/SlimeSpawner.tscn") },
 		{ "HoundSpawner", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/HoundSpawner.tscn") },
@@ -42,6 +43,8 @@ public partial class UnitManager : Node2D
 		{ "LargeSlimeSpawner", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/LargeSlimeSpawner.tscn") },
 		{ "BlinkerSpawner", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/BlinkerSpawner.tscn") },
 		{ "DisablerSpawner", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/DisablerSpawner.tscn") },
+		{ "SummonerSpawner", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/SummonerSpawner.tscn") },
+		{ "SentrySpawner", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/SentrySpawner.tscn") },
 
 		{ "DepoweredSpawner", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/DepoweredSpawner.tscn") },
 
@@ -66,6 +69,9 @@ public partial class UnitManager : Node2D
 		{ "LargeSlime", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Invaders/LargeSlime.tscn")},
 		{ "Blinker", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Invaders/Blinker.tscn")},
 		{ "Disabler", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Invaders/Disabler.tscn")},
+		{ "Summoner", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Invaders/Summoner.tscn")},
+		{ "Summoned", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Invaders/Summoned.tscn")},
+		{ "Sentry", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Invaders/Sentry.tscn")},
 	};
 
 	public static uint UnitLayerMask = 2;
@@ -98,6 +104,7 @@ public partial class UnitManager : Node2D
 	}
 
 	private UnitInfoPanel _unitInfoPanel;
+	private TDTowerManager _towerManager;
 
 	private bool _isDraggingLeft = false;
 	private bool _isDraggingRight = false;
@@ -131,6 +138,7 @@ public partial class UnitManager : Node2D
 		//	SpawnUnit(new Vector2(500, 200) + jitter, 0, "Shooter");
 		//}
 		_unitInfoPanel = GetParent().GetNode<UnitInfoPanel>("UnitInfoPanel");
+		_towerManager = GetParent().GetNode<TDTowerManager>("TowerManager");
 	}
 
 	public override void _Input(InputEvent @event)
@@ -209,6 +217,10 @@ public partial class UnitManager : Node2D
 		}
 		else if (@event is InputEventMouseButton mouseEvent_ && mouseEvent_.ButtonIndex == MouseButton.Left)
 		{
+			if (_towerManager._placementMode)
+			{
+				return;
+			}
 			if (mouseEvent_.Pressed)
 			{
 				_isDraggingLeft = true;
@@ -229,6 +241,10 @@ public partial class UnitManager : Node2D
 		}
 		else if (_isDraggingLeft && @event is InputEventMouseMotion)
 		{
+			if (_towerManager._placementMode)
+			{
+				return;
+			}
 			_dragEnd = GetGlobalMousePosition();
 			QueueRedraw();
 		}
@@ -440,7 +456,10 @@ public partial class UnitManager : Node2D
 		// Deselect old units first
 		foreach (var unit in _selectedUnits)
 		{
-			unit.SetSelectionVisible(false);
+			if (IsInstanceValid(unit))
+			{
+				unit.SetSelectionVisible(false);
+			}
 		}
 
 		_selectedUnits = newSelection;
@@ -465,8 +484,8 @@ public partial class UnitManager : Node2D
 
 			newUnit._aiControlled = aiControlled;
 
-			newUnit.Died += OnUnitDied;
-			newUnit.Removed += OnUnitRemoved;
+			newUnit.Died += () => OnUnitDied(newUnit);
+			newUnit.Removed += () => OnUnitRemoved(newUnit);
 
 			if (gridLocation is not null && newUnit is TowerUnit tower)
 			{
@@ -490,8 +509,6 @@ public partial class UnitManager : Node2D
 
 	private void OnUnitDied(Unit deadUnit)
 	{
-		deadUnit.Died -= OnUnitDied;
-
 		_activeUnits.Remove(deadUnit);
 		if (_selectedUnits.Contains(deadUnit))
 		{
@@ -502,8 +519,6 @@ public partial class UnitManager : Node2D
 
 	private void OnUnitRemoved(Unit removedUnit)
 	{
-		removedUnit.Removed -= OnUnitRemoved;
-
 		_activeUnits.Remove(removedUnit);
 		if (_selectedUnits.Contains(removedUnit))
 		{

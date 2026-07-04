@@ -25,15 +25,23 @@ public partial class TooltipManager : CanvasLayer
 		var hbox = new HBoxContainer();
 
 		TooltipRichTextLabel label = new TooltipRichTextLabel { BbcodeEnabled = true, FitContent = true };
-		TooltipRichTextLabel topRightRTL = new TooltipRichTextLabel { BbcodeEnabled = true, FitContent = true };
 		label.CustomMinimumSize = new Vector2(200, 0);
-		topRightRTL.CustomMinimumSize = new Vector2(50, 0);
-
-		hbox.AddChild(label);
-		hbox.AddChild(topRightRTL);
-		panel.AddChild(hbox);
 		label.Text = texts.Item1;
-		topRightRTL.Text = texts.Item2;
+		hbox.AddChild(label);
+
+		if (texts.Item2 != "")
+		{
+			TooltipRichTextLabel topRightRTL = new TooltipRichTextLabel { BbcodeEnabled = true, FitContent = true };
+			topRightRTL.Text = $"[right]{texts.Item2}[/right]";
+			topRightRTL.CustomMinimumSize = new Vector2(75, 0);
+			hbox.AddChild(topRightRTL);
+		}
+		else
+		{
+			label.CustomMinimumSize = new Vector2(250, 0);
+		}
+
+			panel.AddChild(hbox);		
 		panel.ResetSize();
 
 		return panel;

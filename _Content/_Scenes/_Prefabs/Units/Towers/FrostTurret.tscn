@@ -2,16 +2,14 @@
 
 [ext_resource type="PackedScene" uid="uid://yhbw0b164ui2" path="res://_Content/_Scenes/_Prefabs/Units/BaseTower.tscn" id="1_kxyww"]
 [ext_resource type="Texture2D" uid="uid://bms1krdspg4es" path="res://_Assets/FlameTurret.png" id="2_vplsm"]
-[ext_resource type="Script" uid="uid://cwdxtjh8yj1wq" path="res://_Source/Effects/SlowMovement/SlowMovementBuffResource.cs" id="3_vplsm"]
+[ext_resource type="Script" path="res://_Source/Effects/SlowMovement/SlowMovementBuffResource.cs" id="3_vplsm"]
 [ext_resource type="Script" uid="uid://c7ye5bgfhla5e" path="res://_Source/Effects/StatsIncrease/StatsIncreaseResource.cs" id="3_w3b8b"]
 [ext_resource type="Script" uid="uid://y1enulr4b71h" path="res://_Source/Effects/SlowMovement/SlowMovementResource.cs" id="4_kxyww"]
-[ext_resource type="Script" uid="uid://6ysk040uxhpj" path="res://_Source/Effects/DebuffOnHit/DebuffOnHitBuffResource.cs" id="4_w3b8b"]
+[ext_resource type="Script" path="res://_Source/Effects/DebuffOnHit/DebuffOnHitBuffResource.cs" id="4_w3b8b"]
 [ext_resource type="Script" uid="uid://cxg3f5ateuini" path="res://_Source/Effects/DebuffOnHit/DebuffOnHitResource.cs" id="5_uk4wv"]
-[ext_resource type="Script" uid="uid://dtpcxn7d2dqcy" path="res://_Source/Effects/EffectResource.cs" id="6_6yedp"]
 [ext_resource type="PackedScene" uid="uid://ynqfp128ardg" path="res://_Content/_Scenes/_Prefabs/Weapons/ZoneWeapon.tscn" id="8_08j50"]
 [ext_resource type="Texture2D" uid="uid://bgv17tb1w3qtl" path="res://_Assets/FlameTurretBase.png" id="9_g86d2"]
 [ext_resource type="PackedScene" uid="uid://bol7o0gl5ji8x" path="res://_Content/_Scenes/_Prefabs/Weapons/TurretTurner.tscn" id="10_063i5"]
-[ext_resource type="Texture2D" uid="uid://br7cpvpv5qogr" path="res://_Assets/FlameTurretTurret.png" id="11_cx2fp"]
 
 [sub_resource type="Resource" id="Resource_5002m"]
 script = ExtResource("3_vplsm")
@@ -22,32 +20,6 @@ metadata/_custom_type_script = "uid://cwdxtjh8yj1wq"
 script = ExtResource("4_w3b8b")
 _debuffs = Array[Object]([SubResource("Resource_5002m")])
 metadata/_custom_type_script = "uid://6ysk040uxhpj"
-
-[sub_resource type="Resource" id="Resource_vplsm"]
-script = ExtResource("3_vplsm")
-_time = 0.3
-metadata/_custom_type_script = "uid://cwdxtjh8yj1wq"
-
-[sub_resource type="Resource" id="Resource_6yedp"]
-script = ExtResource("4_w3b8b")
-_debuffs = Array[Object]([SubResource("Resource_vplsm")])
-metadata/_custom_type_script = "uid://6ysk040uxhpj"
-
-[sub_resource type="Resource" id="Resource_ibxbu"]
-script = ExtResource("3_w3b8b")
-_damageIncrease = 20
-_effectName = "Faster Firing"
-metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
-
-[sub_resource type="ConvexPolygonShape2D" id="ConvexPolygonShape2D_6wrck"]
-points = PackedVector2Array(100, 50, 120, 50, 170, 0, 120, -50, 100, -50, 0, 0)
-
-[sub_resource type="Resource" id="Resource_kxyww"]
-script = ExtResource("3_w3b8b")
-_rangeIncrease = 20.0
-_newZone = SubResource("ConvexPolygonShape2D_6wrck")
-_effectName = "Premium bullets"
-metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 
 [sub_resource type="Resource" id="Resource_yglny"]
 script = ExtResource("3_w3b8b")
@@ -70,23 +42,10 @@ metadata/_custom_type_script = "uid://cxg3f5ateuini"
 points = PackedVector2Array(100, 50, 150, 0, 100, -50, 0, 0)
 
 [node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_kxyww")]
-_cost = 30
 _iconTexture = ExtResource("2_vplsm")
-_towerType = 0
 _description = "Basic turret"
 _firstUpgrade = Array[Object]([SubResource("Resource_uk4wv")])
-_firstUpgradeCost = 20
-_firstUpgradeName = "First Upgrade"
-_secondUpgradeA = SubResource("Resource_6yedp")
-_secondUpgradeACost = 25
-_secondUpgradeB = SubResource("Resource_ibxbu")
-_secondUpgradeBCost = 25
-_secondUpgradeC = SubResource("Resource_kxyww")
-_secondUpgradeCCost = 25
 _thirdUpgrade = Array[Object]([SubResource("Resource_yglny")])
-_thirdUpgradeCost = 125
-_thirdUpgradeName = "Third Upgrade"
-_transformEffects = Array[ExtResource("6_6yedp")]([])
 _hpMax = 1
 _startingEffects = Array[Object]([SubResource("Resource_kl4k3")])
 _internalName = "FrostTurret"
@@ -104,4 +63,3 @@ scale = Vector2(1, 1)
 texture = ExtResource("9_g86d2")
 
 [node name="TurretTurner" parent="." index="6" unique_id=113202010 instance=ExtResource("10_063i5")]
-_turretTexture = ExtResource("11_cx2fp")

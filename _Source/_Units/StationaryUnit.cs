@@ -18,10 +18,10 @@ public partial class StationaryUnit : Unit
 		_moveSpeed = 0;
 		SetWeapon();
 		SetSelectionVisual();
+		SetStartingEffects(false);
 		SetAttackRange();
 		SetHealthBar();
 		SetInitialCommand();
-		SetStartingEffects(false);
 		SetSize();
 	}
 

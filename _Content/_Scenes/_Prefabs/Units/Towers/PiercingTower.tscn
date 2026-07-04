@@ -6,7 +6,8 @@
 [ext_resource type="Script" uid="uid://dtpcxn7d2dqcy" path="res://_Source/Effects/EffectResource.cs" id="4_4kcl2"]
 [ext_resource type="Script" uid="uid://be80c57wd06d0" path="res://_Source/Effects/ImmediateTransform/ImmediateTransformResource.cs" id="4_msjep"]
 [ext_resource type="Texture2D" uid="uid://bdyjhvsjs67wx" path="res://_Assets/YellowBase.png" id="5_2kx6n"]
-[ext_resource type="Texture2D" uid="uid://b06iomsnrwbvy" path="res://_Assets/RailgunTurretFire.png" id="7_bpy14"]
+[ext_resource type="Texture2D" uid="uid://t1lqgec5deqv" path="res://_Assets/StunRailgunTurret.png" id="5_7mvqi"]
+[ext_resource type="Texture2D" uid="uid://d3cj27sha64i8" path="res://_Assets/InfinitePiercingTower.png" id="6_m1b1x"]
 [ext_resource type="Texture2D" uid="uid://wswb4au2cnxn" path="res://_Assets/GunShot.png" id="7_msjep"]
 [ext_resource type="PackedScene" uid="uid://bc7mdwf374doj" path="res://_Content/_Scenes/_Prefabs/Weapons/ProjectileWeapon.tscn" id="7_vdetk"]
 [ext_resource type="Script" uid="uid://bva1xkjx08h5v" path="res://_Source/_Units/Weapons/TurretTurner.cs" id="8_2kx6n"]
@@ -14,19 +15,17 @@
 
 [sub_resource type="Resource" id="Resource_bpy14"]
 script = ExtResource("3_7mvqi")
-_damageIncrease = 28
+_damageIncrease = 35
 metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 
 [sub_resource type="Resource" id="Resource_2kx6n"]
 script = ExtResource("3_7mvqi")
-_damageIncrease = 57
-_pierceCount = 1
+_damageIncrease = 74
 metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 
 [sub_resource type="Resource" id="Resource_7mvqi"]
 script = ExtResource("3_7mvqi")
-_damageIncrease = 100
-_pierceCount = 1
+_damageIncrease = 141
 metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 
 [sub_resource type="Resource" id="Resource_m1b1x"]
@@ -35,167 +34,14 @@ _transformedUnit = "StunPiercingTower"
 _description = "Hits stun enemies."
 metadata/_custom_type_script = "uid://be80c57wd06d0"
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_msjep"]
-atlas = ExtResource("7_bpy14")
-region = Rect2(0, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_7mvqi"]
-atlas = ExtResource("7_bpy14")
-region = Rect2(64, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_m1b1x"]
-atlas = ExtResource("7_bpy14")
-region = Rect2(128, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_6kf8s"]
-atlas = ExtResource("7_bpy14")
-region = Rect2(192, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_3qgn4"]
-atlas = ExtResource("7_bpy14")
-region = Rect2(256, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_vdetk"]
-atlas = ExtResource("7_bpy14")
-region = Rect2(320, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_ts0wj"]
-atlas = ExtResource("7_bpy14")
-region = Rect2(384, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_sodxo"]
-atlas = ExtResource("7_bpy14")
-region = Rect2(448, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_0pcct"]
-atlas = ExtResource("7_bpy14")
-region = Rect2(512, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_672ai"]
-atlas = ExtResource("7_bpy14")
-region = Rect2(576, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_jfrxq"]
-atlas = ExtResource("7_bpy14")
-region = Rect2(640, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_44m3k"]
-atlas = ExtResource("7_bpy14")
-region = Rect2(704, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_tbyey"]
-atlas = ExtResource("7_bpy14")
-region = Rect2(768, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_f0s0i"]
-atlas = ExtResource("7_bpy14")
-region = Rect2(832, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_u8t65"]
-atlas = ExtResource("7_bpy14")
-region = Rect2(896, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_6xt6j"]
-atlas = ExtResource("7_bpy14")
-region = Rect2(960, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_ytr5s"]
-atlas = ExtResource("7_bpy14")
-region = Rect2(1024, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_su5q0"]
-atlas = ExtResource("7_bpy14")
-region = Rect2(1088, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_64yml"]
-atlas = ExtResource("7_bpy14")
-region = Rect2(1152, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_d0l2p"]
-atlas = ExtResource("7_bpy14")
-region = Rect2(1216, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_v0syb"]
-atlas = ExtResource("7_bpy14")
-region = Rect2(1280, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_j52lt"]
-atlas = ExtResource("7_bpy14")
-region = Rect2(1344, 0, 64, 64)
+[sub_resource type="Resource" id="Resource_msjep"]
+script = ExtResource("4_msjep")
+_transformedUnit = "InfinitePiercingTower"
+_description = "Piercing +∞"
+metadata/_custom_type_script = "uid://be80c57wd06d0"
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_msjep"]
 animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_msjep")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_7mvqi")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_m1b1x")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_6kf8s")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_3qgn4")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_vdetk")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_ts0wj")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_sodxo")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_0pcct")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_672ai")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_jfrxq")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_44m3k")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_tbyey")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_f0s0i")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_u8t65")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_6xt6j")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_ytr5s")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_su5q0")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_64yml")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_d0l2p")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_v0syb")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_j52lt")
-}],
-"loop": false,
-"name": &"Fire",
-"speed": 50.0
-}, {
 "frames": [{
 "duration": 1.0,
 "texture": ExtResource("9_bpy14")
@@ -216,13 +62,17 @@ _secondUpgradeCost = Vector4i(50, 0, 0, 0)
 _thirdUpgrade = Array[Object]([SubResource("Resource_7mvqi")])
 _thirdUpgradeCost = Vector4i(90, 0, 0, 0)
 _fourthUpgradeA = Array[Object]([SubResource("Resource_m1b1x")])
-_fourthUpgradeATexture = ExtResource("2_4kcl2")
+_fourthUpgradeATexture = ExtResource("5_7mvqi")
 _fourthUpgradeACost = Vector4i(100, 0, 100, 0)
+_fourthUpgradeB = Array[Object]([SubResource("Resource_msjep")])
+_fourthUpgradeBTexture = ExtResource("6_m1b1x")
+_fourthUpgradeBCost = Vector4i(140, 80, 0, 0)
 LeashDistance = 200.0
 _startingEffects = Array[ExtResource("4_4kcl2")]([])
 _internalName = "PiercingTower"
-_name = "Railgun Turret"
+_name = "Piercer"
 _radius = 0.0
+_baseHealthBarWidth = 48.0
 
 [node name="MainSprite" parent="." index="1" unique_id=701942347]
 scale = Vector2(1, 1)
@@ -243,11 +93,11 @@ position = Vector2(18, 0)
 _projectileSpeed = 2000.0
 _projectileTexture = ExtResource("7_msjep")
 _lifeTime = 8.0
-_projectileRadius = 15.0
-_pierceCount = 3
+_projectileRadius = 30.0
+_pierceCount = 4
 _delayProjectile = 0.06
-_damage = 40
-_range = 275.0
+_damage = 55
+_range = 260.0
 _attackCooldown = 2.0
 _attackDelayLow = 0.3
 _attackDelayHigh = 0.3

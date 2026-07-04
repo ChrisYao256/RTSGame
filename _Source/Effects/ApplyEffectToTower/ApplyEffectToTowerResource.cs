@@ -1,5 +1,6 @@
 using Godot;
 using Godot.Collections;
+using System.Collections.Generic;
 namespace RTSGame.Units;
 
 [GlobalClass]
@@ -11,6 +12,39 @@ public partial class ApplyEffectToTowerResource : EffectResource
 	[Export] public Color _tracerColor = ThemePalette.Blue;
 	[Export] public float _tracerWidth = 4.0f;
 	[Export] public float _tracerDuration = 1.0f;
+
+	public override bool MergeWithOld(EffectResource oldResource, List<EffectResource> allMatchingResource)
+	{
+		bool matchFound = false;
+		foreach (EffectResource resource in allMatchingResource)
+		{
+			ApplyEffectToTowerResource typedResource = resource as ApplyEffectToTowerResource;
+			bool mismatch = false;
+			for (int i = 0; i < _debuffs.Count; i++)
+			{
+				if (_debuffs[i].GetType() != typedResource._debuffs[i].GetType())
+				{
+					mismatch = true;
+					break;
+				}
+			}
+			if (mismatch)
+			{
+				continue;
+			}
+			if (matchFound)
+			{
+				throw new System.Exception("Found two ApplyEffectToTowerResource with the same _debuffs!");
+			}
+			matchFound = true;
+			for (int i = 0; i < _debuffs.Count; i++)
+			{
+				_debuffs[i].MergeWithOld(typedResource._debuffs[i], []);
+			}
+			typedResource.SetDescription();
+		}
+		return !matchFound;
+	}
 
 	public override void SetDescription()
 	{

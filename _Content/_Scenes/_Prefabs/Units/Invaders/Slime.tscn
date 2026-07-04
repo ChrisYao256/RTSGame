@@ -34,13 +34,13 @@ animations = [{
 }]
 
 [node name="BaseUnit" unique_id=481801141 instance=ExtResource("1_d12es")]
-_moneyDropped = Vector4i(2, 0, 0, 0)
-_moveSpeed = 75.0
-_hpMax = 150
+_moveSpeed = 50.0
+_hpMax = 0
 _startingEffects = Array[Object]([])
 _internalName = "Slime"
 _name = "Slime"
-_radius = 30.0
+_radius = 24.0
+_baseHealthBarHeight = 12.0
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." index="1" unique_id=113917100]
 texture_filter = 1

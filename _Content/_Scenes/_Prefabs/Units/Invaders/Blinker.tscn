@@ -6,19 +6,19 @@
 
 [sub_resource type="Resource" id="Resource_qj3l2"]
 script = ExtResource("2_k4t0j")
-_distance = 300.0
+_distance = 150.0
 _effectName = "Blink"
 metadata/_custom_type_script = "uid://cr1syn4vsu42"
 
 [node name="BaseUnit" unique_id=481801141 instance=ExtResource("1_k4t0j")]
-_moneyDropped = Vector4i(12, 0, 0, 12)
 _hpDeducted = 2
-_moveSpeed = 100.0
-_hpMax = 1500
+_moveSpeed = 70.0
+_hpMax = 0
 _startingEffects = Array[Object]([SubResource("Resource_qj3l2")])
 _internalName = "Blinker"
 _name = "Blinker"
 _radius = 16.0
+_baseHealthBarHeight = 12.0
 
 [node name="MainSprite" parent="." index="1" unique_id=597948513]
 scale = Vector2(1, 1)

@@ -67,10 +67,37 @@ public partial class MultiProjectileWeapon : ProjectileWeapon
 				await Task.Delay(TimeSpan.FromSeconds(_shotInterval));
 			}
 		}
+		_parent.OnVolleyEnded();
 	}
 
 	public override float GetDPS()
 	{
 		return _hitCount * base.GetDPS();
+	}
+
+	public override void UpdateWeaponInfoContainerWithUpgrade(StatsIncreaseResource upgrade)
+	{
+		string greenHex = ThemePalette.Green.ToHtml(false);
+		VBoxContainer infoV = _infoContainer.GetNode<VBoxContainer>("VBoxContainer");
+		if (upgrade._damageIncrease != 0)
+		{
+			RichTextLabel damageLabel = infoV.GetNode<RichTextLabel>("DamageLabel");
+			damageLabel.Text += $"[color=#{greenHex}]=>{upgrade._damageIncrease + GetDamage()}[/color]";
+		}
+		if (upgrade._attackSpeedIncrease != 0)
+		{
+			RichTextLabel cooldownLabel = infoV.GetNode<RichTextLabel>("CooldownLabel");
+			cooldownLabel.Text += $"[color=#{greenHex}]=>{GetCooldown() / (1 + upgrade._attackSpeedIncrease):F2}[/color]";
+		}
+		if (upgrade._attackSpeedIncrease != 0 || upgrade._damageIncrease != 0)
+		{
+			RichTextLabel dpsLabel = infoV.GetNode<RichTextLabel>("DPSLabel");
+			dpsLabel.Text += $"[color=#{greenHex}]=>{_hitCount * (GetDamage() + upgrade._damageIncrease) / (float)(GetCooldown() / (1 + upgrade._attackSpeedIncrease)):F0}[/color]";
+		}
+		if (upgrade._rangeIncrease != 0)
+		{
+			RichTextLabel rangeLabel = infoV.GetNode<RichTextLabel>("RangeLabel");
+			rangeLabel.Text += $"[color=#{greenHex}]=>{GetRange() + upgrade._rangeIncrease}[/color]";
+		}
 	}
 }

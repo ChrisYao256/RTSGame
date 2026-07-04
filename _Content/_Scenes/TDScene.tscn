@@ -41,19 +41,19 @@ UnitManager = ExtResource("3_473pp")
 
 [node name="TileMapLayer" type="TileMapLayer" parent="." unique_id=2102084703]
 texture_filter = 1
-scale = Vector2(7.5, 7.5)
-tile_map_data = PackedByteArray("AAAEAAYAAAABAAAAAAAGAAYAAAABAAAAAAAHAAYAAAABAAAAAAAJAAYAAAABAAAAAAAKAAYAAAABAAAAAAAMAAAAAAAGAAIAAAALAAAAAAAAAAIAAAAKAAAAAAAFAAIAAAAJAAAAAAAHAAIAAAAIAAAAAAADAAIAAAAHAAAAAAAJAAIAAAAGAAAAAAADAAIAAAAFAAAAAAAIAAIAAAAEAAAAAAAIAAIAAAADAAAAAAADAAIAAAACAAAAAAAIAAIAAAABAAAAAAACAAIAAAAAAAAAAAAEAAIAAAAAAAEAAAAAAAIAAAALAAIAAAAJAAIAAAALAAEAAAADAAIAAAAMAAEAAAAKAAIAAAAMAAIAAAAAAAIAAAAMAAMAAAAAAAIAAAAMAAQAAAACAAIAAAAMAAYAAAAEAAAAAAALAAYAAAABAAAAAAALAAQAAAAFAAIAAAAGAAEAAAABAAAAAAAHAAEAAAAGAAAAAAAIAAEAAAABAAIAAAAIAAIAAAADAAIAAAAHAAIAAAAFAAAAAAAJAAMAAAAAAAIAAAAJAAIAAAALAAIAAAAJAAEAAAACAAIAAAAKAAEAAAAJAAIAAAAKAAIAAAAIAAIAAAAKAAMAAAAGAAIAAAALAAMAAAABAAIAAAADAAYAAAAIAAAAAAAFAAYAAAABAAAAAAABAAMAAAAJAAAAAAAAAAMAAAADAAAAAAABAAEAAAAHAAAAAAABAAIAAAAFAAAAAAAFAAEAAAABAAAAAAAEAAEAAAABAAAAAAADAAEAAAABAAAAAAACAAEAAAABAAAAAAAHAAQAAAAJAAAAAAAHAAMAAAAFAAAAAAAGAAQAAAABAAAAAAADAAQAAAAHAAAAAAAEAAQAAAABAAAAAAAFAAQAAAABAAAAAAADAAUAAAAFAAAAAAAIAAYAAAABAAAAAAAIAAMAAAAKAAIAAAAIAAQAAAADAAIAAAAIAAUAAAALAAIAAAAJAAUAAAALAAIAAAAKAAUAAAAJAAIAAAALAAUAAAAAAAIAAAAMAAUAAAAJAAIAAAAKAAQAAAAIAAIAAAAJAAQAAAAEAAIAAAAEAAUAAAAIAAIAAAAFAAUAAAABAAIAAAAGAAUAAAAGAAIAAAAHAAUAAAAIAAIAAAAGAAIAAAAJAAIAAAAFAAIAAAALAAIAAAAEAAIAAAALAAIAAAADAAIAAAADAAIAAAACAAIAAAALAAIAAAACAAMAAAAFAAIAAAADAAMAAAAIAAIAAAAEAAMAAAAIAAIAAAAFAAMAAAAFAAIAAAAGAAMAAAAAAAIAAAAAAAQAAAAFAAIAAAABAAQAAAAFAAIAAAACAAQAAAADAAIAAAACAAUAAAAEAAIAAAACAAYAAAAJAAIAAAABAAYAAAADAAIAAAAAAAYAAAABAAIAAAAAAAUAAAAJAAIAAAABAAUAAAAHAAIAAAAAAAIAAAAJAAIAAAA=")
+scale = Vector2(8.5, 8.5)
+tile_map_data = PackedByteArray("AAAMAAAAAAAGAAIAAAAKAAAAAAAFAAIAAAAJAAAAAAAHAAIAAAAIAAAAAAADAAIAAAAHAAAAAAAJAAIAAAAGAAAAAAADAAIAAAAFAAAAAAAIAAIAAAAEAAAAAAAIAAIAAAADAAAAAAADAAIAAAACAAAAAAAIAAIAAAABAAAAAAACAAIAAAAAAAAAAAAEAAIAAAAAAAEAAAAAAAIAAAAMAAEAAAAKAAIAAAAMAAIAAAAAAAIAAAAMAAMAAAAAAAIAAAAGAAEAAAABAAAAAAAHAAEAAAAGAAAAAAAIAAEAAAABAAIAAAAIAAIAAAADAAIAAAAHAAIAAAAFAAAAAAAJAAMAAAAAAAIAAAAJAAIAAAALAAIAAAAJAAEAAAACAAIAAAAKAAEAAAAJAAIAAAAKAAIAAAAIAAIAAAAKAAMAAAAGAAIAAAABAAMAAAAJAAAAAAAAAAMAAAADAAAAAAABAAEAAAAHAAAAAAABAAIAAAAFAAAAAAAFAAEAAAABAAAAAAAEAAEAAAABAAAAAAADAAEAAAABAAAAAAACAAEAAAABAAAAAAAHAAMAAAAFAAAAAAAIAAMAAAAKAAIAAAAGAAIAAAAJAAIAAAAFAAIAAAALAAIAAAAEAAIAAAALAAIAAAADAAIAAAADAAIAAAACAAIAAAALAAIAAAACAAMAAAAFAAIAAAADAAMAAAAIAAIAAAAEAAMAAAAIAAIAAAAFAAMAAAAFAAIAAAAGAAMAAAAAAAIAAAAAAAIAAAAJAAIAAAAAAAQAAAAAAAIAAAABAAQAAAAFAAIAAAACAAQAAAAAAAIAAAADAAQAAAADAAIAAAAEAAQAAAAAAAIAAAAFAAQAAAADAAIAAAAGAAQAAAACAAIAAAAKAAQAAAABAAIAAAAJAAQAAAAKAAIAAAAIAAQAAAAIAAIAAAAAAAUAAAAJAAIAAAABAAUAAAADAAIAAAACAAUAAAALAAIAAAADAAUAAAAIAAIAAAAEAAUAAAAHAAIAAAAFAAUAAAAJAAIAAAAGAAUAAAAAAAIAAAAHAAQAAAAFAAAAAAAHAAUAAAAIAAAAAAAIAAUAAAABAAAAAAAJAAUAAAABAAAAAAAKAAUAAAAEAAAAAAA=")
 tile_set = ExtResource("7_5ivv1")
 navigation_enabled = false
 script = ExtResource("8_r27g4")
 
 [node name="OverlayLayer" type="TileMapLayer" parent="." unique_id=33268211]
-scale = Vector2(7.5, 7.5)
+scale = Vector2(8.5, 8.5)
 tile_set = ExtResource("7_5ivv1")
 
 [node name="TdManager" parent="." unique_id=116729899 instance=ExtResource("3_v6k6q")]
 _availTowerList = Array[String](["GunTurret", "LaserTurret", "PiercingTower", "FlameTurret", "MoneyTurret", "SlimeSpawner", "HoundSpawner", "PriestSpawner", "SoldierSpawner", "DisablerSpawner"])
-_startingMoney = Vector4i(150, 0, 100, 0)
+_startingMoney = Vector4i(1000, 1000, 1000, 1000)
 
 [node name="NavigationRegion2D" type="NavigationRegion2D" parent="." unique_id=1731619863]
 visible = false
@@ -76,9 +76,12 @@ process_mode = 3
 [node name="RightPanel" type="PanelContainer" parent="RightPanelCanvasLayer" unique_id=1020797322]
 process_mode = 3
 texture_filter = 1
-offset_left = 1560.0
-offset_right = 1920.0
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -360.0
 offset_bottom = 1080.0
+grow_horizontal = 0
 theme_override_styles/panel = SubResource("StyleBoxTexture_dqwu5")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="RightPanelCanvasLayer/RightPanel" unique_id=782743368]
@@ -87,33 +90,28 @@ layout_mode = 2
 [node name="MoneyLabel" type="RichTextLabel" parent="RightPanelCanvasLayer/RightPanel/VBoxContainer" unique_id=1274819536]
 custom_minimum_size = Vector2(250, 50)
 layout_mode = 2
-theme_override_font_sizes/normal_font_size = 24
-theme_override_font_sizes/bold_font_size = 24
-theme_override_font_sizes/bold_italics_font_size = 24
-theme_override_font_sizes/italics_font_size = 24
-theme_override_font_sizes/mono_font_size = 24
 bbcode_enabled = true
 script = ExtResource("10_2i1sm")
 
 [node name="HpLabel" type="Label" parent="RightPanelCanvasLayer/RightPanel/VBoxContainer" unique_id=1228266498]
 layout_mode = 2
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 18
 
 [node name="WaveCounter" type="Label" parent="RightPanelCanvasLayer/RightPanel/VBoxContainer" unique_id=1760873018]
 layout_mode = 2
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 18
 text = "Wave 0"
 
 [node name="BossWaveLabel" type="Label" parent="RightPanelCanvasLayer/RightPanel/VBoxContainer" unique_id=2051085642]
 layout_mode = 2
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 18
 
 [node name="HBoxContainer" type="VBoxContainer" parent="RightPanelCanvasLayer/RightPanel/VBoxContainer" unique_id=1124233390]
 layout_mode = 2
 
 [node name="SpawnerLimitLabel" type="Label" parent="RightPanelCanvasLayer/RightPanel/VBoxContainer/HBoxContainer" unique_id=1135741774]
 layout_mode = 2
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 18
 
 [node name="Button" type="Button" parent="RightPanelCanvasLayer/RightPanel/VBoxContainer/HBoxContainer" unique_id=2068678590]
 custom_minimum_size = Vector2(314, 88)
@@ -140,24 +138,31 @@ offset_bottom = 20.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
+theme_override_fonts/normal_font = ExtResource("11_hcr7m")
 theme_override_font_sizes/normal_font_size = 24
-theme_override_font_sizes/bold_font_size = 24
-theme_override_font_sizes/bold_italics_font_size = 24
-theme_override_font_sizes/italics_font_size = 24
-theme_override_font_sizes/mono_font_size = 234
 bbcode_enabled = true
 fit_content = true
 script = ExtResource("10_2i1sm")
 
 [node name="IncomeLabel" type="RichTextLabel" parent="RightPanelCanvasLayer/RightPanel/VBoxContainer" unique_id=1319773152]
 layout_mode = 2
-theme_override_font_sizes/normal_font_size = 24
-theme_override_font_sizes/bold_font_size = 24
-theme_override_font_sizes/bold_italics_font_size = 24
-theme_override_font_sizes/italics_font_size = 24
-theme_override_font_sizes/mono_font_size = 24
 bbcode_enabled = true
-text = "Income: $0"
+text = "Maximum Income: $0"
+fit_content = true
+script = ExtResource("10_2i1sm")
+
+[node name="DPSLabel" type="RichTextLabel" parent="RightPanelCanvasLayer/RightPanel/VBoxContainer" unique_id=1047988168]
+layout_mode = 2
+bbcode_enabled = true
+text = "Total DPS: 0
+"
+fit_content = true
+script = ExtResource("10_2i1sm")
+
+[node name="TotalHpLabel" type="RichTextLabel" parent="RightPanelCanvasLayer/RightPanel/VBoxContainer" unique_id=595661229]
+layout_mode = 2
+bbcode_enabled = true
+text = "Total Hp: 0"
 fit_content = true
 script = ExtResource("10_2i1sm")
 

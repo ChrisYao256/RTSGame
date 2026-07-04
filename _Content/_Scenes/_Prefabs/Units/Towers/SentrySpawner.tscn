@@ -1,0 +1,91 @@
+[gd_scene format=3 uid="uid://bbxyxm2s3n2oy"]
+
+[ext_resource type="PackedScene" uid="uid://yhbw0b164ui2" path="res://_Content/_Scenes/_Prefabs/Units/BaseTower.tscn" id="1_ptl6c"]
+[ext_resource type="Script" uid="uid://b4jva1l23o6su" path="res://_Source/_Units/Spawner.cs" id="2_3ot5q"]
+[ext_resource type="Script" uid="uid://iamaod4iivlq" path="res://_Source/Effects/InvaderStatsIncrease/InvaderStatsIncreaseResource.cs" id="3_pb2vt"]
+[ext_resource type="Script" uid="uid://bwnw1f3ti2dgi" path="res://_Source/Effects/SelfHealing/SelfHealingResource.cs" id="4_e65jk"]
+[ext_resource type="Script" uid="uid://cvroohkeaovqw" path="res://_Source/_Units/SpawnerDataResource.cs" id="4_xeclr"]
+[ext_resource type="Texture2D" uid="uid://iocgjnp7i8td" path="res://_Assets/Portal.png" id="5_6gx24"]
+[ext_resource type="Script" uid="uid://djbu8krhjrjib" path="res://_Source/Effects/SpawnerUpgradeResource/SpawnerUpgradeResource.cs" id="8_gg5tu"]
+
+[sub_resource type="Resource" id="Resource_eh4s5"]
+script = ExtResource("3_pb2vt")
+_unitName = "Sentry"
+_hpBuff = 4780
+_moneyBuff = Vector4i(30, 60, 0, 0)
+_startingEffects = Array[Object]([])
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_ffbgm"]
+script = ExtResource("4_xeclr")
+_units = Array[ExtResource("3_pb2vt")]([SubResource("Resource_eh4s5")])
+metadata/_custom_type_script = "uid://cvroohkeaovqw"
+
+[sub_resource type="Resource" id="Resource_bt8jn"]
+script = ExtResource("4_e65jk")
+_healAmount = 149
+metadata/_custom_type_script = "uid://bwnw1f3ti2dgi"
+
+[sub_resource type="Resource" id="Resource_or6jk"]
+script = ExtResource("3_pb2vt")
+_hpBuff = 3900
+_moneyBuff = Vector4i(21, 43, 0, 0)
+_startingEffects = Array[Object]([SubResource("Resource_bt8jn")])
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_e65jk"]
+script = ExtResource("8_gg5tu")
+_units = Array[ExtResource("3_pb2vt")]([SubResource("Resource_or6jk")])
+metadata/_custom_type_script = "uid://djbu8krhjrjib"
+
+[sub_resource type="Resource" id="Resource_0b3ku"]
+script = ExtResource("4_e65jk")
+_healAmount = 250
+metadata/_custom_type_script = "uid://bwnw1f3ti2dgi"
+
+[sub_resource type="Resource" id="Resource_ptl6c"]
+script = ExtResource("3_pb2vt")
+_hpBuff = 6500
+_moneyBuff = Vector4i(33, 67, 0, 0)
+_startingEffects = Array[Object]([SubResource("Resource_0b3ku")])
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_3ot5q"]
+script = ExtResource("8_gg5tu")
+_units = Array[ExtResource("3_pb2vt")]([SubResource("Resource_ptl6c")])
+metadata/_custom_type_script = "uid://djbu8krhjrjib"
+
+[sub_resource type="Resource" id="Resource_gg5tu"]
+script = ExtResource("4_e65jk")
+_healAmount = 395
+metadata/_custom_type_script = "uid://bwnw1f3ti2dgi"
+
+[sub_resource type="Resource" id="Resource_pb2vt"]
+script = ExtResource("3_pb2vt")
+_hpBuff = 9820
+_moneyBuff = Vector4i(50, 90, 0, 0)
+_startingEffects = Array[Object]([SubResource("Resource_gg5tu")])
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_xeclr"]
+script = ExtResource("8_gg5tu")
+_units = Array[ExtResource("3_pb2vt")]([SubResource("Resource_pb2vt")])
+metadata/_custom_type_script = "uid://djbu8krhjrjib"
+
+[node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_ptl6c")]
+script = ExtResource("2_3ot5q")
+_spawnerData = SubResource("Resource_ffbgm")
+_spawnInterval = 1.0
+_isEnemy = true
+_iconTexture = ExtResource("5_6gx24")
+_towerType = 2
+_firstUpgrade = Array[Object]([SubResource("Resource_e65jk")])
+_secondUpgrade = Array[Object]([SubResource("Resource_3ot5q")])
+_thirdUpgrade = Array[Object]([SubResource("Resource_xeclr")])
+_fourthUpgradeA = Array[Object]([])
+LeashDistance = 200.0
+_internalName = "SentrySpawner"
+_name = "Sentry Portal"
+
+[node name="MainSprite" parent="." index="1" unique_id=701942347]
+texture = ExtResource("5_6gx24")

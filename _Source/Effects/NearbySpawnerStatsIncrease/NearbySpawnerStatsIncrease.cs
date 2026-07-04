@@ -34,7 +34,7 @@ public partial class NearbySpawnerStatsIncrease : Effect
 				TowerUnit tower = parentTower._grid.GetTowerOnCell(position);
 				if (tower is Spawner spawner)
 				{
-					for (int i = 0; i < spawner._data._units.Count; i++)
+					for (int i = 0; i < spawner._spawnerData._units.Count; i++)
 					{
 						spawner.AddSpawnerUnitStatsIncrease(i, (InvaderStatsIncreaseResource)_resource._buffResource.DuplicateDeep());
 					}
@@ -52,7 +52,7 @@ public partial class NearbySpawnerStatsIncrease : Effect
 		{
 			if (tower is Spawner spawner)
 			{
-				for (int i = 0; i < spawner._data._units.Count; i++)
+				for (int i = 0; i < spawner._spawnerData._units.Count; i++)
 				{
 					spawner.AddSpawnerUnitStatsIncrease(i, (InvaderStatsIncreaseResource)_resource._buffResource.DuplicateDeep());
 				}
@@ -76,7 +76,7 @@ public partial class NearbySpawnerStatsIncrease : Effect
 				TowerUnit tower = parentTower._grid.GetTowerOnCell(position);
 				if (tower is Spawner spawner)
 				{
-					for (int i = 0; i < spawner._data._units.Count; i++)
+					for (int i = 0; i < spawner._spawnerData._units.Count; i++)
 					{
 						spawner.AddSpawnerUnitStatsIncrease(i, (InvaderStatsIncreaseResource)resource.DuplicateDeep());
 					}
@@ -98,7 +98,7 @@ public partial class NearbySpawnerStatsIncrease : Effect
 		}
 		foreach (Spawner spawner in _affectedSpawners)
 		{
-			for (int i = 0; i < spawner._data._units.Count; i++)
+			for (int i = 0; i < spawner._spawnerData._units.Count; i++)
 			{
 				spawner.RemoveSpawnerUnitStatsIncrease(i, (InvaderStatsIncreaseResource)_resource._buffResource.DuplicateDeep());
 			}

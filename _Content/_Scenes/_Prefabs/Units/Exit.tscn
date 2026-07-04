@@ -15,12 +15,11 @@ scale = Vector2(1, 1)
 
 [node name="CollisionShape2D" parent="." index="2" unique_id=1381764660]
 visible = true
-scale = Vector2(3.32, 3.32)
 
 [node name="HealthBar" parent="." index="4" unique_id=640038315]
 visible = false
 
-[node name="AidArea" parent="." index="5" unique_id=724286163]
+[node name="AidArea" parent="." index="6" unique_id=724286163]
 visible = false
 
 [node name="AidAreaCollision" parent="AidArea" index="0" unique_id=1952573643]

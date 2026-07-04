@@ -13,6 +13,8 @@ public partial class Vulnerable : Effect
 
 	List<(VulnerableResource, Timer)> _debuffs = [];
 
+	private Timer _longestTimer;
+
 	public Vulnerable(VulnerableResource resource) : base(resource)
 	{
 		_firstResource = resource;
@@ -40,22 +42,55 @@ public partial class Vulnerable : Effect
 		RecalculateDebuff();
 	}
 
+	protected override void UpdateTempDebuffIcon(UpgradeButton button)
+	{
+		if (_longestTimer is null)
+		{
+			return;
+		}
+		button.UpdateAffordabilityDisplay((float)_longestTimer.TimeLeft / _firstResource._time);
+	}
+
 	public void RecalculateDebuff()
 	{
-		float maxIncrease = 0;
+		float maxReduction = 0;
 		foreach (var e in _debuffs)
 		{
-			if (e.Item1._percentIncrease > maxIncrease)
+			if (e.Item1._percentIncrease > maxReduction)
 			{
-				maxIncrease = e.Item1._percentIncrease;
+				maxReduction = e.Item1._percentIncrease;
 			}
 		}
-		_firstResource._percentIncrease = maxIncrease;
+		_firstResource._percentIncrease = maxReduction;
 		_firstResource.SetDescription();
 		_parentUnit.EmitSignal(Unit.SignalName.UpdateInfo);
 
-		_parentUnit.SetDamageTakenDebuff(maxIncrease);
-		if (maxIncrease == 0)
+		float maxDuration = 0;
+		foreach (var e in _debuffs)
+		{
+			if (e.Item2.TimeLeft > maxDuration)
+			{
+				maxDuration = (float)e.Item2.TimeLeft;
+			}
+		}
+		if (_longestTimer is null)
+		{
+			_longestTimer = new Timer();
+			_longestTimer.OneShot = true;
+			AddChild(_longestTimer);
+			_longestTimer.Start(maxDuration);
+		}
+		else if (maxDuration > _longestTimer.TimeLeft)
+		{
+			_longestTimer.QueueFree();
+			_longestTimer = new Timer();
+			_longestTimer.OneShot = true;
+			AddChild(_longestTimer);
+			_longestTimer.Start(maxDuration);
+		}
+
+		_parentUnit.SetDamageTakenDebuff(maxReduction);
+		if (maxReduction == 0)
 		{
 			RemoveEffectResource();
 			RemoveEffectNode();
@@ -64,7 +99,7 @@ public partial class Vulnerable : Effect
 		}
 		else
 		{
-			_parentUnit.Modulate = new Color(1, 0.2f, 0);
+			_parentUnit.Modulate = ThemePalette.Red;
 		}
 	}
 }

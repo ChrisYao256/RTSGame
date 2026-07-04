@@ -5,9 +5,10 @@
 [ext_resource type="PackedScene" uid="uid://csclmqhm61enk" path="res://_Content/_Scenes/_Prefabs/Weapons/LaserWeapon.tscn" id="3_7wgq5"]
 [ext_resource type="Script" uid="uid://c7ye5bgfhla5e" path="res://_Source/Effects/StatsIncrease/StatsIncreaseResource.cs" id="3_h0vgu"]
 [ext_resource type="Script" uid="uid://be80c57wd06d0" path="res://_Source/Effects/ImmediateTransform/ImmediateTransformResource.cs" id="4_4io8i"]
+[ext_resource type="Texture2D" uid="uid://bkbs4q4eo7cwa" path="res://_Assets/TeslaTurret.png" id="5_4io8i"]
 [ext_resource type="Script" uid="uid://dtpcxn7d2dqcy" path="res://_Source/Effects/EffectResource.cs" id="5_d4b7m"]
-[ext_resource type="Texture2D" uid="uid://miulw7p5fqif" path="res://_Assets/RedBase.png" id="7_4io8i"]
-[ext_resource type="Script" uid="uid://dp2y3egpfahx1" path="res://_Source/Effects/StatsIncreasePerNearbyTower/StatsIncreasePerNearbyTowerResource.cs" id="7_h8tlq"]
+[ext_resource type="Texture2D" uid="uid://0q0kbyhyvbk" path="res://_Assets/GreenBase.png" id="6_h8tlq"]
+[ext_resource type="Texture2D" uid="uid://dvldu8wegymfb" path="res://_Assets/BatteryLaserTurret.png" id="6_ha87b"]
 [ext_resource type="Texture2D" uid="uid://dswmqssl2idv8" path="res://_Assets/LaserTurretAttacking.png" id="9_4io8i"]
 [ext_resource type="Texture2D" uid="uid://c81t2cos2y8j1" path="res://_Assets/LaserTurretIdle.png" id="9_d4b7m"]
 [ext_resource type="Texture2D" uid="uid://druh6fs01scdp" path="res://_Assets/LaserTurretCharging.png" id="10_ha87b"]
@@ -15,17 +16,17 @@
 
 [sub_resource type="Resource" id="Resource_ha87b"]
 script = ExtResource("3_h0vgu")
-_damageIncrease = 30
+_damageIncrease = 32
 metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 
 [sub_resource type="Resource" id="Resource_h8tlq"]
 script = ExtResource("3_h0vgu")
-_damageIncrease = 64
+_damageIncrease = 65
 metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 
 [sub_resource type="Resource" id="Resource_4io8i"]
 script = ExtResource("3_h0vgu")
-_damageIncrease = 150
+_damageIncrease = 160
 metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 
 [sub_resource type="Resource" id="Resource_2vm1c"]
@@ -35,16 +36,10 @@ _description = "Zaps random targets. Increases damage when multiple strikes hit 
 metadata/_custom_type_script = "uid://be80c57wd06d0"
 
 [sub_resource type="Resource" id="Resource_rnneq"]
-script = ExtResource("3_h0vgu")
-_damageIncrease = 10
-metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
-
-[sub_resource type="Resource" id="Resource_o7wuf"]
-script = ExtResource("7_h8tlq")
-_buffResource = SubResource("Resource_rnneq")
-_area = Array[Vector2i]([Vector2i(1, 1), Vector2i(1, 0), Vector2i(1, -1), Vector2i(0, 1), Vector2i(0, 0), Vector2i(0, -1), Vector2i(-1, 1), Vector2i(-1, 0), Vector2i(-1, -1)])
-_towers = Array[String](["Mine"])
-metadata/_custom_type_script = "uid://dp2y3egpfahx1"
+script = ExtResource("4_4io8i")
+_transformedUnit = "BatteryLaserTurret"
+_description = "Stores unused energy, gaining resources and bonus damage."
+metadata/_custom_type_script = "uid://be80c57wd06d0"
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_2vm1c"]
 atlas = ExtResource("10_ha87b")
@@ -274,43 +269,49 @@ animations = [{
 }]
 
 [node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_mrw2a")]
-_cost = Vector4i(20, 0, 0, 10)
+_cost = Vector4i(20, 0, 0, 20)
 _iconTexture = ExtResource("2_mrw2a")
 _description = "Shoots high damage laser. Requires time to charge up."
 _firstUpgrade = Array[Object]([SubResource("Resource_ha87b")])
-_firstUpgradeCost = Vector4i(15, 0, 0, 7)
+_firstUpgradeCost = Vector4i(12, 0, 0, 12)
 _secondUpgrade = Array[Object]([SubResource("Resource_h8tlq")])
-_secondUpgradeCost = Vector4i(30, 0, 0, 15)
+_secondUpgradeCost = Vector4i(23, 0, 0, 23)
 _thirdUpgrade = Array[Object]([SubResource("Resource_4io8i")])
-_thirdUpgradeCost = Vector4i(67, 0, 0, 33)
+_thirdUpgradeCost = Vector4i(50, 0, 0, 50)
 _fourthUpgradeA = Array[Object]([SubResource("Resource_2vm1c")])
-_fourthUpgradeACost = Vector4i(100, 0, 0, 100)
+_fourthUpgradeATexture = ExtResource("5_4io8i")
+_fourthUpgradeACost = Vector4i(120, 0, 0, 120)
+_fourthUpgradeB = Array[Object]([SubResource("Resource_rnneq")])
+_fourthUpgradeBTexture = ExtResource("6_ha87b")
+_fourthUpgradeBCost = Vector4i(0, 0, 100, 100)
 _hpMax = 1
 _lockOnTarget = true
-_startingEffects = Array[ExtResource("5_d4b7m")]([SubResource("Resource_o7wuf")])
+_startingEffects = Array[ExtResource("5_d4b7m")]([])
 _internalName = "LaserTurret"
-_name = "Laser Turret"
+_name = "Laser"
 _radius = 0.0
+_baseHealthBarWidth = 48.0
 
 [node name="MainSprite" parent="." index="1" unique_id=701942347]
 scale = Vector2(1, 1)
-texture = ExtResource("7_4io8i")
+texture = ExtResource("6_h8tlq")
 
 [node name="TurretTurner" type="Node2D" parent="." index="8" unique_id=1660325207]
 script = ExtResource("12_4io8i")
 _turn = true
+_knockbackDistance = 0.0
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="TurretTurner" index="0" unique_id=1265150402]
 sprite_frames = SubResource("SpriteFrames_ha87b")
-animation = &"Attacking"
+animation = &"Idle"
 
 [node name="Marker2D" type="Marker2D" parent="TurretTurner" index="1" unique_id=13863776]
 position = Vector2(30, 0)
 
 [node name="WeaponComponent" parent="." index="9" unique_id=2120452932 instance=ExtResource("3_7wgq5")]
 _tracerColor = Color(0.46666667, 0.84313726, 0.4392157, 1)
-_damage = 40
-_range = 350.0
+_damage = 50
+_range = 300.0
 _attackDelayLow = 1.5
 _attackDelayHigh = 1.5
 _useAttackDelay = true

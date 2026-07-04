@@ -23,6 +23,7 @@ public partial class DropMoreMoney : Effect
 	public override void ConnectSignals(Unit unit)
 	{
 		base.ConnectSignals(unit);
+		unit.Connect(Unit.SignalName.Died, Callable.From(OnUnitDied));
 		OnCreation();
 		AddResource(_firstResource);
 	}
@@ -51,29 +52,26 @@ public partial class DropMoreMoney : Effect
 		button.UpdateAffordabilityDisplay((float)_longestTimer.TimeLeft / _firstResource._time);
 	}
 
+	protected override void OnUnitDied()
+	{
+		if (_firstResource._source != null)
+		{
+			_firstResource._source.IncreaseMoneyGainedStat(((InvaderUnit)_parentUnit)._moneyTempModifier);
+		}
+	}
+
 	public void RecalculateDebuff()
 	{
-		Vector4I maxIncrease = new Vector4I(0,0,0,0);
+		float maxIncrease = 0;
 		foreach (var e in _debuffs)
 		{
-			if (e.Item1._increase[0] > maxIncrease[0])
+			if (e.Item1._percentIncrease > maxIncrease)
 			{
-				maxIncrease[0] = e.Item1._increase[0];
-			}
-			if (e.Item1._increase[1] > maxIncrease[1])
-			{
-				maxIncrease[1] = e.Item1._increase[1];
-			}
-			if (e.Item1._increase[2] > maxIncrease[2])
-			{
-				maxIncrease[2] = e.Item1._increase[2];
-			}
-			if (e.Item1._increase[3] > maxIncrease[3])
-			{
-				maxIncrease[3] = e.Item1._increase[3];
+				maxIncrease = e.Item1._percentIncrease;
+				_firstResource._source = e.Item1._source;
 			}
 		}
-		_firstResource._increase = maxIncrease;
+		_firstResource._percentIncrease = maxIncrease;
 		_firstResource.SetDescription();
 		_parentUnit.EmitSignal(Unit.SignalName.UpdateInfo);
 
@@ -102,7 +100,7 @@ public partial class DropMoreMoney : Effect
 		}
 
 			((InvaderUnit)_parentUnit).SetMoneyTempModifier(maxIncrease);
-		if (maxIncrease == new Vector4I(0,0,0,0))
+		if (maxIncrease == 0)
 		{
 			RemoveEffectResource();
 			RemoveEffectNode();

@@ -6,20 +6,13 @@
 [ext_resource type="Script" uid="uid://iamaod4iivlq" path="res://_Source/Effects/InvaderStatsIncrease/InvaderStatsIncreaseResource.cs" id="3_nrico"]
 [ext_resource type="Texture2D" uid="uid://iocgjnp7i8td" path="res://_Assets/Portal.png" id="4_tknkj"]
 
-[sub_resource type="Resource" id="Resource_t2tss"]
-script = ExtResource("3_nrico")
-_unitName = "Undead"
-_startingEffects = null
-metadata/_custom_type_script = "uid://iamaod4iivlq"
-
-[sub_resource type="Resource" id="Resource_uw73y"]
+[sub_resource type="Resource" id="Resource_5xgl8"]
 script = ExtResource("3_0lcyp")
-_units = Array[ExtResource("3_nrico")]([SubResource("Resource_t2tss")])
 metadata/_custom_type_script = "uid://cvroohkeaovqw"
 
 [node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_nrico")]
 script = ExtResource("2_t2tss")
-_data = SubResource("Resource_uw73y")
+_spawnerData = SubResource("Resource_5xgl8")
 _spawnInterval = 1.0
 _isEnemy = true
 _iconTexture = ExtResource("4_tknkj")

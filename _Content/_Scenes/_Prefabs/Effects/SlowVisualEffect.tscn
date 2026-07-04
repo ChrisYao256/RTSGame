@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://dncqptowjkcx3"]
+
+[ext_resource type="Texture2D" uid="uid://c60ob3y2f4n88" path="res://_Assets/IceCircle.png" id="1_cf3n8"]
+
+[node name="ExplosionVisualEffect" type="Node2D" unique_id=856898756]
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=124558391]
+texture = ExtResource("1_cf3n8")

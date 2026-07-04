@@ -2,12 +2,11 @@
 
 [ext_resource type="PackedScene" uid="uid://yhbw0b164ui2" path="res://_Content/_Scenes/_Prefabs/Units/BaseTower.tscn" id="1_ief3i"]
 [ext_resource type="Script" uid="uid://c7ye5bgfhla5e" path="res://_Source/Effects/StatsIncrease/StatsIncreaseResource.cs" id="3_sssbq"]
-[ext_resource type="Texture2D" uid="uid://bdyjhvsjs67wx" path="res://_Assets/YellowBase.png" id="6_vw763"]
+[ext_resource type="Texture2D" uid="uid://0q0kbyhyvbk" path="res://_Assets/GreenBase.png" id="4_jujgb"]
 [ext_resource type="Script" uid="uid://bva1xkjx08h5v" path="res://_Source/_Units/Weapons/TurretTurner.cs" id="7_hfhul"]
-[ext_resource type="Texture2D" uid="uid://b2drxuvsgsmdo" path="res://_Assets/DualGunTurretFire.png" id="8_ief3i"]
+[ext_resource type="Texture2D" uid="uid://b3lrividiwwga" path="res://_Assets/GreenGunShot.png" id="7_jujgb"]
 [ext_resource type="Texture2D" uid="uid://4s8818rs7ags" path="res://_Assets/DualGunTurretIdle.png" id="8_vw763"]
 [ext_resource type="Script" uid="uid://bc4day7luihlc" path="res://_Source/_Units/Weapons/MultiProjectileWeapon.cs" id="10_vw763"]
-[ext_resource type="Texture2D" uid="uid://wswb4au2cnxn" path="res://_Assets/GunShot.png" id="11_fq23n"]
 
 [sub_resource type="Resource" id="Resource_cmo3r"]
 script = ExtResource("3_sssbq")
@@ -25,139 +24,8 @@ script = ExtResource("3_sssbq")
 _damageIncrease = 305
 metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_437tk"]
-atlas = ExtResource("8_ief3i")
-region = Rect2(0, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_sssbq"]
-atlas = ExtResource("8_ief3i")
-region = Rect2(64, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_dyxbc"]
-atlas = ExtResource("8_ief3i")
-region = Rect2(128, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_owq5e"]
-atlas = ExtResource("8_ief3i")
-region = Rect2(192, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_4ms0y"]
-atlas = ExtResource("8_ief3i")
-region = Rect2(256, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_hfhul"]
-atlas = ExtResource("8_ief3i")
-region = Rect2(320, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_hi6tt"]
-atlas = ExtResource("8_ief3i")
-region = Rect2(384, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_qxvo7"]
-atlas = ExtResource("8_ief3i")
-region = Rect2(448, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_n65oo"]
-atlas = ExtResource("8_ief3i")
-region = Rect2(512, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_fq23n"]
-atlas = ExtResource("8_ief3i")
-region = Rect2(576, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_qkisv"]
-atlas = ExtResource("8_ief3i")
-region = Rect2(640, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_0ecnu"]
-atlas = ExtResource("8_ief3i")
-region = Rect2(704, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_5ssgk"]
-atlas = ExtResource("8_ief3i")
-region = Rect2(768, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_mxsyp"]
-atlas = ExtResource("8_ief3i")
-region = Rect2(832, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_g6wgw"]
-atlas = ExtResource("8_ief3i")
-region = Rect2(896, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_o2s1q"]
-atlas = ExtResource("8_ief3i")
-region = Rect2(960, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_mgqrx"]
-atlas = ExtResource("8_ief3i")
-region = Rect2(1024, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_t7msj"]
-atlas = ExtResource("8_ief3i")
-region = Rect2(1088, 0, 64, 64)
-
 [sub_resource type="SpriteFrames" id="SpriteFrames_oh15a"]
 animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_437tk")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_sssbq")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_dyxbc")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_owq5e")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_4ms0y")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_hfhul")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_hi6tt")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_qxvo7")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_n65oo")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_fq23n")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_qkisv")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_0ecnu")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_5ssgk")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_mxsyp")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_g6wgw")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_o2s1q")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_mgqrx")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_t7msj")
-}],
-"loop": false,
-"name": &"Fire",
-"speed": 50.0
-}, {
 "frames": [{
 "duration": 1.0,
 "texture": ExtResource("8_vw763")
@@ -177,12 +45,13 @@ _thirdUpgrade = Array[Object]([SubResource("Resource_yglny")])
 _thirdUpgradeCost = Vector4i(230, 0, 0, 120)
 _hpMax = 1
 _internalName = "DualGunTurret"
-_name = "Sentry Turret"
+_name = "Double Gunner"
 _radius = 0.0
+_baseHealthBarWidth = 48.0
 
 [node name="MainSprite" parent="." index="1" unique_id=701942347]
 scale = Vector2(1, 1)
-texture = ExtResource("6_vw763")
+texture = ExtResource("4_jujgb")
 
 [node name="AidAreaCollision" parent="AidArea" parent_id_path=PackedInt32Array(724286163) index="0" unique_id=1952573643]
 position = Vector2(113, -59)
@@ -209,10 +78,10 @@ script = ExtResource("10_vw763")
 _hitCount = 2
 _shotInterval = 0.1
 _projectileSpeed = 1500.0
-_projectileTexture = ExtResource("11_fq23n")
+_projectileTexture = ExtResource("7_jujgb")
 _lifeTime = 5.0
-_projectileRadius = 10.0
+_projectileRadius = 8.0
 _pierceCount = 1
 _damage = 180
-_range = 300.0
+_range = 275.0
 _damageType = 1

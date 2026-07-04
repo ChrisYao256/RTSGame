@@ -29,7 +29,7 @@ public partial class HitscanWeapon : BaseWeapon
 	{
 		_tracerLine.Visible = true;
 
-		_tracerLine.SetPointPosition(0, GlobalPosition);
+		_tracerLine.SetPointPosition(0, _firePoint.GlobalPosition);
 		_tracerLine.SetPointPosition(1, target.GlobalPosition);
 
 		// Start (or restart) the timer for the set duration

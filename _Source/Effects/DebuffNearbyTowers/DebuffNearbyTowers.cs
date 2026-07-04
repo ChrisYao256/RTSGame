@@ -1,18 +1,17 @@
+using Godot;
+using Godot.Collections;
+using RTSGame._Source.Units;
 using RTSGame.Units;
 using System;
 using System.Collections.Generic;
-using Godot;
-using Godot.Collections;
 
+/// <summary>
+/// applies an IStackable effect to towers that enter range. 
+/// </summary>
 public partial class DebuffNearbyTowers : Effect
 {
-	private Timer _timer;
 	DebuffNearbyTowersResource _resource;
-	//public SelfHealing(int healAmount, double healInterval)
-	//{
-	//	_healAmount = healAmount;
-	//	_healInterval = healInterval;
-	//}
+	Array<TowerUnit> _affectedTowers = [];
 
 	public DebuffNearbyTowers(DebuffNearbyTowersResource resource) : base(resource)
 	{
@@ -27,41 +26,65 @@ public partial class DebuffNearbyTowers : Effect
 
 	protected override void OnCreation()
 	{
-		_timer = new Timer();
-		AddChild(_timer);
-		_timer.WaitTime = _resource._period;
-		_timer.OneShot = false;
-		_timer.Timeout += () => {
-			List<Node> nodes = Utils.QueryPhysicsCircle(GetWorld2D(), GlobalPosition, _resource._radius, 4);
+		if (_resource._slowVisualScene != null)
+		{
+			// Create the visual instance
+			var viz = _resource._slowVisualScene.Instantiate<Node2D>();
 
-			List<Unit> towers = [];
-			foreach (Node node in nodes)
+			// Add it to the world (Level), NOT the projectile
+			AddChild(viz);
+
+			// Move it to where the hit happened
+			viz.GlobalPosition = GlobalPosition;
+
+			// If you want to scale the sprite to match the radius:
+			float radius = _resource._radius; // Get this from your shape
+			Utils.ScaleVisualToRadius(viz.GetNode<Sprite2D>("Sprite2D"), radius);
+		}
+
+		Area2D area = new();
+		CollisionShape2D shape = new CollisionShape2D();
+		CircleShape2D circle = new CircleShape2D();
+		circle.Radius = _resource._radius;
+		shape.Shape = circle;
+		area.AddChild(shape);
+		area.CollisionMask = UnitManager.TowerLayerMask;
+
+		area.BodyEntered += OnBodyEntered;
+		area.BodyExited += OnBodyExited;
+
+		AddChild(area);
+	}
+
+	private void OnBodyEntered(Node2D body)
+	{
+		if (body is TowerUnit tower && tower._towerType == TowerUnit.TowerType.Defense)
+		{
+			foreach (EffectResource resource in _resource._debuffs)
 			{
-				if (node is TowerUnit tower)
+				tower.AddEffect(resource);
+				_affectedTowers.Add(tower);
+			}
+		}
+	}
+
+	private void OnBodyExited(Node2D body)
+	{
+		if (body is TowerUnit tower && _affectedTowers.Contains(tower))
+		{
+			foreach (EffectResource resource in _resource._debuffs)
+			{
+				if (resource is IStackable stackableResource)
 				{
-					towers.Add(tower);
+					EffectResource negativeResource = stackableResource.MultiplyEffect(-1);
+					tower.AddEffect(negativeResource);
+					_affectedTowers.Remove(tower);
+				}
+				else
+				{
+					throw new Exception("a debuff must be an IStackable");
 				}
 			}
-			foreach (TowerUnit tower in towers)
-			{
-				tower.AddEffect(_resource._debuff);
-			}
-			if (_resource._slowVisualScene != null)
-			{
-				// Create the visual instance
-				var viz = _resource._slowVisualScene.Instantiate<Node2D>();
-
-				// Add it to the world (Level), NOT the projectile
-				GetTree().Root.AddChild(viz);
-
-				// Move it to where the hit happened
-				viz.GlobalPosition = GlobalPosition;
-
-				// If you want to scale the sprite to match the radius:
-				float radius = _resource._radius; // Get this from your shape
-				Utils.ScaleVisualToRadius(viz.GetNode<Sprite2D>("Sprite2D"), radius);
-			}
-		};
-		_timer.Start();
+		}
 	}
 }

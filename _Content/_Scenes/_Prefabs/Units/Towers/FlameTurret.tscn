@@ -3,9 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://yhbw0b164ui2" path="res://_Content/_Scenes/_Prefabs/Units/BaseTower.tscn" id="1_22s5n"]
 [ext_resource type="Texture2D" uid="uid://ciji7d7547t05" path="res://_Assets/FlamethrowerTurret.png" id="2_geji6"]
 [ext_resource type="Script" uid="uid://c7ye5bgfhla5e" path="res://_Source/Effects/StatsIncrease/StatsIncreaseResource.cs" id="3_geji6"]
-[ext_resource type="Script" uid="uid://dafcorp34tb4a" path="res://_Source/Effects/DamageOverTime/DamageOverTimeBuffResource.cs" id="4_geji6"]
 [ext_resource type="Script" uid="uid://dtpcxn7d2dqcy" path="res://_Source/Effects/EffectResource.cs" id="4_jjii2"]
-[ext_resource type="Script" uid="uid://6ysk040uxhpj" path="res://_Source/Effects/DebuffOnHit/DebuffOnHitBuffResource.cs" id="5_jjii2"]
 [ext_resource type="Script" uid="uid://fdug3yybl4s5" path="res://_Source/Effects/AdjacencyTransform/AdjacencyTransformResource.cs" id="5_kl4k3"]
 [ext_resource type="Script" uid="uid://dxi5nbbsr1isf" path="res://_Source/Effects/DamageOverTime/DamageOverTimeResource.cs" id="6_6wrck"]
 [ext_resource type="PackedScene" uid="uid://ynqfp128ardg" path="res://_Content/_Scenes/_Prefabs/Weapons/ZoneWeapon.tscn" id="6_le7hc"]
@@ -16,34 +14,26 @@
 [ext_resource type="Texture2D" uid="uid://56k5f8f2dyke" path="res://_Assets/GunTurretFire.png" id="12_6wr3n"]
 [ext_resource type="Texture2D" uid="uid://dhsfbtnfthjpj" path="res://_Assets/FlamethrowerTurretIdle.png" id="13_arvu4"]
 
-[sub_resource type="ConvexPolygonShape2D" id="ConvexPolygonShape2D_jjii2"]
-points = PackedVector2Array(175, 75, 225, 0, 175, -75, 0, 0)
-
 [sub_resource type="Resource" id="Resource_cmo3r"]
 script = ExtResource("3_geji6")
-_damageIncrease = 17
-_newZone = SubResource("ConvexPolygonShape2D_jjii2")
+_damageIncrease = 18
 metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
-
-[sub_resource type="ConvexPolygonShape2D" id="ConvexPolygonShape2D_kl4k3"]
-points = PackedVector2Array(200, 75, 250, 0, 200, -75, 0, 0)
 
 [sub_resource type="Resource" id="Resource_6wr3n"]
 script = ExtResource("3_geji6")
-_damageIncrease = 35
+_damageIncrease = 40
 _rangeIncrease = 25.0
-_newZone = SubResource("ConvexPolygonShape2D_kl4k3")
 metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 
 [sub_resource type="Resource" id="Resource_arvu4"]
-script = ExtResource("4_geji6")
+script = ExtResource("6_6wrck")
 _damage = 5
-metadata/_custom_type_script = "uid://dafcorp34tb4a"
+metadata/_custom_type_script = "uid://dxi5nbbsr1isf"
 
 [sub_resource type="Resource" id="Resource_wca21"]
-script = ExtResource("5_jjii2")
+script = ExtResource("7_geji6")
 _debuffs = Array[Object]([SubResource("Resource_arvu4")])
-metadata/_custom_type_script = "uid://6ysk040uxhpj"
+metadata/_custom_type_script = "uid://cxg3f5ateuini"
 
 [sub_resource type="Resource" id="Resource_yglny"]
 script = ExtResource("3_geji6")
@@ -52,14 +42,14 @@ _attackSpeedIncrease = 0.2
 metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 
 [sub_resource type="Resource" id="Resource_jjii2"]
-script = ExtResource("4_geji6")
+script = ExtResource("6_6wrck")
 _damage = 5
-metadata/_custom_type_script = "uid://dafcorp34tb4a"
+metadata/_custom_type_script = "uid://dxi5nbbsr1isf"
 
 [sub_resource type="Resource" id="Resource_s7m3k"]
-script = ExtResource("5_jjii2")
+script = ExtResource("7_geji6")
 _debuffs = Array[Object]([SubResource("Resource_jjii2")])
-metadata/_custom_type_script = "uid://6ysk040uxhpj"
+metadata/_custom_type_script = "uid://cxg3f5ateuini"
 
 [sub_resource type="Resource" id="Resource_2vm1c"]
 script = ExtResource("5_kl4k3")
@@ -196,26 +186,27 @@ animations = [{
 "speed": 1.0
 }]
 
-[sub_resource type="ConvexPolygonShape2D" id="ConvexPolygonShape2D_22s5n"]
-points = PackedVector2Array(175, 60, 225, 0, 175, -60, 0, 0)
+[sub_resource type="ConvexPolygonShape2D" id="ConvexPolygonShape2D_jjii2"]
+points = PackedVector2Array(175, 75, 225, 0, 175, -75, 0, 0)
 
 [node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_22s5n")]
-_cost = Vector4i(20, 20, 0, 0)
+_cost = Vector4i(15, 15, 0, 0)
 _iconTexture = ExtResource("2_geji6")
 _description = "Spews flame that damages and ignites all enemies in an area."
 _firstUpgrade = Array[Object]([SubResource("Resource_cmo3r")])
-_firstUpgradeCost = Vector4i(15, 15, 0, 0)
+_firstUpgradeCost = Vector4i(12, 12, 0, 0)
 _secondUpgrade = Array[Object]([SubResource("Resource_6wr3n"), SubResource("Resource_wca21")])
-_secondUpgradeCost = Vector4i(32, 32, 0, 0)
+_secondUpgradeCost = Vector4i(25, 25, 0, 0)
 _thirdUpgrade = Array[Object]([SubResource("Resource_yglny"), SubResource("Resource_s7m3k")])
-_thirdUpgradeCost = Vector4i(50, 50, 0, 0)
+_thirdUpgradeCost = Vector4i(40, 40, 0, 0)
 _fourthUpgradeA = Array[Object]([])
 _transformEffects = Array[ExtResource("4_jjii2")]([SubResource("Resource_2vm1c")])
 _hpMax = 1
 _startingEffects = Array[Object]([SubResource("Resource_kl4k3")])
 _internalName = "FlameTurret"
-_name = "Flame Turret"
+_name = "Flame"
 _radius = 0.0
+_baseHealthBarWidth = 48.0
 
 [node name="MainSprite" parent="." index="1" unique_id=701942347]
 scale = Vector2(1, 1)
@@ -224,6 +215,7 @@ texture = ExtResource("10_kl4k3")
 [node name="TurretTurner" type="Node2D" parent="." index="8" unique_id=1968164578]
 script = ExtResource("11_kl4k3")
 _turn = true
+_knockbackDistance = 0.0
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="TurretTurner" index="0" unique_id=1427014056]
 sprite_frames = SubResource("SpriteFrames_1k1ln")
@@ -233,6 +225,8 @@ animation = &"Idle"
 position = Vector2(31, 0)
 
 [node name="WeaponComponent" parent="." index="9" unique_id=2120452932 instance=ExtResource("6_le7hc")]
-_shape = SubResource("ConvexPolygonShape2D_22s5n")
+_shape = SubResource("ConvexPolygonShape2D_jjii2")
 _damage = 16
 _range = 225.0
+_attackDelayHigh = 0.1
+_useAttackDelay = true

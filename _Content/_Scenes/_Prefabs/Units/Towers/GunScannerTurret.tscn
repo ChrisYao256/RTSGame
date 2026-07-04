@@ -1,0 +1,131 @@
+[gd_scene format=3 uid="uid://dx8o55q3jyxjv"]
+
+[ext_resource type="PackedScene" uid="uid://yhbw0b164ui2" path="res://_Content/_Scenes/_Prefabs/Units/BaseTower.tscn" id="1_11np5"]
+[ext_resource type="Texture2D" uid="uid://c3sxubmlnevj3" path="res://_Assets/Scanner.png" id="2_b0e8i"]
+[ext_resource type="Script" uid="uid://c7ye5bgfhla5e" path="res://_Source/Effects/StatsIncrease/StatsIncreaseResource.cs" id="3_4kiyl"]
+[ext_resource type="Script" uid="uid://dey8y5bpmxnim" path="res://_Source/Effects/DropMoreMoney/DropMoreMoneyResource.cs" id="4_cq0bm"]
+[ext_resource type="Script" uid="uid://cxg3f5ateuini" path="res://_Source/Effects/DebuffOnHit/DebuffOnHitResource.cs" id="5_5urom"]
+[ext_resource type="Texture2D" uid="uid://bdyjhvsjs67wx" path="res://_Assets/YellowBase.png" id="6_0hjnm"]
+[ext_resource type="Script" uid="uid://bva1xkjx08h5v" path="res://_Source/_Units/Weapons/TurretTurner.cs" id="7_vp1vi"]
+[ext_resource type="Script" uid="uid://bwav65cg5at1c" path="res://_Source/_Units/Weapons/ProjectileWeapon.cs" id="9_0u5xs"]
+[ext_resource type="Texture2D" uid="uid://gt1mwsdlce7x" path="res://_Assets/BlueGunShot.png" id="10_wvvys"]
+
+[sub_resource type="Resource" id="Resource_cmo3r"]
+script = ExtResource("3_4kiyl")
+_damageIncrease = 68
+metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
+
+[sub_resource type="Resource" id="Resource_ra7jq"]
+script = ExtResource("4_cq0bm")
+_percentIncrease = 0.05
+_time = 1.0
+metadata/_custom_type_script = "uid://dey8y5bpmxnim"
+
+[sub_resource type="Resource" id="Resource_j8bnk"]
+script = ExtResource("5_5urom")
+_debuffs = Array[Object]([SubResource("Resource_ra7jq")])
+metadata/_custom_type_script = "uid://cxg3f5ateuini"
+
+[sub_resource type="Resource" id="Resource_oh15a"]
+script = ExtResource("3_4kiyl")
+_damageIncrease = 162
+metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
+
+[sub_resource type="Resource" id="Resource_c5ukl"]
+script = ExtResource("4_cq0bm")
+_percentIncrease = 0.07
+_time = 1.0
+metadata/_custom_type_script = "uid://dey8y5bpmxnim"
+
+[sub_resource type="Resource" id="Resource_dy8do"]
+script = ExtResource("5_5urom")
+_debuffs = Array[Object]([SubResource("Resource_c5ukl")])
+metadata/_custom_type_script = "uid://cxg3f5ateuini"
+
+[sub_resource type="Resource" id="Resource_yglny"]
+script = ExtResource("3_4kiyl")
+_damageIncrease = 300
+metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
+
+[sub_resource type="Resource" id="Resource_t2m5q"]
+script = ExtResource("4_cq0bm")
+_percentIncrease = 0.08
+_time = 1.0
+metadata/_custom_type_script = "uid://dey8y5bpmxnim"
+
+[sub_resource type="Resource" id="Resource_bda6t"]
+script = ExtResource("5_5urom")
+_debuffs = Array[Object]([SubResource("Resource_t2m5q")])
+metadata/_custom_type_script = "uid://cxg3f5ateuini"
+
+[sub_resource type="Resource" id="Resource_coniu"]
+script = ExtResource("4_cq0bm")
+_percentIncrease = 0.3
+_time = 7.0
+metadata/_custom_type_script = "uid://dey8y5bpmxnim"
+
+[sub_resource type="Resource" id="Resource_xn855"]
+script = ExtResource("5_5urom")
+_debuffs = Array[Object]([SubResource("Resource_coniu")])
+metadata/_custom_type_script = "uid://cxg3f5ateuini"
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_oh15a"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_b0e8i")
+}],
+"loop": false,
+"name": &"Idle",
+"speed": 1.0
+}]
+
+[node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_11np5")]
+_cost = Vector4i(20, 0, 0, 0)
+_iconTexture = ExtResource("2_b0e8i")
+_description = "Shoots capsules that instantly scans enemes, increasing their resources dropped."
+_firstUpgrade = Array[Object]([SubResource("Resource_cmo3r"), SubResource("Resource_j8bnk")])
+_firstUpgradeCost = Vector4i(45, 0, 45, 0)
+_secondUpgrade = Array[Object]([SubResource("Resource_oh15a"), SubResource("Resource_dy8do")])
+_secondUpgradeCost = Vector4i(100, 0, 100, 0)
+_thirdUpgrade = Array[Object]([SubResource("Resource_yglny"), SubResource("Resource_bda6t")])
+_thirdUpgradeCost = Vector4i(175, 0, 175, 0)
+_hpMax = 1
+_startingEffects = Array[Object]([SubResource("Resource_xn855")])
+_internalName = "GunScannerTurret"
+_name = "Capsule scanner"
+_radius = 0.0
+_baseHealthBarWidth = 48.0
+
+[node name="MainSprite" parent="." index="1" unique_id=701942347]
+scale = Vector2(1, 1)
+texture = ExtResource("6_0hjnm")
+
+[node name="AidArea" parent="." index="7" unique_id=724286163]
+visible = false
+
+[node name="AidAreaCollision" parent="AidArea" index="0" unique_id=1952573643]
+position = Vector2(113, -59)
+
+[node name="TurretTurner" type="Node2D" parent="." index="8" unique_id=1158807940]
+script = ExtResource("7_vp1vi")
+_turn = true
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="TurretTurner" index="0" unique_id=849851730]
+sprite_frames = SubResource("SpriteFrames_oh15a")
+animation = &"Idle"
+
+[node name="Marker2D" type="Marker2D" parent="TurretTurner" index="1" unique_id=661621734]
+position = Vector2(18, 0)
+
+[node name="WeaponComponent" type="Node2D" parent="." index="9" unique_id=2120452932]
+script = ExtResource("9_0u5xs")
+_projectileSpeed = 1500.0
+_projectileTexture = ExtResource("10_wvvys")
+_lifeTime = 5.0
+_projectileRadius = 8.0
+_pierceCount = 1
+_damage = 280
+_range = 250.0
+_attackDelayLow = 0.3
+_attackDelayHigh = 0.3

@@ -1,0 +1,15 @@
+[remap]
+
+importer="sicilica.import.pixelorama"
+type="SpriteFrames"
+uid="uid://dmhmyb6gcptj6"
+valid=false
+
+[deps]
+
+source_file="res://_Assets/untitled.pxo"
+
+[params]
+
+include_default_animation=true
+separate_layers=false

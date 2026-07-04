@@ -3,9 +3,9 @@ using Godot.Collections;
 using RTSGame.Source;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace RTSGame.Units;
 
@@ -73,6 +73,7 @@ public partial class TowerUnit : StationaryUnit
 		Last,
 		Closest,
 		Strongest,
+		Smart,
 	}
 
 	public enum TowerType
@@ -82,7 +83,7 @@ public partial class TowerUnit : StationaryUnit
 		Spawner
 	}
 
-	public const int PriorityCount = 4;
+	public int _priorityCount = 4;
 
 	private float _upgradeCostScaling = 1;
 
@@ -108,13 +109,18 @@ public partial class TowerUnit : StationaryUnit
 
 	public override void _Ready()
 	{
-		_radius = TDManager.TileSize / 2f;
+		_radius = TDManager.TileSize / (2f * (float)Math.Sqrt(2f));
 		_grid = GetTree().CurrentScene.GetNode<Grid>("TileMapLayer");
 		_tdManager = GetTree().CurrentScene.GetNode<TDManager>("TdManager");
 		base._Ready();
 		CollisionLayer = UnitManager.TowerLayerMask;
 		_aiControlled = false;
 		_lvLabel = GetNode<Label>("Level");
+		if (_weapon is not null && _weapon._hasCustomPriority)
+		{
+			_priorityCount += 1;
+			_targetPriority = (TargetPriority)_priorityCount - 1;
+		}
 	}
 
 	public override void _PhysicsProcess(double delta)
@@ -171,34 +177,68 @@ public partial class TowerUnit : StationaryUnit
 		}
 	}
 
+	public void AddTowerStatsIncrease(StatsIncreaseResource resource)
+	{
+		resource.MergeWithOld(_data, []);
+	}
+
+	public void RemoveTowerStatsIncrease(StatsIncreaseResource resource)
+	{
+		resource.RemoveFromOld(_data);
+	}
+
 	public virtual void OnNewWave()
 	{
 		_damageDealt = 0;
+		_moneyGained = new Vector4I(0,0,0,0);
 		EmitSignal(SignalName.UpdateStatsInfo);
+		EmitSignal(SignalName.NewWave);
 	}
 
 	protected override List<Unit> FormTargetOrder(Array<Unit> bodies)
 	{
-		List<InvaderUnit> sortedBodies = new List<InvaderUnit>();
+		List<InvaderUnit> orderedBodies = new List<InvaderUnit>();
 		List<InvaderUnit> invaders = bodies.OfType<InvaderUnit>().ToList();
-		switch (_targetPriority)
+		Godot.Collections.Dictionary<int, Array<InvaderUnit>> sortedBodies = new();
+		int maxTauntLevel = 0;
+		foreach (InvaderUnit invader in invaders)
 		{
-			case (TargetPriority.First):
-				sortedBodies = invaders.OrderBy(body => body.GetDistanceToExit()).ToList();
-				break;
-			case (TargetPriority.Last):
-				sortedBodies = invaders.OrderBy(body => -body.GetDistanceToExit()).ToList();
-				break;
-			case (TargetPriority.Closest):
-				sortedBodies = invaders.OrderBy(body => GlobalPosition.DistanceSquaredTo(body.GlobalPosition)).ToList();
-				break;
-			case (TargetPriority.Strongest):
-				sortedBodies = invaders.OrderBy(body => -body.GetHpMax()).ToList();
-				break;
-			default:
-				throw new Exception("Unknown TargetPriority");
+			if (!sortedBodies.Keys.Contains(invader._tauntLevel))
+			{
+				sortedBodies.Add(invader._tauntLevel, []);
+			}
+			sortedBodies[invader._tauntLevel].Add(invader);
+			maxTauntLevel = Math.Max(invader._tauntLevel, maxTauntLevel);
 		}
-		return sortedBodies.Cast<Unit>().ToList();
+		for (int i = maxTauntLevel; i >= 0; i--)
+		{
+			if (sortedBodies[i] is null || sortedBodies[i].Count == 0)
+			{
+				continue;
+			}
+			switch (_targetPriority)
+			{
+				case (TargetPriority.First):
+					orderedBodies.AddRange(sortedBodies[i].OrderBy(body => body.GetDistanceToExit()).ToList());
+					break;
+				case (TargetPriority.Last):
+					orderedBodies.AddRange(sortedBodies[i].OrderBy(body => -body.GetDistanceToExit()).ToList());
+					break;
+				case (TargetPriority.Closest):
+					orderedBodies.AddRange(sortedBodies[i].OrderBy(body => GlobalPosition.DistanceSquaredTo(body.GlobalPosition)).ToList());
+					break;
+				case (TargetPriority.Strongest):
+					orderedBodies.AddRange(sortedBodies[i].OrderBy(body => -body.GetHpMax()).ToList());
+					break;
+				case (TargetPriority.Smart):
+					orderedBodies.AddRange(_weapon.FormCustomTargetOrder(sortedBodies[i].ToList()));
+					break;
+				default:
+					throw new Exception("Unknown TargetPriority");
+			}
+		}
+
+		return orderedBodies.Cast<Unit>().ToList();
 	}
 
 	public void SetTargetPriority(TargetPriority priority)
@@ -209,13 +249,13 @@ public partial class TowerUnit : StationaryUnit
 
 	public void LastTargetPriority()
 	{
-		int newPriority = Utils.Mod(((int)_targetPriority - 1), PriorityCount);
+		int newPriority = Utils.Mod(((int)_targetPriority - 1), _priorityCount);
 		SetTargetPriority((TargetPriority)newPriority);
 	}
 
 	public void NextTargetPriority()
 	{
-		int newPriority = Utils.Mod(((int)_targetPriority + 1), PriorityCount);
+		int newPriority = Utils.Mod(((int)_targetPriority + 1), _priorityCount);
 		SetTargetPriority((TargetPriority)newPriority);
 	}
 
@@ -317,7 +357,6 @@ public partial class TowerUnit : StationaryUnit
 		trigger.AddThemeStyleboxOverride("pressed", btnStyle);
 
 		PanelContainer popup = new PanelContainer();
-		popup.MouseFilter = Control.MouseFilterEnum.Ignore;
 		popup.ZIndex = 100;
 		popup.TopLevel = true; // Essential to avoid parent clipping
 		popup.Visible = false;
@@ -328,11 +367,13 @@ public partial class TowerUnit : StationaryUnit
 		{
 			popupH.AddChild(GetUnitInfoContainerWithString("BasicInfo"));
 			popupH.AddChild(GetUnitInfoContainerWithString("WeaponInfo"));
+			popupH.AddChild(GetUnitInfoContainerWithString("EffectsInfo"));
 		}
 		else if (_towerType == TowerType.Spawner)
 		{
 			popupH.AddChild(GetUnitInfoContainerWithString("MoneyInfo"));
 			popupH.AddChild(GetUnitInfoContainerWithString("SpawnedUnitInfo"));
+			popupH.AddChild(GetUnitInfoContainerWithString("EffectsInfo"));
 		}
 		popup.AddChild(popupH);
 		trigger._popupBox = popup;
@@ -372,28 +413,34 @@ public partial class TowerUnit : StationaryUnit
 			moneyInfoV.AddChild(costLabel);
 		}
 
-		if (_weapon != null)
+		TooltipRichTextLabel totalDamageLabel = new();
+		totalDamageLabel.Text = "Bonus gained: \n" + Utils.MakeMoneyText(_moneyGained);
+		totalDamageLabel.Name = "TotalGainLabel";
+		totalDamageLabel.CustomMinimumSize = new(200, 0);
+		totalDamageLabel.BbcodeEnabled = true;
+		totalDamageLabel.FitContent = true;
+		totalDamageLabel.Visible = false;
+		moneyInfoV.AddChild(totalDamageLabel);
+
+		if (_moneyGained != new Vector4I(0,0,0,0))
 		{
-			TooltipRichTextLabel totalDamageLabel = new();
-			totalDamageLabel.Text = "Damage dealt: \n" + _damageDealt;
-			totalDamageLabel.Name = "TotalDamageLabel";
-			totalDamageLabel.CustomMinimumSize = new(200, 0);
-			totalDamageLabel.BbcodeEnabled = true;
-			totalDamageLabel.FitContent = true;
-			moneyInfoV.AddChild(totalDamageLabel);
+			totalDamageLabel.Visible = true;
 		}
 		
-
-		Button sellButton = new();
-		sellButton.Text = "Sell for 75%";
-		sellButton.Pressed += () =>
+		if (_towerType == TowerType.Defense)
 		{
-			_tdManager.GainMoney(Utils.VectorScalarMultiplication(GetTotalCost(), 0.75f));
-			_tdManager._towerManager.RemoveTower(_gridLocation);
-		};
-		moneyInfoV.AddChild(sellButton);
+			Button sellButton = new();
+			sellButton.Text = "Sell for 75%";
+			sellButton.Pressed += () =>
+			{
+				_tdManager.GainMoney(Utils.VectorScalarMultiplication(GetTotalCost(), 0.75f));
+				_tdManager._towerManager.RemoveTower(_gridLocation);
+			};
+			moneyInfoV.AddChild(sellButton);
+		}
 
-		if (this is Spawner spawner && spawner._data._units.Count() > 0)
+
+		if (this is Spawner spawner && spawner._spawnerData._units.Count() > 0)
 		{
 			TooltipRichTextLabel spawnLabel = new();
 			spawnLabel.Text = "Spawns " + spawner.GetSpawns();
@@ -413,7 +460,7 @@ public partial class TowerUnit : StationaryUnit
 			HBoxContainer spawnedUnitTotalInfoH = new();
 			spawnedUnitTotalInfoV.AddChild(spawnedUnitTotalInfoH);
 
-			foreach (InvaderStatsIncreaseResource resource in spawner._data._units)
+			foreach (InvaderStatsIncreaseResource resource in spawner._spawnerData._units)
 			{
 				InvaderUnit spawnedUnit = resource.GetInvader();
 				PanelContainer spawnedUnitInfo = spawnedUnit.GetUnitInfoContainerWithString("BasicInfo");
@@ -431,7 +478,7 @@ public partial class TowerUnit : StationaryUnit
 		if (GetIncome() != new Vector4I(0,0,0,0))
 		{
 			TooltipRichTextLabel incomeLabel = new();
-			incomeLabel.Text = "Total: " + Utils.MakeMoneyText(GetIncome());
+			incomeLabel.Text = "Produces " + Utils.MakeMoneyText(GetIncome());
 			incomeLabel.Name = "IncomeLabel";
 			incomeLabel.CustomMinimumSize = new(200, 0);
 			incomeLabel.BbcodeEnabled = true;
@@ -444,7 +491,6 @@ public partial class TowerUnit : StationaryUnit
 		if (_weapon != null)
 		{
 			PanelContainer attackPriority = new();
-			attackPriority.CustomMinimumSize = new(150, 0);
 			VBoxContainer attackPriorityV = new VBoxContainer();
 			attackPriorityV.Name = "VBoxContainer";
 			attackPriorityV.Alignment = BoxContainer.AlignmentMode.Center;
@@ -454,8 +500,9 @@ public partial class TowerUnit : StationaryUnit
 			upPriorityButton.Pressed += () => LastTargetPriority();
 			attackPriorityV.AddChild(upPriorityButton);
 
-			Label priorityLabel = new();
-			priorityLabel.HorizontalAlignment = HorizontalAlignment.Center;
+			HoverInfoLabel priorityLabel = new();
+			priorityLabel.CustomMinimumSize = new(175, 0);
+			priorityLabel.AddThemeConstantOverride("horizontal_alignment", (int)HorizontalAlignment.Center);
 			switch (_targetPriority)
 			{
 				case TowerUnit.TargetPriority.First:
@@ -470,11 +517,23 @@ public partial class TowerUnit : StationaryUnit
 				case TowerUnit.TargetPriority.Strongest:
 					priorityLabel.Text = "Strongest";
 					break;
+				case TowerUnit.TargetPriority.Smart:
+					priorityLabel.Text = "Smart";
+					break;
 				default:
 					priorityLabel.Text = ((int)_targetPriority).ToString();
 					break;
 			}
 			priorityLabel.Name = "AttackPriorityLabel";
+			if (_targetPriority != TowerUnit.TargetPriority.Smart)
+			{
+				HoverInfoLabel.AddTooltipToButton(priorityLabel, StringDB.Entries["TargetPriority" + _targetPriority.ToString()]);
+			}
+			else
+			{
+				string test = _weapon.GetType().ToString();
+				HoverInfoLabel.AddTooltipToButton(priorityLabel, StringDB.Entries["TargetPriority" + _weapon.GetType().ToString()]);
+			}
 			attackPriorityV.AddChild(priorityLabel);
 
 			Button downPriorityButton = new();
@@ -515,11 +574,26 @@ public partial class TowerUnit : StationaryUnit
 
 		if (_weapon != null)
 		{
-			TooltipRichTextLabel totalDamageLabel = moneyInfoV.GetNode<TooltipRichTextLabel>("TotalDamageLabel");
-			totalDamageLabel.Text = "Damage dealt: \n" + _damageDealt;
+			VBoxContainer weaponInfoV = _infoContainers["WeaponInfo"].GetNode<VBoxContainer>("VBoxContainer");
+			TooltipRichTextLabel totalDamageLabel = weaponInfoV.GetNode<TooltipRichTextLabel>("TotalDamageLabel");
+			totalDamageLabel.Text = "Damage dealt: " + _damageDealt;
 		}
 
-		if (this is Spawner spawner && spawner._data._units.Count() > 0)
+		if (moneyInfoV.HasNode("TotalGainLabel"))
+		{
+			TooltipRichTextLabel totalGainLabel = moneyInfoV.GetNode<TooltipRichTextLabel>("TotalGainLabel");
+			totalGainLabel.Text = "Bonus gained: \n" + Utils.MakeMoneyText(_moneyGained);
+			if (_moneyGained != new Vector4I(0, 0, 0, 0))
+			{
+				totalGainLabel.Visible = true;
+			}
+			else
+			{
+				totalGainLabel.Visible = false;
+			}
+		}
+
+		if (this is Spawner spawner && spawner._spawnerData._units.Count() > 0)
 		{
 			TooltipRichTextLabel spawnLabel = moneyInfoV.GetNode<TooltipRichTextLabel>("SpawnLabel");
 			spawnLabel.Text = "Spawns " + spawner.GetSpawns();
@@ -538,7 +612,7 @@ public partial class TowerUnit : StationaryUnit
 				HBoxContainer spawnedUnitTotalInfoH = new();
 				spawnedUnitTotalInfoV.AddChild(spawnedUnitTotalInfoH);
 
-				foreach (InvaderStatsIncreaseResource resource in spawner._data._units)
+				foreach (InvaderStatsIncreaseResource resource in spawner._spawnerData._units)
 				{
 					InvaderUnit spawnedUnit = resource.GetInvader();
 					PanelContainer spawnedUnitInfo = spawnedUnit.GetUnitInfoContainerWithString("BasicInfo");
@@ -556,14 +630,14 @@ public partial class TowerUnit : StationaryUnit
 		if (GetIncome() != new Vector4I(0, 0, 0, 0))
 		{
 			TooltipRichTextLabel incomeLabel = moneyInfoV.GetNode<TooltipRichTextLabel>("IncomeLabel");
-			incomeLabel.Text = "Total: " + Utils.MakeMoneyText(GetIncome());
+			incomeLabel.Text = "Produces " + Utils.MakeMoneyText(GetIncome());
 		}
 
 		if (_weapon != null)
 		{
 			VBoxContainer attackPriorityV = _infoContainers["AttackPriority"].GetNode<VBoxContainer>("VBoxContainer");
 
-			Label priorityLabel = attackPriorityV.GetNode<Label>("AttackPriorityLabel");
+			HoverInfoLabel priorityLabel = attackPriorityV.GetNode<HoverInfoLabel>("AttackPriorityLabel");
 			switch (_targetPriority)
 			{
 				case TowerUnit.TargetPriority.First:
@@ -578,9 +652,22 @@ public partial class TowerUnit : StationaryUnit
 				case TowerUnit.TargetPriority.Strongest:
 					priorityLabel.Text = "Strongest";
 					break;
+				case TowerUnit.TargetPriority.Smart:
+					priorityLabel.Text = "Smart";
+					break;
 				default:
 					priorityLabel.Text = ((int)_targetPriority).ToString();
 					break;
+			}
+			priorityLabel._popupBox.QueueFree();
+			if (_targetPriority != TowerUnit.TargetPriority.Smart)
+			{
+				HoverInfoLabel.AddTooltipToButton(priorityLabel, StringDB.Entries["TargetPriority" + _targetPriority.ToString()]);
+			}
+			else
+			{
+				string test = _weapon.GetType().ToString();
+				HoverInfoLabel.AddTooltipToButton(priorityLabel, StringDB.Entries["TargetPriority" + _weapon.GetType().ToString()]);
 			}
 		}
 
@@ -597,6 +684,153 @@ public partial class TowerUnit : StationaryUnit
 		}
 
 		_tdManager._towerManager.UpdateIncomeDisplay();
+		_tdManager._towerManager.UpdateDPSDisplay();
+		_tdManager._towerManager.UpdateTotalHpLabel();
+	}
+
+	public void UpdateTowerInfoContainerWithUpgrade(Array<EffectResource> upgrade)
+	{
+		Array<EffectResource> effectUpgrades = [];
+		foreach (EffectResource resource in upgrade)
+		{
+			if (resource is StatsIncreaseResource statsIncrease)
+			{
+				if (_weapon != null)
+				{
+					_weapon.UpdateWeaponInfoContainerWithUpgrade(statsIncrease);
+				}
+			}
+			else if (resource is SpawnerUpgradeResource spawnUpgrade)
+			{
+				if (this is Spawner spawner && spawner._spawnerData._units.Count() > 0)
+				{
+					string greenHex = ThemePalette.Green.ToHtml(false);
+					VBoxContainer moneyInfoV = _infoContainers["MoneyInfo"].GetNode<VBoxContainer>("VBoxContainer");
+
+					TooltipRichTextLabel spawnLabel = moneyInfoV.GetNode<TooltipRichTextLabel>("SpawnLabel");
+					spawnLabel.Text = "Spawns " + spawner.GetSpawns();
+					foreach (var child in _infoContainers["SpawnedUnitInfo"].GetChildren())
+					{
+						child.QueueFree();
+					}
+					VBoxContainer spawnedUnitTotalInfoV = new();
+
+					Label spawnedUnitLabel = new();
+					spawnedUnitLabel.Text = "Spawned Unit:";
+					spawnedUnitTotalInfoV.AddChild(spawnedUnitLabel);
+
+					HBoxContainer spawnedUnitTotalInfoH = new();
+					spawnedUnitTotalInfoV.AddChild(spawnedUnitTotalInfoH);
+
+					Vector4I newIncome = new(0, 0, 0, 0);
+					foreach (InvaderStatsIncreaseResource unit in spawner._spawnerData._units)
+					{
+						if (spawnUpgrade._applySameUpgradeForAllUnits)
+						{
+							InvaderStatsIncreaseResource unitCopy = (InvaderStatsIncreaseResource)unit.DuplicateDeep();
+							spawnUpgrade._units[0].MergeWithOld(unitCopy, []);
+							InvaderUnit newSpawnedUnit = unitCopy.GetInvader();
+							newIncome += newSpawnedUnit.GetTotalMoneyDropped();
+							PanelContainer spawnedUnitInfo = newSpawnedUnit.GetUnitInfoContainerWithUpgradeWithString("BasicInfo", spawnUpgrade._units[0]);
+							spawnedUnitTotalInfoH.AddChild(spawnedUnitInfo);
+							PanelContainer spawnedUnitEffectInfo = newSpawnedUnit.GetUnitInfoContainerWithUpgradeWithString("EffectsInfo", spawnUpgrade._units[0]);
+							spawnedUnitTotalInfoH.AddChild(spawnedUnitEffectInfo);
+							newSpawnedUnit.QueueFree();
+						}
+						else
+						{
+							int i = spawner._spawnerData._units.IndexOf(unit);
+							InvaderStatsIncreaseResource unitCopy = (InvaderStatsIncreaseResource)unit.DuplicateDeep();
+							spawnUpgrade._units[i].MergeWithOld(unitCopy, []);
+							InvaderUnit newSpawnedUnit = unitCopy.GetInvader();
+							newIncome += newSpawnedUnit.GetTotalMoneyDropped();
+							PanelContainer spawnedUnitInfo = newSpawnedUnit.GetUnitInfoContainerWithUpgradeWithString("BasicInfo", spawnUpgrade._units[i]);
+							spawnedUnitTotalInfoH.AddChild(spawnedUnitInfo);
+							PanelContainer spawnedUnitEffectInfo = newSpawnedUnit.GetUnitInfoContainerWithUpgradeWithString("EffectsInfo", spawnUpgrade._units[i]);
+							spawnedUnitTotalInfoH.AddChild(spawnedUnitEffectInfo);
+							newSpawnedUnit.QueueFree();
+						}
+					}
+
+					TooltipRichTextLabel incomeLabel = moneyInfoV.GetNode<TooltipRichTextLabel>("IncomeLabel");
+					incomeLabel.Text = $"[color=#{greenHex}]Produces {Utils.MakeMoneyText(newIncome)}[/color]";
+
+					_infoContainers["SpawnedUnitInfo"].AddChild(spawnedUnitTotalInfoV);
+				}
+			}
+			else if (_effects.Any(e => e.GetType() == resource.GetType()))
+			{
+				effectUpgrades.Add(resource);
+			}
+		}
+		if (effectUpgrades.Count == 0)
+		{
+			return;
+		}
+
+		PanelContainer effectsInfo = _infoContainers["EffectsInfo"];
+		foreach (var child in effectsInfo.GetChildren())
+		{
+			child.QueueFree();
+		}
+
+		HBoxContainer allEffectsH = new();
+
+		VBoxContainer smallEffectsV = new();
+
+		HBoxContainer largeEffectsH = new();
+
+		foreach (EffectResource effect in _effects)
+		{
+			switch (effect._displayType)
+			{
+				case (EffectResource.DisplayTypes.Large):
+					if (effectUpgrades.Any(o => o.GetType() == effect.GetType()))
+					{
+						EffectResource newEffect = effectUpgrades.First(o => o.GetType() == effect.GetType());
+						VBoxContainer container = new();
+						PanelContainer effectName = effect.MakeFullEffectDescriptionWithUpgrade(newEffect);
+						container.AddChild(effectName);
+						largeEffectsH.AddChild(container);
+						break;
+					}
+					else
+					{
+						VBoxContainer container = new();
+						PanelContainer effectName = effect.MakeFullEffectDescription();
+						container.AddChild(effectName);
+						largeEffectsH.AddChild(container);
+						break;
+					}
+
+				case (EffectResource.DisplayTypes.Small):
+					VBoxContainer container1 = new();
+					HoverInfoLabel effectName1 = effect.MakeEffectTooltip(false);
+					container1.AddChild(effectName1);
+					smallEffectsV.AddChild(container1);
+					break;
+				case (EffectResource.DisplayTypes.Hidden):
+					continue;
+			}
+		}
+
+		if (largeEffectsH.GetChildren().Count != 0)
+		{
+			allEffectsH.AddChild(largeEffectsH);
+		}
+		else
+		{
+			largeEffectsH.QueueFree();
+		}
+		if (smallEffectsV.GetChildren().Count != 0)
+		{
+			allEffectsH.AddChild(smallEffectsV);
+		}
+		else
+		{
+			smallEffectsV.QueueFree();
+		}
+		effectsInfo.AddChild(allEffectsH);
 	}
 
 	private void MakeUpgradeUI(HBoxContainer upgradesH)
@@ -616,20 +850,30 @@ public partial class TowerUnit : StationaryUnit
 
 				foreach (EffectResource effect in _firstUpgrade)
 				{
-					effect.SetDescription();
+					effect.SetUpgradeDescription();
 				}
 
 				UpgradeButton upgradeButton = new UpgradeButton();
-				EffectResource.MakeCombinedEffectTooltip(true, _firstUpgradeName, _firstUpgrade, upgradeButton);
+				MakeUpgradeTooltip(_firstUpgrade, upgradeButton);
 
 				upgradeButton.Pressed += (() =>
 				{
 					if (Utils.VectorLeq(_firstUpgradeCost, _tdManager._money))
 					{
-						_tdManager.SpendMoney(_firstUpgradeCost);
 						UpgradeFirst();
+						_tdManager.SpendMoney(_firstUpgradeCost);
 					}
 				});
+
+				InputEventKey keyEvent = new InputEventKey();
+				keyEvent.Keycode = Key.U;
+
+				// Wrap into Shortcut
+				Shortcut shortcut = new Shortcut();
+				shortcut.Events.Add(keyEvent);
+
+				// Assign to button
+				upgradeButton.Shortcut = shortcut;
 
 				upgradeButton.UpdateAffordabilityDisplay(Utils.VectorDivision(_tdManager._money, _firstUpgradeCost));
 
@@ -653,11 +897,11 @@ public partial class TowerUnit : StationaryUnit
 
 				foreach (EffectResource effect in _secondUpgrade)
 				{
-					effect.SetDescription();
+					effect.SetUpgradeDescription();
 				}
 
 				UpgradeButton upgradeButton = new UpgradeButton();
-				EffectResource.MakeCombinedEffectTooltip(true, _secondUpgradeName, _secondUpgrade, upgradeButton);
+				MakeUpgradeTooltip(_secondUpgrade, upgradeButton);
 
 				upgradeButton.Pressed += (() =>
 				{
@@ -667,6 +911,16 @@ public partial class TowerUnit : StationaryUnit
 						UpgradeSecond();
 					}
 				});
+
+				InputEventKey keyEvent = new InputEventKey();
+				keyEvent.Keycode = Key.U;
+
+				// Wrap into Shortcut
+				Shortcut shortcut = new Shortcut();
+				shortcut.Events.Add(keyEvent);
+
+				// Assign to button
+				upgradeButton.Shortcut = shortcut;
 
 				upgradeButton.UpdateAffordabilityDisplay(Utils.VectorDivision(_tdManager._money, _secondUpgradeCost));
 				upgrade.AddChild(upgradeButton);
@@ -689,11 +943,11 @@ public partial class TowerUnit : StationaryUnit
 
 				foreach (EffectResource effect in _thirdUpgrade)
 				{
-					effect.SetDescription();
+					effect.SetUpgradeDescription();
 				}
 
 				UpgradeButton upgradeButton = new UpgradeButton();
-				EffectResource.MakeCombinedEffectTooltip(true, _thirdUpgradeName, _thirdUpgrade, upgradeButton);
+				MakeUpgradeTooltip(_thirdUpgrade, upgradeButton);
 
 				upgradeButton.Pressed += (() =>
 				{
@@ -703,6 +957,16 @@ public partial class TowerUnit : StationaryUnit
 						UpgradeThird();
 					}
 				});
+
+				InputEventKey keyEvent = new InputEventKey();
+				keyEvent.Keycode = Key.U;
+
+				// Wrap into Shortcut
+				Shortcut shortcut = new Shortcut();
+				shortcut.Events.Add(keyEvent);
+
+				// Assign to button
+				upgradeButton.Shortcut = shortcut;
 
 				upgradeButton.UpdateAffordabilityDisplay(Utils.VectorDivision(_tdManager._money, _thirdUpgradeCost));
 				upgrade.AddChild(upgradeButton);
@@ -725,7 +989,7 @@ public partial class TowerUnit : StationaryUnit
 
 				foreach (EffectResource effect in _fourthUpgradeA)
 				{
-					effect.SetDescription();
+					effect.SetUpgradeDescription();
 				}
 
 				UpgradeButton upgradeButton = new UpgradeButton();
@@ -739,6 +1003,16 @@ public partial class TowerUnit : StationaryUnit
 						UpgradeFourthA();
 					}
 				});
+
+				InputEventKey keyEvent = new InputEventKey();
+				keyEvent.Keycode = Key.U;
+
+				// Wrap into Shortcut
+				Shortcut shortcut = new Shortcut();
+				shortcut.Events.Add(keyEvent);
+
+				// Assign to button
+				upgradeButton.Shortcut = shortcut;
 
 				upgradeButton.UpdateAffordabilityDisplay(Utils.VectorDivision(_tdManager._money, _fourthUpgradeACost));
 				upgrade.AddChild(upgradeButton);
@@ -762,7 +1036,7 @@ public partial class TowerUnit : StationaryUnit
 
 				foreach (EffectResource effect in _fourthUpgradeB)
 				{
-					effect.SetDescription();
+					effect.SetUpgradeDescription();
 				}
 
 				UpgradeButton upgradeButton = new UpgradeButton();
@@ -777,6 +1051,16 @@ public partial class TowerUnit : StationaryUnit
 					}
 				});
 
+				InputEventKey keyEvent = new InputEventKey();
+				keyEvent.Keycode = Key.I;
+
+				// Wrap into Shortcut
+				Shortcut shortcut = new Shortcut();
+				shortcut.Events.Add(keyEvent);
+
+				// Assign to button
+				upgradeButton.Shortcut = shortcut;
+
 				upgradeButton.UpdateAffordabilityDisplay(Utils.VectorDivision(_tdManager._money, _fourthUpgradeBCost));
 				upgrade.AddChild(upgradeButton);
 
@@ -788,6 +1072,18 @@ public partial class TowerUnit : StationaryUnit
 				upgradesH.AddChild(upgrade);
 			}
 		}
+	}
+
+	public HoverInfoLabel MakeUpgradeTooltip(Array<EffectResource> effects, HoverInfoLabel trigger)
+	{
+		trigger.MouseEntered += () => UpdateTowerInfoContainerWithUpgrade(effects);
+		trigger.MouseExited += () =>
+		{
+			Callable.From(() => UpdateUnitInfoContainer(true)).CallDeferred();
+		};
+		trigger.Text = "Upgrade";
+		trigger.ResetSize();
+		return trigger;
 	}
 
 	public string GetDescription()

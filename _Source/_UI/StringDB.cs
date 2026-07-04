@@ -13,5 +13,11 @@ public class StringDB
 		{ "RedMoneyDescription", "Metals. Typically dropped by tough enemies."},
 		{ "BlueMoneyDescription", "Water. Typically dropped by enemies that weld magic."},
 		{ "GreenMoneyDescription", "Gas. Typically dropped by fast enemies."},
+
+		{ "TargetPriorityFirst", "Target the enemy closest to the exit"},
+		{ "TargetPriorityLast", "Target the enemy furthest to the exit"},
+		{ "TargetPriorityClosest", "Target the enemy closest to this"},
+		{ "TargetPriorityStrongest", "Target the enemy with the most max Hp"},
+		{ "TargetPriorityScannerWeapon", "Same as First, but prioritize enemies that don't have Analyzed."},
 	};
 }

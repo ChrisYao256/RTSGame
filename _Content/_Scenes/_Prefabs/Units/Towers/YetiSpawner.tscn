@@ -4,20 +4,138 @@
 [ext_resource type="Script" uid="uid://b4jva1l23o6su" path="res://_Source/_Units/Spawner.cs" id="2_3vt3u"]
 [ext_resource type="Script" uid="uid://cvroohkeaovqw" path="res://_Source/_Units/SpawnerDataResource.cs" id="3_etttv"]
 [ext_resource type="Script" uid="uid://iamaod4iivlq" path="res://_Source/Effects/InvaderStatsIncrease/InvaderStatsIncreaseResource.cs" id="3_tvpps"]
+[ext_resource type="Script" uid="uid://7ugg3ogqpxk7" path="res://_Source/Effects/DecreaseRange/DecreaseRangeResource.cs" id="4_3vt3u"]
 [ext_resource type="Texture2D" uid="uid://iocgjnp7i8td" path="res://_Assets/Portal.png" id="4_hxyu6"]
+[ext_resource type="Script" uid="uid://d1m1yhs64wcoj" path="res://_Source/Effects/ApplyEffectToTower/ApplyEffectToTowerResource.cs" id="5_etttv"]
+[ext_resource type="Script" uid="uid://c7ye5bgfhla5e" path="res://_Source/Effects/StatsIncrease/StatsIncreaseResource.cs" id="8_7emr2"]
+[ext_resource type="Script" uid="uid://dlf3d2oy6u4uv" path="res://_Source/Effects/SlowAttack/SlowAttackResource.cs" id="8_e58j6"]
+[ext_resource type="Script" uid="uid://l43pmp147h4r" path="res://_Source/Effects/DebuffNearbyTowers/DebuffNearbyTowersResource.cs" id="9_c637a"]
 [ext_resource type="Script" uid="uid://dtpcxn7d2dqcy" path="res://_Source/Effects/EffectResource.cs" id="9_ijkv7"]
+[ext_resource type="Script" uid="uid://dby4w7fetnae6" path="res://_Source/Effects/NearbyTowerStatsIncrease/NearbyTowerStatsIncreaseResource.cs" id="9_j3hqu"]
+[ext_resource type="Script" uid="uid://djbu8krhjrjib" path="res://_Source/Effects/SpawnerUpgradeResource/SpawnerUpgradeResource.cs" id="10_31608"]
 [ext_resource type="Script" uid="uid://fdug3yybl4s5" path="res://_Source/Effects/AdjacencyTransform/AdjacencyTransformResource.cs" id="10_lnwpx"]
 
-[sub_resource type="Resource" id="Resource_ps4sv"]
+[sub_resource type="Resource" id="Resource_tvpps"]
 script = ExtResource("3_tvpps")
 _unitName = "Yeti"
+_hpBuff = 4000
+_moneyBuff = Vector4i(22, 0, 22, 0)
+_startingEffects = Array[Object]([])
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_hxyu6"]
+script = ExtResource("4_3vt3u")
+_time = 1.0
+metadata/_custom_type_script = "uid://7ugg3ogqpxk7"
+
+[sub_resource type="Resource" id="Resource_e58j6"]
+script = ExtResource("5_etttv")
+_debuffs = Array[Object]([SubResource("Resource_hxyu6")])
+_interval = 5.0
+metadata/_custom_type_script = "uid://d1m1yhs64wcoj"
+
+[sub_resource type="Resource" id="Resource_7emr2"]
+script = ExtResource("3_tvpps")
+_unitName = "Disabler"
+_hpBuff = 2900
+_moneyBuff = Vector4i(22, 0, 22, 0)
+_startingEffects = Array[Object]([SubResource("Resource_e58j6")])
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_ps4sv"]
+script = ExtResource("3_etttv")
+_units = Array[ExtResource("3_tvpps")]([SubResource("Resource_tvpps"), SubResource("Resource_7emr2")])
+metadata/_custom_type_script = "uid://cvroohkeaovqw"
+
+[sub_resource type="Resource" id="Resource_bwpgn"]
+script = ExtResource("8_e58j6")
+_percentDecrease = 0.05
+metadata/_custom_type_script = "uid://dlf3d2oy6u4uv"
+
+[sub_resource type="Resource" id="Resource_ijkv7"]
+script = ExtResource("9_c637a")
+_debuffs = Array[Object]([SubResource("Resource_bwpgn")])
+metadata/_custom_type_script = "uid://l43pmp147h4r"
+
+[sub_resource type="Resource" id="Resource_lnwpx"]
+script = ExtResource("3_tvpps")
+_hpBuff = 1400
+_moneyBuff = Vector4i(7, 0, 7, 0)
+_startingEffects = Array[Object]([SubResource("Resource_ijkv7")])
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_fwoun"]
+script = ExtResource("3_tvpps")
+_hpBuff = 1300
+_moneyBuff = Vector4i(7, 0, 7, 0)
 _startingEffects = null
 metadata/_custom_type_script = "uid://iamaod4iivlq"
 
-[sub_resource type="Resource" id="Resource_ogl47"]
-script = ExtResource("3_etttv")
-_units = Array[ExtResource("3_tvpps")]([SubResource("Resource_ps4sv")])
-metadata/_custom_type_script = "uid://cvroohkeaovqw"
+[sub_resource type="Resource" id="Resource_ss8l0"]
+script = ExtResource("10_31608")
+_units = Array[ExtResource("3_tvpps")]([SubResource("Resource_lnwpx"), SubResource("Resource_fwoun")])
+_applySameUpgradeForAllUnits = false
+metadata/_custom_type_script = "uid://djbu8krhjrjib"
+
+[sub_resource type="Resource" id="Resource_c637a"]
+script = ExtResource("3_tvpps")
+_hpBuff = 2800
+_moneyBuff = Vector4i(12, 0, 12, 0)
+_startingEffects = Array[Object]([])
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_y2c24"]
+script = ExtResource("4_3vt3u")
+_time = 0.5
+metadata/_custom_type_script = "uid://7ugg3ogqpxk7"
+
+[sub_resource type="Resource" id="Resource_ewv5p"]
+script = ExtResource("5_etttv")
+_debuffs = Array[Object]([SubResource("Resource_y2c24")])
+metadata/_custom_type_script = "uid://d1m1yhs64wcoj"
+
+[sub_resource type="Resource" id="Resource_31608"]
+script = ExtResource("3_tvpps")
+_hpBuff = 2400
+_moneyBuff = Vector4i(12, 0, 12, 0)
+_startingEffects = Array[Object]([SubResource("Resource_ewv5p")])
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_1kw88"]
+script = ExtResource("10_31608")
+_units = Array[ExtResource("3_tvpps")]([SubResource("Resource_c637a"), SubResource("Resource_31608")])
+_applySameUpgradeForAllUnits = false
+metadata/_custom_type_script = "uid://djbu8krhjrjib"
+
+[sub_resource type="Resource" id="Resource_nsbtd"]
+script = ExtResource("8_e58j6")
+_percentDecrease = 0.05
+metadata/_custom_type_script = "uid://dlf3d2oy6u4uv"
+
+[sub_resource type="Resource" id="Resource_gv8n8"]
+script = ExtResource("9_c637a")
+_debuffs = Array[Object]([SubResource("Resource_nsbtd")])
+metadata/_custom_type_script = "uid://l43pmp147h4r"
+
+[sub_resource type="Resource" id="Resource_f1ijg"]
+script = ExtResource("3_tvpps")
+_hpBuff = 4800
+_moneyBuff = Vector4i(19, 0, 19, 0)
+_startingEffects = Array[Object]([SubResource("Resource_gv8n8")])
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_uw337"]
+script = ExtResource("3_tvpps")
+_hpBuff = 4300
+_moneyBuff = Vector4i(19, 0, 19, 0)
+_startingEffects = null
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_cgl3k"]
+script = ExtResource("10_31608")
+_units = Array[ExtResource("3_tvpps")]([SubResource("Resource_f1ijg"), SubResource("Resource_uw337")])
+_applySameUpgradeForAllUnits = false
+metadata/_custom_type_script = "uid://djbu8krhjrjib"
 
 [sub_resource type="Resource" id="Resource_fjsrn"]
 script = ExtResource("10_lnwpx")
@@ -27,20 +145,32 @@ Vector2i(1, 0): Vector2i(0, 0)
 }])
 metadata/_custom_type_script = "uid://fdug3yybl4s5"
 
+[sub_resource type="Resource" id="Resource_3vt3u"]
+script = ExtResource("8_7emr2")
+_damagePercentIncrease = 0.25
+metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
+
+[sub_resource type="Resource" id="Resource_j3hqu"]
+script = ExtResource("9_j3hqu")
+_buffResource = SubResource("Resource_3vt3u")
+_area = Array[Vector2i]([Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1), Vector2i(1, 1), Vector2i(1, -1), Vector2i(-1, 1), Vector2i(-1, -1)])
+metadata/_custom_type_script = "uid://dby4w7fetnae6"
+
 [node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_j3hqu")]
 script = ExtResource("2_3vt3u")
-_data = SubResource("Resource_ogl47")
+_spawnerData = SubResource("Resource_ps4sv")
 _spawnInterval = 1.0
 _isEnemy = true
 _iconTexture = ExtResource("4_hxyu6")
 _towerType = 2
-_firstUpgrade = Array[Object]([])
-_secondUpgrade = Array[Object]([])
+_firstUpgrade = Array[Object]([SubResource("Resource_ss8l0")])
+_secondUpgrade = Array[Object]([SubResource("Resource_1kw88")])
+_thirdUpgrade = Array[Object]([SubResource("Resource_cgl3k")])
 _transformEffects = Array[ExtResource("9_ijkv7")]([SubResource("Resource_fjsrn")])
 LeashDistance = 200.0
-_startingEffects = Array[Object]([])
+_startingEffects = Array[Object]([SubResource("Resource_j3hqu")])
 _internalName = "YetiSpawner"
-_name = "Yeti Portal"
+_name = "Ice mage portal"
 
 [node name="MainSprite" parent="." index="1" unique_id=701942347]
 texture = ExtResource("4_hxyu6")

@@ -8,12 +8,8 @@ namespace RTSGame.Units;
 public partial class DummyEffectResource : EffectResource
 {
 
-	[Export]
-	private string _description;
-
 	public override void SetDescription()
 	{
-		_effectDescription = _description;
 	}
 
 	public override Effect CreateNode()

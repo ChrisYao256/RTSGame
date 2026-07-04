@@ -3,12 +3,10 @@
 [ext_resource type="PackedScene" uid="uid://yhbw0b164ui2" path="res://_Content/_Scenes/_Prefabs/Units/BaseTower.tscn" id="1_prthp"]
 [ext_resource type="Texture2D" uid="uid://1ya6poaby1bi" path="res://_Assets/GunTurret.png" id="2_we67n"]
 [ext_resource type="Script" uid="uid://c7ye5bgfhla5e" path="res://_Source/Effects/StatsIncrease/StatsIncreaseResource.cs" id="3_n8q5b"]
-[ext_resource type="Script" uid="uid://ltp3a1v0hhal" path="res://_Source/Effects/ExplosionOnHit/ExplosionOnHitBuffResource.cs" id="4_n8q5b"]
 [ext_resource type="Script" uid="uid://bonjif38a25r3" path="res://_Source/Effects/ExplosionOnHit/ExplosionOnHitResource.cs" id="5_prthp"]
 [ext_resource type="PackedScene" uid="uid://bjudui5jhrtku" path="res://_Content/_Scenes/_Prefabs/Effects/ExplosionVisualEffect.tscn" id="5_we67n"]
 [ext_resource type="Texture2D" uid="uid://bdyjhvsjs67wx" path="res://_Assets/YellowBase.png" id="6_714xp"]
 [ext_resource type="Script" uid="uid://bva1xkjx08h5v" path="res://_Source/_Units/Weapons/TurretTurner.cs" id="7_yt5n5"]
-[ext_resource type="Texture2D" uid="uid://56k5f8f2dyke" path="res://_Assets/GunTurretFire.png" id="8_koeup"]
 [ext_resource type="Texture2D" uid="uid://cmjpp5evevh5r" path="res://_Assets/GunTurretIdle.png" id="9_ah4w8"]
 [ext_resource type="Script" uid="uid://bwav65cg5at1c" path="res://_Source/_Units/Weapons/ProjectileWeapon.cs" id="10_ox4ia"]
 [ext_resource type="Texture2D" uid="uid://wswb4au2cnxn" path="res://_Assets/GunShot.png" id="11_8twvv"]
@@ -19,9 +17,9 @@ _damageIncrease = 125
 metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 
 [sub_resource type="Resource" id="Resource_k5r0l"]
-script = ExtResource("4_n8q5b")
+script = ExtResource("5_prthp")
 _explosionDamage = 50
-metadata/_custom_type_script = "uid://ltp3a1v0hhal"
+metadata/_custom_type_script = "uid://bonjif38a25r3"
 
 [sub_resource type="Resource" id="Resource_oh15a"]
 script = ExtResource("3_n8q5b")
@@ -29,19 +27,19 @@ _damageIncrease = 300
 metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 
 [sub_resource type="Resource" id="Resource_n8q5b"]
-script = ExtResource("4_n8q5b")
+script = ExtResource("5_prthp")
 _explosionDamage = 100
-metadata/_custom_type_script = "uid://ltp3a1v0hhal"
+metadata/_custom_type_script = "uid://bonjif38a25r3"
 
 [sub_resource type="Resource" id="Resource_yglny"]
 script = ExtResource("3_n8q5b")
 _damageIncrease = 650
 metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 
-[sub_resource type="Resource" id="Resource_nb5yh"]
-script = ExtResource("4_n8q5b")
+[sub_resource type="Resource" id="Resource_prthp"]
+script = ExtResource("5_prthp")
 _explosionDamage = 200
-metadata/_custom_type_script = "uid://ltp3a1v0hhal"
+metadata/_custom_type_script = "uid://bonjif38a25r3"
 
 [sub_resource type="Resource" id="Resource_we67n"]
 script = ExtResource("5_prthp")
@@ -53,108 +51,12 @@ _effectName = "Explosive shells"
 _displayType = 1
 metadata/_custom_type_script = "uid://bonjif38a25r3"
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_cmo3r"]
-atlas = ExtResource("8_koeup")
-region = Rect2(0, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_yglny"]
-atlas = ExtResource("8_koeup")
-region = Rect2(64, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_oh15a"]
-atlas = ExtResource("8_koeup")
-region = Rect2(128, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_dnbqd"]
-atlas = ExtResource("8_koeup")
-region = Rect2(192, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_in623"]
-atlas = ExtResource("8_koeup")
-region = Rect2(256, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_d1w5n"]
-atlas = ExtResource("8_koeup")
-region = Rect2(320, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_ji5kk"]
-atlas = ExtResource("8_koeup")
-region = Rect2(384, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_8bi3n"]
-atlas = ExtResource("8_koeup")
-region = Rect2(448, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_d6qei"]
-atlas = ExtResource("8_koeup")
-region = Rect2(512, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_vpldu"]
-atlas = ExtResource("8_koeup")
-region = Rect2(576, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_wt4yc"]
-atlas = ExtResource("8_koeup")
-region = Rect2(640, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_xhgat"]
-atlas = ExtResource("8_koeup")
-region = Rect2(704, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_j15gn"]
-atlas = ExtResource("8_koeup")
-region = Rect2(768, 0, 64, 64)
-
 [sub_resource type="AtlasTexture" id="AtlasTexture_e2eil"]
 atlas = ExtResource("9_ah4w8")
 region = Rect2(0, 0, 64, 64)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_oh15a"]
 animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_cmo3r")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_yglny")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_oh15a")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_dnbqd")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_in623")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_d1w5n")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_ji5kk")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_8bi3n")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_d6qei")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_vpldu")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_wt4yc")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_xhgat")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_j15gn")
-}],
-"loop": false,
-"name": &"Fire",
-"speed": 50.0
-}, {
 "frames": [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_e2eil")
@@ -170,13 +72,14 @@ _firstUpgrade = Array[Object]([SubResource("Resource_cmo3r"), SubResource("Resou
 _firstUpgradeCost = Vector4i(60, 30, 0, 0)
 _secondUpgrade = Array[Object]([SubResource("Resource_oh15a"), SubResource("Resource_n8q5b")])
 _secondUpgradeCost = Vector4i(125, 75, 0, 0)
-_thirdUpgrade = Array[Object]([SubResource("Resource_yglny"), SubResource("Resource_nb5yh")])
+_thirdUpgrade = Array[Object]([SubResource("Resource_yglny"), SubResource("Resource_prthp")])
 _thirdUpgradeCost = Vector4i(300, 100, 0, 0)
 _hpMax = 1
 _startingEffects = Array[Object]([SubResource("Resource_we67n")])
 _internalName = "ExplosiveGunTurret"
-_name = "Cannon Turret"
+_name = "Cannon gunner"
 _radius = 0.0
+_baseHealthBarWidth = 48.0
 
 [node name="MainSprite" parent="." index="1" unique_id=701942347]
 scale = Vector2(1, 1)
@@ -204,6 +107,6 @@ _lifeTime = 5.0
 _projectileRadius = 20.0
 _pierceCount = 1
 _damage = 350
-_range = 250.0
+_range = 225.0
 _attackDelayLow = 0.3
 _attackDelayHigh = 0.3

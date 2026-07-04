@@ -23,7 +23,8 @@ public partial class InvaderUnit : Unit
 	public Vector4I _moneyModifier;
 	public Vector4I _moneyTempModifier;
 
-	public Array<Vector2> _pathToExit;
+	private Vector2 _pathOffset;
+	private Array<Vector2> _pathToExit;
 
 	public TDManager _tdManager;
 
@@ -73,6 +74,25 @@ public partial class InvaderUnit : Unit
 		}
 	}
 
+	public void SetRandomPathOffset()
+	{
+		_pathOffset = Grid.GetRandomOffset();
+	}
+
+	public void SetPathOffset(Vector2 offset)
+	{
+		_pathOffset = Grid.ClampOffset(offset);
+	}
+
+	public void SetPathToExit(Array<Vector2> path)
+	{
+		for (int i = 0; i < path.Count; i++)
+		{
+			path[i] += _pathOffset;
+		}
+		_pathToExit = path;
+	}
+
 	public void SetMoneyModifier(Vector4I money)
 	{
 		_moneyModifier = money;
@@ -88,9 +108,14 @@ public partial class InvaderUnit : Unit
 		_moneyTempModifier = money;
 	}
 
+	public void SetMoneyTempModifier(float percentIncrease)
+	{
+		_moneyTempModifier = Utils.VectorScalarMultiplication(GetNormalMoneyDropped(), percentIncrease);
+	}
+
 	protected override void Die()
 	{
-		if (_floatingTextScene != null && GetMoneyDropped() != new Vector4I(0, 0, 0, 0))
+		if (_floatingTextScene != null && GetSelfMoneyDropped() != new Vector4I(0, 0, 0, 0))
 		{
 			_currentFloatingAnimationCount++;
 
@@ -151,15 +176,49 @@ public partial class InvaderUnit : Unit
 		RemoveSelf();
 	}
 
-	public Vector4I GetMoneyDropped()
+	/// <summary>
+	/// Returns the money that will be dropped if this unit dies now. Used to actually award money for kills. Is equivalent ot GetNormalMoneyDropped() if the unit is not added to TD. 
+	/// </summary>
+	/// <returns></returns>
+	public Vector4I GetSelfMoneyDropped()
 	{
 		return _moneyDropped + _moneyModifier + _moneyTempModifier;
 	}
 
+	/// <summary>
+	/// Returns the money that will be dropped if this unit and units that it spawns die. Used to calculate total income for spawner towers. 
+	/// </summary>
+	/// <returns></returns>
+	public Vector4I GetTotalMoneyDropped()
+	{
+		if (!_effects.Any(o => o.GetType() == typeof(SpawnUnitOnDeathResource)))
+		{
+			return GetSelfMoneyDropped();
+		}
+		else
+		{
+			Vector4I moneyFromSpawns = new(0,0,0,0);
+			SpawnUnitOnDeathResource spawnEffectResource = (SpawnUnitOnDeathResource)_effects.First(o => o.GetType() == typeof(SpawnUnitOnDeathResource));
+			foreach (InvaderStatsIncreaseResource unit in spawnEffectResource._spawnedUnits)
+			{
+				InvaderUnit invader = unit.GetInvader();
+				moneyFromSpawns += invader.GetTotalMoneyDropped();
+				invader.QueueFree();
+			}
+			return GetSelfMoneyDropped() + moneyFromSpawns;
+		}
+	}
+
+	/// <summary>
+	/// Returns the money that should be dropped without temporary modifiers such as Analyzed. Used to display bonus floating text when the unit dies. 
+	/// </summary>
+	/// <returns></returns>
 	public Vector4I GetNormalMoneyDropped()
 	{
 		return _moneyDropped + _moneyModifier;
 	}
+
+	public Array<Vector2> GetPathToExit() => _pathToExit;
 
 	public float GetDistanceToExit()
 	{

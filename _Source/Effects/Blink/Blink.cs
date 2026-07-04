@@ -37,7 +37,7 @@ public partial class Blink : Effect
 	{
 		if (_parentUnit is InvaderUnit invader)
 		{
-			if (invader._pathToExit.Count == 0) return;
+			if (invader.GetPathToExit().Count == 0) return;
 
 			Vector2 currentPos = GlobalPosition;
 			float distanceLeftToBlink = distance;
@@ -45,9 +45,9 @@ public partial class Blink : Effect
 
 			// Start evaluating from the point we are currently walking towards
 
-			while (distanceLeftToBlink > 0 && 0 < invader._pathToExit.Count)
+			while (distanceLeftToBlink > 0 && 0 < invader.GetPathToExit().Count)
 			{
-				Vector2 nextCorner = invader._pathToExit[0];
+				Vector2 nextCorner = invader.GetPathToExit()[0];
 				float distanceToCorner = currentPos.DistanceTo(nextCorner);
 
 				if (distanceLeftToBlink <= distanceToCorner)
@@ -65,7 +65,7 @@ public partial class Blink : Effect
 					currentPos = nextCorner;
 					targetBlinkPosition = nextCorner;
 
-					invader._pathToExit.RemoveAt(0);
+					invader.GetPathToExit().RemoveAt(0);
 				}
 			}
 

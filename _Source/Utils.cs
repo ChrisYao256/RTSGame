@@ -54,8 +54,6 @@ namespace RTSGame.Units
 			button.IgnoreTextureSize = true;
 		}
 
-
-
 		public static List<Node> QueryPhysicsCircle(World2D world, Vector2 position, float radius, uint collisionMask = 2)
 		{
 			var spaceState = world.DirectSpaceState;
@@ -144,7 +142,7 @@ namespace RTSGame.Units
 		{
 			for (int i = 0; i < 4; i++)
 			{
-				a[i] = (int)(a[i] * b);
+				a[i] = (int)Math.Ceiling(a[i] * b);
 			}
 			return a;
 		}
@@ -162,6 +160,15 @@ namespace RTSGame.Units
 			return (float)VectorSum(top) / (float)VectorSum(bot);
 		}
 
+		public static Vector4I VectorMaxClamp(Vector4I a, Vector4I b)
+		{
+			for (int i = 0; i < 4; i++)
+			{
+				a[i] = Math.Clamp(a[i], 0, b[i]);
+			}
+			return a;
+		}
+
 		public static string MakeMoneyText(Vector4I money, bool displayAll = false)
 		{
 			string yellowHex = ThemePalette.Yellow.ToHtml(false);
@@ -171,29 +178,29 @@ namespace RTSGame.Units
 			string output = "";
 			if (displayAll)
 			{
-				output += $"[color=#{yellowHex}][url={StringDB.Entries["YellowMoneyDescription"]}][img=24x24]res://_Assets/Electricity.png[/img]{money[0]}[/url][/color]  ";
-				output += $"[color=#{redHex}][url={StringDB.Entries["RedMoneyDescription"]}][img=24x24]res://_Assets/Steel.png[/img]{money[1]}[/url][/color]  ";
-				output += $"[color=#{blueHex}][url={StringDB.Entries["BlueMoneyDescription"]}][img=24x24]res://_Assets/Water.png[/img]{money[2]}[/url][/color]  ";
-				output += $"[color=#{greenHex}][url={StringDB.Entries["GreenMoneyDescription"]}][img=24x24]res://_Assets/Gas.png[/img]{money[3]}[/url][/color]  ";
+				output += $"[color=#{yellowHex}][url={StringDB.Entries["YellowMoneyDescription"]}][img=18x18]res://_Assets/Electricity.png[/img]{money[0]}[/url][/color]  ";
+				output += $"[color=#{redHex}][url={StringDB.Entries["RedMoneyDescription"]}][img=18x18]res://_Assets/Steel.png[/img]{money[1]}[/url][/color]  ";
+				output += $"[color=#{blueHex}][url={StringDB.Entries["BlueMoneyDescription"]}][img=18x18]res://_Assets/Water.png[/img]{money[2]}[/url][/color]  ";
+				output += $"[color=#{greenHex}][url={StringDB.Entries["GreenMoneyDescription"]}][img=18x18]res://_Assets/Gas.png[/img]{money[3]}[/url][/color]  ";
 			}
 			else
 			{
 				if (money[0] != 0)
 				{
-					output += $"[color=#{yellowHex}][img=24x24]res://_Assets/Electricity.png[/img]{money[0]}[/color]  ";
+					output += $"[color=#{yellowHex}][img=18x18]res://_Assets/Electricity.png[/img]{money[0]}[/color]  ";
 				}
 
 				if (money[1] != 0 || displayAll)
 				{
-					output += $"[color=#{redHex}][img=24x24]res://_Assets/Steel.png[/img]{money[1]}[/color]  ";
+					output += $"[color=#{redHex}][img=18x18]res://_Assets/Steel.png[/img]{money[1]}[/color]  ";
 				}
 				if (money[2] != 0 || displayAll)
 				{
-					output += $"[color=#{blueHex}][img=24x24]res://_Assets/Water.png[/img]{money[2]}[/color]  ";
+					output += $"[color=#{blueHex}][img=18x18]res://_Assets/Water.png[/img]{money[2]}[/color]  ";
 				}
 				if (money[3] != 0 || displayAll)
 				{
-					output += $"[color=#{greenHex}][img=24x24]res://_Assets/Gas.png[/img] {money[3]} [/color]  ";
+					output += $"[color=#{greenHex}][img=18x18]res://_Assets/Gas.png[/img] {money[3]} [/color]  ";
 				}
 			}
 

@@ -1,0 +1,22 @@
+[gd_scene format=3 uid="uid://bvfksklry28wb"]
+
+[ext_resource type="PackedScene" uid="uid://bqn4h6d52i52" path="res://_Content/_Scenes/_Prefabs/Units/BaseInvaderUnit.tscn" id="1_py0g3"]
+[ext_resource type="Texture2D" uid="uid://bc230321nqto5" path="res://icon.svg" id="3_76o52"]
+
+[node name="BaseUnit" unique_id=481801141 instance=ExtResource("1_py0g3")]
+_moveSpeed = 60.0
+_hpMax = 0
+_startingEffects = Array[Object]([])
+_internalName = "Summoned"
+_name = "Apprentice"
+_radius = 24.0
+
+[node name="MainSprite" parent="." index="1" unique_id=597948513]
+scale = Vector2(1, 1)
+texture = ExtResource("3_76o52")
+
+[node name="HealthBar" parent="." index="5" unique_id=640038315]
+offset_left = -24.0
+offset_top = -32.0
+offset_right = 24.0
+offset_bottom = -20.0

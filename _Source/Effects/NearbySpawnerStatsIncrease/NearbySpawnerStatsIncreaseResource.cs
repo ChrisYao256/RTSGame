@@ -24,7 +24,10 @@ public partial class NearbySpawnerStatsIncreaseResource : EffectResource
 	{
 		NearbySpawnerStatsIncreaseResource oldTypedResource = (NearbySpawnerStatsIncreaseResource)oldResource;
 		_buffResource.MergeWithOld(oldTypedResource._buffResource, []);
-		oldTypedResource._effect.AddNewBuffResource(_buffResource);
+		if (_effect != null)
+		{
+			oldTypedResource._effect.AddNewBuffResource(_buffResource);
+		}
 		oldTypedResource._effectDescription = "";
 		oldTypedResource.SetDescription();
 		return false;

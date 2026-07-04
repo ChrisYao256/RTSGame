@@ -42,7 +42,7 @@ public partial class TDManager : Node
 	private TooltipRichTextLabel _spawnerLimitIncreaseButtonText;
 	private Control _fullscreenOverlay;
 
-	private Exit _base;
+	private Exit _exit;
 
 	public int _hp;
 	public Vector4I _money;
@@ -80,11 +80,10 @@ public partial class TDManager : Node
 			{ 20, [(["BigArchbishop"], 1f)]},
 		};
 
-		_base = (Exit)(_unitManager.SpawnUnit(_grid.GetExitLocation(), 0, "Exit"));
-		_base._tdManager = this;
-		_base.CollisionLayer = UnitManager.TowerLayerMask;
-		_base._radius = 0.1f;
-		_base.SetSize();
+		_exit = (Exit)(_unitManager.SpawnUnit(_grid.GetExitLocation(), 0, "Exit"));
+		_exit._tdManager = this;
+		_exit._radius = TDManager.TileSize / (float)Math.Sqrt(2);
+		_exit.SetSize();
 
 		UpdateHp(20);
 
@@ -178,22 +177,24 @@ public partial class TDManager : Node
 	{
 		Unit unit = _unitManager.SpawnUnit(_grid.GetEntrancePosition(), 1, name, true);
 		List<Vector2> waypoints = _grid.GetPath(_grid.GetEntrancePosition(), _grid.GetExitLocation());
-		foreach (Vector2 waypoint in waypoints)
+		if (unit is InvaderUnit invader)
 		{
-			unit.AddCommand(new AttackMove(unit, waypoint));
+			invader.SetPathToExit(new Godot.Collections.Array<Vector2>(waypoints));
 		}
-		unit.Connect(Unit.SignalName.Died, Callable.From<Unit>(OnUnitDied));
+		unit.Connect(Unit.SignalName.Died, Callable.From(() => OnUnitDied(unit)));
 	}
 
 	public InvaderUnit SpawnEnemyAtGlobalPosition(string name, Vector2 position)
 	{
+		Vector2 offset = position - _grid.MapToGlobal((_grid.LocalToMap(_grid.ToLocal(position))));
 		Unit unit = _unitManager.SpawnUnit(position, 1, name, true);
 		List<Vector2> waypoints = _grid.GetPath(position, _grid.GetExitLocation());
 		if (unit is InvaderUnit invader)
 		{
-			invader._pathToExit = new Godot.Collections.Array<Vector2>(waypoints);
+			invader.SetPathOffset(offset);
+			invader.SetPathToExit(new Godot.Collections.Array<Vector2>(waypoints));
 		}
-		unit.Connect(Unit.SignalName.Died, Callable.From<Unit>(OnUnitDied));
+		unit.Connect(Unit.SignalName.Died, Callable.From(() => OnUnitDied(unit)));
 		return (InvaderUnit)unit;
 	}
 
@@ -203,9 +204,10 @@ public partial class TDManager : Node
 		List<Vector2> waypoints = _grid.GetPath(position, _grid.GetExitLocation());
 		if (unit is InvaderUnit invader)
 		{
-			invader._pathToExit = new Godot.Collections.Array<Vector2>(waypoints);
+			invader.SetRandomPathOffset();
+			invader.SetPathToExit(new Godot.Collections.Array<Vector2>(waypoints));
 		}
-		unit.Connect(Unit.SignalName.Died, Callable.From<Unit>(OnUnitDied));
+		unit.Connect(Unit.SignalName.Died, Callable.From(() => OnUnitDied(unit)));
 		return (InvaderUnit)unit;
 	}
 
@@ -215,9 +217,10 @@ public partial class TDManager : Node
 		List<Vector2> waypoints = _grid.GetPath(gridPosition, _grid.GetExitLocation());
 		if (unit is InvaderUnit invader)
 		{
-			invader._pathToExit = new Godot.Collections.Array<Vector2>(waypoints);
+			invader.SetRandomPathOffset();
+			invader.SetPathToExit(new Godot.Collections.Array<Vector2>(waypoints));
 		}
-		unit.Connect(Unit.SignalName.Died, Callable.From<Unit>(OnUnitDied));
+		unit.Connect(Unit.SignalName.Died, Callable.From(() => OnUnitDied(unit)));
 		return (InvaderUnit)unit;
 	}
 
@@ -231,7 +234,7 @@ public partial class TDManager : Node
 	{
 		Unit unit = _unitManager.SpawnUnit(position, 0, name, true);
 		GD.Print(name + " Spawned");
-		unit.Connect(Unit.SignalName.Died, Callable.From<Unit>(OnUnitDied));
+		unit.Connect(Unit.SignalName.Died, Callable.From(() => OnUnitDied(unit)));
 		return (Unit)unit;
 	}
 
@@ -331,7 +334,7 @@ public partial class TDManager : Node
 	{
 		if (unit is InvaderUnit invader)
 		{
-			GainMoney(invader.GetMoneyDropped());
+			GainMoney(invader.GetSelfMoneyDropped());
 		}
 	}
 

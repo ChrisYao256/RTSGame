@@ -3,17 +3,43 @@ using RTSGame.Units;
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using static Godot.TextServer;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace RTSGame.Source;
 
 public partial class Grid : TileMapLayer
 {
+	public static Vector2 GetRandomOffset()
+	{
+		Random random = new Random();
+		float x = random.Next(-40, 40);
+		float y = random.Next(-30, 40);
+		return new Vector2(x, y);
+	}
+
+	public static Vector2 ClampOffset(Vector2 offset)
+	{
+		offset.X = Math.Clamp(offset.X, -40, 40);
+		offset.Y = Math.Clamp(offset.Y, -30, 40);
+		return offset;
+	}
+
+	private static readonly Vector2I[] Directions = new Vector2I[]
+		{
+				new Vector2I(0, -1), // Up
+        new Vector2I(1, 0),  // Right
+        new Vector2I(0, 1),  // Down
+        new Vector2I(-1, 0)  // Left
+    };
+
+
 	private AStarGrid2D _astar = new AStarGrid2D();
 
 	private Dictionary<Vector2I, TowerUnit> _occupiedCells = new Dictionary<Vector2I, TowerUnit>();
 
 	private TileMapLayer _overlayLayer;
+
 
 	public override void _Ready()
 	{
@@ -26,24 +52,69 @@ public partial class Grid : TileMapLayer
 		Vector2I gridPos = LocalToMap(worldPosition);
 		return MapToLocal(gridPos);
 	}
-	public bool CanBuildAt(Vector2 worldPosition)
+
+	public bool CanBuildAt(Vector2I gridPos)
 	{
-		Vector2I gridPos = LocalToMap(worldPosition);
+
+		if (!IsCellVacant(gridPos))
+		{
+			return false;
+		}
 
 		// 1. Check TileSet data (is it grass/dirt?)
 		TileData data = GetCellTileData(gridPos);
-		if (data == null || !(bool)data.GetCustomData("buildable"))
+		if (data != null)
 		{
-			return false;
+			// Access the custom data we set up in the editor
+			return(bool)data.GetCustomData("Buildable");
+		}
+		return false;
+	}
+
+	public Vector2I FindClosestBuildableCell(Vector2I startCell, int maxRadius = 10)
+	{
+		// 1. If the starting cell is already matching, return it immediately
+		if (CanBuildAt(startCell)) return startCell;
+
+		// 2. Track visited cells so we don't look at the same tile twice (avoids infinite loops)
+		HashSet<Vector2I> visited = new HashSet<Vector2I>();
+
+		// 3. The queue stores cells we need to check, processing them in First-In, First-Out order
+		Queue<Vector2I> queue = new Queue<Vector2I>();
+
+		queue.Enqueue(startCell);
+		visited.Add(startCell);
+
+		while (queue.Count > 0)
+		{
+			Vector2I current = queue.Dequeue();
+
+			// Early exit safeguard: Stop searching if we're drifting too far away
+			if (Mathf.Abs(current.X - startCell.X) > maxRadius || Mathf.Abs(current.Y - startCell.Y) > maxRadius)
+				continue;
+
+			// Check all valid neighbors
+			foreach (Vector2I dir in Directions)
+			{
+				Vector2I neighbor = current + dir;
+
+				if (!visited.Contains(neighbor))
+				{
+					visited.Add(neighbor);
+
+					// If this neighbor meets our criteria, it is guaranteed to be the closest!
+					if (CanBuildAt(neighbor))
+					{
+						return neighbor;
+					}
+
+					// Otherwise, queue it up so we can search its neighbors in the next layer
+					queue.Enqueue(neighbor);
+				}
+			}
 		}
 
-		// 2. Check if a tower is already there
-		if (!IsCellVacant(gridPos))	
-		{
-			return false;
-		}
-
-		return true;
+		return new Vector2I(999,999); // Return null if no matching cell exists within bounds
 	}
 
 	public Vector2 MapToGlobal(Vector2I mapPosition)

@@ -29,14 +29,14 @@ public partial class SpawnerUpgrade : Effect
 		Spawner spawner = (Spawner)_parentUnit;
 		if (_resource._applySameUpgradeForAllUnits)
 		{
-			for (int i = 0; i < spawner._data._units.Count; i++)
+			for (int i = 0; i < spawner._spawnerData._units.Count; i++)
 			{
 				spawner.AddSpawnerUnitStatsIncrease(i, _resource._units[0]);
 			}
 		}
 		else
 		{
-			for (int i = 0; i < spawner._data._units.Count; i++)
+			for (int i = 0; i < spawner._spawnerData._units.Count; i++)
 			{
 				spawner.AddSpawnerUnitStatsIncrease(i, _resource._units[i]);
 			}

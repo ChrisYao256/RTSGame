@@ -1,0 +1,37 @@
+[gd_scene format=3 uid="uid://b1uie7sjqj64t"]
+
+[ext_resource type="PackedScene" uid="uid://bqn4h6d52i52" path="res://_Content/_Scenes/_Prefabs/Units/BaseInvaderUnit.tscn" id="1_abam4"]
+[ext_resource type="Script" uid="uid://d0a0ojv5vp0k3" path="res://_Source/Effects/DummyEffect/DummyEffectResource.cs" id="3_50u11"]
+[ext_resource type="Texture2D" uid="uid://bc230321nqto5" path="res://icon.svg" id="3_fjbmc"]
+[ext_resource type="Script" uid="uid://bwnw1f3ti2dgi" path="res://_Source/Effects/SelfHealing/SelfHealingResource.cs" id="5_snfni"]
+
+[sub_resource type="Resource" id="Resource_6h205"]
+script = ExtResource("5_snfni")
+_healAmount = 206
+metadata/_custom_type_script = "uid://bwnw1f3ti2dgi"
+
+[sub_resource type="Resource" id="Resource_fjbmc"]
+script = ExtResource("3_50u11")
+_displayType = 1
+_effectDescription = "More likely to be targeted by defenses."
+metadata/_custom_type_script = "uid://d0a0ojv5vp0k3"
+
+[node name="BaseUnit" unique_id=481801141 instance=ExtResource("1_abam4")]
+_hpDeducted = 2
+_tauntLevel = 1
+_moveSpeed = 45.0
+_hpMax = 0
+_startingEffects = Array[Object]([SubResource("Resource_6h205"), SubResource("Resource_fjbmc")])
+_internalName = "Sentry"
+_name = "Construct"
+_radius = 24.0
+
+[node name="MainSprite" parent="." index="1" unique_id=597948513]
+scale = Vector2(1, 1)
+texture = ExtResource("3_fjbmc")
+
+[node name="HealthBar" parent="." index="5" unique_id=640038315]
+offset_left = -24.0
+offset_top = -32.0
+offset_right = 24.0
+offset_bottom = -20.0

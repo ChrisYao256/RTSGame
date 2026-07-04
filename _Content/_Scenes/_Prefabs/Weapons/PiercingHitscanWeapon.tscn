@@ -1,0 +1,16 @@
+[gd_scene format=3 uid="uid://bs0q2oav1v20o"]
+
+[ext_resource type="Script" uid="uid://f063vc77wej5" path="res://_Source/_Units/Weapons/PiercingHitscanWeapon.cs" id="1_f431v"]
+
+[node name="WeaponComponent" type="Node2D" unique_id=2120452932]
+script = ExtResource("1_f431v")
+_damage = 5
+_range = 100.0
+
+[node name="TracerLine" type="Line2D" parent="." unique_id=1982471993]
+visible = false
+top_level = true
+width = 2.0
+default_color = Color(0.80784315, 0, 0.15294118, 0.5294118)
+
+[node name="Timer" type="Timer" parent="TracerLine" unique_id=215397211]

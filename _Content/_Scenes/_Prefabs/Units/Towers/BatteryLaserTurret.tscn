@@ -1,0 +1,109 @@
+[gd_scene format=3 uid="uid://cfp4due2vm2gg"]
+
+[ext_resource type="PackedScene" uid="uid://yhbw0b164ui2" path="res://_Content/_Scenes/_Prefabs/Units/BaseTower.tscn" id="1_f8p3g"]
+[ext_resource type="Texture2D" uid="uid://dvldu8wegymfb" path="res://_Assets/BatteryLaserTurret.png" id="2_2ukyf"]
+[ext_resource type="Script" uid="uid://c7ye5bgfhla5e" path="res://_Source/Effects/StatsIncrease/StatsIncreaseResource.cs" id="3_kaylg"]
+[ext_resource type="Script" uid="uid://dtpcxn7d2dqcy" path="res://_Source/Effects/EffectResource.cs" id="5_dtfox"]
+[ext_resource type="Texture2D" uid="uid://s1ywp7jtyat" path="res://_Assets/BlueBase.png" id="6_2ukyf"]
+[ext_resource type="Script" uid="uid://3kn0gvwq5hwk" path="res://_Source/Effects/StoreEnergy/StoreEnergyResource.cs" id="6_f8p3g"]
+[ext_resource type="Script" uid="uid://bva1xkjx08h5v" path="res://_Source/_Units/Weapons/TurretTurner.cs" id="8_rms8x"]
+[ext_resource type="PackedScene" uid="uid://csclmqhm61enk" path="res://_Content/_Scenes/_Prefabs/Weapons/LaserWeapon.tscn" id="12_2cio5"]
+
+[sub_resource type="Resource" id="Resource_ha87b"]
+script = ExtResource("3_kaylg")
+_damageIncrease = 185
+metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
+
+[sub_resource type="Resource" id="Resource_2ukyf"]
+script = ExtResource("6_f8p3g")
+_increaseAmount = 35
+_moneyGain = Vector4i(0, 0, 10, 10)
+metadata/_custom_type_script = "uid://3kn0gvwq5hwk"
+
+[sub_resource type="Resource" id="Resource_h8tlq"]
+script = ExtResource("3_kaylg")
+_damageIncrease = 490
+metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
+
+[sub_resource type="Resource" id="Resource_f8p3g"]
+script = ExtResource("6_f8p3g")
+_increaseAmount = 90
+_moneyGain = Vector4i(0, 0, 23, 23)
+metadata/_custom_type_script = "uid://3kn0gvwq5hwk"
+
+[sub_resource type="Resource" id="Resource_4io8i"]
+script = ExtResource("3_kaylg")
+_damageIncrease = 1025
+metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
+
+[sub_resource type="Resource" id="Resource_kaylg"]
+script = ExtResource("6_f8p3g")
+_increaseAmount = 180
+_moneyGain = Vector4i(0, 0, 42, 42)
+metadata/_custom_type_script = "uid://3kn0gvwq5hwk"
+
+[sub_resource type="Resource" id="Resource_x8ubt"]
+script = ExtResource("3_kaylg")
+metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
+
+[sub_resource type="Resource" id="Resource_i7ski"]
+script = ExtResource("6_f8p3g")
+_increaseAmount = 60
+_moneyGain = Vector4i(0, 0, 25, 25)
+_increaseLimit = 4
+metadata/_custom_type_script = "uid://3kn0gvwq5hwk"
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_ha87b"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_2ukyf")
+}],
+"loop": false,
+"name": &"Idle",
+"speed": 1.0
+}]
+
+[node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_f8p3g")]
+_cost = Vector4i(1, 0, 0, 0)
+_iconTexture = ExtResource("2_2ukyf")
+_description = "Shoots laser. Stores unused energy as resources and bonus damage if this doesn't attack in a turn. "
+_firstUpgrade = Array[Object]([SubResource("Resource_ha87b"), SubResource("Resource_2ukyf")])
+_firstUpgradeCost = Vector4i(0, 0, 60, 60)
+_secondUpgrade = Array[Object]([SubResource("Resource_h8tlq"), SubResource("Resource_f8p3g")])
+_secondUpgradeCost = Vector4i(0, 0, 150, 150)
+_thirdUpgrade = Array[Object]([SubResource("Resource_4io8i"), SubResource("Resource_kaylg")])
+_thirdUpgradeCost = Vector4i(0, 0, 300, 300)
+_data = SubResource("Resource_x8ubt")
+_hpMax = 1
+_lockOnTarget = true
+_startingEffects = Array[ExtResource("5_dtfox")]([SubResource("Resource_i7ski")])
+_internalName = "BatteryLaserTurret"
+_name = "Capacitor"
+_radius = 0.0
+_baseHealthBarWidth = 48.0
+
+[node name="MainSprite" parent="." index="1" unique_id=701942347]
+scale = Vector2(1, 1)
+texture = ExtResource("6_2ukyf")
+
+[node name="TurretTurner" type="Node2D" parent="." index="8" unique_id=1660325207]
+script = ExtResource("8_rms8x")
+_turn = true
+_knockbackDistance = 0.0
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="TurretTurner" index="0" unique_id=1265150402]
+sprite_frames = SubResource("SpriteFrames_ha87b")
+animation = &"Idle"
+
+[node name="Marker2D" type="Marker2D" parent="TurretTurner" index="1" unique_id=13863776]
+position = Vector2(30, 0)
+
+[node name="WeaponComponent" parent="." index="9" unique_id=2120452932 instance=ExtResource("12_2cio5")]
+_tracerColor = Color(0.46666667, 0.84313726, 0.4392157, 1)
+_damage = 600
+_range = 300.0
+_attackDelayLow = 1.5
+_attackDelayHigh = 1.5
+_useAttackDelay = true
+_damageType = 2

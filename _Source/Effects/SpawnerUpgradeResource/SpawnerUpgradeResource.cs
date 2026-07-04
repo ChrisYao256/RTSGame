@@ -25,5 +25,19 @@ public partial class SpawnerUpgradeResource : EffectResource
 		{
 			_effectDescription = "Every spawned unit drops +" + Utils.MakeMoneyText(_units[0]._moneyBuff) + " but becomes stronger.";
 		}
+		else if (_effectDescription == "" && !_applySameUpgradeForAllUnits)
+		{
+			Vector4I gain = new Vector4I(0,0,0,0);
+			foreach (var unit in _units)
+			{
+				gain += unit._moneyBuff;
+			}
+			_effectDescription = "Spawned units drop +" + Utils.MakeMoneyText(gain) + " total but become stronger.";
+		}
+	}
+
+	public override void SetUpgradeDescription()
+	{
+		SetDescription();
 	}
 }

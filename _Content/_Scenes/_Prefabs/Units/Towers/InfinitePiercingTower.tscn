@@ -1,0 +1,76 @@
+[gd_scene format=3 uid="uid://prfkmsd6gel3"]
+
+[ext_resource type="PackedScene" uid="uid://yhbw0b164ui2" path="res://_Content/_Scenes/_Prefabs/Units/BaseTower.tscn" id="1_i6b2u"]
+[ext_resource type="Texture2D" uid="uid://d3cj27sha64i8" path="res://_Assets/InfinitePiercingTower.png" id="2_pbkif"]
+[ext_resource type="Script" uid="uid://c7ye5bgfhla5e" path="res://_Source/Effects/StatsIncrease/StatsIncreaseResource.cs" id="3_x762y"]
+[ext_resource type="Script" uid="uid://dtpcxn7d2dqcy" path="res://_Source/Effects/EffectResource.cs" id="5_lqan1"]
+[ext_resource type="Texture2D" uid="uid://bdyjhvsjs67wx" path="res://_Assets/YellowBase.png" id="6_rtfw5"]
+[ext_resource type="Script" uid="uid://bva1xkjx08h5v" path="res://_Source/_Units/Weapons/TurretTurner.cs" id="7_u31e6"]
+[ext_resource type="PackedScene" uid="uid://bs0q2oav1v20o" path="res://_Content/_Scenes/_Prefabs/Weapons/PiercingHitscanWeapon.tscn" id="10_3pfqg"]
+
+[sub_resource type="Resource" id="Resource_bpy14"]
+script = ExtResource("3_x762y")
+_damageIncrease = 196
+metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
+
+[sub_resource type="Resource" id="Resource_2kx6n"]
+script = ExtResource("3_x762y")
+_damageIncrease = 434
+_pierceCount = 1
+metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
+
+[sub_resource type="Resource" id="Resource_7mvqi"]
+script = ExtResource("3_x762y")
+_damageIncrease = 650
+_pierceCount = 1
+metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_msjep"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_pbkif")
+}],
+"loop": false,
+"name": &"Idle",
+"speed": 1.0
+}]
+
+[node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_i6b2u")]
+_cost = Vector4i(1, 0, 0, 0)
+_iconTexture = ExtResource("2_pbkif")
+_description = "Shoots piercing projectiles that can damage multiple enemies on a line."
+_firstUpgrade = Array[Object]([SubResource("Resource_bpy14")])
+_firstUpgradeCost = Vector4i(90, 50, 0, 0)
+_secondUpgrade = Array[Object]([SubResource("Resource_2kx6n")])
+_secondUpgradeCost = Vector4i(180, 100, 0, 0)
+_thirdUpgrade = Array[Object]([SubResource("Resource_7mvqi")])
+_thirdUpgradeCost = Vector4i(267, 133, 0, 0)
+LeashDistance = 200.0
+_startingEffects = Array[ExtResource("5_lqan1")]([])
+_internalName = "InfinitePiercingTower"
+_name = "Railgun Piercer"
+_radius = 0.0
+_baseHealthBarWidth = 48.0
+
+[node name="MainSprite" parent="." index="1" unique_id=701942347]
+scale = Vector2(1, 1)
+texture = ExtResource("6_rtfw5")
+
+[node name="TurretTurner" type="Node2D" parent="." index="8" unique_id=1640024612]
+script = ExtResource("7_u31e6")
+_turn = true
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="TurretTurner" index="0" unique_id=317933646]
+sprite_frames = SubResource("SpriteFrames_msjep")
+animation = &"Idle"
+
+[node name="Marker2D" type="Marker2D" parent="TurretTurner" index="1" unique_id=293047182]
+position = Vector2(36, 0)
+
+[node name="WeaponComponent" parent="." index="9" unique_id=2120452932 instance=ExtResource("10_3pfqg")]
+_tracerWidth = 20.0
+_damage = 520
+_range = 260.0
+_attackCooldown = 1.5
+_attackDelayHigh = 0.1

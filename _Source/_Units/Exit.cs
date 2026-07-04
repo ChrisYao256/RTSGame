@@ -12,10 +12,29 @@ public partial class Exit : StationaryUnit
 {
 	public TDManager _tdManager;
 
-	protected override void SetAttackRange()
+	public override void SetAttackRange()
 	{
 		_attackCollisionShape = GetNode<CollisionShape2D>("AttackArea/AttackAreaCollision");
-		_attackRange = 50f;
+		_attackRange = TDManager.TileSize / 4f;
+		if (_attackCollisionShape.Shape is CircleShape2D circle)
+		{
+			circle = (CircleShape2D)circle.Duplicate();
+			circle.Radius = _attackRange;
+			if (IsInstanceValid(_attackCollisionShape))
+			{
+				_attackCollisionShape.Shape = circle;
+			}
+			//Callable.From(() => {
+			//	if (IsInstanceValid(_attackCollisionShape))
+			//	{
+			//		_attackCollisionShape.Shape = circle;
+			//	}
+			//}).CallDeferred();
+		}
+		else
+		{
+			throw new Exception("Attack area shape is not a disk");
+		}
 	}
 
 	public override void _PhysicsProcess(double delta)

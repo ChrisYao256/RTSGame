@@ -6,13 +6,13 @@
 [ext_resource type="Script" uid="uid://iamaod4iivlq" path="res://_Source/Effects/InvaderStatsIncrease/InvaderStatsIncreaseResource.cs" id="3_brthf"]
 [ext_resource type="Texture2D" uid="uid://b1n42dv6cvvon" path="res://_Assets/GrayPortal.png" id="4_brthf"]
 
-[sub_resource type="Resource" id="Resource_jssxb"]
+[sub_resource type="Resource" id="Resource_brthf"]
 script = ExtResource("3_2elwc")
 metadata/_custom_type_script = "uid://cvroohkeaovqw"
 
 [node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_8vol0")]
 script = ExtResource("2_x4pyh")
-_data = SubResource("Resource_jssxb")
+_spawnerData = SubResource("Resource_brthf")
 _spawnInterval = 1.0
 _isEnemy = true
 _iconTexture = ExtResource("4_brthf")

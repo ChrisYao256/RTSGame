@@ -5,28 +5,91 @@
 [ext_resource type="Script" uid="uid://iamaod4iivlq" path="res://_Source/Effects/InvaderStatsIncrease/InvaderStatsIncreaseResource.cs" id="3_6d8vk"]
 [ext_resource type="Script" uid="uid://cvroohkeaovqw" path="res://_Source/_Units/SpawnerDataResource.cs" id="3_q2jb2"]
 [ext_resource type="Texture2D" uid="uid://iocgjnp7i8td" path="res://_Assets/Portal.png" id="4_d63dk"]
+[ext_resource type="Script" uid="uid://be80c57wd06d0" path="res://_Source/Effects/ImmediateTransform/ImmediateTransformResource.cs" id="6_d3jpy"]
+[ext_resource type="Script" uid="uid://djbu8krhjrjib" path="res://_Source/Effects/SpawnerUpgradeResource/SpawnerUpgradeResource.cs" id="6_rn5l1"]
+[ext_resource type="Script" uid="uid://bwnw1f3ti2dgi" path="res://_Source/Effects/SelfHealing/SelfHealingResource.cs" id="7_q2jb2"]
 
-[sub_resource type="Resource" id="Resource_q2jb2"]
+[sub_resource type="Resource" id="Resource_6d8vk"]
 script = ExtResource("3_6d8vk")
 _unitName = "Soldier"
+_hpBuff = 500
+_moneyBuff = Vector4i(4, 6, 0, 0)
 _startingEffects = null
 metadata/_custom_type_script = "uid://iamaod4iivlq"
 
-[sub_resource type="Resource" id="Resource_jssxb"]
+[sub_resource type="Resource" id="Resource_d3jpy"]
 script = ExtResource("3_q2jb2")
-_units = Array[ExtResource("3_6d8vk")]([SubResource("Resource_q2jb2")])
+_units = Array[ExtResource("3_6d8vk")]([SubResource("Resource_6d8vk")])
 metadata/_custom_type_script = "uid://cvroohkeaovqw"
+
+[sub_resource type="Resource" id="Resource_imd83"]
+script = ExtResource("7_q2jb2")
+_healAmount = 13
+metadata/_custom_type_script = "uid://bwnw1f3ti2dgi"
+
+[sub_resource type="Resource" id="Resource_q2jb2"]
+script = ExtResource("3_6d8vk")
+_hpBuff = 280
+_moneyBuff = Vector4i(2, 4, 0, 0)
+_startingEffects = Array[Object]([SubResource("Resource_imd83")])
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_d63dk"]
+script = ExtResource("6_rn5l1")
+_units = Array[ExtResource("3_6d8vk")]([SubResource("Resource_q2jb2")])
+metadata/_custom_type_script = "uid://djbu8krhjrjib"
+
+[sub_resource type="Resource" id="Resource_tqwml"]
+script = ExtResource("7_q2jb2")
+_healAmount = 27
+metadata/_custom_type_script = "uid://bwnw1f3ti2dgi"
+
+[sub_resource type="Resource" id="Resource_yf86q"]
+script = ExtResource("3_6d8vk")
+_hpBuff = 600
+_moneyBuff = Vector4i(6, 9, 0, 0)
+_startingEffects = Array[Object]([SubResource("Resource_tqwml")])
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_f0flp"]
+script = ExtResource("6_rn5l1")
+_units = Array[ExtResource("3_6d8vk")]([SubResource("Resource_yf86q")])
+metadata/_custom_type_script = "uid://djbu8krhjrjib"
+
+[sub_resource type="Resource" id="Resource_qybyb"]
+script = ExtResource("7_q2jb2")
+_healAmount = 55
+metadata/_custom_type_script = "uid://bwnw1f3ti2dgi"
+
+[sub_resource type="Resource" id="Resource_yuxvw"]
+script = ExtResource("3_6d8vk")
+_hpBuff = 1200
+_moneyBuff = Vector4i(7, 15, 0, 0)
+_startingEffects = Array[Object]([SubResource("Resource_qybyb")])
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_pabjm"]
+script = ExtResource("6_rn5l1")
+_units = Array[ExtResource("3_6d8vk")]([SubResource("Resource_yuxvw")])
+metadata/_custom_type_script = "uid://djbu8krhjrjib"
+
+[sub_resource type="Resource" id="Resource_rn5l1"]
+script = ExtResource("6_d3jpy")
+_transformedUnit = "SentrySpawner"
+_description = "Spawns a sentry instead. "
+metadata/_custom_type_script = "uid://be80c57wd06d0"
 
 [node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_d3jpy")]
 script = ExtResource("2_rn5l1")
-_data = SubResource("Resource_jssxb")
+_spawnerData = SubResource("Resource_d3jpy")
 _spawnInterval = 1.0
 _isEnemy = true
 _iconTexture = ExtResource("4_d63dk")
 _towerType = 2
-_firstUpgrade = Array[Object]([])
-_secondUpgrade = Array[Object]([])
-_thirdUpgrade = Array[Object]([])
+_firstUpgrade = Array[Object]([SubResource("Resource_d63dk")])
+_secondUpgrade = Array[Object]([SubResource("Resource_f0flp")])
+_thirdUpgrade = Array[Object]([SubResource("Resource_pabjm")])
+_fourthUpgradeA = Array[Object]([SubResource("Resource_rn5l1")])
 LeashDistance = 200.0
 _startingEffects = Array[Object]([])
 _internalName = "SoldierSpawner"

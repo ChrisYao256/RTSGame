@@ -10,8 +10,8 @@ _healAmount = 100
 metadata/_custom_type_script = "uid://bwnw1f3ti2dgi"
 
 [node name="BaseUnit" unique_id=481801141 instance=ExtResource("1_sdwyq")]
-_moneyDropped = Vector4i(50, 0, 0, 0)
-_hpDeducted = 20
+_moneyDropped = Vector4i(50, 50, 50, 50)
+_hpDeducted = 10
 _moveSpeed = 60.0
 _hpMax = 10000
 _startingEffects = Array[Object]([SubResource("Resource_sdwyq")])

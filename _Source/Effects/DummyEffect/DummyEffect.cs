@@ -8,4 +8,10 @@ public partial class DummyEffect : Effect
 	public DummyEffect(EffectResource resource) : base(resource)
 	{
 	}
+
+	public override void ConnectSignals(Unit unit)
+	{
+		base.ConnectSignals(unit);
+		QueueFree();
+	}
 }

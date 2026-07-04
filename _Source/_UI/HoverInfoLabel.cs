@@ -1,8 +1,19 @@
 using Godot;
+using RTSGame.Units;
 using System.Drawing;
 
 public partial class HoverInfoLabel : Button
 {
+	public static void AddTooltipToButton(HoverInfoLabel trigger, string text)
+	{
+		PanelContainer popup = TooltipManager.GetTooltipContainer((text, ""));
+		trigger._popupBox = popup;
+		popup.Visible = false;
+		trigger.AddChild(popup);
+
+		trigger.ResetSize();
+	}
+
 	public Control _popupBox;
 
 	public override void _Ready()

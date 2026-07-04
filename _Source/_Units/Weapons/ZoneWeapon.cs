@@ -10,8 +10,6 @@ public partial class ZoneWeapon : BaseWeapon
   [Export]
   PackedScene _attackVisualEffect;
 
-	private Marker2D _firePoint;
-
 	public override void _Ready()
 	{
 		base._Ready();
@@ -72,7 +70,7 @@ public partial class ZoneWeapon : BaseWeapon
         // Example: If you use an interface for your entities
         if (entity is InvaderUnit invader)
         {
-					_parent.OnBeforeHitEnemy(target);
+					_parent.OnBeforeHitEnemy(invader);
 					invader.Hit(GetDamage(), _parent);
 					_parent.OnHitEnemy(invader);
 				}

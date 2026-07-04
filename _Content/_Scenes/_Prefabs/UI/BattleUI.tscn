@@ -14,9 +14,12 @@ texture_margin_bottom = 12.0
 script = ExtResource("1_ytyh6")
 
 [node name="PanelContainer" type="PanelContainer" parent="." unique_id=1719557160]
-offset_top = 830.0
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -262.0
 offset_right = 1920.0
-offset_bottom = 1080.0
+grow_vertical = 0
 theme_override_styles/panel = SubResource("StyleBoxTexture_4chrn")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer" unique_id=421499899]

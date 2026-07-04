@@ -1,11 +1,12 @@
 using Godot;
+using RTSGame._Source.Units;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
 namespace RTSGame.Units;
 
 [GlobalClass]
-public partial class SlowAttackResource : EffectResource
+public partial class SlowAttackResource : EffectResource, IStackable
 {
 	[Export]
 	public float _percentDecrease;
@@ -15,31 +16,28 @@ public partial class SlowAttackResource : EffectResource
 
 	private SlowAttack _effect;
 
+	public EffectResource MultiplyEffect(int n)
+	{
+		SlowAttackResource newResource = (SlowAttackResource)Duplicate();
+		newResource._percentDecrease *= n;
+		newResource.SetDescription();
+		return newResource;
+	}
+
 	public override bool MergeWithOld(EffectResource oldResource, List<EffectResource> allMatchingResource)
 	{
 		SlowAttackResource typedOldResource = (SlowAttackResource)oldResource;
-		//if (typedOldResource._change > _change && typedOldResource._effect._timer.TimeLeft < _time) // if new debuff is stronger and lasts longer, then remove old debuff and add new one.
-		//{
-		//	typedOldResource._effect.RemoveEffectResource();
-		//	typedOldResource._effect.RemoveEffectNode();
-		//	return true;
-		//}
-		//else if (typedOldResource._change <= _change && typedOldResource._effect._timer.TimeLeft < _time) // if new debuff is weaker but lasts longer, then .
-		//{
 
-		//	return true;
-		//}
-		//else if (typedOldResource._change > _change && typedOldResource._effect._timer.TimeLeft >= _time) // if new debuff is stronger but lasts shorter, then make this effect the difference and add it.
-		//{
-		//	_change = _change - typedOldResource._change;
-		//	return true;
-		//}
-		//else // if new debuff is stronger but lasts shorter, then don't add new debuff.
-		//{
-		//	return false;
-		//}
-
-		typedOldResource._effect.AddResource(this);
+		if (typedOldResource._effect is not null)
+		{
+			((SlowAttack)typedOldResource._effect).AddResource(this);
+		}
+		else
+		{
+			typedOldResource._percentDecrease += _percentDecrease;
+			typedOldResource._time += _time;
+			typedOldResource.SetDescription();
+		}
 		return false;
 	}
 
@@ -50,11 +48,32 @@ public partial class SlowAttackResource : EffectResource
 		{
 			_effectName = "Slowed";
 		}
-		if (_effectDescription == "")
+		_effectDescription = "Attack speed slowed by " + Math.Truncate(_percentDecrease * 100) + "%";
+		if (_time != -1)
 		{
-			_effectDescription = "Attack speed slowed by " + Math.Truncate(_percentDecrease * 100) + "%";
+			_effectTopRightString = _time + "::duration::";
 		}
-		_effectTopRightString = _time + "::duration::";
+		else
+		{
+			_effectTopRightString = "∞::duration::";
+		}
+	}
+
+	public override void SetUpgradeDescription()
+	{
+		if (_effectName == "")
+		{
+			_effectName = "Slowed";
+		}
+		_effectDescription = "";
+		if (_percentDecrease != 0)
+		{
+			_effectDescription += $"{_effectName} strength +" + Math.Truncate(_percentDecrease * 100) + "%";
+		}
+		if (_time != 0)
+		{
+			_effectDescription += $"{_effectName} duration +" + _time + "::duration::";
+		}
 	}
 
 	public override Effect CreateNode()

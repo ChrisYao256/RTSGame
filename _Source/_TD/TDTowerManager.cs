@@ -2,6 +2,7 @@ using Godot;
 using RTSGame.Units;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.NetworkInformation;
 
 namespace RTSGame.Source;
 
@@ -17,7 +18,7 @@ public partial class TDTowerManager : Node2D
 
 	private Godot.Collections.Array<string> _towers;
 
-	private bool _placementMode = false;
+	public bool _placementMode { get; private set; } = false;
 	private string _towerToPlace;
 	private TowerUnit _previewTower;
 
@@ -30,6 +31,8 @@ public partial class TDTowerManager : Node2D
 		_grid = GetParent().GetNode<Grid>("TileMapLayer");
 		_tdManager = GetParent().GetNode<TDManager>("TdManager");
 		UpdateIncomeDisplay();
+		UpdateDPSDisplay();
+		UpdateTotalHpLabel();
 	}
 
 	public override void _Process(double delta)
@@ -58,11 +61,13 @@ public partial class TDTowerManager : Node2D
 			if (unit._towerType != tab)
 			{
 				unit.QueueFree();
+				container.QueueFree();
 				continue;
 			}
 
 			Label nameLabel = new Label();
 			nameLabel.Text = unit._name;
+			nameLabel.CustomMinimumSize = new(160, 0);
 			nameLabel.HorizontalAlignment = HorizontalAlignment.Center;
 			container.AddChild(nameLabel);
 
@@ -87,7 +92,14 @@ public partial class TDTowerManager : Node2D
 			TooltipRichTextLabel costLabel = new TooltipRichTextLabel();
 			costLabel.FitContent = true;
 			costLabel.BbcodeEnabled = true;
-			costLabel.Text = Utils.MakeMoneyText(unit._cost);
+			if (unit is not Spawner)
+			{
+				costLabel.Text = Utils.MakeMoneyText(unit._cost);
+			}
+			else
+			{
+				costLabel.Text = "+" + Utils.MakeMoneyText(unit.GetIncome());
+			}
 			costLabel.HorizontalAlignment = HorizontalAlignment.Center;
 			container.AddChild(costLabel);
 			
@@ -133,6 +145,8 @@ public partial class TDTowerManager : Node2D
 		_placementMode = true;
 		_towerToPlace = towerName;
 		_previewTower = (TowerUnit)_unitManager.SpawnUnit(GetGlobalMousePosition(), 0 ,towerName, hasEffects: false);
+		_previewTower.Modulate = new Color(0.5f, 0.5f, 0.5f, 1f);
+		_previewTower.SetAttackRange();
 		_previewTower.DisablePhysicsProcess();
 		_unitManager.UpdatePlayerSelection([_previewTower]);
 	}
@@ -158,34 +172,19 @@ public partial class TDTowerManager : Node2D
 		// Convert mouse position to grid coordinates (e.g., Vector2I(5, 3))
 		Vector2I gridCoords = _grid.LocalToMap(mousePos);
 
-		// Snap the preview to the center of the tile
-		_previewTower.GlobalPosition = _grid.ToGlobal(_grid.MapToLocal(gridCoords));
-		_previewTower._gridLocation = gridCoords;
+		Vector2I buildableGridCoords = _grid.FindClosestBuildableCell(gridCoords);
+		_previewTower.GlobalPosition = _grid.ToGlobal(_grid.MapToLocal(buildableGridCoords));
+		_previewTower._gridLocation = buildableGridCoords;
 
-		// Check if the tile allows building
-		TileData data = _grid.GetCellTileData(gridCoords);
-		bool canBuild = false;
-
-		if (data != null)
-		{
-			// Access the custom data we set up in the editor
-			canBuild = (bool)data.GetCustomData("Buildable");
-		}
-
-		canBuild = canBuild && _grid.IsCellVacant(gridCoords);
-
-		// Visual feedback: Green if valid, Red if blocked
-		_previewTower.Modulate = canBuild ? new Color(0, 1, 0, 0.5f) : new Color(1, 0, 0, 0.5f);
-		
 		if (Input.IsActionJustPressed("Left_click"))
 		{
 			if (_previewTower._towerType == TowerUnit.TowerType.Spawner && !_tdManager.CanBuildExtraSpawner())
 			{
 				ExitPlacementMode();
 			}
-			else if (canBuild && Utils.VectorLeq(_previewTower._cost, _tdManager._money))
+			else if (Utils.VectorLeq(_previewTower._cost, _tdManager._money))
 			{
-				PlaceDraggingTower(gridCoords);
+				PlaceDraggingTower(buildableGridCoords);
 			}
 			else
 			{
@@ -215,6 +214,8 @@ public partial class TDTowerManager : Node2D
 		
 		newTower.EmitSignal(Unit.SignalName.Creation);
 		UpdateIncomeDisplay();
+		UpdateDPSDisplay();
+		UpdateTotalHpLabel();
 		return newTower;
 	}
 
@@ -238,6 +239,9 @@ public partial class TDTowerManager : Node2D
 		}		
 		newTower.EmitSignal(Unit.SignalName.Creation);
 		UpdateIncomeDisplay();
+		UpdateDPSDisplay();
+		UpdateTotalHpLabel();
+		//_unitManager.UpdatePlayerSelection([newTower]);
 	}
 
 	public void RemoveTower(Vector2I gridCoords)
@@ -252,7 +256,7 @@ public partial class TDTowerManager : Node2D
 			_tdManager.IncreaseSpawnerCount(-1);
 		}
 		_allTowers.Remove(tower);
-		tower.EmitSignal(Unit.SignalName.Removed, tower);
+		tower.EmitSignal(Unit.SignalName.Removed);
 		tower.RemoveAllEffects();
 		_grid.UnoccupyCell(gridCoords);
 		tower.QueueFree();
@@ -265,6 +269,7 @@ public partial class TDTowerManager : Node2D
 		RemoveTower(gridCoords);
 		TowerUnit newTowerNode = PlaceTower(gridCoords, newTower);
 		newTowerNode._cost = oldCost;
+		_unitManager.UpdatePlayerSelection([newTowerNode]);
 	}
 
 	public void UpdateIncomeDisplay()
@@ -279,6 +284,40 @@ public partial class TDTowerManager : Node2D
 		}
 
 		incomeLabel.Text = "Maximum Income: " + Utils.MakeMoneyText(income);
+	}
+
+	public void UpdateDPSDisplay()
+	{
+		TooltipRichTextLabel dpsLabel = _rightPanel.GetNode<TooltipRichTextLabel>("DPSLabel");
+
+		float dps = 0;
+
+		foreach (TowerUnit tower in _allTowers)
+		{
+			if (tower._weapon is not null)
+			{
+				dps += tower._weapon.GetDPS();
+			}
+		}
+
+		dpsLabel.Text = "Total DPS: " + dps.ToString("F0");
+	}
+
+	public void UpdateTotalHpLabel()
+	{
+		TooltipRichTextLabel totalHpLabel = _rightPanel.GetNode<TooltipRichTextLabel>("TotalHpLabel");
+
+		int hp = 0;
+
+		foreach (TowerUnit tower in _allTowers)
+		{
+			if (tower is Spawner spawner)
+			{
+				hp += spawner.GetTotalHp();
+			}
+		}
+
+		totalHpLabel.Text = "Total Enemy Hp: " + hp.ToString();
 	}
 
 	public List<TowerUnit> GetAllTowers()

@@ -1,9 +1,15 @@
 [gd_scene format=3 uid="uid://bwym8b0opf06j"]
 
 [ext_resource type="Script" uid="uid://btamq8cjowbjw" path="res://_Source/_Units/Weapons/ScannerWeapon.cs" id="1_0hyku"]
+[ext_resource type="Script" uid="uid://dey8y5bpmxnim" path="res://_Source/Effects/DropMoreMoney/DropMoreMoneyResource.cs" id="2_odxj3"]
+
+[sub_resource type="Resource" id="Resource_hojse"]
+script = ExtResource("2_odxj3")
+metadata/_custom_type_script = "uid://dey8y5bpmxnim"
 
 [node name="WeaponComponent" type="Node2D" unique_id=2120452932]
 script = ExtResource("1_0hyku")
+_prioritizeEnemyWithoutThisEffect = SubResource("Resource_hojse")
 
 [node name="TracerLine" type="Line2D" parent="." unique_id=1982471993]
 visible = false
@@ -12,3 +18,4 @@ width = 2.0
 default_color = Color(0.80784315, 0, 0.15294118, 0.5294118)
 
 [node name="Timer" type="Timer" parent="TracerLine" unique_id=215397211]
+one_shot = true

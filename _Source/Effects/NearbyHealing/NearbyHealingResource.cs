@@ -23,19 +23,29 @@ public partial class NearbyHealingResource : EffectResource
 
 	private NearbyHealing _effect;
 
+	/// <summary>
+	/// Merging combines _healAmount if both are _isShield or both are not _isShield.
+	/// </summary>
+	/// <param name="oldResource"></param>
+	/// <param name="allMatchingResource"></param>
+	/// <returns></returns>
 	public override bool MergeWithOld(EffectResource oldResource, List<EffectResource> allMatchingResource)
 	{
-		NearbyHealingResource typedOldResource = (NearbyHealingResource)oldResource;
-		if (_isShield != typedOldResource._isShield)
+		foreach (EffectResource resource in allMatchingResource)
 		{
-			return true;
+			NearbyHealingResource typedResource = (NearbyHealingResource)resource;
+			if (_isShield != typedResource._isShield)
+			{
+				continue;
+			}
+			else
+			{
+				typedResource._healAmount += _healAmount;
+				typedResource.SetDescription();
+				return false;
+			}
 		}
-		else
-		{
-			typedOldResource._healAmount += _healAmount;
-			typedOldResource.SetDescription();
-			return false;
-		}
+		return true;
 	}
 
 	public override void SetDescription()

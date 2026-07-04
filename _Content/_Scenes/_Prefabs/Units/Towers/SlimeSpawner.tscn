@@ -11,16 +11,20 @@
 [sub_resource type="Resource" id="Resource_1tabr"]
 script = ExtResource("3_jssxb")
 _unitName = "Slime"
+_hpBuff = 150
+_moneyBuff = Vector4i(2, 0, 0, 0)
 _startingEffects = null
 metadata/_custom_type_script = "uid://iamaod4iivlq"
 
 [sub_resource type="Resource" id="Resource_34is0"]
 script = ExtResource("3_jssxb")
 _unitName = "Slime"
+_hpBuff = 150
+_moneyBuff = Vector4i(2, 0, 0, 0)
 _startingEffects = null
 metadata/_custom_type_script = "uid://iamaod4iivlq"
 
-[sub_resource type="Resource" id="Resource_jssxb"]
+[sub_resource type="Resource" id="Resource_hedbo"]
 script = ExtResource("3_38tks")
 _units = Array[ExtResource("3_jssxb")]([SubResource("Resource_1tabr"), SubResource("Resource_34is0")])
 metadata/_custom_type_script = "uid://cvroohkeaovqw"
@@ -69,7 +73,7 @@ metadata/_custom_type_script = "uid://be80c57wd06d0"
 
 [node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_gjvjw")]
 script = ExtResource("2_jar8h")
-_data = SubResource("Resource_jssxb")
+_spawnerData = SubResource("Resource_hedbo")
 _spawnInterval = 1.0
 _isEnemy = true
 _iconTexture = ExtResource("4_jssxb")
