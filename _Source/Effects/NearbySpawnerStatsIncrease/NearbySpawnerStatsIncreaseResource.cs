@@ -39,7 +39,7 @@ public partial class NearbySpawnerStatsIncreaseResource : EffectResource
 		{
 			return;
 		}
-		_effectDescription = "Enemies from nearby spawners get \n";
+		_effectDescription = "Enemies from nearby portals get \n";
 
 		if (_buffResource._hpBuff != 0)
 		{

@@ -13,12 +13,18 @@ public partial class TDScene : Node2D
 	{
 		UnitManager unitManager = UnitManager.Instantiate<UnitManager>();
 		AddChild(unitManager);
+
+		var globals = GetNode<GameGlobals>("/root/GameGlobals");
+
 		_tdManager = GetNode<TDManager>("TdManager");
-		_tdManager.Initialize();
+		_tdManager.Initialize(globals.CurrentMode);
 	}
 
 	public void OnNextWavePressed()
 	{
-		_tdManager.SpawnNextWave();
+		if (_tdManager.CheckWaveFinished())
+		{
+			_tdManager.SpawnNextWave();
+		}
 	}
 }

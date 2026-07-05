@@ -9,9 +9,9 @@ public class StringDB
 {
 	public static Dictionary<string, string> Entries = new()
 	{
-		{ "YellowMoneyDescription", "Biofuel. Dropped by most enemies."},
-		{ "RedMoneyDescription", "Metals. Typically dropped by tough enemies."},
-		{ "BlueMoneyDescription", "Water. Typically dropped by enemies that weld magic."},
+		{ "YellowMoneyDescription", "Electricity. Dropped by most enemies."},
+		{ "RedMoneyDescription", "Metals. Typically dropped by durable enemies."},
+		{ "BlueMoneyDescription", "Water. Typically dropped by enemies with potent magic."},
 		{ "GreenMoneyDescription", "Gas. Typically dropped by fast enemies."},
 
 		{ "TargetPriorityFirst", "Target the enemy closest to the exit"},

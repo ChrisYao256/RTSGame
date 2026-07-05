@@ -9,12 +9,13 @@
 [ext_resource type="Texture2D" uid="uid://iocgjnp7i8td" path="res://_Assets/Portal.png" id="5_6lym2"]
 [ext_resource type="Script" uid="uid://bu6prnkxpfjo0" path="res://_Source/Effects/PeriodicSpawnEnemies/PeriodicSpawnEnemiesResource.cs" id="8_6lym2"]
 [ext_resource type="Script" uid="uid://djbu8krhjrjib" path="res://_Source/Effects/SpawnerUpgradeResource/SpawnerUpgradeResource.cs" id="8_cbkic"]
+[ext_resource type="Script" uid="uid://c4pph75db2q3s" path="res://_Source/Effects/NearbySpawnerStatsIncrease/NearbySpawnerStatsIncreaseResource.cs" id="10_0mt6m"]
 
 [sub_resource type="Resource" id="Resource_dlscx"]
 script = ExtResource("3_b3dvg")
 _unitName = "Summoner"
 _hpBuff = 1500
-_moneyBuff = Vector4i(7, 0, 7, 0)
+_moneyBuff = Vector4i(8, 0, 8, 0)
 _startingEffects = Array[Object]([])
 metadata/_custom_type_script = "uid://iamaod4iivlq"
 
@@ -28,7 +29,7 @@ metadata/_custom_type_script = "uid://of8d3f3k7s7j"
 [sub_resource type="Resource" id="Resource_r38ps"]
 script = ExtResource("3_b3dvg")
 _unitName = "Priest"
-_hpBuff = 1240
+_hpBuff = 1110
 _moneyBuff = Vector4i(7, 0, 7, 0)
 _startingEffects = Array[Object]([SubResource("Resource_b3dvg")])
 metadata/_custom_type_script = "uid://iamaod4iivlq"
@@ -58,7 +59,7 @@ metadata/_custom_type_script = "uid://bu6prnkxpfjo0"
 [sub_resource type="Resource" id="Resource_gnrs1"]
 script = ExtResource("3_b3dvg")
 _hpBuff = 1200
-_moneyBuff = Vector4i(5, 0, 5, 0)
+_moneyBuff = Vector4i(6, 0, 6, 0)
 _startingEffects = Array[Object]([SubResource("Resource_ck3sd")])
 metadata/_custom_type_script = "uid://iamaod4iivlq"
 
@@ -70,7 +71,7 @@ metadata/_custom_type_script = "uid://of8d3f3k7s7j"
 
 [sub_resource type="Resource" id="Resource_0mt6m"]
 script = ExtResource("3_b3dvg")
-_hpBuff = 1120
+_hpBuff = 900
 _moneyBuff = Vector4i(5, 0, 5, 0)
 _startingEffects = Array[Object]([SubResource("Resource_6lym2")])
 metadata/_custom_type_script = "uid://iamaod4iivlq"
@@ -80,6 +81,17 @@ script = ExtResource("8_cbkic")
 _units = Array[ExtResource("3_b3dvg")]([SubResource("Resource_gnrs1"), SubResource("Resource_0mt6m")])
 _applySameUpgradeForAllUnits = false
 metadata/_custom_type_script = "uid://djbu8krhjrjib"
+
+[sub_resource type="Resource" id="Resource_0b3kg"]
+script = ExtResource("3_b3dvg")
+_moneyBuff = Vector4i(12, 0, 0, 0)
+_startingEffects = null
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_88wlr"]
+script = ExtResource("10_0mt6m")
+_buffResource = SubResource("Resource_0b3kg")
+metadata/_custom_type_script = "uid://c4pph75db2q3s"
 
 [sub_resource type="Resource" id="Resource_ray65"]
 script = ExtResource("3_b3dvg")
@@ -101,7 +113,7 @@ metadata/_custom_type_script = "uid://bu6prnkxpfjo0"
 [sub_resource type="Resource" id="Resource_otbq6"]
 script = ExtResource("3_b3dvg")
 _hpBuff = 2200
-_moneyBuff = Vector4i(8, 0, 8, 0)
+_moneyBuff = Vector4i(10, 0, 10, 0)
 _startingEffects = Array[Object]([SubResource("Resource_5patb")])
 metadata/_custom_type_script = "uid://iamaod4iivlq"
 
@@ -113,7 +125,7 @@ metadata/_custom_type_script = "uid://of8d3f3k7s7j"
 
 [sub_resource type="Resource" id="Resource_iofqy"]
 script = ExtResource("3_b3dvg")
-_hpBuff = 2000
+_hpBuff = 1550
 _moneyBuff = Vector4i(8, 0, 8, 0)
 _startingEffects = Array[Object]([SubResource("Resource_vybhg")])
 metadata/_custom_type_script = "uid://iamaod4iivlq"
@@ -123,6 +135,17 @@ script = ExtResource("8_cbkic")
 _units = Array[ExtResource("3_b3dvg")]([SubResource("Resource_otbq6"), SubResource("Resource_iofqy")])
 _applySameUpgradeForAllUnits = false
 metadata/_custom_type_script = "uid://djbu8krhjrjib"
+
+[sub_resource type="Resource" id="Resource_wm0y4"]
+script = ExtResource("3_b3dvg")
+_moneyBuff = Vector4i(22, 0, 0, 0)
+_startingEffects = null
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_2s3gf"]
+script = ExtResource("10_0mt6m")
+_buffResource = SubResource("Resource_wm0y4")
+metadata/_custom_type_script = "uid://c4pph75db2q3s"
 
 [sub_resource type="Resource" id="Resource_g5ctb"]
 script = ExtResource("3_b3dvg")
@@ -144,7 +167,7 @@ metadata/_custom_type_script = "uid://bu6prnkxpfjo0"
 [sub_resource type="Resource" id="Resource_cbkic"]
 script = ExtResource("3_b3dvg")
 _hpBuff = 3300
-_moneyBuff = Vector4i(11, 0, 11, 0)
+_moneyBuff = Vector4i(18, 0, 18, 0)
 _startingEffects = Array[Object]([SubResource("Resource_0r0ds")])
 metadata/_custom_type_script = "uid://iamaod4iivlq"
 
@@ -156,7 +179,7 @@ metadata/_custom_type_script = "uid://of8d3f3k7s7j"
 
 [sub_resource type="Resource" id="Resource_cgs3h"]
 script = ExtResource("3_b3dvg")
-_hpBuff = 3140
+_hpBuff = 2240
 _moneyBuff = Vector4i(11, 0, 11, 0)
 _startingEffects = Array[Object]([SubResource("Resource_wsn4s")])
 metadata/_custom_type_script = "uid://iamaod4iivlq"
@@ -167,6 +190,29 @@ _units = Array[ExtResource("3_b3dvg")]([SubResource("Resource_cbkic"), SubResour
 _applySameUpgradeForAllUnits = false
 metadata/_custom_type_script = "uid://djbu8krhjrjib"
 
+[sub_resource type="Resource" id="Resource_vyew4"]
+script = ExtResource("3_b3dvg")
+_moneyBuff = Vector4i(32, 0, 0, 0)
+_startingEffects = null
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_ukyd0"]
+script = ExtResource("10_0mt6m")
+_buffResource = SubResource("Resource_vyew4")
+metadata/_custom_type_script = "uid://c4pph75db2q3s"
+
+[sub_resource type="Resource" id="Resource_w35ht"]
+script = ExtResource("3_b3dvg")
+_moneyBuff = Vector4i(14, 0, 0, 0)
+_startingEffects = null
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_xtfj1"]
+script = ExtResource("10_0mt6m")
+_buffResource = SubResource("Resource_w35ht")
+_area = Array[Vector2i]([Vector2i(1, 1), Vector2i(1, 0), Vector2i(1, -1), Vector2i(0, 1), Vector2i(0, 0), Vector2i(0, -1), Vector2i(-1, 1), Vector2i(-1, 0), Vector2i(-1, -1)])
+metadata/_custom_type_script = "uid://c4pph75db2q3s"
+
 [node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_dlscx")]
 script = ExtResource("2_r38ps")
 _spawnerData = SubResource("Resource_5xgl8")
@@ -174,11 +220,11 @@ _spawnInterval = 1.0
 _isEnemy = true
 _iconTexture = ExtResource("5_6lym2")
 _towerType = 2
-_firstUpgrade = Array[Object]([SubResource("Resource_aq0yu")])
-_secondUpgrade = Array[Object]([SubResource("Resource_xx6eh")])
-_thirdUpgrade = Array[Object]([SubResource("Resource_lm74b")])
+_firstUpgrade = Array[Object]([SubResource("Resource_aq0yu"), SubResource("Resource_88wlr")])
+_secondUpgrade = Array[Object]([SubResource("Resource_xx6eh"), SubResource("Resource_2s3gf")])
+_thirdUpgrade = Array[Object]([SubResource("Resource_lm74b"), SubResource("Resource_ukyd0")])
 LeashDistance = 200.0
-_startingEffects = Array[Object]([])
+_startingEffects = Array[Object]([SubResource("Resource_xtfj1")])
 _internalName = "SummonerSpawner"
 _name = "Summoner Portal"
 

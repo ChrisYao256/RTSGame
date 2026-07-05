@@ -1,4 +1,5 @@
 using Godot;
+using Godot.Collections;
 using RTSGame.Units;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,7 +23,7 @@ public partial class TDTowerManager : Node2D
 	private string _towerToPlace;
 	private TowerUnit _previewTower;
 
-	private List<TowerUnit> _allTowers = [];
+	public Array<TowerUnit> _allTowers = [];
 
 	public override void _Ready()
 	{
@@ -180,6 +181,7 @@ public partial class TDTowerManager : Node2D
 		{
 			if (_previewTower._towerType == TowerUnit.TowerType.Spawner && !_tdManager.CanBuildExtraSpawner())
 			{
+				_tdManager.FlashPortalLimit();
 				ExitPlacementMode();
 			}
 			else if (Utils.VectorLeq(_previewTower._cost, _tdManager._money))
@@ -188,6 +190,7 @@ public partial class TDTowerManager : Node2D
 			}
 			else
 			{
+				_tdManager.FlashMoney();
 				ExitPlacementMode();
 			}
 		}
@@ -318,10 +321,5 @@ public partial class TDTowerManager : Node2D
 		}
 
 		totalHpLabel.Text = "Total Enemy Hp: " + hp.ToString();
-	}
-
-	public List<TowerUnit> GetAllTowers()
-	{
-		return _allTowers;
 	}
 }

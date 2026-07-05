@@ -65,13 +65,13 @@ metadata/_custom_type_script = "uid://c4pph75db2q3s"
 
 [sub_resource type="Resource" id="Resource_vcgrl"]
 script = ExtResource("6_ogl47")
-_healAmount = 60
+_healAmount = 65
 _isShield = true
 metadata/_custom_type_script = "uid://of8d3f3k7s7j"
 
 [sub_resource type="Resource" id="Resource_w05on"]
 script = ExtResource("3_cotg0")
-_hpBuff = 160
+_hpBuff = 150
 _moneyBuff = Vector4i(1, 0, 1, 0)
 _startingEffects = Array[Object]([SubResource("Resource_vcgrl")])
 metadata/_custom_type_script = "uid://iamaod4iivlq"
@@ -100,7 +100,7 @@ metadata/_custom_type_script = "uid://of8d3f3k7s7j"
 
 [sub_resource type="Resource" id="Resource_rn78u"]
 script = ExtResource("3_cotg0")
-_hpBuff = 270
+_hpBuff = 240
 _moneyBuff = Vector4i(1, 0, 2, 0)
 _startingEffects = Array[Object]([SubResource("Resource_i8ujv")])
 metadata/_custom_type_script = "uid://iamaod4iivlq"

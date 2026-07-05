@@ -6,7 +6,7 @@
 [node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_e28ny")]
 script = ExtResource("2_jppn4")
 _hpMax = 1000
-_name = "Base"
+_name = "HQ"
 _radius = 32.0
 
 [node name="MainSprite" parent="." index="1" unique_id=701942347]

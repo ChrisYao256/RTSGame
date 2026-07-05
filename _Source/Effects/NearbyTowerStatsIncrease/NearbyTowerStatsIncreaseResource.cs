@@ -36,7 +36,7 @@ public partial class NearbyTowerStatsIncreaseResource : EffectResource
 
 	public override void SetDescription()
 	{
-		_effectDescription = "Buffs nearby spawners with the following: \n";
+		_effectDescription = "Buffs nearby defenses with the following: \n";
 		_buffResource.SetDescription();
 		_effectDescription += _buffResource._effectDescription;
 	}

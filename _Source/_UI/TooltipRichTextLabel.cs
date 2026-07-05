@@ -16,6 +16,10 @@ public partial class TooltipRichTextLabel : RichTextLabel
 	private static Dictionary<string, string> _imageAliases = new()
 		{
 				{ "::duration::", "[img=18x18]res://_Assets/Duration.png[/img]" },
+				{ "::electricity::", "[img=18x18]res://_Assets/Electricity.png[/img]" },
+				{ "::steel::", "[img=18x18]res://_Assets/Steel.png[/img]" },
+				{ "::water::", "[img=18x18]res://_Assets/Water.png[/img]" },
+				{ "::gas::", "[img=18x18]res://_Assets/Gas.png[/img]" },
 		};
 
 	public override void _Ready()
@@ -68,5 +72,29 @@ public partial class TooltipRichTextLabel : RichTextLabel
 			return (meta.Replace("{", "[").Replace("}", "]"), "");
 		}
 		
+	}
+
+	private Tween _flashTween;
+
+	public void FlashRed()
+	{
+		if (_flashTween != null && _flashTween.IsRunning())
+		{
+			_flashTween.Kill();
+		}
+
+		// 2. Create a brand new tween
+		_flashTween = CreateTween();
+
+		// 3. Snap the color to bright red instantly
+		Modulate = new Color(1, 0, 0, 1);
+
+		// 4. Smoothly interpolate (fade) back to solid white over 1.0 seconds
+		_flashTween.TweenProperty(
+				this,
+				"modulate",
+				new Color(1, 1, 1, 1),
+				1.0f // Duration in seconds
+		).SetTrans(Tween.TransitionType.Cubic).SetEase(Tween.EaseType.Out);
 	}
 }

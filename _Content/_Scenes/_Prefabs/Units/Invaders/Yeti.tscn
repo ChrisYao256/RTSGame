@@ -26,7 +26,7 @@ _hpMax = 0
 _startingEffects = Array[Object]([SubResource("Resource_7qlbt")])
 _internalName = "Yeti"
 _name = "Ice mage"
-_radius = 32.0
+_radius = 16.0
 
 [node name="MainSprite" parent="." index="1" unique_id=597948513]
 texture = ExtResource("6_amxnn")

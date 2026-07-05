@@ -85,3 +85,4 @@ _pierceCount = 1
 _damage = 180
 _range = 275.0
 _damageType = 1
+_description = "Shoots twice"

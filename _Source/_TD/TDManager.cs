@@ -18,31 +18,36 @@ public partial class TDManager : Node
 	public Array<string> _availTowerList;
 
 	[Export]
-	private Vector4I _startingMoney = new Vector4I(100, 0, 0, 0);
+	public Vector4I _startingMoney = new Vector4I(100, 0, 0, 0);
 
 	[Export]
 	private int _startingSpawnerLimit = 5;
 
 	public static float TileSize = 120f;
 
-	private System.Collections.Generic.Dictionary<int, List<(List<string>, float)>> _waveList;
+	public System.Collections.Generic.Dictionary<int, List<(List<string>, float)>> _waveList;
 	public int _waveIndex = 0;
 
 	private UnitManager _unitManager;
 	public TDTowerManager _towerManager;
-	private VBoxContainer _rightPanel;
+	private TutorialManager _tutorialManager;
+	private SaveManager _saveManager;
+
+	public VBoxContainer _rightPanel;
 	private UnitInfoPanel _infoPanel;
 	private Label _hpLabel;
 	private TooltipRichTextLabel _moneyLabel;
 	private Grid _grid;
 	private Label _waveCounter;
 	private Label _bossWaveLabel;
-	private Label _spawnerLimitLabel;
+	private TooltipRichTextLabel _spawnerLimitLabel;
 	public UpgradeButton _spawnerLimitIncreaseButton;
 	private TooltipRichTextLabel _spawnerLimitIncreaseButtonText;
 	private Control _fullscreenOverlay;
 
 	private Exit _exit;
+
+	private int _invaderCount;
 
 	public int _hp;
 	public Vector4I _money;
@@ -58,7 +63,7 @@ public partial class TDManager : Node
 		_grid = GetParent().GetNode<Grid>("TileMapLayer");
 		_waveCounter = _rightPanel.GetNode<Label>("WaveCounter");
 		_bossWaveLabel = _rightPanel.GetNode<Label>("BossWaveLabel");
-		_spawnerLimitLabel = _rightPanel.GetNode("HBoxContainer").GetNode<Label>("SpawnerLimitLabel");
+		_spawnerLimitLabel = _rightPanel.GetNode("HBoxContainer").GetNode<TooltipRichTextLabel>("SpawnerLimitLabel");
 		_spawnerLimitIncreaseButton = _rightPanel.GetNode("HBoxContainer").GetNode<UpgradeButton>("Button");
 		_spawnerLimitIncreaseButtonText = _spawnerLimitIncreaseButton.GetNode<TooltipRichTextLabel>("RichTextLabel");
 		_spawnerLimitIncreaseButton.MouseEntered += () => _spawnerLimitIncreaseButtonText.AddThemeColorOverride("default_color", ThemePalette.White);
@@ -68,29 +73,56 @@ public partial class TDManager : Node
 		_infoPanel = GetParent().GetNode<UnitInfoPanel>("UnitInfoPanel");
 	}
 
-	public void Initialize()
+	public void Initialize(GameGlobals.GameMode mode)
 	{
 		_unitManager = GetParent().GetNode<UnitManager>("UnitManager");
 		_towerManager = GetParent().GetNode<TDTowerManager>("TowerManager");
 		_towerManager.InitializeTowersPanel(_availTowerList, _unitManager, TowerUnit.TowerType.Defense);
 
 		_waveList = new System.Collections.Generic.Dictionary<int, List<(List<string>, float)>>{
-			{ 6, [(["MegaSlime"], 1f)]},
+			{ 5, [(["MegaSlime"], 1f)]},
 			{ 12, [(["Archbishop"], 1f)]},
-			{ 20, [(["BigArchbishop"], 1f)]},
+			{ 30, [(["BigArchbishop"], 1f)]},
 		};
 
 		_exit = (Exit)(_unitManager.SpawnUnit(_grid.GetExitLocation(), 0, "Exit"));
 		_exit._tdManager = this;
 		_exit._radius = TDManager.TileSize / (float)Math.Sqrt(2);
 		_exit.SetSize();
+		_saveManager = GetNode<SaveManager>("/root/SaveManager");
 
-		UpdateHp(20);
+		switch (mode)
+		{
+			case GameGlobals.GameMode.Debug:
+				UpdateHp(1000);
+				IncreaseSpawnerLimit(_startingSpawnerLimit);
+				UpdateMoney(new Vector4I(99999,99999,99999,99999));
+				UpdateWaveIndexCounter();
+				UpdatePortalLimitButtonText();
+				break;
+			case GameGlobals.GameMode.Tutorial:
+				UpdateHp(20);
+				IncreaseSpawnerLimit(_startingSpawnerLimit);
+				UpdateMoney(_startingMoney);
+				UpdateWaveIndexCounter();
+				UpdatePortalLimitButtonText();
 
-		IncreaseSpawnerLimit(_startingSpawnerLimit);
-		UpdateMoney(_startingMoney);
-		UpdateWaveIndexCounter();
-		UpdatePortalLimitButtonText();
+				_tutorialManager = GetParent().GetNode<TutorialManager>("TutorialLayer/TutorialManager");
+				_tutorialManager.Initialize(this, _grid, _unitManager);
+				break;
+			case GameGlobals.GameMode.Continue:
+				_saveManager._tdManager = this;
+				_saveManager.LoadGame();
+				break;
+			case GameGlobals.GameMode.Normal:
+			default:
+				UpdateHp(20);
+				IncreaseSpawnerLimit(_startingSpawnerLimit);
+				UpdateMoney(_startingMoney);
+				UpdateWaveIndexCounter();
+				UpdatePortalLimitButtonText();
+				break;
+		}
 	}
 
 	public async void SpawnNextWave()
@@ -116,10 +148,27 @@ public partial class TDManager : Node
 		}
 	}
 
-	private void UpdateWaveIndexCounter()
+	public bool CheckWaveFinished()
 	{
-		_waveCounter.Text = "Wave " + _waveIndex;
-		_bossWaveLabel.Text = "Boss at wave " + GetNextBossWave();
+		if (_invaderCount == 0)
+		{
+			if (_tutorialManager is not null)
+			{
+				_tutorialManager.NextWave();
+				_tutorialManager.Show();
+			}
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	public void UpdateWaveIndexCounter()
+	{
+		_waveCounter.Text = "Cycle " + _waveIndex;
+		_bossWaveLabel.Text = "Next Inspection: Cycle " + GetNextBossWave();
 	}
 
 	public void UpdateSpawnerLimit(int newLimit)
@@ -156,21 +205,31 @@ public partial class TDManager : Node
 		{
 			return;
 		}
-		IncreaseSpawnerLimit(1);
+		IncreaseSpawnerLimit(2);
 		SpendMoney(new Vector4I(cost, 0, 0, 0));
 		UpdatePortalLimitButtonText();
 	}
 
 	public void UpdatePortalLimitButtonText()
 	{
-		int cost = 10 * (int)Math.Pow(2, (double)(_spawnerLimit - _startingSpawnerLimit));
-		_spawnerLimitIncreaseButtonText.Text = "Increase Portal Limit: \n" + Utils.MakeMoneyText(new Vector4I(cost, 0, 0, 0));
+		int cost = GetPortalLimitUpgradeCost();
+		_spawnerLimitIncreaseButtonText.Text = "Upgrade Portal Capacity \n" + Utils.MakeMoneyText(new Vector4I(cost, 0, 0, 0));
 		_spawnerLimitIncreaseButtonText.AddThemeColorOverride("default_color", GetSpawnerLimitIncreaseButtonTextColor());
 	}
 
 	public int GetPortalLimitUpgradeCost()
 	{
-		return 10 * (int)Math.Pow(2, (double)(_spawnerLimit - _startingSpawnerLimit));
+		return 20 * (int)Math.Pow(2, (double)(_spawnerLimit - _startingSpawnerLimit) / 2f);
+	}
+
+	public void FlashMoney()
+	{
+		_moneyLabel.FlashRed();
+	}
+
+	public void FlashPortalLimit()
+	{
+		_spawnerLimitLabel.FlashRed();
 	}
 
 	private void SpawnEnemyAtEntrance(string name)
@@ -182,6 +241,7 @@ public partial class TDManager : Node
 			invader.SetPathToExit(new Godot.Collections.Array<Vector2>(waypoints));
 		}
 		unit.Connect(Unit.SignalName.Died, Callable.From(() => OnUnitDied(unit)));
+		_invaderCount++;
 	}
 
 	public InvaderUnit SpawnEnemyAtGlobalPosition(string name, Vector2 position)
@@ -195,6 +255,7 @@ public partial class TDManager : Node
 			invader.SetPathToExit(new Godot.Collections.Array<Vector2>(waypoints));
 		}
 		unit.Connect(Unit.SignalName.Died, Callable.From(() => OnUnitDied(unit)));
+		_invaderCount++;
 		return (InvaderUnit)unit;
 	}
 
@@ -208,6 +269,7 @@ public partial class TDManager : Node
 			invader.SetPathToExit(new Godot.Collections.Array<Vector2>(waypoints));
 		}
 		unit.Connect(Unit.SignalName.Died, Callable.From(() => OnUnitDied(unit)));
+		_invaderCount++;
 		return (InvaderUnit)unit;
 	}
 
@@ -221,6 +283,7 @@ public partial class TDManager : Node
 			invader.SetPathToExit(new Godot.Collections.Array<Vector2>(waypoints));
 		}
 		unit.Connect(Unit.SignalName.Died, Callable.From(() => OnUnitDied(unit)));
+		_invaderCount++;
 		return (InvaderUnit)unit;
 	}
 
@@ -251,13 +314,7 @@ public partial class TDManager : Node
 		}
 	}
 
-	public void UnitExited(InvaderUnit unit)
-	{
-		UpdateMoney(_money - unit._moneyDeducted);
-		UpdateHp(_hp - unit._hpDeducted);
-	}
-
-	private void UpdateHp(int newHp)
+	public void UpdateHp(int newHp)
 	{
 		_hp = newHp;
 		_hpLabel.Text = "Hp: " + _hp.ToString();
@@ -265,6 +322,12 @@ public partial class TDManager : Node
 		{
 			EndTD();
 		}
+	}
+
+	private void SaveAndQuite()
+	{
+		_saveManager.SaveGame(_money, _spawnerLimit, _hp, _waveIndex, _towerManager._allTowers);
+		GetTree().CallDeferred(SceneTree.MethodName.ChangeSceneToFile, MenuPath);
 	}
 
 	private void EndTD()
@@ -296,7 +359,7 @@ public partial class TDManager : Node
 		_fullscreenOverlay.GetNode<Label>("Paused").Visible = false;
 	}
 
-	private void UpdateMoney(Vector4I newMoney)
+	public void UpdateMoney(Vector4I newMoney)
 	{
 		_money = newMoney;
 		_moneyLabel.Text = Utils.MakeMoneyText(_money, true);
@@ -335,7 +398,17 @@ public partial class TDManager : Node
 		if (unit is InvaderUnit invader)
 		{
 			GainMoney(invader.GetSelfMoneyDropped());
+			_invaderCount--;
+			CheckWaveFinished();
 		}
+	}
+
+	public void UnitExited(InvaderUnit unit)
+	{
+		UpdateMoney(_money - unit._moneyDeducted);
+		UpdateHp(_hp - unit._hpDeducted);
+		_invaderCount--;
+		CheckWaveFinished();
 	}
 
 	public int GetNextBossWave()

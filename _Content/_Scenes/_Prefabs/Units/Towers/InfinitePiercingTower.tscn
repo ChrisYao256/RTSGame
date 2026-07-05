@@ -10,18 +10,18 @@
 
 [sub_resource type="Resource" id="Resource_bpy14"]
 script = ExtResource("3_x762y")
-_damageIncrease = 196
+_damageIncrease = 240
 metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 
 [sub_resource type="Resource" id="Resource_2kx6n"]
 script = ExtResource("3_x762y")
-_damageIncrease = 434
+_damageIncrease = 540
 _pierceCount = 1
 metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 
 [sub_resource type="Resource" id="Resource_7mvqi"]
 script = ExtResource("3_x762y")
-_damageIncrease = 650
+_damageIncrease = 870
 _pierceCount = 1
 metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 
@@ -37,7 +37,6 @@ animations = [{
 }]
 
 [node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_i6b2u")]
-_cost = Vector4i(1, 0, 0, 0)
 _iconTexture = ExtResource("2_pbkif")
 _description = "Shoots piercing projectiles that can damage multiple enemies on a line."
 _firstUpgrade = Array[Object]([SubResource("Resource_bpy14")])
@@ -70,7 +69,7 @@ position = Vector2(36, 0)
 
 [node name="WeaponComponent" parent="." index="9" unique_id=2120452932 instance=ExtResource("10_3pfqg")]
 _tracerWidth = 20.0
-_damage = 520
+_damage = 650
 _range = 260.0
 _attackCooldown = 1.5
 _attackDelayHigh = 0.1

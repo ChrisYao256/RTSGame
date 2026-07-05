@@ -38,7 +38,7 @@ public partial class DamageOverTimeResource : EffectResource
 	public override void SetDescription()
 	{
 		_displayType = DisplayTypes.Small;
-		_effectName = "Burning";
+		_effectName = "Burning " + (_damage).ToString("F0");
 		_effectDescription = "Taking " + _damage.ToString() + " every second";
 		_effectTopRightString = _time + "::duration::";
 	}

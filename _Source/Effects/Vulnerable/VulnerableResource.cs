@@ -35,7 +35,7 @@ public partial class VulnerableResource : EffectResource
 		_displayType = DisplayTypes.Small;
 		if (_effectName == "")
 		{
-			_effectName = "Vulnerable";
+			_effectName = "Vulnerable " + (_percentIncrease*100).ToString("F0");
 		}
 		_effectDescription = "Taking " + Math.Truncate(_percentIncrease * 100) + "% more damage";
 		_effectTopRightString = _time + "::duration::";

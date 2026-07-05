@@ -12,14 +12,12 @@
 
 [sub_resource type="Resource" id="Resource_5cain"]
 script = ExtResource("3_lodyr")
-_damageIncrease = 18
-_attackSpeedIncrease = 0.05
-_attackDelayModifierIncrease = 0.05
+_damageIncrease = 90
 metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 
 [sub_resource type="Resource" id="Resource_bhpke"]
 script = ExtResource("7_bhpke")
-_percentIncrease = 0.03
+_percentIncrease = 0.06
 metadata/_custom_type_script = "uid://csv13a4vnrcwo"
 
 [sub_resource type="Resource" id="Resource_j4w61"]
@@ -29,14 +27,13 @@ metadata/_custom_type_script = "uid://cxg3f5ateuini"
 
 [sub_resource type="Resource" id="Resource_oh15a"]
 script = ExtResource("3_lodyr")
-_damageIncrease = 42
-_attackSpeedIncrease = 0.1
-_attackDelayModifierIncrease = 0.1
+_damageIncrease = 200
 metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 
 [sub_resource type="Resource" id="Resource_chrvl"]
 script = ExtResource("7_bhpke")
-_percentIncrease = 0.05
+_percentIncrease = 0.08
+_time = 1.0
 metadata/_custom_type_script = "uid://csv13a4vnrcwo"
 
 [sub_resource type="Resource" id="Resource_c4lc3"]
@@ -46,14 +43,12 @@ metadata/_custom_type_script = "uid://cxg3f5ateuini"
 
 [sub_resource type="Resource" id="Resource_yglny"]
 script = ExtResource("3_lodyr")
-_damageIncrease = 50
-_attackSpeedIncrease = 0.2
-_attackDelayModifierIncrease = 0.2
+_damageIncrease = 380
 metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 
 [sub_resource type="Resource" id="Resource_hxo5r"]
 script = ExtResource("7_bhpke")
-_percentIncrease = 0.1
+_percentIncrease = 0.14
 metadata/_custom_type_script = "uid://csv13a4vnrcwo"
 
 [sub_resource type="Resource" id="Resource_87nd2"]
@@ -69,14 +64,13 @@ metadata/_custom_type_script = "uid://be80c57wd06d0"
 
 [sub_resource type="Resource" id="Resource_lodyr"]
 script = ExtResource("7_bhpke")
-_percentIncrease = 0.25
-_time = 6.0
+_percentIncrease = 0.32
+_time = 7.0
 metadata/_custom_type_script = "uid://csv13a4vnrcwo"
 
 [sub_resource type="Resource" id="Resource_bvd4s"]
 script = ExtResource("5_hxo5r")
 _debuffs = Array[Object]([SubResource("Resource_lodyr")])
-_effectName = "Yield Booster"
 _displayType = 1
 metadata/_custom_type_script = "uid://cxg3f5ateuini"
 
@@ -96,15 +90,14 @@ script = ExtResource("7_bhpke")
 metadata/_custom_type_script = "uid://csv13a4vnrcwo"
 
 [node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_4370p")]
-_cost = Vector4i(28, 0, 12, 0)
 _iconTexture = ExtResource("2_bhpke")
 _description = "Scans enemies to increase their damage taken. "
 _firstUpgrade = Array[Object]([SubResource("Resource_5cain"), SubResource("Resource_j4w61")])
-_firstUpgradeCost = Vector4i(18, 0, 7, 0)
+_firstUpgradeCost = Vector4i(0, 0, 50, 50)
 _secondUpgrade = Array[Object]([SubResource("Resource_oh15a"), SubResource("Resource_c4lc3")])
-_secondUpgradeCost = Vector4i(45, 0, 15, 0)
+_secondUpgradeCost = Vector4i(0, 0, 105, 105)
 _thirdUpgrade = Array[Object]([SubResource("Resource_yglny"), SubResource("Resource_87nd2")])
-_thirdUpgradeCost = Vector4i(69, 0, 24, 0)
+_thirdUpgradeCost = Vector4i(0, 0, 190, 190)
 _fourthUpgradeA = Array[Object]([SubResource("Resource_0m3ok")])
 _fourthUpgradeB = Array[Object]([])
 _fourthUpgradeBCost = Vector4i(0, 75, 0, 0)

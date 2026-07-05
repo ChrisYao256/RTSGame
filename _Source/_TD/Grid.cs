@@ -123,11 +123,20 @@ public partial class Grid : TileMapLayer
 		return ToGlobal(local);
 	}
 
-	//public void MarkCellAsOccupied(Vector2 worldPosition)
-	//{
-	//	Vector2I gridPos = LocalToMap(worldPosition);
-	//	_occupiedCells.Add((gridPos, ));
-	//}
+	public Rect2 GetGlobalTileRect(Vector2I mapPosition)
+	{
+		float leftX = MapToGlobal(mapPosition).X - TileSet.TileSize.X / 2 * Scale.X;
+		float topY = MapToGlobal(mapPosition).Y - TileSet.TileSize.Y / 2 * Scale.Y;
+		return new Rect2(leftX, topY, TileSet.TileSize.X * Scale.X, TileSet.TileSize.Y * Scale.Y);
+	}
+
+	public Rect2 GetGlobalTileRect(Vector2 globalPosition)
+	{
+		Vector2I mapPosition = LocalToMap(ToLocal(globalPosition));
+		float leftX = MapToGlobal(mapPosition).X - TileSet.TileSize.X / 2 * Scale.X;
+		float topY = MapToGlobal(mapPosition).Y - TileSet.TileSize.Y / 2 * Scale.Y;
+		return new Rect2(leftX, topY, TileSet.TileSize.X * Scale.X, TileSet.TileSize.Y * Scale.Y);
+	}
 
 	public Vector2 GetEntrancePosition()
 	{

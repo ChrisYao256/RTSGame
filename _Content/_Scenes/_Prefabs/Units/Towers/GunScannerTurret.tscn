@@ -81,7 +81,6 @@ animations = [{
 }]
 
 [node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_11np5")]
-_cost = Vector4i(20, 0, 0, 0)
 _iconTexture = ExtResource("2_b0e8i")
 _description = "Shoots capsules that instantly scans enemes, increasing their resources dropped."
 _firstUpgrade = Array[Object]([SubResource("Resource_cmo3r"), SubResource("Resource_j8bnk")])

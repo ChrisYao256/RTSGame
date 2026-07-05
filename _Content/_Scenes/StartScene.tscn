@@ -6,16 +6,35 @@
 layout_mode = 3
 anchors_preset = 0
 offset_top = -1.0
-offset_bottom = -1.0
+offset_right = 1920.0
+offset_bottom = 1079.0
 script = ExtResource("1_1a63w")
 
-[node name="Button" type="Button" parent="." unique_id=598364671]
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=193147055]
 layout_mode = 0
-offset_left = 960.0
-offset_top = 540.0
-offset_right = 1060.0
-offset_bottom = 590.0
+offset_left = 806.0
+offset_top = 517.0
+offset_right = 1114.0
+offset_bottom = 563.0
+alignment = 1
+
+[node name="StartButton" type="Button" parent="HBoxContainer" unique_id=598364671]
+layout_mode = 2
 text = "Start
 "
 
-[connection signal="pressed" from="Button" to="." method="OnStartButtonPressed"]
+[node name="ContinueButton" type="Button" parent="HBoxContainer" unique_id=335516551]
+layout_mode = 2
+text = "Continue
+"
+
+[node name="TestingButton" type="Button" parent="HBoxContainer" unique_id=1029595328]
+layout_mode = 2
+text = "Testing
+
+"
+
+[node name="TutorialButton" type="Button" parent="HBoxContainer" unique_id=896442955]
+layout_mode = 2
+text = "Tutorial
+"

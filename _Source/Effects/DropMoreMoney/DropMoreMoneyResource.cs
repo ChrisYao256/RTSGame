@@ -35,9 +35,9 @@ public partial class DropMoreMoneyResource : EffectResource
 
 	public override void SetDescription()
 	{
-		_effectName = "Analyzed";
+		_effectName = "Analyzed " + (_percentIncrease * 100).ToString("F0");
 		_displayType = DisplayTypes.Small;
-		_effectDescription = $"Drops " + Math.Truncate(_percentIncrease * 100) + "% more resources.";
+		_effectDescription = $"Drops " + (_percentIncrease * 100).ToString("F0") + "% more resources.";
 		_effectTopRightString = _time + "::duration::";
 	}
 
@@ -47,7 +47,7 @@ public partial class DropMoreMoneyResource : EffectResource
 		_effectDescription = "";
 		if (_percentIncrease > 0)
 		{
-			_effectDescription += $"{_effectName} units drop " + (_percentIncrease * 100).ToString("F2") + "% more resources.\n";
+			_effectDescription += $"{_effectName} units drop " + (_percentIncrease * 100).ToString("F0") + "% more resources.\n";
 		}
 		if (_time > 0)
 		{

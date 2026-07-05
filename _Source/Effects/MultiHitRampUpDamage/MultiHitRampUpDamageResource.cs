@@ -20,7 +20,7 @@ public partial class MultiHitRampUpDamageResource : EffectResource
 	public override void SetDescription()
 	{
 		_displayType = DisplayTypes.Large;
-		_effectDescription = $"Increases damage by {_increaseAmount * 100:F2}% when attacks hit the same enemy.";
+		_effectDescription = $"Increases damage by {_increaseAmount * 100:F0}% when attacks hit the same enemy.";
 	}
 
 	public override void SetUpgradeDescription()

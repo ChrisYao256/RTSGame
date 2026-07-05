@@ -452,7 +452,11 @@ public partial class UnitManager : Node2D
 
 	public void UpdatePlayerSelection(List<Unit> newSelection)
 	{
-
+		if (newSelection.Count > 0)
+		{
+			newSelection = [newSelection[0]];
+		}
+		
 		// Deselect old units first
 		foreach (var unit in _selectedUnits)
 		{

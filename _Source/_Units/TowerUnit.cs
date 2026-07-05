@@ -212,7 +212,7 @@ public partial class TowerUnit : StationaryUnit
 		}
 		for (int i = maxTauntLevel; i >= 0; i--)
 		{
-			if (sortedBodies[i] is null || sortedBodies[i].Count == 0)
+			if (!sortedBodies.Keys.Contains(i) || sortedBodies[i].Count == 0)
 			{
 				continue;
 			}
@@ -863,6 +863,10 @@ public partial class TowerUnit : StationaryUnit
 						UpgradeFirst();
 						_tdManager.SpendMoney(_firstUpgradeCost);
 					}
+					else
+					{
+						_tdManager.FlashMoney();
+					}
 				});
 
 				InputEventKey keyEvent = new InputEventKey();
@@ -910,6 +914,10 @@ public partial class TowerUnit : StationaryUnit
 						_tdManager.SpendMoney(_secondUpgradeCost);
 						UpgradeSecond();
 					}
+					else
+					{
+						_tdManager.FlashMoney();
+					}
 				});
 
 				InputEventKey keyEvent = new InputEventKey();
@@ -956,6 +964,10 @@ public partial class TowerUnit : StationaryUnit
 						_tdManager.SpendMoney(_thirdUpgradeCost);
 						UpgradeThird();
 					}
+					else
+					{
+						_tdManager.FlashMoney();
+					}
 				});
 
 				InputEventKey keyEvent = new InputEventKey();
@@ -1001,6 +1013,10 @@ public partial class TowerUnit : StationaryUnit
 					{
 						_tdManager.SpendMoney(_fourthUpgradeACost);
 						UpgradeFourthA();
+					}
+					else
+					{
+						_tdManager.FlashMoney();
 					}
 				});
 
@@ -1049,6 +1065,10 @@ public partial class TowerUnit : StationaryUnit
 						_tdManager.SpendMoney(_fourthUpgradeBCost);
 						UpgradeFourthB();
 					}
+					else
+					{
+						_tdManager.FlashMoney();
+					}
 				});
 
 				InputEventKey keyEvent = new InputEventKey();
@@ -1094,6 +1114,26 @@ public partial class TowerUnit : StationaryUnit
 	public override Texture2D GetIconTexture()
 	{
 		return _iconTexture;
+	}
+
+	public int GetTowerLevel()
+	{
+		if (!_hasFirstUpgrade)
+		{
+			return 1;
+		}
+		else if (!_hasSecondUpgrade)
+		{
+			return 2;
+		}
+		else if (!_hasThirdUpgrade)
+		{
+			return 3;
+		}
+		else
+		{
+			return 4;
+		}
 	}
 
 	public string GetDPS()
