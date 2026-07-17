@@ -136,6 +136,9 @@ public partial class Unit : CharacterBody2D
 	public delegate void UpdateInfoEventHandler(Unit unit);
 
 	[Signal]
+	public delegate void UpdateUpgradeButtonEventHandler(Unit unit);
+
+	[Signal]
 	public delegate void UpdateStatsInfoEventHandler(Unit unit);
 
 	[Signal]
@@ -1120,7 +1123,7 @@ public partial class Unit : CharacterBody2D
 		damage = (int)(damage * (1f + _damageTakenDebuff + _damageTakenModifier) * (1f - _damageReductionBuff));
 		if (source is TowerUnit tower)
 		{
-			source.IncreaseDamageDealtStat(damage);
+			source.IncreaseDamageDealtStat(Math.Min(damage, _hp));
 		}
 		IncreaseHp(-damage, ignoreArmor);
 		Area2D socialArea = GetNode<Area2D>("AidArea");

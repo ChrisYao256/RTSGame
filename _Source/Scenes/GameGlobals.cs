@@ -6,6 +6,7 @@ public partial class GameGlobals : Node
 	public enum GameMode
 	{
 		Normal,
+		Rogue,
 		Continue,
 		Debug,
 		Tutorial

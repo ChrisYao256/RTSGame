@@ -1,8 +1,8 @@
 [gd_scene format=4 uid="uid://ccjmsw17g3tm6"]
 
-[ext_resource type="Script" uid="uid://blc8s4i2v8kmq" path="res://_Source/_UI/TDScene.cs" id="1_t07i4"]
+[ext_resource type="Script" uid="uid://7ybvhykusw2c" path="res://_Source/Scenes/TDScene.cs" id="1_d7nqx"]
+[ext_resource type="PackedScene" uid="uid://clx6sk7mljed3" path="res://_Content/_Scenes/_Prefabs/Units/UnitManager.tscn" id="2_4rvgl"]
 [ext_resource type="Script" uid="uid://ce6y6raslv15c" path="res://_Source/Camera.cs" id="2_473pp"]
-[ext_resource type="PackedScene" uid="uid://clx6sk7mljed3" path="res://_Content/_Scenes/_Prefabs/Units/UnitManager.tscn" id="3_473pp"]
 [ext_resource type="PackedScene" uid="uid://baks6mq2g1jjx" path="res://_Content/_Scenes/_Prefabs/UI/BattleUI.tscn" id="3_na4n4"]
 [ext_resource type="PackedScene" uid="uid://cq3t80c5vyoxi" path="res://_Content/_Scenes/_Prefabs/TDManager.tscn" id="3_v6k6q"]
 [ext_resource type="Script" uid="uid://bk7cmv6d4884o" path="res://_Source/_TD/TDTowerManager.cs" id="6_ih04x"]
@@ -45,13 +45,13 @@ texture_margin_right = 12.0
 texture_margin_bottom = 12.0
 
 [node name="TdScene" type="Node2D" unique_id=2097345796]
-script = ExtResource("1_t07i4")
-UnitManager = ExtResource("3_473pp")
+script = ExtResource("1_d7nqx")
+UnitManager = ExtResource("2_4rvgl")
 
 [node name="TileMapLayer" type="TileMapLayer" parent="." unique_id=2102084703]
 texture_filter = 1
 scale = Vector2(7.375, 7.375)
-tile_map_data = PackedByteArray("AAAMAAAAAAAGAAIAAAAKAAAAAAAFAAIAAAAJAAAAAAAHAAIAAAAIAAAAAAADAAIAAAAHAAAAAAAJAAIAAAAGAAAAAAADAAIAAAAFAAAAAAAIAAIAAAAEAAAAAAAIAAIAAAADAAAAAAADAAIAAAACAAAAAAAIAAIAAAABAAAAAAACAAIAAAAAAAAAAAAEAAIAAAAAAAEAAAAAAAIAAAAMAAEAAAAKAAIAAAAMAAIAAAABAAIAAAAMAAMAAAALAAIAAAAGAAEAAAABAAAAAAAHAAEAAAAGAAAAAAAIAAEAAAABAAIAAAAIAAIAAAADAAIAAAAHAAIAAAAFAAAAAAAJAAMAAAAAAAIAAAAJAAIAAAALAAIAAAAJAAEAAAACAAIAAAAKAAEAAAAJAAIAAAAKAAMAAAAGAAIAAAABAAMAAAAJAAAAAAAAAAMAAAADAAAAAAABAAEAAAAHAAAAAAABAAIAAAAFAAAAAAAFAAEAAAABAAAAAAAEAAEAAAABAAAAAAADAAEAAAABAAAAAAACAAEAAAABAAAAAAAHAAMAAAAFAAAAAAAIAAMAAAAKAAIAAAAGAAIAAAAJAAIAAAAFAAIAAAALAAIAAAAEAAIAAAALAAIAAAADAAIAAAADAAIAAAACAAIAAAALAAIAAAACAAMAAAAFAAIAAAADAAMAAAAIAAIAAAAEAAMAAAAIAAIAAAAFAAMAAAAFAAIAAAAGAAMAAAAAAAIAAAAAAAIAAAAJAAIAAAAAAAQAAAAAAAIAAAABAAQAAAAFAAIAAAACAAQAAAAAAAIAAAADAAQAAAADAAIAAAAEAAQAAAAAAAIAAAAFAAQAAAADAAIAAAAGAAQAAAACAAIAAAAKAAQAAAAIAAIAAAAJAAQAAAAKAAIAAAAIAAQAAAAIAAIAAAAAAAUAAAAJAAIAAAABAAUAAAADAAIAAAACAAUAAAALAAIAAAADAAUAAAAIAAIAAAAEAAUAAAAHAAIAAAAFAAUAAAAJAAIAAAAGAAUAAAAAAAIAAAAHAAQAAAAFAAAAAAAHAAUAAAAIAAAAAAAIAAUAAAABAAAAAAAJAAUAAAABAAAAAAAKAAUAAAABAAAAAAAKAAIAAAAIAAIAAAAAAAYAAAAKAAIAAAABAAYAAAAJAAIAAAACAAYAAAAEAAIAAAADAAYAAAAIAAIAAAAEAAYAAAAEAAIAAAAFAAYAAAABAAIAAAAGAAYAAAAFAAIAAAAHAAYAAAADAAIAAAALAAAAAAACAAIAAAALAAEAAAAGAAIAAAALAAIAAAAGAAIAAAALAAMAAAABAAIAAAALAAQAAAADAAIAAAALAAUAAAABAAAAAAALAAYAAAACAAIAAAAMAAYAAAAHAAIAAAAMAAUAAAAEAAAAAAAMAAQAAAADAAIAAAAIAAYAAAABAAIAAAAJAAYAAAAKAAIAAAAKAAYAAAAEAAIAAAA=")
+tile_map_data = PackedByteArray("AAAMAAAAAAAGAAIAAAAKAAAAAAAFAAIAAAAJAAAAAAAHAAIAAAAIAAAAAAADAAIAAAAHAAAAAAAJAAIAAAAGAAAAAAADAAIAAAAFAAAAAAAIAAIAAAAEAAAAAAAIAAIAAAADAAAAAAADAAIAAAACAAAAAAAIAAIAAAABAAAAAAACAAIAAAAAAAAAAAAEAAIAAAAAAAEAAAAAAAIAAAAMAAEAAAAKAAIAAAAMAAIAAAABAAIAAAAMAAMAAAALAAIAAAAGAAEAAAABAAAAAAAHAAEAAAAGAAAAAAAIAAEAAAABAAIAAAAIAAIAAAADAAIAAAAHAAIAAAAFAAAAAAAJAAMAAAAAAAIAAAAJAAIAAAALAAIAAAAJAAEAAAACAAIAAAAKAAEAAAAJAAIAAAAKAAMAAAAGAAIAAAABAAMAAAAJAAAAAAAAAAMAAAADAAAAAAABAAEAAAAHAAAAAAABAAIAAAAFAAAAAAAFAAEAAAABAAAAAAAEAAEAAAABAAAAAAADAAEAAAABAAAAAAACAAEAAAABAAAAAAAHAAMAAAAFAAAAAAAIAAMAAAAKAAIAAAAGAAIAAAAJAAIAAAAFAAIAAAALAAIAAAAEAAIAAAALAAIAAAADAAIAAAADAAIAAAACAAIAAAALAAIAAAACAAMAAAAFAAIAAAADAAMAAAAIAAIAAAAEAAMAAAAIAAIAAAAFAAMAAAAFAAIAAAAGAAMAAAAAAAIAAAAAAAIAAAAJAAIAAAAAAAQAAAAAAAIAAAABAAQAAAAFAAAAAAACAAQAAAAAAAIAAAADAAQAAAADAAIAAAAEAAQAAAAAAAIAAAAFAAQAAAADAAIAAAAGAAQAAAACAAIAAAAKAAQAAAAIAAIAAAAJAAQAAAAKAAIAAAAIAAQAAAAIAAIAAAAAAAUAAAAJAAIAAAABAAUAAAAIAAAAAAACAAUAAAABAAAAAAADAAUAAAABAAAAAAAEAAUAAAABAAAAAAAFAAUAAAABAAAAAAAGAAUAAAABAAAAAAAHAAQAAAAFAAAAAAAHAAUAAAAIAAAAAAAIAAUAAAABAAAAAAAJAAUAAAABAAAAAAAKAAUAAAABAAAAAAAKAAIAAAAIAAIAAAAAAAYAAAAKAAIAAAABAAYAAAAJAAIAAAACAAYAAAAEAAIAAAADAAYAAAAIAAIAAAAEAAYAAAAEAAIAAAAFAAYAAAABAAIAAAAGAAYAAAAFAAIAAAAHAAYAAAADAAIAAAALAAAAAAACAAIAAAALAAEAAAAGAAIAAAALAAIAAAAGAAIAAAALAAMAAAABAAIAAAALAAQAAAADAAIAAAALAAUAAAABAAAAAAALAAYAAAACAAIAAAAMAAYAAAAHAAIAAAAMAAUAAAAEAAAAAAAMAAQAAAADAAIAAAAIAAYAAAABAAIAAAAJAAYAAAAKAAIAAAAKAAYAAAAEAAIAAAA=")
 tile_set = ExtResource("7_5ivv1")
 navigation_enabled = false
 script = ExtResource("8_r27g4")
@@ -61,7 +61,7 @@ scale = Vector2(8.5, 8.5)
 tile_set = ExtResource("7_5ivv1")
 
 [node name="TdManager" parent="." unique_id=116729899 instance=ExtResource("3_v6k6q")]
-_availTowerList = Array[String](["GunTurret", "LaserTurret", "PiercingTower", "FlameTurret", "MoneyTurret", "SlimeSpawner", "HoundSpawner", "PriestSpawner", "SoldierSpawner", "DisablerSpawner"])
+_allTowerList = Array[String](["GunTurret", "PiercingTower", "FlameTurret", "LaserTurret", "MoneyTurret", "SlowTurret", "SlimeSpawner", "HoundSpawner", "PriestSpawner", "DisablerSpawner", "SoldierSpawner", "SniperTurret"])
 _startingMoney = Vector4i(100, 0, 0, 0)
 
 [node name="NavigationRegion2D" type="NavigationRegion2D" parent="." unique_id=1731619863]
@@ -91,6 +91,7 @@ anchor_right = 1.0
 offset_left = -360.0
 offset_bottom = 1080.0
 grow_horizontal = 0
+mouse_filter = 1
 theme_override_styles/panel = SubResource("StyleBoxTexture_dqwu5")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="RightPanelCanvasLayer/RightPanel" unique_id=782743368]
@@ -120,6 +121,7 @@ layout_mode = 2
 
 [node name="SpawnerLimitLabel" type="RichTextLabel" parent="RightPanelCanvasLayer/RightPanel/VBoxContainer/HBoxContainer" unique_id=1887037457]
 layout_mode = 2
+fit_content = true
 script = ExtResource("10_2i1sm")
 
 [node name="Button" type="Button" parent="RightPanelCanvasLayer/RightPanel/VBoxContainer/HBoxContainer" unique_id=2068678590]
@@ -209,22 +211,32 @@ text = "
 "
 script = ExtResource("10_2i1sm")
 
-[node name="Exit" type="Button" parent="." unique_id=571441518]
+[node name="TopLeftOptions" type="CanvasLayer" parent="." unique_id=87019652]
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TopLeftOptions" unique_id=1462645268]
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Exit" type="Button" parent="TopLeftOptions/VBoxContainer" unique_id=571441518]
 process_mode = 3
-offset_right = 24.0
-offset_bottom = 24.0
+layout_mode = 2
 text = "Exit
 "
 
-[node name="Pause" type="Button" parent="." unique_id=1527826559]
+[node name="Pause" type="Button" parent="TopLeftOptions/VBoxContainer" unique_id=1527826559]
 process_mode = 3
-offset_left = -2.0
-offset_top = 47.0
-offset_right = 82.0
-offset_bottom = 93.0
+layout_mode = 2
 shortcut = SubResource("Shortcut_j46br")
 text = "Pause
 "
+
+[node name="SpeedUp" type="CheckButton" parent="TopLeftOptions/VBoxContainer" unique_id=813389318]
+layout_mode = 2
+text = "2x Speed"
+
+[node name="FastForward" type="Button" parent="TopLeftOptions/VBoxContainer" unique_id=293444417]
+layout_mode = 2
+text = "10x speed"
 
 [node name="FullscreenOverlay" type="Control" parent="." unique_id=952040268]
 layout_mode = 3
@@ -260,6 +272,14 @@ script = ExtResource("12_j46br")
 
 [node name="Node" type="Node" parent="." unique_id=510760044]
 script = ExtResource("15_d7nqx")
+
+[node name="RogueLayer" type="CanvasLayer" parent="." unique_id=986343627]
+visible = false
+
+[node name="ColorRect" type="ColorRect" parent="RogueLayer" unique_id=1988125182]
+offset_right = 1920.0
+offset_bottom = 1080.0
+color = Color(0.0023445894, 0.0023445901, 0.0023445883, 0.627451)
 
 [node name="TutorialLayer" type="CanvasLayer" parent="." unique_id=213049663]
 layer = 10
@@ -310,5 +330,8 @@ script = ExtResource("10_2i1sm")
 [connection signal="button_down" from="RightPanelCanvasLayer/RightPanel/VBoxContainer/Tabs/DefenseTab" to="TowerManager" method="SwitchDisplayedTabDefense"]
 [connection signal="button_down" from="RightPanelCanvasLayer/RightPanel/VBoxContainer/Tabs/SpawnerTab" to="TowerManager" method="SwitchDisplayedTabSpawner"]
 [connection signal="pressed" from="RightPanelCanvasLayer/RightPanel/VBoxContainer/NextWave" to="." method="OnNextWavePressed"]
-[connection signal="pressed" from="Exit" to="TdManager" method="SaveAndQuite"]
-[connection signal="pressed" from="Pause" to="TdManager" method="SwitchPauseState"]
+[connection signal="pressed" from="TopLeftOptions/VBoxContainer/Exit" to="TdManager" method="Quit"]
+[connection signal="pressed" from="TopLeftOptions/VBoxContainer/Pause" to="TdManager" method="SwitchPauseState"]
+[connection signal="toggled" from="TopLeftOptions/VBoxContainer/SpeedUp" to="TdManager" method="ToggleDoubleSpeed"]
+[connection signal="button_down" from="TopLeftOptions/VBoxContainer/FastForward" to="TdManager" method="FastForward"]
+[connection signal="button_up" from="TopLeftOptions/VBoxContainer/FastForward" to="TdManager" method="NormalSpeed"]

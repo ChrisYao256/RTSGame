@@ -15,10 +15,15 @@ public partial class TDManager : Node
 	public string MenuPath = "res://_Content/_Scenes/StartScene.tscn";
 
 	[Export]
+	public Array<string> _allTowerList;
+
 	public Array<string> _availTowerList;
 
 	[Export]
-	public Vector4I _startingMoney = new Vector4I(100, 0, 0, 0);
+	public Vector4I _sandboxStartingMoney = new Vector4I(100, 0, 0, 0);
+
+	[Export]
+	public Vector4I _rogueStartingMoney = new Vector4I(50, 0, 0, 0);
 
 	[Export]
 	private int _startingSpawnerLimit = 5;
@@ -32,6 +37,7 @@ public partial class TDManager : Node
 	public TDTowerManager _towerManager;
 	private TutorialManager _tutorialManager;
 	private SaveManager _saveManager;
+	private RogueManager _rogueManager;
 
 	public VBoxContainer _rightPanel;
 	private UnitInfoPanel _infoPanel;
@@ -49,6 +55,7 @@ public partial class TDManager : Node
 
 	private int _invaderCount;
 
+	public GameGlobals.GameMode _gameMode;
 	public int _hp;
 	public Vector4I _money;
 	private int _spawnerLimit;
@@ -77,7 +84,7 @@ public partial class TDManager : Node
 	{
 		_unitManager = GetParent().GetNode<UnitManager>("UnitManager");
 		_towerManager = GetParent().GetNode<TDTowerManager>("TowerManager");
-		_towerManager.InitializeTowersPanel(_availTowerList, _unitManager, TowerUnit.TowerType.Defense);
+		_towerManager.Initialize(_unitManager);
 
 		_waveList = new System.Collections.Generic.Dictionary<int, List<(List<string>, float)>>{
 			{ 5, [(["MegaSlime"], 1f)]},
@@ -91,6 +98,7 @@ public partial class TDManager : Node
 		_exit.SetSize();
 		_saveManager = GetNode<SaveManager>("/root/SaveManager");
 
+		_gameMode = mode;
 		switch (mode)
 		{
 			case GameGlobals.GameMode.Debug:
@@ -98,35 +106,58 @@ public partial class TDManager : Node
 				IncreaseSpawnerLimit(_startingSpawnerLimit);
 				UpdateMoney(new Vector4I(99999,99999,99999,99999));
 				UpdateWaveIndexCounter();
+				_availTowerList = _allTowerList;
 				UpdatePortalLimitButtonText();
 				break;
 			case GameGlobals.GameMode.Tutorial:
 				UpdateHp(20);
 				IncreaseSpawnerLimit(_startingSpawnerLimit);
-				UpdateMoney(_startingMoney);
+				UpdateMoney(_sandboxStartingMoney);
 				UpdateWaveIndexCounter();
 				UpdatePortalLimitButtonText();
 
 				_tutorialManager = GetParent().GetNode<TutorialManager>("TutorialLayer/TutorialManager");
 				_tutorialManager.Initialize(this, _grid, _unitManager);
+				_availTowerList = _allTowerList;
+				_towerManager.InitializeTowersPanel(_allTowerList, TowerUnit.TowerType.Defense);
 				break;
 			case GameGlobals.GameMode.Continue:
 				_saveManager._tdManager = this;
 				_saveManager.LoadGame();
+				if (_gameMode == GameGlobals.GameMode.Rogue)
+				{
+					_rogueManager = new RogueManager(this);
+					_rogueManager._loaded = true;
+					GetParent().AddChild(_rogueManager);
+				}
+				break;
+			case GameGlobals.GameMode.Rogue:
+				UpdateHp(20);
+				IncreaseSpawnerLimit(_startingSpawnerLimit);
+				UpdateMoney(_rogueStartingMoney);
+				UpdateWaveIndexCounter();
+				UpdatePortalLimitButtonText();
+				_availTowerList = [];
+				_rogueManager = new RogueManager(this);
+				_rogueManager._loaded = false;
+				GetParent().AddChild(_rogueManager);
 				break;
 			case GameGlobals.GameMode.Normal:
 			default:
 				UpdateHp(20);
 				IncreaseSpawnerLimit(_startingSpawnerLimit);
-				UpdateMoney(_startingMoney);
+				UpdateMoney(_sandboxStartingMoney);
 				UpdateWaveIndexCounter();
 				UpdatePortalLimitButtonText();
+				_availTowerList = _allTowerList;
 				break;
 		}
+		_towerManager.InitializeTowersPanel(_availTowerList, TowerUnit.TowerType.Defense);
 	}
 
 	public async void SpawnNextWave()
 	{
+		_saveManager.SaveGame(_gameMode, _money, _spawnerLimit, _hp, _waveIndex, _towerManager._allTowers, _availTowerList);
 		_waveIndex++;
 		EmitSignal(SignalName.NewWave);
 		UpdateWaveIndexCounter();
@@ -146,9 +177,25 @@ public partial class TDManager : Node
 				}
 			}
 		}
+		else
+		{
+			OnWaveEnded();
+		}
 	}
 
 	public bool CheckWaveFinished()
+	{
+		if (_invaderCount == 0)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	public void OnWaveEnded()
 	{
 		if (_invaderCount == 0)
 		{
@@ -157,11 +204,10 @@ public partial class TDManager : Node
 				_tutorialManager.NextWave();
 				_tutorialManager.Show();
 			}
-			return true;
-		}
-		else
-		{
-			return false;
+			if (_rogueManager is not null)
+			{
+				_rogueManager.OnNewWave(_waveIndex);
+			}
 		}
 	}
 
@@ -324,15 +370,25 @@ public partial class TDManager : Node
 		}
 	}
 
-	private void SaveAndQuite()
+	public void UnlockTower(string name)
 	{
-		_saveManager.SaveGame(_money, _spawnerLimit, _hp, _waveIndex, _towerManager._allTowers);
+		_availTowerList.Add(name);
+		_towerManager.UpdateTowersPanel(_availTowerList);
+	}
+
+	private void Quit()
+	{
+		if (CheckWaveFinished())
+		{
+			_saveManager.SaveGame(_gameMode, _money, _spawnerLimit, _hp, _waveIndex, _towerManager._allTowers, _availTowerList);
+		}
 		GetTree().CallDeferred(SceneTree.MethodName.ChangeSceneToFile, MenuPath);
 	}
 
 	private void EndTD()
 	{
 		GetTree().CallDeferred(SceneTree.MethodName.ChangeSceneToFile, MenuPath);
+		_saveManager.DeleteSave();
 	}
 
 	private void SwitchPauseState()
@@ -359,13 +415,41 @@ public partial class TDManager : Node
 		_fullscreenOverlay.GetNode<Label>("Paused").Visible = false;
 	}
 
+	private void ToggleDoubleSpeed(bool toggle)
+	{
+		if (toggle)
+		{
+			DoubleSpeed();
+		}
+		else
+		{
+			NormalSpeed();
+		}
+	}
+
+	private void DoubleSpeed()
+	{
+		Engine.TimeScale = 2.0;
+	}
+
+	private void NormalSpeed()
+	{
+		Engine.TimeScale = 1.0;
+	}
+
+	private void FastForward()
+	{
+		GetParent().GetNode<CheckButton>("TopLeftOptions/VBoxContainer/SpeedUp").ButtonPressed = false;
+		Engine.TimeScale = 10.0;
+	}
+
 	public void UpdateMoney(Vector4I newMoney)
 	{
 		_money = newMoney;
 		_moneyLabel.Text = Utils.MakeMoneyText(_money, true);
 		if (_infoPanel.GetSelectedUnit() is not null)
 		{
-			_infoPanel.GetSelectedUnit().EmitSignal(Unit.SignalName.UpdateInfo);
+			_infoPanel.GetSelectedUnit().EmitSignal(Unit.SignalName.UpdateUpgradeButton);
 		}
 		_spawnerLimitIncreaseButton.UpdateAffordabilityDisplay(Utils.VectorDivision(newMoney, new(GetPortalLimitUpgradeCost(),0,0,0)));
 		_spawnerLimitIncreaseButtonText.AddThemeColorOverride("default_color", GetSpawnerLimitIncreaseButtonTextColor());
@@ -399,7 +483,9 @@ public partial class TDManager : Node
 		{
 			GainMoney(invader.GetSelfMoneyDropped());
 			_invaderCount--;
-			CheckWaveFinished();
+			Callable.From(() => {
+				OnWaveEnded();
+			}).CallDeferred();
 		}
 	}
 
@@ -408,7 +494,7 @@ public partial class TDManager : Node
 		UpdateMoney(_money - unit._moneyDeducted);
 		UpdateHp(_hp - unit._hpDeducted);
 		_invaderCount--;
-		CheckWaveFinished();
+		OnWaveEnded();
 	}
 
 	public int GetNextBossWave()

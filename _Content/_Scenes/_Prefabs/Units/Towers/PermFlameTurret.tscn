@@ -1,0 +1,223 @@
+[gd_scene format=3 uid="uid://vr7hsfw31x23"]
+
+[ext_resource type="PackedScene" uid="uid://yhbw0b164ui2" path="res://_Content/_Scenes/_Prefabs/Units/BaseTower.tscn" id="1_g18mk"]
+[ext_resource type="Texture2D" uid="uid://ciji7d7547t05" path="res://_Assets/FlamethrowerTurret.png" id="2_l68p6"]
+[ext_resource type="Script" uid="uid://b1o222pk7rw3x" path="res://_Source/Effects/Burn/BurnResource.cs" id="3_7knnu"]
+[ext_resource type="Script" uid="uid://cxg3f5ateuini" path="res://_Source/Effects/DebuffOnHit/DebuffOnHitResource.cs" id="4_127ki"]
+[ext_resource type="PackedScene" uid="uid://tjf5vmfcot3t" path="res://_Content/_Scenes/_Prefabs/Effects/Burn.tscn" id="7_8kwfv"]
+[ext_resource type="Script" uid="uid://y8nclwh814w3" path="res://_Source/Effects/PermBurn/PermBurnResource.cs" id="8_l68p6"]
+[ext_resource type="Texture2D" uid="uid://miulw7p5fqif" path="res://_Assets/RedBase.png" id="8_o3nnn"]
+[ext_resource type="Script" uid="uid://bva1xkjx08h5v" path="res://_Source/_Units/Weapons/TurretTurner.cs" id="9_dehx0"]
+[ext_resource type="Texture2D" uid="uid://56k5f8f2dyke" path="res://_Assets/GunTurretFire.png" id="10_4xmso"]
+[ext_resource type="Texture2D" uid="uid://dhsfbtnfthjpj" path="res://_Assets/FlamethrowerTurretIdle.png" id="11_krbud"]
+[ext_resource type="PackedScene" uid="uid://ynqfp128ardg" path="res://_Content/_Scenes/_Prefabs/Weapons/ZoneWeapon.tscn" id="12_6nm0n"]
+
+[sub_resource type="Resource" id="Resource_ein6h"]
+script = ExtResource("3_7knnu")
+_damage = 80
+metadata/_custom_type_script = "uid://b1o222pk7rw3x"
+
+[sub_resource type="Resource" id="Resource_l68p6"]
+script = ExtResource("8_l68p6")
+_time = 0.5
+metadata/_custom_type_script = "uid://y8nclwh814w3"
+
+[sub_resource type="Resource" id="Resource_p3jvl"]
+script = ExtResource("4_127ki")
+_debuffs = Array[Object]([SubResource("Resource_ein6h"), SubResource("Resource_l68p6")])
+metadata/_custom_type_script = "uid://cxg3f5ateuini"
+
+[sub_resource type="Resource" id="Resource_6wr3n"]
+script = ExtResource("3_7knnu")
+_damage = 160
+metadata/_custom_type_script = "uid://b1o222pk7rw3x"
+
+[sub_resource type="Resource" id="Resource_127ki"]
+script = ExtResource("8_l68p6")
+_time = 0.8
+metadata/_custom_type_script = "uid://y8nclwh814w3"
+
+[sub_resource type="Resource" id="Resource_arvu4"]
+script = ExtResource("4_127ki")
+_debuffs = Array[Object]([SubResource("Resource_6wr3n"), SubResource("Resource_127ki")])
+metadata/_custom_type_script = "uid://cxg3f5ateuini"
+
+[sub_resource type="Resource" id="Resource_geji6"]
+script = ExtResource("3_7knnu")
+_damage = 300
+metadata/_custom_type_script = "uid://b1o222pk7rw3x"
+
+[sub_resource type="Resource" id="Resource_3fk8k"]
+script = ExtResource("8_l68p6")
+_time = 1.2
+metadata/_custom_type_script = "uid://y8nclwh814w3"
+
+[sub_resource type="Resource" id="Resource_s7m3k"]
+script = ExtResource("4_127ki")
+_debuffs = Array[Object]([SubResource("Resource_geji6"), SubResource("Resource_3fk8k")])
+metadata/_custom_type_script = "uid://cxg3f5ateuini"
+
+[sub_resource type="Resource" id="Resource_1k1ln"]
+script = ExtResource("3_7knnu")
+_damage = 260
+_burnVisualScene = ExtResource("7_8kwfv")
+metadata/_custom_type_script = "uid://b1o222pk7rw3x"
+
+[sub_resource type="Resource" id="Resource_7knnu"]
+script = ExtResource("8_l68p6")
+_time = 2.0
+metadata/_custom_type_script = "uid://y8nclwh814w3"
+
+[sub_resource type="Resource" id="Resource_kl4k3"]
+script = ExtResource("4_127ki")
+_debuffs = Array[Object]([SubResource("Resource_1k1ln"), SubResource("Resource_7knnu")])
+_effectName = "Flames"
+metadata/_custom_type_script = "uid://cxg3f5ateuini"
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cmo3r"]
+atlas = ExtResource("10_4xmso")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yglny"]
+atlas = ExtResource("10_4xmso")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_oh15a"]
+atlas = ExtResource("10_4xmso")
+region = Rect2(128, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dnbqd"]
+atlas = ExtResource("10_4xmso")
+region = Rect2(192, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_in623"]
+atlas = ExtResource("10_4xmso")
+region = Rect2(256, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_d1w5n"]
+atlas = ExtResource("10_4xmso")
+region = Rect2(320, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ji5kk"]
+atlas = ExtResource("10_4xmso")
+region = Rect2(384, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8bi3n"]
+atlas = ExtResource("10_4xmso")
+region = Rect2(448, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_d6qei"]
+atlas = ExtResource("10_4xmso")
+region = Rect2(512, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vpldu"]
+atlas = ExtResource("10_4xmso")
+region = Rect2(576, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wt4yc"]
+atlas = ExtResource("10_4xmso")
+region = Rect2(640, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xhgat"]
+atlas = ExtResource("10_4xmso")
+region = Rect2(704, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_j15gn"]
+atlas = ExtResource("10_4xmso")
+region = Rect2(768, 0, 64, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_1k1ln"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cmo3r")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yglny")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_oh15a")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dnbqd")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_in623")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_d1w5n")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ji5kk")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8bi3n")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_d6qei")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vpldu")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wt4yc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xhgat")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_j15gn")
+}],
+"loop": false,
+"name": &"Fire",
+"speed": 50.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("11_krbud")
+}],
+"loop": false,
+"name": &"Idle",
+"speed": 1.0
+}]
+
+[sub_resource type="ConvexPolygonShape2D" id="ConvexPolygonShape2D_l68p6"]
+points = PackedVector2Array(0, 0, 160, 80, 175, 0, 160, -80)
+
+[node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_g18mk")]
+_iconTexture = ExtResource("2_l68p6")
+_description = "Spews flame that damages and ignites all enemies in an area."
+_firstUpgrade = Array[Object]([SubResource("Resource_p3jvl")])
+_firstUpgradeCost = Vector4i(0, 80, 0, 80)
+_secondUpgrade = Array[Object]([SubResource("Resource_arvu4")])
+_secondUpgradeCost = Vector4i(0, 150, 0, 150)
+_thirdUpgrade = Array[Object]([SubResource("Resource_s7m3k")])
+_thirdUpgradeCost = Vector4i(0, 300, 0, 300)
+_fourthUpgradeA = Array[Object]([])
+_hpMax = 1
+_startingEffects = Array[Object]([SubResource("Resource_kl4k3")])
+_internalName = "PermFlameTurret"
+_name = "Chemical Flame"
+_radius = 0.0
+_baseHealthBarWidth = 48.0
+
+[node name="MainSprite" parent="." index="1" unique_id=701942347]
+scale = Vector2(1, 1)
+texture = ExtResource("8_o3nnn")
+
+[node name="TurretTurner" type="Node2D" parent="." index="8" unique_id=1968164578]
+script = ExtResource("9_dehx0")
+_knockbackDistance = 0.0
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="TurretTurner" index="0" unique_id=1427014056]
+sprite_frames = SubResource("SpriteFrames_1k1ln")
+animation = &"Idle"
+
+[node name="Marker2D" type="Marker2D" parent="TurretTurner" index="1" unique_id=761672561]
+
+[node name="WeaponComponent" parent="." index="9" unique_id=2120452932 instance=ExtResource("12_6nm0n")]
+_shape = SubResource("ConvexPolygonShape2D_l68p6")
+_damage = 0
+_range = 175.0
+_attackCooldown = 2.0
+_attackDelayHigh = 0.1

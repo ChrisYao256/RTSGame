@@ -4,5 +4,4 @@
 
 [node name="TdManager" type="Node2D" unique_id=116729899]
 script = ExtResource("1_24ujo")
-_availTowerList = Array[String](["GunTurret", "LaserTurret", "BigLaserTurret", "BombTurret", "PiercingTower", "SlimeSpawner", "HoundSpawner", "PriestSpawner", "UndeadSpawner"])
 _startingMoney = Vector4i(100, 0, 50, 0)

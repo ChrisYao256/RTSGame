@@ -10,18 +10,17 @@
 
 [sub_resource type="Resource" id="Resource_cmo3r"]
 script = ExtResource("3_sssbq")
-_damageIncrease = 62
-_rangeIncrease = 25.0
+_damageIncrease = 74
 metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 
 [sub_resource type="Resource" id="Resource_oh15a"]
 script = ExtResource("3_sssbq")
-_damageIncrease = 148
+_damageIncrease = 181
 metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 
 [sub_resource type="Resource" id="Resource_yglny"]
 script = ExtResource("3_sssbq")
-_damageIncrease = 305
+_damageIncrease = 390
 metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_oh15a"]
@@ -82,7 +81,7 @@ _projectileTexture = ExtResource("7_jujgb")
 _lifeTime = 5.0
 _projectileRadius = 8.0
 _pierceCount = 1
-_damage = 180
+_damage = 200
 _range = 275.0
 _damageType = 1
 _description = "Shoots twice"

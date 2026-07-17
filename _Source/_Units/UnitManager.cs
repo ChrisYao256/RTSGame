@@ -33,6 +33,11 @@ public partial class UnitManager : Node2D
 		{ "TestTurret", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/TestTurret.tscn") },
 		{ "BatteryLaserTurret", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/BatteryLaserTurret.tscn") },
 		{ "InfinitePiercingTower", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/InfinitePiercingTower.tscn") },
+		{ "SniperTurret", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/SniperTurret.tscn") },
+		{ "ExplosiveSniperTurret", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/ExplosiveSniperTurret.tscn") },
+		{ "PermFlameTurret", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/PermFlameTurret.tscn") },
+		{ "BigFlameTurret", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/BigFlameTurret.tscn") },
+		{ "SlowTurret", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/SlowTurret.tscn") },
 
 		{ "SlimeSpawner", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/SlimeSpawner.tscn") },
 		{ "HoundSpawner", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/HoundSpawner.tscn") },

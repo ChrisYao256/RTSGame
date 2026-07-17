@@ -12,10 +12,11 @@ public partial class SaveManager : Node
 	public TDManager _tdManager;
 
 	// A helper method to pack your current game data into a Godot Dictionary
-	public Dictionary<string, Variant> PackGameData(Vector4I money, int portalLimit, int hp, int waveCount, Array<TowerUnit> towers)
+	public Dictionary<string, Variant> PackGameData(GameGlobals.GameMode gameMode,Vector4I money, int portalLimit, int hp, int waveCount, Array<TowerUnit> towers, Array<string> unlockedTowers)
 	{
 		var gameData = new Dictionary<string, Variant>
 				{
+						{ "GameMode", (int)gameMode },
 						{ "Money", money },
 						{ "PortalLimit", portalLimit },
 			      { "WaveCount", waveCount},
@@ -38,13 +39,15 @@ public partial class SaveManager : Node
 		}
 
 		gameData.Add("Towers", towerList);
+
+		gameData.Add("UnlockedTowers", unlockedTowers);
 		return gameData;
 	}
 
-	public void SaveGame(Vector4I money, int portalLimit, int hp,int waveCount, Array<TowerUnit> currentTowers)
+	public void SaveGame(GameGlobals.GameMode gameMode, Vector4I money, int portalLimit, int hp,int waveCount, Array<TowerUnit> currentTowers, Array<string> unlockedTowers)
 	{
 		// Pack the data using your defined method
-		Dictionary<string, Variant> dataToSave = PackGameData(money, portalLimit, hp, waveCount, currentTowers);
+		Dictionary<string, Variant> dataToSave = PackGameData(gameMode, money, portalLimit, hp, waveCount, currentTowers, unlockedTowers);
 
 		// Convert the dictionary into a clean JSON text string
 		string jsonString = Json.Stringify(dataToSave);
@@ -58,6 +61,28 @@ public partial class SaveManager : Node
 		else
 		{
 			GD.PrintErr($"Failed to write save file. Error: {FileAccess.GetOpenError()}");
+		}
+	}
+
+	public void DeleteSave()
+	{
+		if (FileAccess.FileExists(SavePath))
+		{
+			using var dir = DirAccess.Open("user://");
+
+			if (dir != null)
+			{
+				Error result = dir.Remove("savegame.json");
+
+				if (result != Error.Ok)
+				{
+					GD.Print($"Failed to delete save file. Error code {result}");
+				}
+			}
+		}
+		else
+		{
+			GD.Print("No save file exists to delete.");
 		}
 	}
 
@@ -85,6 +110,8 @@ public partial class SaveManager : Node
 
 		// --- EXTRATING AND CONVERTING THE SAVED DATA ---
 
+		GameGlobals.GameMode gameMode = (GameGlobals.GameMode)(int)gameData["GameMode"];
+
 		// Convert the JSON variant back into a proper Godot Vector4I
 		Vector4I loadedMoney = VariantToVector4I(gameData["Money"]);
 
@@ -95,19 +122,28 @@ public partial class SaveManager : Node
 		// Extract the nested tower array
 		var loadedTowers = (Array<Dictionary<string, Variant>>)gameData["Towers"];
 
+		var loadedUnlockedTowers = (Array<string>)gameData["UnlockedTowers"];
+
 		// Send everything off to be reconstructed in your main match loop
-		ApplyLoadedData(loadedMoney, loadedPortalLimit, loadedHp, loadedWaveCount, loadedTowers);
+		ApplyLoadedData(gameMode, loadedMoney, loadedPortalLimit, loadedHp, loadedWaveCount, loadedTowers, loadedUnlockedTowers);
+	}
+
+	public bool HasSavedGame()
+	{
+		return FileAccess.FileExists(SavePath);
 	}
 
 	// 3. Spawning / Applying Method
-	private void ApplyLoadedData(Vector4I money, int portalLimit, int hp, int waveCount, Array<Dictionary<string, Variant>> towers)
+	private void ApplyLoadedData(GameGlobals.GameMode gameMode, Vector4I money, int portalLimit, int hp, int waveCount, Array<Dictionary<string, Variant>> towers, Array<string> loadedUnlockedTowers)
 	{
+		_tdManager._gameMode = gameMode;
 		_tdManager.UpdateMoney(money);
 		_tdManager.UpdateHp(hp);
 		_tdManager.IncreaseSpawnerLimit(portalLimit);
 		_tdManager._waveIndex = waveCount;
 		_tdManager.UpdateWaveIndexCounter();
 		_tdManager.UpdatePortalLimitButtonText(); 
+		_tdManager._availTowerList = loadedUnlockedTowers;
 
 		foreach (var towerData in towers)
 		{

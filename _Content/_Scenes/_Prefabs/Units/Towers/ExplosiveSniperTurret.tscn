@@ -1,0 +1,108 @@
+[gd_scene format=3 uid="uid://c5njs80um8w7m"]
+
+[ext_resource type="PackedScene" uid="uid://yhbw0b164ui2" path="res://_Content/_Scenes/_Prefabs/Units/BaseTower.tscn" id="1_j0sbj"]
+[ext_resource type="Texture2D" uid="uid://cmjpp5evevh5r" path="res://_Assets/GunTurretIdle.png" id="2_qsjlu"]
+[ext_resource type="Script" uid="uid://c7ye5bgfhla5e" path="res://_Source/Effects/StatsIncrease/StatsIncreaseResource.cs" id="3_0s2u8"]
+[ext_resource type="Texture2D" uid="uid://miulw7p5fqif" path="res://_Assets/RedBase.png" id="6_4rsa5"]
+[ext_resource type="PackedScene" uid="uid://bjudui5jhrtku" path="res://_Content/_Scenes/_Prefabs/Effects/ExplosionVisualEffect.tscn" id="7_0s2u8"]
+[ext_resource type="Script" uid="uid://bjtpxhe8yya7o" path="res://_Source/Effects/ExplosionOnKill/ExplosionOnKillResource.cs" id="8_1ho41"]
+[ext_resource type="Script" uid="uid://bva1xkjx08h5v" path="res://_Source/_Units/Weapons/TurretTurner.cs" id="8_b8lss"]
+[ext_resource type="PackedScene" uid="uid://cekj6vfjmeih4" path="res://_Content/_Scenes/_Prefabs/Weapons/HitscanWeapon.tscn" id="9_d201m"]
+[ext_resource type="Script" uid="uid://jefu0eey6jje" path="res://_Source/_Units/Weapons/SniperHitscanWeapon.cs" id="10_8nr37"]
+
+[sub_resource type="Resource" id="Resource_cmo3r"]
+script = ExtResource("3_0s2u8")
+_damageIncrease = 350
+metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
+
+[sub_resource type="Resource" id="Resource_0s2u8"]
+script = ExtResource("8_1ho41")
+_explosionDamage = 430
+metadata/_custom_type_script = "uid://bjtpxhe8yya7o"
+
+[sub_resource type="Resource" id="Resource_oh15a"]
+script = ExtResource("3_0s2u8")
+_damageIncrease = 860
+metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
+
+[sub_resource type="Resource" id="Resource_1ho41"]
+script = ExtResource("8_1ho41")
+_explosionDamage = 860
+metadata/_custom_type_script = "uid://bjtpxhe8yya7o"
+
+[sub_resource type="Resource" id="Resource_yglny"]
+script = ExtResource("3_0s2u8")
+_damageIncrease = 1960
+metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
+
+[sub_resource type="Resource" id="Resource_mbjci"]
+script = ExtResource("8_1ho41")
+_explosionDamage = 2370
+metadata/_custom_type_script = "uid://bjtpxhe8yya7o"
+
+[sub_resource type="Resource" id="Resource_ymgfk"]
+script = ExtResource("8_1ho41")
+_explosionRadius = 200.0
+_explosionDamage = 800
+ExplosionVisualScene = ExtResource("7_0s2u8")
+metadata/_custom_type_script = "uid://bjtpxhe8yya7o"
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_e2eil"]
+atlas = ExtResource("2_qsjlu")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_oh15a"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_e2eil")
+}],
+"loop": false,
+"name": &"Idle",
+"speed": 1.0
+}]
+
+[node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_j0sbj")]
+_iconTexture = ExtResource("2_qsjlu")
+_description = "Simple turret that shoots bullets at enemies."
+_firstUpgrade = Array[Object]([SubResource("Resource_cmo3r"), SubResource("Resource_0s2u8")])
+_firstUpgradeCost = Vector4i(43, 43, 0, 0)
+_secondUpgrade = Array[Object]([SubResource("Resource_oh15a"), SubResource("Resource_1ho41")])
+_secondUpgradeCost = Vector4i(98, 98, 0, 0)
+_thirdUpgrade = Array[Object]([SubResource("Resource_yglny"), SubResource("Resource_mbjci")])
+_thirdUpgradeCost = Vector4i(202, 202, 0, 0)
+_fourthUpgradeACost = Vector4i(100, 0, 0, 50)
+_fourthUpgradeBCost = Vector4i(100, 75, 0, 0)
+_hpMax = 1
+_startingEffects = Array[Object]([SubResource("Resource_ymgfk")])
+_internalName = "ExplosiveSniperTurret"
+_name = "Explosive Sniper"
+_radius = 0.0
+_baseHealthBarWidth = 48.0
+
+[node name="MainSprite" parent="." index="1" unique_id=701942347]
+scale = Vector2(1, 1)
+texture = ExtResource("6_4rsa5")
+
+[node name="AidArea" parent="." index="7" unique_id=724286163]
+visible = false
+
+[node name="AidAreaCollision" parent="AidArea" index="0" unique_id=1952573643]
+position = Vector2(113, -59)
+
+[node name="TurretTurner" type="Node2D" parent="." index="8" unique_id=1158807940]
+script = ExtResource("8_b8lss")
+_turn = true
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="TurretTurner" index="0" unique_id=849851730]
+sprite_frames = SubResource("SpriteFrames_oh15a")
+animation = &"Idle"
+
+[node name="Marker2D" type="Marker2D" parent="TurretTurner" index="1" unique_id=661621734]
+position = Vector2(18, 0)
+
+[node name="WeaponComponent" parent="." index="9" unique_id=2120452932 instance=ExtResource("9_d201m")]
+script = ExtResource("10_8nr37")
+_damage = 1100
+_range = 450.0
+_attackCooldown = 3.0

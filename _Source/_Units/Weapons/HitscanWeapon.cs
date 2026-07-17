@@ -38,5 +38,6 @@ public partial class HitscanWeapon : BaseWeapon
 		_parent.OnBeforeHitEnemy(target);
 		target.Hit(GetDamage(), _parent);
 		_parent.OnHitEnemy(target);
+		_parent.EmitSignal(Unit.SignalName.ShotFired);
 	}
 }

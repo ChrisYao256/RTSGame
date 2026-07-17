@@ -1,8 +1,6 @@
 [gd_scene format=3 uid="uid://b3dupjk1otmji"]
 
-[ext_resource type="Script" uid="uid://diaqlwxkb7dvh" path="res://_Source/_UI/BattleScene.cs" id="1_8dk3v"]
-[ext_resource type="PackedScene" uid="uid://clx6sk7mljed3" path="res://_Content/_Scenes/_Prefabs/Units/UnitManager.tscn" id="2_1kakq"]
-[ext_resource type="PackedScene" uid="uid://baks6mq2g1jjx" path="res://_Content/_Scenes/_Prefabs/UI/BattleUI.tscn" id="3_1kakq"]
+[ext_resource type="Script" uid="uid://cd7u7libqkqxd" path="res://_Source/Scenes/BattleScene.cs" id="1_bawlu"]
 [ext_resource type="Script" uid="uid://ce6y6raslv15c" path="res://_Source/Camera.cs" id="3_ptj6r"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_ea6fk"]
@@ -12,9 +10,7 @@ outlines = Array[PackedVector2Array]([PackedVector2Array(-480, -399, -480, 1285,
 agent_radius = 20.0
 
 [node name="BattleScene" type="Node2D" unique_id=89453753]
-script = ExtResource("1_8dk3v")
-UnitManager = ExtResource("2_1kakq")
-UnitInfoPanel = ExtResource("3_1kakq")
+script = ExtResource("1_bawlu")
 
 [node name="NavigationRegion2D" type="NavigationRegion2D" parent="." unique_id=196948469]
 position = Vector2(-30, -15)

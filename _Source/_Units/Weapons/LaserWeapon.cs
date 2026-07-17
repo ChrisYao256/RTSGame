@@ -28,7 +28,7 @@ public partial class LaserWeapon : BaseWeapon
 
 	public override void _PhysicsProcess(double delta)
 	{
-		if (_attackTarget is not null && _beginAttacking)
+		if (_attackTarget is not null && _beginAttacking && GetParent().GetNode<TurretTurner>("TurretTurner")._finishedTurning)
 		{
 			_tracerLine.Visible = true;
 			_tracerLine.SetPointPosition(0, _firePoint.GlobalPosition);

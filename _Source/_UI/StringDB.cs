@@ -19,5 +19,8 @@ public class StringDB
 		{ "TargetPriorityClosest", "Target the enemy closest to this"},
 		{ "TargetPriorityStrongest", "Target the enemy with the most max Hp"},
 		{ "TargetPriorityScannerWeapon", "Same as First, but prioritize enemies that don't have Analyzed."},
+		{ "TargetPrioritySniperHitscanWeapon", "Target the enemy with the lowest Hp."},
+
+		{ "TowerChoice", "Pick a tower to unlock this run.\n You are also given the cost of picked tower:)"},
 	};
 }

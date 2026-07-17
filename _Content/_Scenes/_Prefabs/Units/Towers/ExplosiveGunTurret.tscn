@@ -8,45 +8,47 @@
 [ext_resource type="Texture2D" uid="uid://bdyjhvsjs67wx" path="res://_Assets/YellowBase.png" id="6_714xp"]
 [ext_resource type="Script" uid="uid://bva1xkjx08h5v" path="res://_Source/_Units/Weapons/TurretTurner.cs" id="7_yt5n5"]
 [ext_resource type="Texture2D" uid="uid://cmjpp5evevh5r" path="res://_Assets/GunTurretIdle.png" id="9_ah4w8"]
+[ext_resource type="Texture2D" uid="uid://c5phek5qufdeh" path="res://_Assets/RedGunShot.png" id="10_dadjd"]
 [ext_resource type="Script" uid="uid://bwav65cg5at1c" path="res://_Source/_Units/Weapons/ProjectileWeapon.cs" id="10_ox4ia"]
-[ext_resource type="Texture2D" uid="uid://wswb4au2cnxn" path="res://_Assets/GunShot.png" id="11_8twvv"]
 
 [sub_resource type="Resource" id="Resource_cmo3r"]
 script = ExtResource("3_n8q5b")
-_damageIncrease = 125
+_damageIncrease = 130
 metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 
 [sub_resource type="Resource" id="Resource_k5r0l"]
 script = ExtResource("5_prthp")
-_explosionDamage = 50
+_explosionRadius = 10.0
+_explosionDamage = 74
 metadata/_custom_type_script = "uid://bonjif38a25r3"
 
 [sub_resource type="Resource" id="Resource_oh15a"]
 script = ExtResource("3_n8q5b")
-_damageIncrease = 300
+_damageIncrease = 310
 metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 
 [sub_resource type="Resource" id="Resource_n8q5b"]
 script = ExtResource("5_prthp")
-_explosionDamage = 100
+_explosionRadius = 15.0
+_explosionDamage = 181
 metadata/_custom_type_script = "uid://bonjif38a25r3"
 
 [sub_resource type="Resource" id="Resource_yglny"]
 script = ExtResource("3_n8q5b")
-_damageIncrease = 650
+_damageIncrease = 700
 metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 
 [sub_resource type="Resource" id="Resource_prthp"]
 script = ExtResource("5_prthp")
-_explosionDamage = 200
+_explosionRadius = 25.0
+_explosionDamage = 410
 metadata/_custom_type_script = "uid://bonjif38a25r3"
 
 [sub_resource type="Resource" id="Resource_we67n"]
 script = ExtResource("5_prthp")
 _explosionRadius = 100.0
-_explosionDamage = 150
+_explosionDamage = 135
 ExplosionVisualScene = ExtResource("5_we67n")
-_explosiveHitInterval = 3
 _effectName = "Explosive shells"
 _displayType = 1
 metadata/_custom_type_script = "uid://bonjif38a25r3"
@@ -73,7 +75,7 @@ _firstUpgradeCost = Vector4i(60, 30, 0, 0)
 _secondUpgrade = Array[Object]([SubResource("Resource_oh15a"), SubResource("Resource_n8q5b")])
 _secondUpgradeCost = Vector4i(125, 75, 0, 0)
 _thirdUpgrade = Array[Object]([SubResource("Resource_yglny"), SubResource("Resource_prthp")])
-_thirdUpgradeCost = Vector4i(300, 100, 0, 0)
+_thirdUpgradeCost = Vector4i(310, 105, 0, 0)
 _hpMax = 1
 _startingEffects = Array[Object]([SubResource("Resource_we67n")])
 _internalName = "ExplosiveGunTurret"
@@ -102,11 +104,11 @@ position = Vector2(18, 0)
 [node name="WeaponComponent" type="Node2D" parent="." index="9" unique_id=2120452932]
 script = ExtResource("10_ox4ia")
 _projectileSpeed = 1500.0
-_projectileTexture = ExtResource("11_8twvv")
+_projectileTexture = ExtResource("10_dadjd")
 _lifeTime = 5.0
 _projectileRadius = 20.0
 _pierceCount = 1
-_damage = 350
-_range = 225.0
+_damage = 380
+_range = 250.0
 _attackDelayLow = 0.3
 _attackDelayHigh = 0.3

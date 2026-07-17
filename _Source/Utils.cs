@@ -80,6 +80,40 @@ namespace RTSGame.Units
 			return nodes;
 		}
 
+		public static Array<T> GetRandomElements<[MustBeVariant] T>(Array<T> sourceArray, int n)
+		{
+			Random random = new Random();
+			// 1. Safety checks
+			if (sourceArray == null || sourceArray.Count == 0 || n <= 0)
+				return new Array<T>();
+
+			if (n >= sourceArray.Count)
+				return sourceArray.Duplicate(); // Return a shallow copy of the whole array
+
+			// 2. Create a shallow copy to shuffle so the original list order is preserved
+			Array<T> shuffled = sourceArray.Duplicate();
+
+			// 3. Perform a partial Fisher-Yates shuffle up to 'n' items
+			for (int i = 0; i < n; i++)
+			{
+				// Pick a random remaining index from the rest of the array
+				int randomIndex = random.Next(i, shuffled.Count);
+
+				// Swap the items
+				T temp = shuffled[i];
+				shuffled[i] = shuffled[randomIndex];
+				shuffled[randomIndex] = temp;
+			}
+
+			// 4. Extract the first 'n' shuffled items into our final Godot Array
+			Array<T> result = new Array<T>();
+			for (int i = 0; i < n; i++)
+			{
+				result.Add(shuffled[i]);
+			}
+
+			return result;
+		}
 		public static int Mod(int dividend, int divisor)
 		{
 			// Guard against division by zero

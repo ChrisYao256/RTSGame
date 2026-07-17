@@ -60,7 +60,7 @@ public abstract partial class BaseWeapon : Node2D
 		{
 			_attackTimer -= delta;
 		}
-		if (_attackTarget is not null)
+		if (_attackTarget is not null && GetParent().GetNode<TurretTurner>("TurretTurner")._finishedTurning)
 		{
 			if (_attackTimer < 0)
 			{

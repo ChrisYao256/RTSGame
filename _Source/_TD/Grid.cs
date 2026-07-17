@@ -71,10 +71,36 @@ public partial class Grid : TileMapLayer
 		return false;
 	}
 
-	public Vector2I FindClosestBuildableCell(Vector2I startCell, int maxRadius = 10)
+	public bool IsPath(Vector2I gridPos)
+	{
+		// 1. Check TileSet data (is it grass/dirt?)
+		TileData data = GetCellTileData(gridPos);
+		if (data != null)
+		{
+			// Access the custom data we set up in the editor
+			return (bool)data.GetCustomData("Path");
+		}
+		return false;
+	}
+
+	public Vector2I FindClosestBuildableCell(Vector2I startCell, bool mustBePathAdjacent, int maxRadius = 10)
 	{
 		// 1. If the starting cell is already matching, return it immediately
-		if (CanBuildAt(startCell)) return startCell;
+		if (CanBuildAt(startCell))
+		{
+			if (!mustBePathAdjacent)
+			{
+				return startCell;
+			}
+			foreach (Vector2I dir_ in Directions)
+			{
+				Vector2I neighbor_ = startCell + dir_;
+				if (IsPath(neighbor_))
+				{
+					return startCell;
+				}
+			}
+		}
 
 		// 2. Track visited cells so we don't look at the same tile twice (avoids infinite loops)
 		HashSet<Vector2I> visited = new HashSet<Vector2I>();
@@ -103,9 +129,20 @@ public partial class Grid : TileMapLayer
 					visited.Add(neighbor);
 
 					// If this neighbor meets our criteria, it is guaranteed to be the closest!
-					if (CanBuildAt(neighbor))
+					if (!mustBePathAdjacent && CanBuildAt(neighbor))
 					{
 						return neighbor;
+					}
+					else if (mustBePathAdjacent && CanBuildAt(neighbor))
+					{
+						foreach (Vector2I dir_ in Directions)
+						{
+							Vector2I neighbor_ = neighbor + dir_;
+							if (IsPath(neighbor_))
+							{
+								return neighbor;
+							}
+						}
 					}
 
 					// Otherwise, queue it up so we can search its neighbors in the next layer
@@ -114,7 +151,7 @@ public partial class Grid : TileMapLayer
 			}
 		}
 
-		return new Vector2I(999,999); // Return null if no matching cell exists within bounds
+		return new Vector2I(999,999);
 	}
 
 	public Vector2 MapToGlobal(Vector2I mapPosition)
@@ -190,6 +227,13 @@ public partial class Grid : TileMapLayer
 	public List<Vector2> GetPath(Vector2 startWorld, Vector2 endWorld)
 	{
 		Vector2I startMap = LocalToMap(ToLocal(startWorld));
+		TileData data = GetCellTileData(startMap);
+		bool startedFromPath = (bool)data.GetCustomData("Path");
+		if (!startedFromPath)
+		{
+			_astar.SetPointSolid(startMap, false);
+		}
+
 		Vector2I endMap = LocalToMap(ToLocal(endWorld));
 
 		// This returns a list of world positions for the enemy to follow
@@ -198,6 +242,10 @@ public partial class Grid : TileMapLayer
 		foreach (Vector2I cell in path)
 		{
 			waypoints.Add(ToGlobal(MapToLocal(cell)));
+		}
+		if (!startedFromPath)
+		{
+			_astar.SetPointSolid(startMap, true);
 		}
 		return waypoints;
 	}

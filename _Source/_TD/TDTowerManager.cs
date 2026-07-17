@@ -25,6 +25,8 @@ public partial class TDTowerManager : Node2D
 
 	public Array<TowerUnit> _allTowers = [];
 
+	private TowerUnit.TowerType _tab;
+
 	public override void _Ready()
 	{
 		_rightPanel = GetParent().GetNode("RightPanelCanvasLayer").GetNode("RightPanel").GetNode<VBoxContainer>("VBoxContainer");
@@ -36,6 +38,11 @@ public partial class TDTowerManager : Node2D
 		UpdateTotalHpLabel();
 	}
 
+	public void Initialize(UnitManager unitManager)
+	{
+		_unitManager = unitManager;
+	}
+
 	public override void _Process(double delta)
 	{
 		if (_placementMode)
@@ -44,10 +51,10 @@ public partial class TDTowerManager : Node2D
 		}
 	}
 
-	public void InitializeTowersPanel(Godot.Collections.Array<string> towers, UnitManager unitManager, TowerUnit.TowerType tab)
+	public void InitializeTowersPanel(Godot.Collections.Array<string> towers, TowerUnit.TowerType tab)
 	{
-		_unitManager = unitManager;
 		_towers = towers;
+		_tab = tab;
 		foreach (Node child in _towersBox.GetChildren())
 		{
 			child.QueueFree();
@@ -111,22 +118,88 @@ public partial class TDTowerManager : Node2D
 		}
 	}
 
+	public void UpdateTowersPanel(Godot.Collections.Array<string> towers)
+	{
+		_towers = towers;
+		foreach (Node child in _towersBox.GetChildren())
+		{
+			child.QueueFree();
+		}
+		foreach (string name in towers)
+		{
+			VBoxContainer container = new VBoxContainer();
+
+			string name_ = name;
+			TowerUnit unit = (TowerUnit)UnitManager.GetUnit(name, true);
+
+			if (unit._towerType != _tab)
+			{
+				unit.QueueFree();
+				container.QueueFree();
+				continue;
+			}
+
+			Label nameLabel = new Label();
+			nameLabel.Text = unit._name;
+			nameLabel.CustomMinimumSize = new(160, 0);
+			nameLabel.HorizontalAlignment = HorizontalAlignment.Center;
+			container.AddChild(nameLabel);
+
+			AddChild(unit);
+
+			HoverInfoImage towerButton
+				= unit.MakeTowerTooltip(true);
+			towerButton.Pressed += (() =>
+			{
+				if (Utils.VectorLeq(unit._cost, _tdManager._money))
+				{
+					EnterPlacementMode(name_);
+				}
+			});
+			towerButton.MouseEntered += () => nameLabel.AddThemeColorOverride("font_color", ThemePalette.White);
+			towerButton.MouseExited += () => nameLabel.AddThemeColorOverride("font_color", ThemePalette.Yellow);
+
+			PanelContainer panelContainer = new();
+			panelContainer.AddChild(towerButton);
+			container.AddChild(panelContainer);
+
+			TooltipRichTextLabel costLabel = new TooltipRichTextLabel();
+			costLabel.FitContent = true;
+			costLabel.BbcodeEnabled = true;
+			if (unit is not Spawner)
+			{
+				costLabel.Text = Utils.MakeMoneyText(unit._cost);
+			}
+			else
+			{
+				costLabel.Text = "+" + Utils.MakeMoneyText(unit.GetIncome());
+			}
+			costLabel.HorizontalAlignment = HorizontalAlignment.Center;
+			container.AddChild(costLabel);
+
+			_towersBox.AddChild(container);
+
+			unit.QueueFree();
+
+		}
+	}
+
 	public void SwitchDisplayedTabDefense()
 	{
-		InitializeTowersPanel(_tdManager._availTowerList, _unitManager, TowerUnit.TowerType.Defense);
+		InitializeTowersPanel(_tdManager._availTowerList, TowerUnit.TowerType.Defense);
 	}
 
 	public void SwitchDisplayedTabSupport()
 	{
-		InitializeTowersPanel(_tdManager._availTowerList, _unitManager, TowerUnit.TowerType.Support);
+		InitializeTowersPanel(_tdManager._availTowerList, TowerUnit.TowerType.Support);
 	}
 
 	public void SwitchDisplayedTabSpawner()
 	{
-		InitializeTowersPanel(_tdManager._availTowerList, _unitManager, TowerUnit.TowerType.Spawner);
+		InitializeTowersPanel(_tdManager._availTowerList, TowerUnit.TowerType.Spawner);
 	}
 
-	public override void _UnhandledInput(InputEvent @event)
+	public override void _Input(InputEvent @event)
 	{
 		if (@event is InputEventMouseButton mouseEvent &&
 				mouseEvent.ButtonIndex == MouseButton.Right)
@@ -136,6 +209,7 @@ public partial class TDTowerManager : Node2D
 				if (_placementMode)
 				{
 					ExitPlacementMode();
+					GetViewport().SetInputAsHandled();
 				}
 			}
 		}
@@ -172,8 +246,16 @@ public partial class TDTowerManager : Node2D
 
 		// Convert mouse position to grid coordinates (e.g., Vector2I(5, 3))
 		Vector2I gridCoords = _grid.LocalToMap(mousePos);
+		Vector2I buildableGridCoords;
+		if (_previewTower is Spawner)
+		{
+			buildableGridCoords = _grid.FindClosestBuildableCell(gridCoords, true);
+		}
+		else
+		{
+			buildableGridCoords = _grid.FindClosestBuildableCell(gridCoords, false);
+		}
 
-		Vector2I buildableGridCoords = _grid.FindClosestBuildableCell(gridCoords);
 		_previewTower.GlobalPosition = _grid.ToGlobal(_grid.MapToLocal(buildableGridCoords));
 		_previewTower._gridLocation = buildableGridCoords;
 

@@ -1,0 +1,134 @@
+[gd_scene format=3 uid="uid://d2xifnv8r3eh5"]
+
+[ext_resource type="PackedScene" uid="uid://yhbw0b164ui2" path="res://_Content/_Scenes/_Prefabs/Units/BaseTower.tscn" id="1_1rxw6"]
+[ext_resource type="Texture2D" uid="uid://c3sxubmlnevj3" path="res://_Assets/Scanner.png" id="2_fx2rp"]
+[ext_resource type="Script" uid="uid://c7ye5bgfhla5e" path="res://_Source/Effects/StatsIncrease/StatsIncreaseResource.cs" id="3_mqaiv"]
+[ext_resource type="Script" uid="uid://cxg3f5ateuini" path="res://_Source/Effects/DebuffOnHit/DebuffOnHitResource.cs" id="5_u05y1"]
+[ext_resource type="Texture2D" uid="uid://s1ywp7jtyat" path="res://_Assets/BlueBase.png" id="7_yeps2"]
+[ext_resource type="Script" uid="uid://bva1xkjx08h5v" path="res://_Source/_Units/Weapons/TurretTurner.cs" id="8_e7nhc"]
+[ext_resource type="PackedScene" uid="uid://bwym8b0opf06j" path="res://_Content/_Scenes/_Prefabs/Weapons/ScannerWeapon.tscn" id="9_wqvwd"]
+[ext_resource type="Script" uid="uid://y1enulr4b71h" path="res://_Source/Effects/SlowMovement/SlowMovementResource.cs" id="10_fx2rp"]
+
+[sub_resource type="Resource" id="Resource_5cain"]
+script = ExtResource("3_mqaiv")
+_damageIncrease = 14
+metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
+
+[sub_resource type="Resource" id="Resource_tay8w"]
+script = ExtResource("10_fx2rp")
+_percentDecrease = 0.04
+_time = 1.0
+metadata/_custom_type_script = "uid://y1enulr4b71h"
+
+[sub_resource type="Resource" id="Resource_j4w61"]
+script = ExtResource("5_u05y1")
+_debuffs = Array[Object]([SubResource("Resource_tay8w")])
+metadata/_custom_type_script = "uid://cxg3f5ateuini"
+
+[sub_resource type="Resource" id="Resource_oh15a"]
+script = ExtResource("3_mqaiv")
+_damageIncrease = 39
+metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
+
+[sub_resource type="Resource" id="Resource_u05y1"]
+script = ExtResource("10_fx2rp")
+_percentDecrease = 0.05
+_time = 1.0
+metadata/_custom_type_script = "uid://y1enulr4b71h"
+
+[sub_resource type="Resource" id="Resource_c4lc3"]
+script = ExtResource("5_u05y1")
+_debuffs = Array[Object]([SubResource("Resource_u05y1")])
+metadata/_custom_type_script = "uid://cxg3f5ateuini"
+
+[sub_resource type="Resource" id="Resource_yglny"]
+script = ExtResource("3_mqaiv")
+_damageIncrease = 80
+metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
+
+[sub_resource type="Resource" id="Resource_1rxw6"]
+script = ExtResource("10_fx2rp")
+_percentDecrease = 0.06
+_time = 2.0
+metadata/_custom_type_script = "uid://y1enulr4b71h"
+
+[sub_resource type="Resource" id="Resource_87nd2"]
+script = ExtResource("5_u05y1")
+_debuffs = Array[Object]([SubResource("Resource_1rxw6")])
+metadata/_custom_type_script = "uid://cxg3f5ateuini"
+
+[sub_resource type="Resource" id="Resource_fx2rp"]
+script = ExtResource("10_fx2rp")
+_percentDecrease = 0.18
+_time = 4.0
+metadata/_custom_type_script = "uid://y1enulr4b71h"
+
+[sub_resource type="Resource" id="Resource_bvd4s"]
+script = ExtResource("5_u05y1")
+_debuffs = Array[Object]([SubResource("Resource_fx2rp")])
+_displayType = 1
+metadata/_custom_type_script = "uid://cxg3f5ateuini"
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_oh15a"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_fx2rp")
+}],
+"loop": false,
+"name": &"Idle",
+"speed": 1.0
+}]
+
+[sub_resource type="Resource" id="Resource_mqaiv"]
+script = ExtResource("10_fx2rp")
+metadata/_custom_type_script = "uid://y1enulr4b71h"
+
+[node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_1rxw6")]
+_cost = Vector4i(20, 0, 15, 0)
+_iconTexture = ExtResource("2_fx2rp")
+_description = "Scans enemies to increase their resources yield. Deals damage when scan finishes."
+_firstUpgrade = Array[Object]([SubResource("Resource_5cain"), SubResource("Resource_j4w61")])
+_firstUpgradeCost = Vector4i(18, 0, 7, 0)
+_secondUpgrade = Array[Object]([SubResource("Resource_oh15a"), SubResource("Resource_c4lc3")])
+_secondUpgradeCost = Vector4i(45, 0, 15, 0)
+_thirdUpgrade = Array[Object]([SubResource("Resource_yglny"), SubResource("Resource_87nd2")])
+_thirdUpgradeCost = Vector4i(69, 0, 24, 0)
+_fourthUpgradeACost = Vector4i(90, 0, 90, 0)
+_fourthUpgradeBCost = Vector4i(0, 100, 100, 0)
+_hpMax = 1
+_startingEffects = Array[Object]([SubResource("Resource_bvd4s")])
+_internalName = "SlowTurret"
+_name = "Frost"
+_radius = 0.0
+_baseHealthBarWidth = 48.0
+
+[node name="MainSprite" parent="." index="1" unique_id=701942347]
+scale = Vector2(1, 1)
+texture = ExtResource("7_yeps2")
+
+[node name="AidAreaCollision" parent="AidArea" parent_id_path=PackedInt32Array(724286163) index="0" unique_id=1952573643]
+position = Vector2(113, -59)
+
+[node name="TurretTurner" type="Node2D" parent="." index="8" unique_id=1158807940]
+script = ExtResource("8_e7nhc")
+_turn = true
+_knockbackDistance = 0.0
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="TurretTurner" index="0" unique_id=849851730]
+sprite_frames = SubResource("SpriteFrames_oh15a")
+animation = &"Idle"
+
+[node name="Marker2D" type="Marker2D" parent="TurretTurner" index="1" unique_id=661621734]
+position = Vector2(20, 0)
+
+[node name="WeaponComponent" parent="." index="9" unique_id=2120452932 instance=ExtResource("9_wqvwd")]
+_tracerColor = Color(0.54509807, 0.7411765, 0.8784314, 0.7058824)
+_tracerWidth = 12.0
+_prioritizeEnemyWithoutThisEffect = SubResource("Resource_mqaiv")
+_damage = 30
+_range = 300.0
+_attackDelayLow = 0.5
+_attackDelayHigh = 0.5
+_useAttackDelay = true
+_damageType = 1

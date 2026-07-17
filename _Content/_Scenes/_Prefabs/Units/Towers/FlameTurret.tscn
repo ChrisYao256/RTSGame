@@ -2,76 +2,63 @@
 
 [ext_resource type="PackedScene" uid="uid://yhbw0b164ui2" path="res://_Content/_Scenes/_Prefabs/Units/BaseTower.tscn" id="1_22s5n"]
 [ext_resource type="Texture2D" uid="uid://ciji7d7547t05" path="res://_Assets/FlamethrowerTurret.png" id="2_geji6"]
-[ext_resource type="Script" uid="uid://c7ye5bgfhla5e" path="res://_Source/Effects/StatsIncrease/StatsIncreaseResource.cs" id="3_geji6"]
-[ext_resource type="Script" uid="uid://dtpcxn7d2dqcy" path="res://_Source/Effects/EffectResource.cs" id="4_jjii2"]
-[ext_resource type="Script" uid="uid://fdug3yybl4s5" path="res://_Source/Effects/AdjacencyTransform/AdjacencyTransformResource.cs" id="5_kl4k3"]
-[ext_resource type="Script" uid="uid://dxi5nbbsr1isf" path="res://_Source/Effects/DamageOverTime/DamageOverTimeResource.cs" id="6_6wrck"]
+[ext_resource type="Script" uid="uid://be80c57wd06d0" path="res://_Source/Effects/ImmediateTransform/ImmediateTransformResource.cs" id="5_jjii2"]
 [ext_resource type="PackedScene" uid="uid://ynqfp128ardg" path="res://_Content/_Scenes/_Prefabs/Weapons/ZoneWeapon.tscn" id="6_le7hc"]
 [ext_resource type="Script" uid="uid://cxg3f5ateuini" path="res://_Source/Effects/DebuffOnHit/DebuffOnHitResource.cs" id="7_geji6"]
 [ext_resource type="PackedScene" uid="uid://tjf5vmfcot3t" path="res://_Content/_Scenes/_Prefabs/Effects/Burn.tscn" id="8_6wr3n"]
+[ext_resource type="Script" uid="uid://b1o222pk7rw3x" path="res://_Source/Effects/Burn/BurnResource.cs" id="8_jjii2"]
 [ext_resource type="Texture2D" uid="uid://miulw7p5fqif" path="res://_Assets/RedBase.png" id="10_kl4k3"]
 [ext_resource type="Script" uid="uid://bva1xkjx08h5v" path="res://_Source/_Units/Weapons/TurretTurner.cs" id="11_kl4k3"]
 [ext_resource type="Texture2D" uid="uid://56k5f8f2dyke" path="res://_Assets/GunTurretFire.png" id="12_6wr3n"]
 [ext_resource type="Texture2D" uid="uid://dhsfbtnfthjpj" path="res://_Assets/FlamethrowerTurretIdle.png" id="13_arvu4"]
 
-[sub_resource type="Resource" id="Resource_cmo3r"]
-script = ExtResource("3_geji6")
-_damageIncrease = 18
-metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
+[sub_resource type="Resource" id="Resource_ein6h"]
+script = ExtResource("8_jjii2")
+_damage = 16
+metadata/_custom_type_script = "uid://b1o222pk7rw3x"
 
-[sub_resource type="Resource" id="Resource_6wr3n"]
-script = ExtResource("3_geji6")
-_damageIncrease = 40
-_rangeIncrease = 25.0
-metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
-
-[sub_resource type="Resource" id="Resource_arvu4"]
-script = ExtResource("6_6wrck")
-_damage = 5
-metadata/_custom_type_script = "uid://dxi5nbbsr1isf"
-
-[sub_resource type="Resource" id="Resource_wca21"]
+[sub_resource type="Resource" id="Resource_p3jvl"]
 script = ExtResource("7_geji6")
-_debuffs = Array[Object]([SubResource("Resource_arvu4")])
+_debuffs = Array[Object]([SubResource("Resource_ein6h")])
 metadata/_custom_type_script = "uid://cxg3f5ateuini"
 
-[sub_resource type="Resource" id="Resource_yglny"]
-script = ExtResource("3_geji6")
-_damageIncrease = 45
-_attackSpeedIncrease = 0.2
-metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
+[sub_resource type="Resource" id="Resource_6wr3n"]
+script = ExtResource("8_jjii2")
+_damage = 37
+metadata/_custom_type_script = "uid://b1o222pk7rw3x"
 
-[sub_resource type="Resource" id="Resource_jjii2"]
-script = ExtResource("6_6wrck")
-_damage = 5
-metadata/_custom_type_script = "uid://dxi5nbbsr1isf"
+[sub_resource type="Resource" id="Resource_arvu4"]
+script = ExtResource("7_geji6")
+_debuffs = Array[Object]([SubResource("Resource_6wr3n")])
+metadata/_custom_type_script = "uid://cxg3f5ateuini"
+
+[sub_resource type="Resource" id="Resource_geji6"]
+script = ExtResource("8_jjii2")
+_damage = 63
+metadata/_custom_type_script = "uid://b1o222pk7rw3x"
 
 [sub_resource type="Resource" id="Resource_s7m3k"]
 script = ExtResource("7_geji6")
-_debuffs = Array[Object]([SubResource("Resource_jjii2")])
+_debuffs = Array[Object]([SubResource("Resource_geji6")])
 metadata/_custom_type_script = "uid://cxg3f5ateuini"
 
-[sub_resource type="Resource" id="Resource_2vm1c"]
-script = ExtResource("5_kl4k3")
-_transformedUnit = "FrostTurret"
-_requirements = Array[Dictionary]([{
-Vector2i(1, 0): ["YetiSpawner"]
-}, {
-Vector2i(-1, 0): ["YetiSpawner"]
-}, {
-Vector2i(0, 1): ["YetiSpawner"]
-}, {
-Vector2i(0, -1): ["YetiSpawner"]
-}])
-metadata/_custom_type_script = "uid://fdug3yybl4s5"
+[sub_resource type="Resource" id="Resource_jjii2"]
+script = ExtResource("5_jjii2")
+_transformedUnit = "BigFlameTurret"
+_description = "Flame covers a much larger area"
+metadata/_custom_type_script = "uid://be80c57wd06d0"
+
+[sub_resource type="Resource" id="Resource_wca21"]
+script = ExtResource("5_jjii2")
+_transformedUnit = "PermFlameTurret"
+_description = "Burn does not decrease for some time after each attack"
+metadata/_custom_type_script = "uid://be80c57wd06d0"
 
 [sub_resource type="Resource" id="Resource_1k1ln"]
-script = ExtResource("6_6wrck")
-_damage = 5
-_time = 1.0
+script = ExtResource("8_jjii2")
+_damage = 20
 _burnVisualScene = ExtResource("8_6wr3n")
-_effectName = "Burn"
-metadata/_custom_type_script = "uid://dxi5nbbsr1isf"
+metadata/_custom_type_script = "uid://b1o222pk7rw3x"
 
 [sub_resource type="Resource" id="Resource_kl4k3"]
 script = ExtResource("7_geji6")
@@ -186,21 +173,23 @@ animations = [{
 "speed": 1.0
 }]
 
-[sub_resource type="ConvexPolygonShape2D" id="ConvexPolygonShape2D_jjii2"]
-points = PackedVector2Array(175, 75, 225, 0, 175, -75, 0, 0)
+[sub_resource type="CircleShape2D" id="CircleShape2D_jjii2"]
+radius = 175.0
 
 [node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_22s5n")]
 _cost = Vector4i(15, 15, 0, 0)
 _iconTexture = ExtResource("2_geji6")
 _description = "Spews flame that damages and ignites all enemies in an area."
-_firstUpgrade = Array[Object]([SubResource("Resource_cmo3r")])
+_firstUpgrade = Array[Object]([SubResource("Resource_p3jvl")])
 _firstUpgradeCost = Vector4i(12, 12, 0, 0)
-_secondUpgrade = Array[Object]([SubResource("Resource_6wr3n"), SubResource("Resource_wca21")])
+_secondUpgrade = Array[Object]([SubResource("Resource_arvu4")])
 _secondUpgradeCost = Vector4i(25, 25, 0, 0)
-_thirdUpgrade = Array[Object]([SubResource("Resource_yglny"), SubResource("Resource_s7m3k")])
+_thirdUpgrade = Array[Object]([SubResource("Resource_s7m3k")])
 _thirdUpgradeCost = Vector4i(40, 40, 0, 0)
-_fourthUpgradeA = Array[Object]([])
-_transformEffects = Array[ExtResource("4_jjii2")]([SubResource("Resource_2vm1c")])
+_fourthUpgradeA = Array[Object]([SubResource("Resource_jjii2")])
+_fourthUpgradeACost = Vector4i(0, 200, 0, 0)
+_fourthUpgradeB = Array[Object]([SubResource("Resource_wca21")])
+_fourthUpgradeBCost = Vector4i(0, 120, 0, 120)
 _hpMax = 1
 _startingEffects = Array[Object]([SubResource("Resource_kl4k3")])
 _internalName = "FlameTurret"
@@ -214,7 +203,6 @@ texture = ExtResource("10_kl4k3")
 
 [node name="TurretTurner" type="Node2D" parent="." index="8" unique_id=1968164578]
 script = ExtResource("11_kl4k3")
-_turn = true
 _knockbackDistance = 0.0
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="TurretTurner" index="0" unique_id=1427014056]
@@ -222,11 +210,10 @@ sprite_frames = SubResource("SpriteFrames_1k1ln")
 animation = &"Idle"
 
 [node name="Marker2D" type="Marker2D" parent="TurretTurner" index="1" unique_id=761672561]
-position = Vector2(31, 0)
 
 [node name="WeaponComponent" parent="." index="9" unique_id=2120452932 instance=ExtResource("6_le7hc")]
-_shape = SubResource("ConvexPolygonShape2D_jjii2")
-_damage = 16
-_range = 225.0
+_shape = SubResource("CircleShape2D_jjii2")
+_damage = 0
+_range = 175.0
+_attackCooldown = 2.0
 _attackDelayHigh = 0.1
-_useAttackDelay = true

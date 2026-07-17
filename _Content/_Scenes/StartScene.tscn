@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://cprp1r3sy7f0t"]
 
-[ext_resource type="Script" uid="uid://3k6m8x13r4w1" path="res://_Source/_UI/MainMenu.cs" id="1_1a63w"]
+[ext_resource type="Script" uid="uid://xgct2pjesy4w" path="res://_Source/Scenes/MainMenu.cs" id="1_1a63w"]
 
 [node name="StartScene" type="Control" unique_id=1851011903]
 layout_mode = 3
@@ -10,20 +10,32 @@ offset_right = 1920.0
 offset_bottom = 1079.0
 script = ExtResource("1_1a63w")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=193147055]
-layout_mode = 0
-offset_left = 806.0
-offset_top = 517.0
-offset_right = 1114.0
-offset_bottom = 563.0
+[node name="HBoxContainer" type="VBoxContainer" parent="." unique_id=14499307]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -154.0
+offset_top = -123.0
+offset_right = 154.0
+offset_bottom = 123.0
+grow_horizontal = 2
+grow_vertical = 2
 alignment = 1
 
 [node name="StartButton" type="Button" parent="HBoxContainer" unique_id=598364671]
 layout_mode = 2
-text = "Start
+text = "SandBox
 "
 
+[node name="RogueButton" type="Button" parent="HBoxContainer" unique_id=1888692875]
+layout_mode = 2
+text = "Start"
+
 [node name="ContinueButton" type="Button" parent="HBoxContainer" unique_id=335516551]
+visible = false
 layout_mode = 2
 text = "Continue
 "
@@ -38,3 +50,24 @@ text = "Testing
 layout_mode = 2
 text = "Tutorial
 "
+
+[node name="OptionsButton" type="Button" parent="HBoxContainer" unique_id=674764667]
+layout_mode = 2
+text = "Options
+"
+
+[node name="QuitButton" type="Button" parent="HBoxContainer" unique_id=1659162257]
+layout_mode = 2
+text = "Quit
+"
+
+[node name="DeleteSaveButton" type="Button" parent="." unique_id=800203830]
+layout_mode = 0
+offset_left = 1763.0
+offset_top = 1035.0
+offset_right = 1920.0
+offset_bottom = 1081.0
+text = "Delete Save
+"
+
+[connection signal="pressed" from="HBoxContainer/OptionsButton" to="." method="OnOptionsButtonPressed"]

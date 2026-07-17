@@ -64,6 +64,12 @@ public partial class TowerUnit : StationaryUnit
 
 	public readonly string _fourthUpgradeBName = "Rank up B";
 
+	private UpgradeButton _upgradeButton1; // the upgrade button at slot 1. Could be for any level.
+	private Vector4I _upgrade1Cost; // this is not the cost of the first upgrade, but it is the cost of whatever upgrade currently sits at slot 1.
+
+	private UpgradeButton _upgradeButton2;
+	private Vector4I _upgrade2Cost;
+
 	[Export]
 	private Array<EffectResource> _transformEffects = [];
 
@@ -80,7 +86,8 @@ public partial class TowerUnit : StationaryUnit
 	{
 		Defense,
 		Support,
-		Spawner
+		Spawner,
+		Null
 	}
 
 	public int _priorityCount = 4;
@@ -439,6 +446,17 @@ public partial class TowerUnit : StationaryUnit
 			moneyInfoV.AddChild(sellButton);
 		}
 
+		if (_towerType == TowerType.Spawner)
+		{
+			Button sellButton = new();
+			sellButton.Text = "Remove";
+			sellButton.Pressed += () =>
+			{
+				_tdManager._towerManager.RemoveTower(_gridLocation);
+			};
+			moneyInfoV.AddChild(sellButton);
+		}
+
 
 		if (this is Spawner spawner && spawner._spawnerData._units.Count() > 0)
 		{
@@ -682,6 +700,10 @@ public partial class TowerUnit : StationaryUnit
 
 			MakeUpgradeUI(upgradesH);
 		}
+		else
+		{
+			UpdateUpgradeButtonProgress();
+		}
 
 		_tdManager._towerManager.UpdateIncomeDisplay();
 		_tdManager._towerManager.UpdateDPSDisplay();
@@ -881,6 +903,9 @@ public partial class TowerUnit : StationaryUnit
 
 				upgradeButton.UpdateAffordabilityDisplay(Utils.VectorDivision(_tdManager._money, _firstUpgradeCost));
 
+				_upgradeButton1 = upgradeButton;
+				_upgrade1Cost = _firstUpgradeCost;
+
 				//upgradeTooltip.AddChild(upgradeButton);
 				upgrade.AddChild(upgradeButton);
 				upgradesH.AddChild(upgrade);
@@ -931,6 +956,10 @@ public partial class TowerUnit : StationaryUnit
 				upgradeButton.Shortcut = shortcut;
 
 				upgradeButton.UpdateAffordabilityDisplay(Utils.VectorDivision(_tdManager._money, _secondUpgradeCost));
+
+				_upgradeButton1 = upgradeButton;
+				_upgrade1Cost = _secondUpgradeCost;
+
 				upgrade.AddChild(upgradeButton);
 				upgradesH.AddChild(upgrade);
 			}
@@ -981,6 +1010,10 @@ public partial class TowerUnit : StationaryUnit
 				upgradeButton.Shortcut = shortcut;
 
 				upgradeButton.UpdateAffordabilityDisplay(Utils.VectorDivision(_tdManager._money, _thirdUpgradeCost));
+
+				_upgradeButton1 = upgradeButton;
+				_upgrade1Cost = _thirdUpgradeCost;
+
 				upgrade.AddChild(upgradeButton);
 				upgradesH.AddChild(upgrade);
 			}
@@ -1031,6 +1064,10 @@ public partial class TowerUnit : StationaryUnit
 				upgradeButton.Shortcut = shortcut;
 
 				upgradeButton.UpdateAffordabilityDisplay(Utils.VectorDivision(_tdManager._money, _fourthUpgradeACost));
+
+				_upgradeButton1 = upgradeButton;
+				_upgrade1Cost = _fourthUpgradeACost;
+
 				upgrade.AddChild(upgradeButton);
 				TextureRect image = new();
 				image.Texture = _fourthUpgradeATexture;
@@ -1082,6 +1119,10 @@ public partial class TowerUnit : StationaryUnit
 				upgradeButton.Shortcut = shortcut;
 
 				upgradeButton.UpdateAffordabilityDisplay(Utils.VectorDivision(_tdManager._money, _fourthUpgradeBCost));
+
+				_upgradeButton2 = upgradeButton;
+				_upgrade2Cost = _fourthUpgradeBCost;
+
 				upgrade.AddChild(upgradeButton);
 
 				TextureRect image = new();
@@ -1091,6 +1132,18 @@ public partial class TowerUnit : StationaryUnit
 
 				upgradesH.AddChild(upgrade);
 			}
+		}
+	}
+
+	public void UpdateUpgradeButtonProgress()
+	{
+		if (_upgradeButton1 is not null && IsInstanceValid(_upgradeButton1))
+		{
+			_upgradeButton1.UpdateAffordabilityDisplay(Utils.VectorDivision(_tdManager._money, _upgrade1Cost));
+		}
+		if (_upgradeButton2 is not null && IsInstanceValid(_upgradeButton2))
+		{
+			_upgradeButton2.UpdateAffordabilityDisplay(Utils.VectorDivision(_tdManager._money, _upgrade2Cost));
 		}
 	}
 

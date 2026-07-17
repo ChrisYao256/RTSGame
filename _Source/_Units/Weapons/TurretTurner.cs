@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Transactions;
 
 namespace RTSGame.Units;
 
@@ -23,6 +24,8 @@ public partial class TurretTurner : Node2D
 	private bool _queueStopAttacking = false;
 
 	private AnimatedSprite2D _animatedSprite;
+
+	public bool _finishedTurning = false;
 
 	public override void _Ready()
 	{
@@ -53,17 +56,33 @@ public partial class TurretTurner : Node2D
 				}
 			}
 		};
+		if (!_turn)
+		{
+			_finishedTurning = true;
+		}
 	}
 
 	public override void _Process(double delta)
 	{
 		if (_turn && _parentWeapon._attackTarget != null && IsInstanceValid(_parentWeapon._attackTarget))
 		{
-			RotateTowardsTarget(delta);
+			float angle = RotateTowardsTarget(delta);
+			if (Math.Abs(angle) > Mathf.DegToRad(5.0f))
+			{
+				_finishedTurning = false;
+			}
+			else
+			{
+				_finishedTurning = true;
+			}
+		}
+		else if (_turn)
+		{
+			_finishedTurning = false;
 		}
 	}
 
-	private void RotateTowardsTarget(double delta)
+	private float RotateTowardsTarget(double delta)
 	{
 		// 1. Calculate the angle to the target
 		Vector2 targetDir = _parentWeapon._attackTarget.GlobalPosition - GlobalPosition;
@@ -73,6 +92,7 @@ public partial class TurretTurner : Node2D
 		// Use AngleLerp to prevent the turret from spinning 360 degrees the wrong way
 		float currentAngle = GlobalRotation;
 		GlobalRotation = (float)Mathf.LerpAngle(currentAngle, targetAngle, _rotationSpeed * delta);
+		return targetAngle - currentAngle;
 	}
 
 	private void OnBeginAttack(Unit target)

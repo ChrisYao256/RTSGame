@@ -41,10 +41,8 @@ public partial class SlowMovementResource : EffectResource, IStackable
 
 	public override void SetDescription()
 	{
-		if (_effectName == "")
-		{
-			_effectName = "Slowed " + (_percentDecrease * 100).ToString("F0");
-		}
+		_displayType = DisplayTypes.Small;
+		_effectName = "Slowed " + (_percentDecrease * 100).ToString("F0");
 		_effectDescription = "Move speed slowed by " + Math.Truncate(_percentDecrease * 100) + "%";
 		if (_time != -1)
 		{

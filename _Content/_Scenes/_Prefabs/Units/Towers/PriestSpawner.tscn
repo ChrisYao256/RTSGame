@@ -14,7 +14,7 @@
 script = ExtResource("3_cotg0")
 _unitName = "Priest"
 _hpBuff = 140
-_moneyBuff = Vector4i(1, 0, 1, 0)
+_moneyBuff = Vector4i(0, 0, 2, 0)
 _startingEffects = null
 metadata/_custom_type_script = "uid://iamaod4iivlq"
 
@@ -43,7 +43,7 @@ metadata/_custom_type_script = "uid://of8d3f3k7s7j"
 [sub_resource type="Resource" id="Resource_fjsrn"]
 script = ExtResource("3_cotg0")
 _hpBuff = 70
-_moneyBuff = Vector4i(1, 0, 0, 0)
+_moneyBuff = Vector4i(0, 0, 1, 0)
 _startingEffects = Array[Object]([SubResource("Resource_frhtf")])
 metadata/_custom_type_script = "uid://iamaod4iivlq"
 
@@ -69,16 +69,16 @@ _healAmount = 65
 _isShield = true
 metadata/_custom_type_script = "uid://of8d3f3k7s7j"
 
-[sub_resource type="Resource" id="Resource_w05on"]
+[sub_resource type="Resource" id="Resource_gi004"]
 script = ExtResource("3_cotg0")
 _hpBuff = 150
-_moneyBuff = Vector4i(1, 0, 1, 0)
+_moneyBuff = Vector4i(0, 0, 2, 0)
 _startingEffects = Array[Object]([SubResource("Resource_vcgrl")])
 metadata/_custom_type_script = "uid://iamaod4iivlq"
 
 [sub_resource type="Resource" id="Resource_jk1h7"]
 script = ExtResource("7_w05on")
-_units = Array[ExtResource("3_cotg0")]([SubResource("Resource_w05on")])
+_units = Array[ExtResource("3_cotg0")]([SubResource("Resource_gi004")])
 metadata/_custom_type_script = "uid://djbu8krhjrjib"
 
 [sub_resource type="Resource" id="Resource_i7vgs"]
@@ -101,7 +101,7 @@ metadata/_custom_type_script = "uid://of8d3f3k7s7j"
 [sub_resource type="Resource" id="Resource_rn78u"]
 script = ExtResource("3_cotg0")
 _hpBuff = 240
-_moneyBuff = Vector4i(1, 0, 2, 0)
+_moneyBuff = Vector4i(0, 0, 3, 0)
 _startingEffects = Array[Object]([SubResource("Resource_i8ujv")])
 metadata/_custom_type_script = "uid://iamaod4iivlq"
 

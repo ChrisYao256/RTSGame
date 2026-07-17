@@ -65,7 +65,7 @@ public partial class ScannerWeapon : BaseWeapon
 		if (!_scanning && _queuedAttackTarget is not null)
 		{
 			_attackTimer -= delta;
-			if (_attackTimer < 0)
+			if (_attackTimer < 0 && GetParent().GetNode<TurretTurner>("TurretTurner")._finishedTurning)
 			{
 				if (_useAttackDelay)
 				{
@@ -127,6 +127,32 @@ public partial class ScannerWeapon : BaseWeapon
 		_tracerTimer.Stop();
 		_tracerLine.Visible = false;
 		_scanning = false;
+	}
+
+	public override void UpdateWeaponInfoContainerWithUpgrade(StatsIncreaseResource upgrade)
+	{
+		string greenHex = ThemePalette.Green.ToHtml(false);
+		VBoxContainer infoV = _infoContainer.GetNode<VBoxContainer>("VBoxContainer");
+		if (upgrade._damageIncrease != 0)
+		{
+			RichTextLabel damageLabel = infoV.GetNode<RichTextLabel>("DamageLabel");
+			damageLabel.Text = $"[color=#{greenHex}]Damage: {upgrade._damageIncrease + GetDamage()}[/color]";
+		}
+		if (upgrade._attackSpeedIncrease != 0)
+		{
+			RichTextLabel cooldownLabel = infoV.GetNode<RichTextLabel>("CooldownLabel");
+			cooldownLabel.Text = $"[color=#{greenHex}]Cooldown: {GetCooldown() / (1 + upgrade._attackSpeedIncrease):F2}[/color]";
+		}
+		if (upgrade._attackSpeedIncrease != 0 || upgrade._damageIncrease != 0)
+		{
+			RichTextLabel dpsLabel = infoV.GetNode<RichTextLabel>("DPSLabel");
+			dpsLabel.Text = $"[color=#{greenHex}]DPS: {(GetDamage() + upgrade._damageIncrease) / (float)(GetCooldown() / (1 + upgrade._attackSpeedIncrease) + GetAttackDelay() / (1 + upgrade._attackDelayModifierIncrease)):F0}[/color]";
+		}
+		if (upgrade._rangeIncrease != 0)
+		{
+			RichTextLabel rangeLabel = infoV.GetNode<RichTextLabel>("RangeLabel");
+			rangeLabel.Text = $"[color=#{greenHex}]Range: {GetRange() + upgrade._rangeIncrease}[/color]";
+		}
 	}
 
 	public override float GetDPS()

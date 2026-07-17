@@ -115,11 +115,11 @@ _thirdUpgradeCost = Vector4i(69, 0, 24, 0)
 _fourthUpgradeA = Array[Object]([SubResource("Resource_0m3ok")])
 _fourthUpgradeACost = Vector4i(90, 0, 90, 0)
 _fourthUpgradeB = Array[Object]([SubResource("Resource_dpnr0")])
-_fourthUpgradeBCost = Vector4i(0, 100, 100, 0)
+_fourthUpgradeBCost = Vector4i(0, 0, 100, 100)
 _hpMax = 1
 _startingEffects = Array[Object]([SubResource("Resource_bvd4s")])
 _internalName = "MoneyTurret"
-_name = "Scanner"
+_name = "Extractor"
 _radius = 0.0
 _baseHealthBarWidth = 48.0
 

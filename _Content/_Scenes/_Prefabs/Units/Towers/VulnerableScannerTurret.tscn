@@ -4,9 +4,8 @@
 [ext_resource type="Texture2D" uid="uid://c3sxubmlnevj3" path="res://_Assets/Scanner.png" id="2_bhpke"]
 [ext_resource type="Script" uid="uid://c7ye5bgfhla5e" path="res://_Source/Effects/StatsIncrease/StatsIncreaseResource.cs" id="3_lodyr"]
 [ext_resource type="Script" uid="uid://cxg3f5ateuini" path="res://_Source/Effects/DebuffOnHit/DebuffOnHitResource.cs" id="5_hxo5r"]
-[ext_resource type="Script" uid="uid://be80c57wd06d0" path="res://_Source/Effects/ImmediateTransform/ImmediateTransformResource.cs" id="6_3h72x"]
+[ext_resource type="Texture2D" uid="uid://0q0kbyhyvbk" path="res://_Assets/GreenBase.png" id="6_e5xp6"]
 [ext_resource type="Script" uid="uid://csv13a4vnrcwo" path="res://_Source/Effects/Vulnerable/VulnerableResource.cs" id="7_bhpke"]
-[ext_resource type="Texture2D" uid="uid://miulw7p5fqif" path="res://_Assets/RedBase.png" id="8_bhpke"]
 [ext_resource type="Script" uid="uid://bva1xkjx08h5v" path="res://_Source/_Units/Weapons/TurretTurner.cs" id="8_s7xln"]
 [ext_resource type="PackedScene" uid="uid://bwym8b0opf06j" path="res://_Content/_Scenes/_Prefabs/Weapons/ScannerWeapon.tscn" id="9_pogf8"]
 
@@ -56,12 +55,6 @@ script = ExtResource("5_hxo5r")
 _debuffs = Array[Object]([SubResource("Resource_hxo5r")])
 metadata/_custom_type_script = "uid://cxg3f5ateuini"
 
-[sub_resource type="Resource" id="Resource_0m3ok"]
-script = ExtResource("6_3h72x")
-_transformedUnit = "GunScannerTurret"
-_description = "Shoots capsules that instantly scans unit. Analyzed lasts longer and give more resources. "
-metadata/_custom_type_script = "uid://be80c57wd06d0"
-
 [sub_resource type="Resource" id="Resource_lodyr"]
 script = ExtResource("7_bhpke")
 _percentIncrease = 0.32
@@ -98,7 +91,6 @@ _secondUpgrade = Array[Object]([SubResource("Resource_oh15a"), SubResource("Reso
 _secondUpgradeCost = Vector4i(0, 0, 105, 105)
 _thirdUpgrade = Array[Object]([SubResource("Resource_yglny"), SubResource("Resource_87nd2")])
 _thirdUpgradeCost = Vector4i(0, 0, 190, 190)
-_fourthUpgradeA = Array[Object]([SubResource("Resource_0m3ok")])
 _fourthUpgradeB = Array[Object]([])
 _fourthUpgradeBCost = Vector4i(0, 75, 0, 0)
 _hpMax = 1
@@ -110,7 +102,7 @@ _baseHealthBarWidth = 48.0
 
 [node name="MainSprite" parent="." index="1" unique_id=701942347]
 scale = Vector2(1, 1)
-texture = ExtResource("8_bhpke")
+texture = ExtResource("6_e5xp6")
 
 [node name="AidAreaCollision" parent="AidArea" parent_id_path=PackedInt32Array(724286163) index="0" unique_id=1952573643]
 position = Vector2(113, -59)

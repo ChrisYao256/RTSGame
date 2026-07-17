@@ -5,17 +5,17 @@
 [ext_resource type="Script" uid="uid://c7ye5bgfhla5e" path="res://_Source/Effects/StatsIncrease/StatsIncreaseResource.cs" id="3_7mvqi"]
 [ext_resource type="Script" uid="uid://dtpcxn7d2dqcy" path="res://_Source/Effects/EffectResource.cs" id="4_4kcl2"]
 [ext_resource type="Script" uid="uid://be80c57wd06d0" path="res://_Source/Effects/ImmediateTransform/ImmediateTransformResource.cs" id="4_msjep"]
-[ext_resource type="Texture2D" uid="uid://bdyjhvsjs67wx" path="res://_Assets/YellowBase.png" id="5_2kx6n"]
 [ext_resource type="Texture2D" uid="uid://t1lqgec5deqv" path="res://_Assets/StunRailgunTurret.png" id="5_7mvqi"]
 [ext_resource type="Texture2D" uid="uid://d3cj27sha64i8" path="res://_Assets/InfinitePiercingTower.png" id="6_m1b1x"]
 [ext_resource type="Texture2D" uid="uid://wswb4au2cnxn" path="res://_Assets/GunShot.png" id="7_msjep"]
 [ext_resource type="PackedScene" uid="uid://bc7mdwf374doj" path="res://_Content/_Scenes/_Prefabs/Weapons/ProjectileWeapon.tscn" id="7_vdetk"]
 [ext_resource type="Script" uid="uid://bva1xkjx08h5v" path="res://_Source/_Units/Weapons/TurretTurner.cs" id="8_2kx6n"]
+[ext_resource type="Texture2D" uid="uid://miulw7p5fqif" path="res://_Assets/RedBase.png" id="8_7mvqi"]
 [ext_resource type="Texture2D" uid="uid://mb44h82gnkel" path="res://_Assets/RailgunTurretIdle.png" id="9_bpy14"]
 
 [sub_resource type="Resource" id="Resource_bpy14"]
 script = ExtResource("3_7mvqi")
-_damageIncrease = 35
+_damageIncrease = 34
 metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 
 [sub_resource type="Resource" id="Resource_2kx6n"]
@@ -52,21 +52,21 @@ animations = [{
 }]
 
 [node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_bpy14")]
-_cost = Vector4i(40, 0, 0, 0)
+_cost = Vector4i(20, 20, 0, 0)
 _iconTexture = ExtResource("2_4kcl2")
 _description = "Shoots piercing projectiles that can damage multiple enemies on a line."
 _firstUpgrade = Array[Object]([SubResource("Resource_bpy14")])
-_firstUpgradeCost = Vector4i(25, 0, 0, 0)
+_firstUpgradeCost = Vector4i(12, 12, 0, 0)
 _secondUpgrade = Array[Object]([SubResource("Resource_2kx6n")])
-_secondUpgradeCost = Vector4i(50, 0, 0, 0)
+_secondUpgradeCost = Vector4i(25, 25, 0, 0)
 _thirdUpgrade = Array[Object]([SubResource("Resource_7mvqi")])
-_thirdUpgradeCost = Vector4i(90, 0, 0, 0)
+_thirdUpgradeCost = Vector4i(45, 45, 0, 0)
 _fourthUpgradeA = Array[Object]([SubResource("Resource_m1b1x")])
 _fourthUpgradeATexture = ExtResource("5_7mvqi")
-_fourthUpgradeACost = Vector4i(100, 0, 100, 0)
+_fourthUpgradeACost = Vector4i(0, 100, 100, 0)
 _fourthUpgradeB = Array[Object]([SubResource("Resource_msjep")])
 _fourthUpgradeBTexture = ExtResource("6_m1b1x")
-_fourthUpgradeBCost = Vector4i(140, 80, 0, 0)
+_fourthUpgradeBCost = Vector4i(80, 140, 0, 0)
 LeashDistance = 200.0
 _startingEffects = Array[ExtResource("4_4kcl2")]([])
 _internalName = "PiercingTower"
@@ -76,7 +76,7 @@ _baseHealthBarWidth = 48.0
 
 [node name="MainSprite" parent="." index="1" unique_id=701942347]
 scale = Vector2(1, 1)
-texture = ExtResource("5_2kx6n")
+texture = ExtResource("8_7mvqi")
 
 [node name="TurretTurner" type="Node2D" parent="." index="8" unique_id=1640024612]
 script = ExtResource("8_2kx6n")
