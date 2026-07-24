@@ -334,7 +334,6 @@ public partial class TowerUnit : StationaryUnit
 
 	public virtual HoverInfoImage MakeTowerTooltip(bool clickable)
 	{
-		_tdManager = GetTree().CurrentScene.GetNode<TDManager>("TdManager");
 		HoverInfoImage trigger = new HoverInfoImage();
 		trigger.TextureNormal = GetIconTexture();
 		trigger.TextureFilter = TextureFilterEnum.Nearest;
@@ -473,21 +472,36 @@ public partial class TowerUnit : StationaryUnit
 
 			Label spawnedUnitLabel = new();
 			spawnedUnitLabel.Text = "Spawned Unit:";
+			spawnedUnitLabel.CustomMinimumSize = new Vector2(100, 0);
 			spawnedUnitTotalInfoV.AddChild(spawnedUnitLabel);
 
 			HBoxContainer spawnedUnitTotalInfoH = new();
 			spawnedUnitTotalInfoV.AddChild(spawnedUnitTotalInfoH);
 
-			foreach (InvaderStatsIncreaseResource resource in spawner._spawnerData._units)
+			if (spawner._spawnedUnitArray.Count != 0)
 			{
-				InvaderUnit spawnedUnit = resource.GetInvader();
-				PanelContainer spawnedUnitInfo = spawnedUnit.GetUnitInfoContainerWithString("BasicInfo");
-				spawnedUnitTotalInfoH.AddChild(spawnedUnitInfo);
-				PanelContainer spawnedUnitEffectInfo = spawnedUnit.GetUnitInfoContainerWithString("EffectsInfo");
-				spawnedUnitTotalInfoH.AddChild(spawnedUnitEffectInfo);
-				spawnedUnit.QueueFree();
+				foreach (InvaderUnit spawnedUnit in spawner._spawnedUnitArray)
+				{
+					PanelContainer spawnedUnitInfo = spawnedUnit.GetUnitInfoContainerWithString("BasicInfo");
+					spawnedUnitTotalInfoH.AddChild(spawnedUnitInfo);
+					PanelContainer spawnedUnitEffectInfo = spawnedUnit.GetUnitInfoContainerWithString("EffectsInfo");
+					spawnedUnitTotalInfoH.AddChild(spawnedUnitEffectInfo);
+				}
 			}
-			
+			else
+			{
+				foreach (InvaderStatsIncreaseResource resource in spawner._spawnerData._units)
+				{
+					InvaderUnit spawnedUnit = resource.GetInvader();
+					spawner._spawnedUnitArray.Add(spawnedUnit);
+					PanelContainer spawnedUnitInfo = spawnedUnit.GetUnitInfoContainerWithString("BasicInfo");
+					spawnedUnitTotalInfoH.AddChild(spawnedUnitInfo);
+					PanelContainer spawnedUnitEffectInfo = spawnedUnit.GetUnitInfoContainerWithString("EffectsInfo");
+					spawnedUnitTotalInfoH.AddChild(spawnedUnitEffectInfo);
+				}
+			}
+
+
 			spawnedUnitTotalInfo.AddChild(spawnedUnitTotalInfoV);
 
 			_infoContainers.Add("SpawnedUnitInfo", spawnedUnitTotalInfo);
@@ -630,25 +644,57 @@ public partial class TowerUnit : StationaryUnit
 				HBoxContainer spawnedUnitTotalInfoH = new();
 				spawnedUnitTotalInfoV.AddChild(spawnedUnitTotalInfoH);
 
-				foreach (InvaderStatsIncreaseResource resource in spawner._spawnerData._units)
+				if (spawner._spawnedUnitArray.Count != 0)
 				{
-					InvaderUnit spawnedUnit = resource.GetInvader();
-					PanelContainer spawnedUnitInfo = spawnedUnit.GetUnitInfoContainerWithString("BasicInfo");
-					spawnedUnitTotalInfoH.AddChild(spawnedUnitInfo);
-					PanelContainer spawnedUnitEffectInfo = spawnedUnit.GetUnitInfoContainerWithString("EffectsInfo");
-					spawnedUnitTotalInfoH.AddChild(spawnedUnitEffectInfo);
-					spawnedUnit.QueueFree();
+					foreach (InvaderUnit spawnedUnit in spawner._spawnedUnitArray)
+					{
+						PanelContainer spawnedUnitInfo = spawnedUnit.GetUnitInfoContainerWithString("BasicInfo");
+						spawnedUnitTotalInfoH.AddChild(spawnedUnitInfo);
+						PanelContainer spawnedUnitEffectInfo = spawnedUnit.GetUnitInfoContainerWithString("EffectsInfo");
+						spawnedUnitTotalInfoH.AddChild(spawnedUnitEffectInfo);
+					}
+				}
+				else
+				{
+					foreach (InvaderStatsIncreaseResource resource in spawner._spawnerData._units)
+					{
+						InvaderUnit spawnedUnit = resource.GetInvader();
+						spawner._spawnedUnitArray.Add(spawnedUnit);
+						PanelContainer spawnedUnitInfo = spawnedUnit.GetUnitInfoContainerWithString("BasicInfo");
+						spawnedUnitTotalInfoH.AddChild(spawnedUnitInfo);
+						PanelContainer spawnedUnitEffectInfo = spawnedUnit.GetUnitInfoContainerWithString("EffectsInfo");
+						spawnedUnitTotalInfoH.AddChild(spawnedUnitEffectInfo);
+					}
 				}
 
 				_infoContainers["SpawnedUnitInfo"].AddChild(spawnedUnitTotalInfoV);
 			}
 		}
-		
 
 		if (GetIncome() != new Vector4I(0, 0, 0, 0))
 		{
-			TooltipRichTextLabel incomeLabel = moneyInfoV.GetNode<TooltipRichTextLabel>("IncomeLabel");
-			incomeLabel.Text = "Produces " + Utils.MakeMoneyText(GetIncome());
+			if (moneyInfoV.HasNode("IncomeLabel"))
+			{
+				TooltipRichTextLabel incomeLabel = moneyInfoV.GetNode<TooltipRichTextLabel>("IncomeLabel");
+				incomeLabel.Text = $"Produces {Utils.MakeMoneyText(GetIncome())}";
+			}
+			else
+			{
+				TooltipRichTextLabel incomeLabel = new();
+				incomeLabel.Text = $"Produces {Utils.MakeMoneyText(GetIncome())}";
+				incomeLabel.Name = "IncomeLabel";
+				incomeLabel.CustomMinimumSize = new(200, 0);
+				incomeLabel.BbcodeEnabled = true;
+				incomeLabel.FitContent = true;
+				moneyInfoV.AddChild(incomeLabel);
+			}
+		}
+		else
+		{
+			if (moneyInfoV.HasNode("IncomeLabel"))
+			{
+				moneyInfoV.GetNode<TooltipRichTextLabel>("IncomeLabel").QueueFree();
+			}
 		}
 
 		if (_weapon != null)
@@ -751,6 +797,7 @@ public partial class TowerUnit : StationaryUnit
 						{
 							InvaderStatsIncreaseResource unitCopy = (InvaderStatsIncreaseResource)unit.DuplicateDeep();
 							spawnUpgrade._units[0].MergeWithOld(unitCopy, []);
+							unitCopy._startingEffects = [];
 							InvaderUnit newSpawnedUnit = unitCopy.GetInvader();
 							newIncome += newSpawnedUnit.GetTotalMoneyDropped();
 							PanelContainer spawnedUnitInfo = newSpawnedUnit.GetUnitInfoContainerWithUpgradeWithString("BasicInfo", spawnUpgrade._units[0]);
@@ -774,8 +821,24 @@ public partial class TowerUnit : StationaryUnit
 						}
 					}
 
-					TooltipRichTextLabel incomeLabel = moneyInfoV.GetNode<TooltipRichTextLabel>("IncomeLabel");
-					incomeLabel.Text = $"[color=#{greenHex}]Produces {Utils.MakeMoneyText(newIncome)}[/color]";
+					if (newIncome != new Vector4I(0, 0, 0, 0))
+					{
+						if (moneyInfoV.HasNode("IncomeLabel"))
+						{
+							TooltipRichTextLabel incomeLabel = moneyInfoV.GetNode<TooltipRichTextLabel>("IncomeLabel");
+							incomeLabel.Text = $"[color=#{greenHex}]Produces {Utils.MakeMoneyText(newIncome)}[/color]";
+						}
+						else
+						{
+							TooltipRichTextLabel incomeLabel = new();
+							incomeLabel.Text = $"[color=#{greenHex}]Produces {Utils.MakeMoneyText(newIncome)}[/color]";
+							incomeLabel.Name = "IncomeLabel";
+							incomeLabel.CustomMinimumSize = new(200, 0);
+							incomeLabel.BbcodeEnabled = true;
+							incomeLabel.FitContent = true;
+							moneyInfoV.AddChild(incomeLabel);
+						}
+					}
 
 					_infoContainers["SpawnedUnitInfo"].AddChild(spawnedUnitTotalInfoV);
 				}
@@ -1206,6 +1269,16 @@ public partial class TowerUnit : StationaryUnit
 	{
 		Vector4I income = new();
 		foreach (MoneyOnWaveStartResource resource in _effects.OfType<MoneyOnWaveStartResource>())
+		{
+			income += resource._money;
+		}
+		return income;
+	}
+
+	public virtual int GetUnknownIncome()
+	{
+		int income = 0;
+		foreach (MoneyOnWaveStartOneTypeResource resource in _effects.OfType<MoneyOnWaveStartOneTypeResource>())
 		{
 			income += resource._money;
 		}

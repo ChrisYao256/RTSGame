@@ -1,0 +1,102 @@
+[gd_scene format=3 uid="uid://bfasn0an4unco"]
+
+[ext_resource type="PackedScene" uid="uid://yhbw0b164ui2" path="res://_Content/_Scenes/_Prefabs/Units/BaseTower.tscn" id="1_88a5b"]
+[ext_resource type="Script" uid="uid://b4jva1l23o6su" path="res://_Source/_Units/Spawner.cs" id="2_hrjsw"]
+[ext_resource type="Script" uid="uid://iamaod4iivlq" path="res://_Source/Effects/InvaderStatsIncrease/InvaderStatsIncreaseResource.cs" id="3_t5d2h"]
+[ext_resource type="Script" uid="uid://cvroohkeaovqw" path="res://_Source/_Units/SpawnerDataResource.cs" id="4_uafsw"]
+[ext_resource type="Texture2D" uid="uid://iocgjnp7i8td" path="res://_Assets/Portal.png" id="5_tvt0k"]
+[ext_resource type="Script" uid="uid://50km4o3nbdym" path="res://_Source/Effects/SpeedUp/SpeedUpResource.cs" id="6_88a5b"]
+[ext_resource type="Script" uid="uid://djbu8krhjrjib" path="res://_Source/Effects/SpawnerUpgradeResource/SpawnerUpgradeResource.cs" id="7_a1bmu"]
+[ext_resource type="Script" uid="uid://be80c57wd06d0" path="res://_Source/Effects/ImmediateTransform/ImmediateTransformResource.cs" id="8_lpt72"]
+
+[sub_resource type="Resource" id="Resource_uw73y"]
+script = ExtResource("3_t5d2h")
+_unitName = "Rocket"
+_hpBuff = 450
+_moneyBuff = Vector4i(3, 0, 0, 6)
+_startingEffects = null
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_puj6i"]
+script = ExtResource("4_uafsw")
+_units = Array[ExtResource("3_t5d2h")]([SubResource("Resource_uw73y")])
+metadata/_custom_type_script = "uid://cvroohkeaovqw"
+
+[sub_resource type="Resource" id="Resource_hrjsw"]
+script = ExtResource("6_88a5b")
+_increase = 3.0
+metadata/_custom_type_script = "uid://50km4o3nbdym"
+
+[sub_resource type="Resource" id="Resource_4imld"]
+script = ExtResource("3_t5d2h")
+_hpBuff = 340
+_moneyBuff = Vector4i(2, 0, 0, 4)
+_startingEffects = Array[Object]([SubResource("Resource_hrjsw")])
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_hdwh2"]
+script = ExtResource("7_a1bmu")
+_units = Array[ExtResource("3_t5d2h")]([SubResource("Resource_4imld")])
+metadata/_custom_type_script = "uid://djbu8krhjrjib"
+
+[sub_resource type="Resource" id="Resource_t5d2h"]
+script = ExtResource("6_88a5b")
+_increase = 5.0
+_maxTriggers = 1
+metadata/_custom_type_script = "uid://50km4o3nbdym"
+
+[sub_resource type="Resource" id="Resource_qkotg"]
+script = ExtResource("3_t5d2h")
+_hpBuff = 550
+_moneyBuff = Vector4i(3, 0, 0, 6)
+_startingEffects = Array[Object]([SubResource("Resource_t5d2h")])
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_htg75"]
+script = ExtResource("7_a1bmu")
+_units = Array[ExtResource("3_t5d2h")]([SubResource("Resource_qkotg")])
+metadata/_custom_type_script = "uid://djbu8krhjrjib"
+
+[sub_resource type="Resource" id="Resource_uafsw"]
+script = ExtResource("6_88a5b")
+_increase = 8.0
+_maxTriggers = 1
+metadata/_custom_type_script = "uid://50km4o3nbdym"
+
+[sub_resource type="Resource" id="Resource_av2x7"]
+script = ExtResource("3_t5d2h")
+_hpBuff = 1060
+_moneyBuff = Vector4i(5, 0, 0, 15)
+_startingEffects = Array[Object]([SubResource("Resource_uafsw")])
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_llm1m"]
+script = ExtResource("7_a1bmu")
+_units = Array[ExtResource("3_t5d2h")]([SubResource("Resource_av2x7")])
+metadata/_custom_type_script = "uid://djbu8krhjrjib"
+
+[sub_resource type="Resource" id="Resource_jbo8f"]
+script = ExtResource("8_lpt72")
+_transformedUnit = "BlinkerSpawner"
+_description = "Spawns an extra Blinker that blinks when hit for the first time."
+metadata/_custom_type_script = "uid://be80c57wd06d0"
+
+[node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_88a5b")]
+script = ExtResource("2_hrjsw")
+_spawnerData = SubResource("Resource_puj6i")
+_spawnInterval = 1.0
+_isEnemy = true
+_iconTexture = ExtResource("5_tvt0k")
+_towerType = 2
+_firstUpgrade = Array[Object]([SubResource("Resource_hdwh2")])
+_secondUpgrade = Array[Object]([SubResource("Resource_htg75")])
+_thirdUpgrade = Array[Object]([SubResource("Resource_llm1m")])
+_fourthUpgradeA = Array[Object]([SubResource("Resource_jbo8f")])
+_fourthUpgradeATexture = ExtResource("5_tvt0k")
+LeashDistance = 200.0
+_startingEffects = Array[Object]([])
+_internalName = "RocketSpawner"
+_name = "Rocket Portal"
+
+[node name="MainSprite" parent="." index="1" unique_id=701942347]
+texture = ExtResource("5_tvt0k")

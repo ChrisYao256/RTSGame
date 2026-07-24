@@ -38,6 +38,8 @@ public partial class UnitManager : Node2D
 		{ "PermFlameTurret", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/PermFlameTurret.tscn") },
 		{ "BigFlameTurret", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/BigFlameTurret.tscn") },
 		{ "SlowTurret", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/SlowTurret.tscn") },
+		{ "GatlinTurret", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/GatlinTurret.tscn") },
+		{ "RampUpGatlinTurret", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/RampUpGatlinTurret.tscn") },
 
 		{ "SlimeSpawner", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/SlimeSpawner.tscn") },
 		{ "HoundSpawner", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/HoundSpawner.tscn") },
@@ -50,6 +52,10 @@ public partial class UnitManager : Node2D
 		{ "DisablerSpawner", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/DisablerSpawner.tscn") },
 		{ "SummonerSpawner", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/SummonerSpawner.tscn") },
 		{ "SentrySpawner", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/SentrySpawner.tscn") },
+		{ "GeneratorSpawner", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/GeneratorSpawner.tscn") },
+		{ "RocketSpawner", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/RocketSpawner.tscn") },
+		{ "ShieldSpawner", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/ShieldSpawner.tscn") },
+		{ "DuplicatorSpawner", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/DuplicatorSpawner.tscn") },
 
 		{ "DepoweredSpawner", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/DepoweredSpawner.tscn") },
 
@@ -77,6 +83,10 @@ public partial class UnitManager : Node2D
 		{ "Summoner", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Invaders/Summoner.tscn")},
 		{ "Summoned", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Invaders/Summoned.tscn")},
 		{ "Sentry", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Invaders/Sentry.tscn")},
+		{ "Escapee", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Invaders/Escapee.tscn")},
+		{ "Shield", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Invaders/Shield.tscn")},
+		{ "Rocket", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Invaders/Rocket.tscn")},
+		{ "Duplicator", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Invaders/Duplicator.tscn")},
 	};
 
 	public static uint UnitLayerMask = 2;
@@ -91,6 +101,13 @@ public partial class UnitManager : Node2D
 			{
 				newUnit.SetDisplayUnit();
 			}
+			newUnit.TreeExiting += () =>
+			{
+				if (newUnit is Spawner spawner)
+				{
+					spawner.ClearInfoCache();
+				}
+			};
 			return newUnit;
 		}
 		else

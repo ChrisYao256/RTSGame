@@ -203,41 +203,88 @@ namespace RTSGame.Units
 			return a;
 		}
 
-		public static string MakeMoneyText(Vector4I money, bool displayAll = false)
+		public static string MakeMoneyText(Vector4I money, bool displayAll = false, bool multiline = false, int unknownMoney = 0, bool additionSigns = false)
 		{
 			string yellowHex = ThemePalette.Yellow.ToHtml(false);
 			string redHex = ThemePalette.Red.ToHtml(false);
 			string blueHex = ThemePalette.Blue.ToHtml(false);
 			string greenHex = ThemePalette.Green.ToHtml(false);
 			string output = "";
-			if (displayAll)
+			if (displayAll || money[0] != 0)
 			{
-				output += $"[color=#{yellowHex}][url={StringDB.Entries["YellowMoneyDescription"]}][img=18x18]res://_Assets/Electricity.png[/img]{money[0]}[/url][/color]  ";
-				output += $"[color=#{redHex}][url={StringDB.Entries["RedMoneyDescription"]}][img=18x18]res://_Assets/Steel.png[/img]{money[1]}[/url][/color]  ";
-				output += $"[color=#{blueHex}][url={StringDB.Entries["BlueMoneyDescription"]}][img=18x18]res://_Assets/Water.png[/img]{money[2]}[/url][/color]  ";
-				output += $"[color=#{greenHex}][url={StringDB.Entries["GreenMoneyDescription"]}][img=18x18]res://_Assets/Gas.png[/img]{money[3]}[/url][/color]  ";
-			}
-			else
-			{
-				if (money[0] != 0)
+				if (additionSigns)
 				{
-					output += $"[color=#{yellowHex}][img=18x18]res://_Assets/Electricity.png[/img]{money[0]}[/color]  ";
+					output += "+";
 				}
-
-				if (money[1] != 0 || displayAll)
+				if (multiline)
 				{
-					output += $"[color=#{redHex}][img=18x18]res://_Assets/Steel.png[/img]{money[1]}[/color]  ";
+					output += $"[color=#{yellowHex}][url={StringDB.Entries["YellowMoneyDescription"]}][img=18x18]res://_Assets/Electricity.png[/img]{money[0]}[/url][/color]\n";
 				}
-				if (money[2] != 0 || displayAll)
+				else
 				{
-					output += $"[color=#{blueHex}][img=18x18]res://_Assets/Water.png[/img]{money[2]}[/color]  ";
-				}
-				if (money[3] != 0 || displayAll)
-				{
-					output += $"[color=#{greenHex}][img=18x18]res://_Assets/Gas.png[/img] {money[3]} [/color]  ";
+					output += $"[color=#{yellowHex}][url={StringDB.Entries["YellowMoneyDescription"]}][img=18x18]res://_Assets/Electricity.png[/img]{money[0]}[/url][/color]  ";
 				}
 			}
-
+			if (displayAll || money[1] != 0)
+			{
+				if (additionSigns)
+				{
+					output += "+";
+				}
+				if (multiline)
+				{
+					output += $"[color=#{redHex}][url={StringDB.Entries["RedMoneyDescription"]}][img=18x18]res://_Assets/Steel.png[/img]{money[1]}[/url][/color]\n";
+				}
+				else
+				{
+					output += $"[color=#{redHex}][url={StringDB.Entries["RedMoneyDescription"]}][img=18x18]res://_Assets/Steel.png[/img]{money[1]}[/url][/color]  ";
+				}
+			}
+			if (displayAll || money[2] != 0)
+			{
+				if (additionSigns)
+				{
+					output += "+";
+				}
+				if (multiline)
+				{
+					output += $"[color=#{blueHex}][url={StringDB.Entries["BlueMoneyDescription"]}][img=18x18]res://_Assets/Water.png[/img]{money[2]}[/url][/color]\n";
+				}
+				else
+				{
+					output += $"[color=#{blueHex}][url={StringDB.Entries["BlueMoneyDescription"]}][img=18x18]res://_Assets/Water.png[/img]{money[2]}[/url][/color]  ";
+				}
+			}
+			if (displayAll || money[3] != 0)
+			{
+				if (additionSigns)
+				{
+					output += "+";
+				}
+				if (multiline)
+				{
+					output += $"[color=#{greenHex}][url={StringDB.Entries["GreenMoneyDescription"]}][img=18x18]res://_Assets/Gas.png[/img]{money[3]}[/url][/color]\n";
+				}
+				else
+				{
+					output += $"[color=#{greenHex}][url={StringDB.Entries["GreenMoneyDescription"]}][img=18x18]res://_Assets/Gas.png[/img]{money[3]}[/url][/color]  ";
+				}
+			}
+			if (unknownMoney != 0)
+			{
+				if (additionSigns)
+				{
+					output += "+";
+				}
+				if (multiline)
+				{
+					output += $"[color=#{yellowHex}][url={StringDB.Entries["UnknownMoneyDescription"]}][img=18x18]res://_Assets/UnknownMoney.png[/img]{unknownMoney}[/url][/color]\n";
+				}
+				else
+				{
+					output += $"[color=#{yellowHex}][url={StringDB.Entries["UnknownMoneyDescription"]}][img=18x18]res://_Assets/UnknownMoney.png[/img]{unknownMoney}[/url][/color]  ";
+				}
+			}
 			return output.Trim();
 		}
 	}

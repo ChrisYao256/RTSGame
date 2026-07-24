@@ -30,7 +30,6 @@ public partial class TDTowerManager : Node2D
 	public override void _Ready()
 	{
 		_rightPanel = GetParent().GetNode("RightPanelCanvasLayer").GetNode("RightPanel").GetNode<VBoxContainer>("VBoxContainer");
-		_towersBox = _rightPanel.GetNode<GridContainer>("Towers");
 		_grid = GetParent().GetNode<Grid>("TileMapLayer");
 		_tdManager = GetParent().GetNode<TDManager>("TdManager");
 		UpdateIncomeDisplay();
@@ -51,71 +50,9 @@ public partial class TDTowerManager : Node2D
 		}
 	}
 
-	public void InitializeTowersPanel(Godot.Collections.Array<string> towers, TowerUnit.TowerType tab)
+	public void InitializeTowersPanel(TowerUnit.TowerType tab)
 	{
-		_towers = towers;
-		_tab = tab;
-		foreach (Node child in _towersBox.GetChildren())
-		{
-			child.QueueFree();
-		}
-		foreach (string name in towers)
-		{
-			VBoxContainer container = new VBoxContainer();
-
-			string name_ = name;
-			TowerUnit unit = (TowerUnit)UnitManager.GetUnit(name, true);
-
-			if (unit._towerType != tab)
-			{
-				unit.QueueFree();
-				container.QueueFree();
-				continue;
-			}
-
-			Label nameLabel = new Label();
-			nameLabel.Text = unit._name;
-			nameLabel.CustomMinimumSize = new(160, 0);
-			nameLabel.HorizontalAlignment = HorizontalAlignment.Center;
-			container.AddChild(nameLabel);
-
-			AddChild(unit);
-
-			HoverInfoImage towerButton
-				= unit.MakeTowerTooltip(true);
-			towerButton.Pressed += (()=> 
-			{
-				if (Utils.VectorLeq(unit._cost, _tdManager._money))
-				{
-					EnterPlacementMode(name_); 
-				}
-			});
-			towerButton.MouseEntered += () => nameLabel.AddThemeColorOverride("font_color", ThemePalette.White);
-			towerButton.MouseExited += () => nameLabel.AddThemeColorOverride("font_color", ThemePalette.Yellow);
-
-			PanelContainer panelContainer = new();
-			panelContainer.AddChild(towerButton);
-			container.AddChild(panelContainer);
-
-			TooltipRichTextLabel costLabel = new TooltipRichTextLabel();
-			costLabel.FitContent = true;
-			costLabel.BbcodeEnabled = true;
-			if (unit is not Spawner)
-			{
-				costLabel.Text = Utils.MakeMoneyText(unit._cost);
-			}
-			else
-			{
-				costLabel.Text = "+" + Utils.MakeMoneyText(unit.GetIncome());
-			}
-			costLabel.HorizontalAlignment = HorizontalAlignment.Center;
-			container.AddChild(costLabel);
-			
-			_towersBox.AddChild(container);
-
-			unit.QueueFree();
-
-		}
+		_tdManager._infoPanel.MakeAllTowersMenu(tab);
 	}
 
 	public void UpdateTowersPanel(Godot.Collections.Array<string> towers)
@@ -184,21 +121,6 @@ public partial class TDTowerManager : Node2D
 		}
 	}
 
-	public void SwitchDisplayedTabDefense()
-	{
-		InitializeTowersPanel(_tdManager._availTowerList, TowerUnit.TowerType.Defense);
-	}
-
-	public void SwitchDisplayedTabSupport()
-	{
-		InitializeTowersPanel(_tdManager._availTowerList, TowerUnit.TowerType.Support);
-	}
-
-	public void SwitchDisplayedTabSpawner()
-	{
-		InitializeTowersPanel(_tdManager._availTowerList, TowerUnit.TowerType.Spawner);
-	}
-
 	public override void _Input(InputEvent @event)
 	{
 		if (@event is InputEventMouseButton mouseEvent &&
@@ -215,7 +137,7 @@ public partial class TDTowerManager : Node2D
 		}
 	}
 
-	private void EnterPlacementMode(string towerName)
+	public void EnterPlacementMode(string towerName)
 	{
 		_placementMode = true;
 		_towerToPlace = towerName;
@@ -226,7 +148,7 @@ public partial class TDTowerManager : Node2D
 		_unitManager.UpdatePlayerSelection([_previewTower]);
 	}
 
-	private void ExitPlacementMode()
+	public void ExitPlacementMode()
 	{
 		_unitManager.UpdatePlayerSelection([]);
 		_placementMode = false;
@@ -368,7 +290,13 @@ public partial class TDTowerManager : Node2D
 			income += tower.GetIncome();
 		}
 
-		incomeLabel.Text = "Maximum Income: " + Utils.MakeMoneyText(income);
+		int unknownIncome = 0;
+		foreach (TowerUnit tower in _allTowers)
+		{
+			unknownIncome += tower.GetUnknownIncome();
+		}
+
+		incomeLabel.Text = "Maximum Income: \n" + Utils.MakeMoneyText(income, multiline: true, unknownMoney: unknownIncome, additionSigns: true);
 	}
 
 	public void UpdateDPSDisplay()

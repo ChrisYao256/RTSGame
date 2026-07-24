@@ -7,11 +7,17 @@ using System.Collections.Generic;
 public partial class UnitInfoPanel : CanvasLayer
 {
 	private HBoxContainer _infoContainer;
+	private GridContainer _towersContainer;
+	private VBoxContainer _buildContainer;
 
 	private List<Unit> _units;
 	private Unit _unit;
 
+	private TowerUnit.TowerType _tab = TowerUnit.TowerType.Null;
+
 	private TDManager _tdManager;
+
+	private Dictionary<string, TowerUnit> _unitInstanceDictionary = new();
 
 	public override void _Ready()
 	{
@@ -46,6 +52,8 @@ public partial class UnitInfoPanel : CanvasLayer
 		//_container = GetNode<PanelContainer>("PanelContainer");
 
 		_infoContainer = GetNode<HBoxContainer>("PanelContainer/HBoxContainer/UnitInfo");
+		_towersContainer = GetNode<GridContainer>("PanelContainer/Towers/GridContainer");
+		_buildContainer = GetNode<VBoxContainer>("PanelContainer/Towers");
 
 		_tdManager = GetParent().GetNode<TDManager>("TdManager");
 	}
@@ -55,9 +63,9 @@ public partial class UnitInfoPanel : CanvasLayer
 	{
 		ResetUnitInfo();
 		_units = units;
-		if (_units is null)
+		if (_units is null || _units.Count == 0)
 		{
-			return;
+			MakeAllTowersMenu(_tab);
 		}
 		if (_units.Count == 1)
 		{
@@ -130,7 +138,8 @@ public partial class UnitInfoPanel : CanvasLayer
 
 	public void MakeNewUnitInfo()
 	{
-		//_infoContainer.Show();
+		_buildContainer.Hide();
+		_infoContainer.Show();
 		Unit unit = _unit;
 		Godot.Collections.Dictionary<string, PanelContainer> infoContainers = _unit.MakeUnitInfoContainer();
 
@@ -175,5 +184,89 @@ public partial class UnitInfoPanel : CanvasLayer
 		//_infoContainer.Hide();
 		//_upgradeContainer.Hide();
 		//_unitsContainer.Hide();
+		//MakeAllTowersMenu(_tab);
+	}
+
+	public void MakeAllTowersMenu(TowerUnit.TowerType tab)
+	{
+		if (_tab == tab && _buildContainer.Visible)
+		{
+			return;
+		}
+		_tab = tab;
+		_infoContainer.Hide();
+		_buildContainer.Show();
+		Godot.Collections.Array<string> towers = _tdManager._availTowerList;
+		foreach (Node child in _towersContainer.GetChildren())
+		{
+			child.QueueFree();
+		}
+		foreach (string name in towers)
+		{
+			TowerUnit unit;
+			if (!_unitInstanceDictionary.Keys.Contains(name))
+			{
+				unit = (TowerUnit)UnitManager.GetUnit(name, true);
+				_unitInstanceDictionary.Add(name, unit);
+			}
+			else
+			{
+				unit = _unitInstanceDictionary[name];
+			}
+
+			string name_ = name;
+			
+
+			if (unit._towerType != tab)
+			{
+				continue;
+			}
+
+			VBoxContainer container = new VBoxContainer();
+
+			Label nameLabel = new Label();
+			nameLabel.Text = unit._name;
+			nameLabel.HorizontalAlignment = HorizontalAlignment.Center;
+			container.AddChild(nameLabel);
+
+			unit._tdManager = _tdManager;
+
+			HoverInfoImage towerButton
+				= unit.MakeTowerTooltip(true);
+			towerButton.Pressed += (() =>
+			{
+				if (Utils.VectorLeq(unit._cost, _tdManager._money))
+				{
+					_tdManager._towerManager.EnterPlacementMode(name_);
+				}
+			});
+			towerButton.MouseEntered += () => nameLabel.AddThemeColorOverride("font_color", ThemePalette.White);
+			towerButton.MouseExited += () => nameLabel.AddThemeColorOverride("font_color", ThemePalette.Yellow);
+
+			PanelContainer panelContainer = new();
+			panelContainer.AddChild(towerButton);
+			container.AddChild(panelContainer);
+
+			TooltipRichTextLabel costLabel = new TooltipRichTextLabel();
+			costLabel.FitContent = true;
+			costLabel.BbcodeEnabled = true;
+			costLabel.CustomMinimumSize = new(80, 0);
+			if (unit is not Spawner)
+			{
+				costLabel.Text = Utils.MakeMoneyText(unit._cost, multiline: true);
+			}
+			else
+			{
+				if (unit.GetIncome() != new Vector4I(0, 0, 0, 0) || unit.GetUnknownIncome() > 0)
+				{
+					costLabel.Text = Utils.MakeMoneyText(unit.GetIncome(), multiline: true, unknownMoney: unit.GetUnknownIncome(), additionSigns: true);
+				}
+			}
+			costLabel.HorizontalAlignment = HorizontalAlignment.Center;
+			container.AddChild(costLabel);
+
+			_towersContainer.AddChild(container);
+
+		}
 	}
 }

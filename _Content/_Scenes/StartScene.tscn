@@ -27,12 +27,11 @@ alignment = 1
 
 [node name="StartButton" type="Button" parent="HBoxContainer" unique_id=598364671]
 layout_mode = 2
-text = "SandBox
-"
+text = "Free Play"
 
 [node name="RogueButton" type="Button" parent="HBoxContainer" unique_id=1888692875]
 layout_mode = 2
-text = "Start"
+text = "rogue-like"
 
 [node name="ContinueButton" type="Button" parent="HBoxContainer" unique_id=335516551]
 visible = false
@@ -42,9 +41,7 @@ text = "Continue
 
 [node name="TestingButton" type="Button" parent="HBoxContainer" unique_id=1029595328]
 layout_mode = 2
-text = "Testing
-
-"
+text = "Sandbox"
 
 [node name="TutorialButton" type="Button" parent="HBoxContainer" unique_id=896442955]
 layout_mode = 2

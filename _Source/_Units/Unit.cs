@@ -163,8 +163,6 @@ public partial class Unit : CharacterBody2D
 
 	public float _speedDebuff;
 
-	public int _hpMaxModifier;
-
 	public int _armorModifier;
 
 	public int _armorDebuff;
@@ -189,7 +187,7 @@ public partial class Unit : CharacterBody2D
 
 	public bool _hasEffects = true;
 
-	protected Godot.Collections.Dictionary<string, PanelContainer> _infoContainers;
+	protected Godot.Collections.Dictionary<string, PanelContainer> _infoContainers = new();
 
 	public bool _isDisplayUnit = false;
 
@@ -217,9 +215,9 @@ public partial class Unit : CharacterBody2D
 	public virtual void SetDisplayUnit()
 	{
 		_isDisplayUnit = true;
-		_hp = GetHpMax();
 		SetWeapon();
 		SetStartingEffects(true);
+		_hp = GetHpMax();
 		SetAttackRange();
 		SetSize();
 	}
@@ -351,23 +349,14 @@ public partial class Unit : CharacterBody2D
 		_attackCollisionShape = GetNode<CollisionShape2D>("AttackArea/AttackAreaCollision");
 		_attackRange = _weapon.GetRange();
 
-		// CRITICAL: Make the shape unique so changing this unit 
-		// doesn't change every other unit of the same type.
 		if (_attackCollisionShape.Shape is CircleShape2D circle)
 		{
 			circle = (CircleShape2D)circle.Duplicate();
 			circle.Radius = _attackRange;
 			if (IsInstanceValid(_attackCollisionShape))
 			{
-				_attackCollisionShape.Shape = circle;
+				_attackCollisionShape.Shape = circle; // this triggers OnScanBodyLeft() if there were any enemies in range, even if the new shape still contains the enemy. 
 			}
-			//Callable.From(() =>
-			//{
-			//	if (IsInstanceValid(_attackCollisionShape))
-			//	{
-			//		_attackCollisionShape.Shape = circle;
-			//	}
-			//}).CallDeferred();
 		}
 		else
 		{
@@ -378,6 +367,16 @@ public partial class Unit : CharacterBody2D
 		{
 			ScanForEnemies();
 		}
+	}
+
+	public void UpdateAttackRange()
+	{
+		if (_weapon is null)
+		{
+			return;
+		}
+		_attackCollisionShape = GetNode<CollisionShape2D>("AttackArea/AttackAreaCollision");
+		_attackRange = _weapon.GetRange();
 	}
 
 	protected void SetPathFinder()
@@ -407,7 +406,7 @@ public partial class Unit : CharacterBody2D
 
 	public int GetHpMax()
 	{
-		return  (int)(_hpMax + _hpMaxModifier);
+		return  (int)(_hpMax + _data._maxHpIncrease);
 	}
 
 	public float GetSpeed()
@@ -451,6 +450,7 @@ public partial class Unit : CharacterBody2D
 					shieldLabel.Name = "ShieldLabel";
 					shieldLabel.BbcodeEnabled = true;
 					shieldLabel.FitContent = true;
+					shieldLabel.CustomMinimumSize = new Vector2(150, 0);
 					basicInfoV.AddChild(shieldLabel);
 				}
 
@@ -459,6 +459,7 @@ public partial class Unit : CharacterBody2D
 				hpLabel.Name = "HpLabel";
 				hpLabel.BbcodeEnabled = true;
 				hpLabel.FitContent = true;
+				hpLabel.CustomMinimumSize = new Vector2(150, 0);
 				basicInfoV.AddChild(hpLabel);
 
 				RichTextLabel speedLabel = new();
@@ -466,6 +467,7 @@ public partial class Unit : CharacterBody2D
 				speedLabel.Name = "SpeedLabel";
 				speedLabel.BbcodeEnabled = true;
 				speedLabel.FitContent = true;
+				speedLabel.CustomMinimumSize = new Vector2(150, 0);
 				basicInfoV.AddChild(speedLabel);
 			}
 
@@ -478,7 +480,14 @@ public partial class Unit : CharacterBody2D
 				moneyDropLabel.AutowrapMode = TextServer.AutowrapMode.Off;
 				moneyDropLabel.FitContent = true;
 				moneyDropLabel.BbcodeEnabled = true;
+				moneyDropLabel.CustomMinimumSize = new Vector2(150, 0);
 				basicInfoV.AddChild(moneyDropLabel);
+
+				if (invader.GetTotalMoneyDropped() == new Vector4I(0, 0, 0, 0))
+				{
+					moneyDropLabel.Hide();
+				}
+
 
 				TooltipRichTextLabel hpLossLabel = new();
 				hpLossLabel.Text = $"Deducts {invader._hpDeducted} Hp";
@@ -486,7 +495,13 @@ public partial class Unit : CharacterBody2D
 				hpLossLabel.AutowrapMode = TextServer.AutowrapMode.Off;
 				hpLossLabel.FitContent = true;
 				hpLossLabel.BbcodeEnabled = true;
+				hpLossLabel.CustomMinimumSize = new Vector2(150, 0);
 				basicInfoV.AddChild(hpLossLabel);
+
+				if (invader._hpDeducted == 0)
+				{
+					hpLossLabel.Hide();
+				}
 			}
 
 			if (this is TowerUnit tower)
@@ -644,9 +659,24 @@ public partial class Unit : CharacterBody2D
 			{
 				TooltipRichTextLabel moneyDropLabel = basicInfoV.GetNode<TooltipRichTextLabel>("MoneyDropLabel");
 				moneyDropLabel.Text = "Drops " + Utils.MakeMoneyText(invader.GetTotalMoneyDropped());
-
 				TooltipRichTextLabel hpLossLabel = basicInfoV.GetNode<TooltipRichTextLabel>("HpLossLabel");
 				hpLossLabel.Text = $"Deducts {invader._hpDeducted} Hp";
+				if (invader.GetTotalMoneyDropped() != new Vector4I(0, 0, 0, 0))
+				{
+					moneyDropLabel.Show();
+				}
+				else
+				{
+					moneyDropLabel.Hide();
+				}
+				if (invader._hpDeducted != 0)
+				{
+					hpLossLabel.Show();
+				}
+				else
+				{
+					hpLossLabel.Hide();
+				}
 			}
 		}
 		
@@ -775,7 +805,6 @@ public partial class Unit : CharacterBody2D
 				if (_effects.Any(e => e.GetType() == resource.GetType()))
 				{
 					effectUpgrades.Add(resource);
-					break;
 				}
 			}
 			if (effectUpgrades.Count == 0)
@@ -874,12 +903,15 @@ public partial class Unit : CharacterBody2D
 	public PanelContainer GetUnitInfoContainerWithString(string name)
 	{
 		Godot.Collections.Dictionary<string, PanelContainer> dict = MakeUnitInfoContainer();
-		PanelContainer dictCopy = (PanelContainer)dict[name].Duplicate();
-		foreach (PanelContainer panelContainer in dict.Values)
+		foreach (string key in dict.Keys)
 		{
-			panelContainer.QueueFree();
+			if (key != name)
+			{
+				dict[key].QueueFree();
+				dict.Remove(key);
+			}
 		}
-		return dictCopy;
+		return dict[name];
 	}
 
 	public PanelContainer GetUnitInfoContainerWithUpgradeWithString(string name, InvaderStatsIncreaseResource upgrade)
@@ -1400,13 +1432,13 @@ public partial class Unit : CharacterBody2D
 		int newMax = _hpMax + hpModifier;
 		int change = newMax - _hpMax;
 		_hp += change;
-		_hpMaxModifier = hpModifier;
+		_data._maxHpIncrease = hpModifier;
 		EmitSignal(SignalName.UpdateStatsInfo);
 	}
 
 	public void IncreaseHpMaxModifier(int change)
 	{
-		SetHpMaxModifier(_hpMaxModifier + change);
+		SetHpMaxModifier(_data._maxHpIncrease + change);
 		UpdateHpMax();
 	}
 

@@ -13,6 +13,7 @@ public class StringDB
 		{ "RedMoneyDescription", "Metals. Typically dropped by durable enemies."},
 		{ "BlueMoneyDescription", "Water. Typically dropped by enemies with potent magic."},
 		{ "GreenMoneyDescription", "Gas. Typically dropped by fast enemies."},
+		{ "UnknownMoneyDescription", "Undetermined type. Represents income from certain special effects."},
 
 		{ "TargetPriorityFirst", "Target the enemy closest to the exit"},
 		{ "TargetPriorityLast", "Target the enemy furthest to the exit"},

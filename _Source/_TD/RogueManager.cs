@@ -124,7 +124,10 @@ public partial class RogueManager : Node
 			}
 			else
 			{
-				costLabel.Text = "+" + Utils.MakeMoneyText(unit.GetIncome());
+				if (unit.GetIncome() != new Vector4I(0,0,0,0))
+				{
+					costLabel.Text = "+" + Utils.MakeMoneyText(unit.GetIncome());
+				}
 			}
 			costLabel.HorizontalAlignment = HorizontalAlignment.Center;
 			container.AddChild(costLabel);

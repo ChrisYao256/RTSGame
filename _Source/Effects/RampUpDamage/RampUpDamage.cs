@@ -27,18 +27,25 @@ public partial class RampUpDamage : Effect
 		_timer = new Timer();
 		AddChild(_timer);
 		_timer.WaitTime = _resource._increaseInterval;
-		_timer.OneShot = _resource._oneTime;
 		_timer.Timeout += () =>
 		{
-			_parentUnit.IncreaseWeaponModifier(_resource._increaseAmount);
-			_increaseCount++;
+			if (_increaseCount < _resource._increaseMaxCount)
+			{
+				_parentUnit.IncreaseWeaponModifier(_resource._increaseAmount);
+				_increaseCount++;
+				_timer.Start();
+			}
 		};
 		_timer.Start();
 	}
 
 	protected override void OnStopAttack(Unit target)
 	{
-		_parentUnit.IncreaseWeaponModifier(-_resource._increaseAmount * _increaseCount);
-		_timer?.Stop();
+		if (_increaseCount > 0)
+		{
+			_parentUnit.IncreaseWeaponModifier(-_resource._increaseAmount * _increaseCount);
+			_timer?.Stop();
+			_increaseCount = 0;
+		}
 	}
 }

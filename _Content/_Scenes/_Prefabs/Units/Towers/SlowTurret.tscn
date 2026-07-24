@@ -85,15 +85,15 @@ script = ExtResource("10_fx2rp")
 metadata/_custom_type_script = "uid://y1enulr4b71h"
 
 [node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_1rxw6")]
-_cost = Vector4i(20, 0, 15, 0)
+_cost = Vector4i(23, 0, 12, 0)
 _iconTexture = ExtResource("2_fx2rp")
 _description = "Scans enemies to increase their resources yield. Deals damage when scan finishes."
 _firstUpgrade = Array[Object]([SubResource("Resource_5cain"), SubResource("Resource_j4w61")])
-_firstUpgradeCost = Vector4i(18, 0, 7, 0)
+_firstUpgradeCost = Vector4i(12, 0, 8, 0)
 _secondUpgrade = Array[Object]([SubResource("Resource_oh15a"), SubResource("Resource_c4lc3")])
-_secondUpgradeCost = Vector4i(45, 0, 15, 0)
+_secondUpgradeCost = Vector4i(33, 0, 17, 0)
 _thirdUpgrade = Array[Object]([SubResource("Resource_yglny"), SubResource("Resource_87nd2")])
-_thirdUpgradeCost = Vector4i(69, 0, 24, 0)
+_thirdUpgradeCost = Vector4i(57, 0, 28, 0)
 _fourthUpgradeACost = Vector4i(90, 0, 90, 0)
 _fourthUpgradeBCost = Vector4i(0, 100, 100, 0)
 _hpMax = 1

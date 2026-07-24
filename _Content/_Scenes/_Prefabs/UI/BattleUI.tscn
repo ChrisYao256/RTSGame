@@ -33,3 +33,25 @@ theme_override_constants/separation = 8
 [node name="UnitsContainer" type="BoxContainer" parent="PanelContainer/HBoxContainer" unique_id=1991042290]
 layout_mode = 2
 theme_override_constants/separation = 8
+
+[node name="Towers" type="VBoxContainer" parent="PanelContainer" unique_id=693011361]
+layout_mode = 2
+
+[node name="GridContainer" type="GridContainer" parent="PanelContainer/Towers" unique_id=821519812]
+layout_mode = 2
+columns = 10
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/Towers" unique_id=392244790]
+layout_mode = 2
+
+[node name="Button" type="Button" parent="PanelContainer/Towers/HBoxContainer" unique_id=400386106]
+layout_mode = 2
+text = "Defense
+"
+
+[node name="Button2" type="Button" parent="PanelContainer/Towers/HBoxContainer" unique_id=2537460]
+layout_mode = 2
+text = "Portals"
+
+[connection signal="pressed" from="PanelContainer/Towers/HBoxContainer/Button" to="." method="MakeAllTowersMenu" binds= [0]]
+[connection signal="pressed" from="PanelContainer/Towers/HBoxContainer/Button2" to="." method="MakeAllTowersMenu" binds= [2]]

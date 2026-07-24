@@ -47,7 +47,7 @@ metadata/_custom_type_script = "uid://bwnw1f3ti2dgi"
 [sub_resource type="Resource" id="Resource_yf86q"]
 script = ExtResource("3_6d8vk")
 _hpBuff = 600
-_moneyBuff = Vector4i(6, 9, 0, 0)
+_moneyBuff = Vector4i(4, 8, 0, 0)
 _startingEffects = Array[Object]([SubResource("Resource_tqwml")])
 metadata/_custom_type_script = "uid://iamaod4iivlq"
 

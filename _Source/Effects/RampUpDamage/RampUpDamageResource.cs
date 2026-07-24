@@ -12,13 +12,14 @@ public partial class RampUpDamageResource : EffectResource
 	public double _increaseInterval;
 
 	[Export]
-	public bool _oneTime = false;
+	public int _increaseMaxCount;
 
 	public override bool MergeWithOld(EffectResource oldResource, List<EffectResource> allMatchingResource)
 	{
 		RampUpDamageResource typedOldResource = (RampUpDamageResource)oldResource;
 
 		typedOldResource._increaseAmount += _increaseAmount;
+		typedOldResource._increaseMaxCount += _increaseMaxCount;
 		typedOldResource.SetDescription();
 		return false;
 	}
@@ -26,7 +27,7 @@ public partial class RampUpDamageResource : EffectResource
 	public override void SetDescription()
 	{
 		_displayType = DisplayTypes.Large;
-		_effectDescription = "Increases tower damage by " + _increaseAmount + " for every " + _increaseInterval + " seconds the tower has spent attacking the same enemy.";
+		_effectDescription = $"Increases tower damage by {_increaseAmount} for every {_increaseInterval} seconds the tower has spent attacking the same enemy, up to {_increaseMaxCount} times";
 	}
 
 	public override void SetUpgradeDescription()

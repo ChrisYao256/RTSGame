@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace RTSGame.Units;
 
-public partial class MoneyOnWaveStart : Effect
+public partial class MoneyOnWaveStart: Effect
 {
 	MoneyOnWaveStartResource _resource;
 

@@ -1,0 +1,106 @@
+[gd_scene format=3 uid="uid://d1n4a5p0w5fdy"]
+
+[ext_resource type="PackedScene" uid="uid://yhbw0b164ui2" path="res://_Content/_Scenes/_Prefabs/Units/BaseTower.tscn" id="1_8cjk8"]
+[ext_resource type="Texture2D" uid="uid://cmjpp5evevh5r" path="res://_Assets/GunTurretIdle.png" id="2_k2utg"]
+[ext_resource type="Script" uid="uid://c7ye5bgfhla5e" path="res://_Source/Effects/StatsIncrease/StatsIncreaseResource.cs" id="3_6ejht"]
+[ext_resource type="Script" uid="uid://be80c57wd06d0" path="res://_Source/Effects/ImmediateTransform/ImmediateTransformResource.cs" id="4_88xlf"]
+[ext_resource type="Texture2D" uid="uid://1ya6poaby1bi" path="res://_Assets/GunTurret.png" id="6_fgmh5"]
+[ext_resource type="Texture2D" uid="uid://bdyjhvsjs67wx" path="res://_Assets/YellowBase.png" id="7_7oaay"]
+[ext_resource type="Script" uid="uid://bva1xkjx08h5v" path="res://_Source/_Units/Weapons/TurretTurner.cs" id="8_8afwn"]
+[ext_resource type="Script" uid="uid://bwav65cg5at1c" path="res://_Source/_Units/Weapons/ProjectileWeapon.cs" id="9_hdvl5"]
+[ext_resource type="Texture2D" uid="uid://b3lrividiwwga" path="res://_Assets/GreenGunShot.png" id="10_8cjk8"]
+
+[sub_resource type="Resource" id="Resource_cmo3r"]
+script = ExtResource("3_6ejht")
+_damageIncrease = 1
+_attackSpeedIncrease = 0.15
+metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
+
+[sub_resource type="Resource" id="Resource_oh15a"]
+script = ExtResource("3_6ejht")
+_damageIncrease = 2
+_attackSpeedIncrease = 0.13
+metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
+
+[sub_resource type="Resource" id="Resource_yglny"]
+script = ExtResource("3_6ejht")
+_damageIncrease = 4
+_attackSpeedIncrease = 0.07
+metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
+
+[sub_resource type="Resource" id="Resource_n37es"]
+script = ExtResource("4_88xlf")
+_transformedUnit = "RampUpGatlinTurret"
+_description = "Damage increases when focusing on the same target."
+metadata/_custom_type_script = "uid://be80c57wd06d0"
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_e2eil"]
+atlas = ExtResource("2_k2utg")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_oh15a"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_e2eil")
+}],
+"loop": false,
+"name": &"Idle",
+"speed": 1.0
+}]
+
+[node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_8cjk8")]
+_cost = Vector4i(18, 0, 0, 18)
+_iconTexture = ExtResource("2_k2utg")
+_description = "Fast-firing turret with superior damage. Warning: bullets may miss fast-moving enemies."
+_firstUpgrade = Array[Object]([SubResource("Resource_cmo3r")])
+_firstUpgradeCost = Vector4i(12, 0, 0, 12)
+_secondUpgrade = Array[Object]([SubResource("Resource_oh15a")])
+_secondUpgradeCost = Vector4i(22, 0, 0, 23)
+_thirdUpgrade = Array[Object]([SubResource("Resource_yglny")])
+_thirdUpgradeCost = Vector4i(40, 0, 0, 40)
+_fourthUpgradeA = Array[Object]([SubResource("Resource_n37es")])
+_fourthUpgradeATexture = ExtResource("6_fgmh5")
+_fourthUpgradeACost = Vector4i(100, 0, 0, 100)
+_fourthUpgradeBCost = Vector4i(100, 75, 0, 0)
+_hpMax = 1
+_startingEffects = Array[Object]([])
+_internalName = "GatlinTurret"
+_name = "Gatlin"
+_radius = 0.0
+_baseHealthBarWidth = 48.0
+
+[node name="MainSprite" parent="." index="1" unique_id=701942347]
+scale = Vector2(1, 1)
+texture = ExtResource("7_7oaay")
+
+[node name="AidArea" parent="." index="7" unique_id=724286163]
+visible = false
+
+[node name="AidAreaCollision" parent="AidArea" index="0" unique_id=1952573643]
+position = Vector2(113, -59)
+
+[node name="TurretTurner" type="Node2D" parent="." index="8" unique_id=1158807940]
+script = ExtResource("8_8afwn")
+_turn = true
+_knockbackDistance = 0.0
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="TurretTurner" index="0" unique_id=849851730]
+sprite_frames = SubResource("SpriteFrames_oh15a")
+animation = &"Idle"
+
+[node name="Marker2D" type="Marker2D" parent="TurretTurner" index="1" unique_id=661621734]
+position = Vector2(18, 0)
+
+[node name="WeaponComponent" type="Node2D" parent="." index="9" unique_id=2120452932]
+script = ExtResource("9_hdvl5")
+_projectileSpeed = 700.0
+_projectileTexture = ExtResource("10_8cjk8")
+_lifeTime = 10.0
+_projectileRadius = 6.0
+_pierceCount = 1
+_damage = 2
+_range = 240.0
+_attackCooldown = 0.05
+_attackDelayLow = 0.3
+_attackDelayHigh = 0.3

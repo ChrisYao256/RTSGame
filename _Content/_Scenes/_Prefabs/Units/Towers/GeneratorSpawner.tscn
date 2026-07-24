@@ -1,0 +1,103 @@
+[gd_scene format=3 uid="uid://cgxoco11qy8ra"]
+
+[ext_resource type="PackedScene" uid="uid://yhbw0b164ui2" path="res://_Content/_Scenes/_Prefabs/Units/BaseTower.tscn" id="1_1rvln"]
+[ext_resource type="Script" uid="uid://b4jva1l23o6su" path="res://_Source/_Units/Spawner.cs" id="2_cnvj6"]
+[ext_resource type="Script" uid="uid://iamaod4iivlq" path="res://_Source/Effects/InvaderStatsIncrease/InvaderStatsIncreaseResource.cs" id="3_0m2oa"]
+[ext_resource type="Script" uid="uid://cvroohkeaovqw" path="res://_Source/_Units/SpawnerDataResource.cs" id="4_ylm6c"]
+[ext_resource type="Texture2D" uid="uid://iocgjnp7i8td" path="res://_Assets/Portal.png" id="5_4xgbq"]
+[ext_resource type="Script" uid="uid://djbu8krhjrjib" path="res://_Source/Effects/SpawnerUpgradeResource/SpawnerUpgradeResource.cs" id="6_gtxu4"]
+[ext_resource type="Script" uid="uid://be80c57wd06d0" path="res://_Source/Effects/ImmediateTransform/ImmediateTransformResource.cs" id="7_lpitj"]
+[ext_resource type="Script" uid="uid://oka53ec6ds3" path="res://_Source/Effects/MoneyOnWaveStartOneType/MoneyOnWaveStartOneTypeResource.cs" id="8_cnvj6"]
+
+[sub_resource type="Resource" id="Resource_1tabr"]
+script = ExtResource("3_0m2oa")
+_unitName = "Escapee"
+_hpBuff = 200
+_startingEffects = null
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_hedbo"]
+script = ExtResource("4_ylm6c")
+_units = Array[ExtResource("3_0m2oa")]([SubResource("Resource_1tabr")])
+metadata/_custom_type_script = "uid://cvroohkeaovqw"
+
+[sub_resource type="Resource" id="Resource_45p1p"]
+script = ExtResource("3_0m2oa")
+_hpBuff = 130
+_startingEffects = null
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_fflv8"]
+script = ExtResource("6_gtxu4")
+_units = Array[ExtResource("3_0m2oa")]([SubResource("Resource_45p1p")])
+metadata/_custom_type_script = "uid://djbu8krhjrjib"
+
+[sub_resource type="Resource" id="Resource_cnvj6"]
+script = ExtResource("8_cnvj6")
+_money = 1
+metadata/_custom_type_script = "uid://oka53ec6ds3"
+
+[sub_resource type="Resource" id="Resource_0bcix"]
+script = ExtResource("3_0m2oa")
+_hpBuff = 330
+_startingEffects = null
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_lh454"]
+script = ExtResource("6_gtxu4")
+_units = Array[ExtResource("3_0m2oa")]([SubResource("Resource_0bcix")])
+metadata/_custom_type_script = "uid://djbu8krhjrjib"
+
+[sub_resource type="Resource" id="Resource_ylm6c"]
+script = ExtResource("8_cnvj6")
+_money = 2
+metadata/_custom_type_script = "uid://oka53ec6ds3"
+
+[sub_resource type="Resource" id="Resource_q3hbh"]
+script = ExtResource("3_0m2oa")
+_hpBuff = 540
+_startingEffects = null
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_02mu3"]
+script = ExtResource("6_gtxu4")
+_units = Array[ExtResource("3_0m2oa")]([SubResource("Resource_q3hbh")])
+metadata/_custom_type_script = "uid://djbu8krhjrjib"
+
+[sub_resource type="Resource" id="Resource_4xgbq"]
+script = ExtResource("8_cnvj6")
+_money = 3
+metadata/_custom_type_script = "uid://oka53ec6ds3"
+
+[sub_resource type="Resource" id="Resource_uquhd"]
+script = ExtResource("7_lpitj")
+_transformedUnit = "LargeSlimeSpawner"
+_description = "Spawns a large ooze that breaks into two slimes instead."
+metadata/_custom_type_script = "uid://be80c57wd06d0"
+
+[sub_resource type="Resource" id="Resource_0m2oa"]
+script = ExtResource("8_cnvj6")
+_money = 2
+_giveLowest = true
+metadata/_custom_type_script = "uid://oka53ec6ds3"
+
+[node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_1rvln")]
+script = ExtResource("2_cnvj6")
+_spawnerData = SubResource("Resource_hedbo")
+_spawnInterval = 1.0
+_isEnemy = true
+_iconTexture = ExtResource("5_4xgbq")
+_towerType = 2
+_firstUpgrade = Array[Object]([SubResource("Resource_fflv8"), SubResource("Resource_cnvj6")])
+_secondUpgrade = Array[Object]([SubResource("Resource_lh454"), SubResource("Resource_ylm6c")])
+_thirdUpgrade = Array[Object]([SubResource("Resource_02mu3"), SubResource("Resource_4xgbq")])
+_fourthUpgradeA = Array[Object]([SubResource("Resource_uquhd")])
+_fourthUpgradeATexture = ExtResource("5_4xgbq")
+LeashDistance = 200.0
+_startingEffects = Array[Object]([SubResource("Resource_0m2oa")])
+_internalName = "GeneratorSpawner"
+_name = "Generator"
+_radius = 0.0
+
+[node name="MainSprite" parent="." index="1" unique_id=701942347]
+texture = ExtResource("5_4xgbq")

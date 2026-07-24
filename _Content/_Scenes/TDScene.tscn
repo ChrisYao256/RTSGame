@@ -61,8 +61,8 @@ scale = Vector2(8.5, 8.5)
 tile_set = ExtResource("7_5ivv1")
 
 [node name="TdManager" parent="." unique_id=116729899 instance=ExtResource("3_v6k6q")]
-_allTowerList = Array[String](["GunTurret", "PiercingTower", "FlameTurret", "LaserTurret", "MoneyTurret", "SlowTurret", "SlimeSpawner", "HoundSpawner", "PriestSpawner", "DisablerSpawner", "SoldierSpawner", "SniperTurret"])
-_startingMoney = Vector4i(100, 0, 0, 0)
+_allTowerList = Array[String](["GunTurret", "PiercingTower", "FlameTurret", "LaserTurret", "MoneyTurret", "SlowTurret", "SlimeSpawner", "HoundSpawner", "PriestSpawner", "DisablerSpawner", "SoldierSpawner", "SniperTurret", "GeneratorSpawner", "RocketSpawner", "ShieldSpawner", "DuplicatorSpawner", "GatlinTurret"])
+_sandboxStartingMoney = Vector4i(100, 100, 100, 100)
 
 [node name="NavigationRegion2D" type="NavigationRegion2D" parent="." unique_id=1731619863]
 visible = false
@@ -176,23 +176,6 @@ bbcode_enabled = true
 text = "Total Hp: 0"
 fit_content = true
 script = ExtResource("10_2i1sm")
-
-[node name="Tabs" type="HBoxContainer" parent="RightPanelCanvasLayer/RightPanel/VBoxContainer" unique_id=1535235636]
-layout_mode = 2
-
-[node name="DefenseTab" type="Button" parent="RightPanelCanvasLayer/RightPanel/VBoxContainer/Tabs" unique_id=505616612]
-layout_mode = 2
-theme_override_font_sizes/font_size = 24
-text = "Defenses"
-
-[node name="SpawnerTab" type="Button" parent="RightPanelCanvasLayer/RightPanel/VBoxContainer/Tabs" unique_id=827187694]
-layout_mode = 2
-theme_override_font_sizes/font_size = 24
-text = "Portals"
-
-[node name="Towers" type="GridContainer" parent="RightPanelCanvasLayer/RightPanel/VBoxContainer" unique_id=1478457631]
-layout_mode = 2
-columns = 2
 
 [node name="NextWave" type="Button" parent="RightPanelCanvasLayer/RightPanel/VBoxContainer" unique_id=195529716]
 process_mode = 1
@@ -327,8 +310,6 @@ text = "
 script = ExtResource("10_2i1sm")
 
 [connection signal="pressed" from="RightPanelCanvasLayer/RightPanel/VBoxContainer/HBoxContainer/Button" to="TdManager" method="BuyExtraPortalLimit"]
-[connection signal="button_down" from="RightPanelCanvasLayer/RightPanel/VBoxContainer/Tabs/DefenseTab" to="TowerManager" method="SwitchDisplayedTabDefense"]
-[connection signal="button_down" from="RightPanelCanvasLayer/RightPanel/VBoxContainer/Tabs/SpawnerTab" to="TowerManager" method="SwitchDisplayedTabSpawner"]
 [connection signal="pressed" from="RightPanelCanvasLayer/RightPanel/VBoxContainer/NextWave" to="." method="OnNextWavePressed"]
 [connection signal="pressed" from="TopLeftOptions/VBoxContainer/Exit" to="TdManager" method="Quit"]
 [connection signal="pressed" from="TopLeftOptions/VBoxContainer/Pause" to="TdManager" method="SwitchPauseState"]

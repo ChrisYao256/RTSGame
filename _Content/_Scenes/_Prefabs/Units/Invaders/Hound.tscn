@@ -17,7 +17,7 @@ _moveSpeed = 65.0
 _hpMax = 0
 _startingEffects = Array[Object]([SubResource("Resource_htjgi")])
 _internalName = "Hound"
-_name = "Goblin"
+_name = "Broom rider"
 _radius = 16.0
 _baseHealthBarHeight = 12.0
 

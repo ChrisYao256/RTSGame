@@ -1,0 +1,29 @@
+[gd_scene format=3 uid="uid://qpcxcyq6y40n"]
+
+[ext_resource type="PackedScene" uid="uid://bqn4h6d52i52" path="res://_Content/_Scenes/_Prefabs/Units/BaseInvaderUnit.tscn" id="1_t5nkc"]
+[ext_resource type="Script" uid="uid://blleps1e6vdkq" path="res://_Source/Effects/OneTimeShield/OneTimeShieldResource.cs" id="2_t5nkc"]
+[ext_resource type="Texture2D" uid="uid://bc230321nqto5" path="res://icon.svg" id="3_6kxqy"]
+
+[sub_resource type="Resource" id="Resource_t5jjs"]
+script = ExtResource("2_t5nkc")
+_stack = 3
+metadata/_custom_type_script = "uid://blleps1e6vdkq"
+
+[node name="BaseUnit" unique_id=481801141 instance=ExtResource("1_t5nkc")]
+_hpDeducted = 2
+_moveSpeed = 45.0
+_hpMax = 0
+_startingEffects = Array[Object]([SubResource("Resource_t5jjs")])
+_internalName = "Shield"
+_name = "Shield"
+_radius = 24.0
+
+[node name="MainSprite" parent="." index="1" unique_id=597948513]
+scale = Vector2(1, 1)
+texture = ExtResource("3_6kxqy")
+
+[node name="HealthBar" parent="." index="5" unique_id=640038315]
+offset_left = -24.0
+offset_top = -32.0
+offset_right = 24.0
+offset_bottom = -20.0

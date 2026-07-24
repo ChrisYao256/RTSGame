@@ -15,7 +15,7 @@ public partial class Exit : StationaryUnit
 	public override void SetAttackRange()
 	{
 		_attackCollisionShape = GetNode<CollisionShape2D>("AttackArea/AttackAreaCollision");
-		_attackRange = TDManager.TileSize / 4f;
+		_attackRange = TDManager.TileSize / 2f;
 		if (_attackCollisionShape.Shape is CircleShape2D circle)
 		{
 			circle = (CircleShape2D)circle.Duplicate();

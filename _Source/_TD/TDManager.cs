@@ -40,7 +40,7 @@ public partial class TDManager : Node
 	private RogueManager _rogueManager;
 
 	public VBoxContainer _rightPanel;
-	private UnitInfoPanel _infoPanel;
+	public UnitInfoPanel _infoPanel;
 	private Label _hpLabel;
 	private TooltipRichTextLabel _moneyLabel;
 	private Grid _grid;
@@ -119,7 +119,7 @@ public partial class TDManager : Node
 				_tutorialManager = GetParent().GetNode<TutorialManager>("TutorialLayer/TutorialManager");
 				_tutorialManager.Initialize(this, _grid, _unitManager);
 				_availTowerList = _allTowerList;
-				_towerManager.InitializeTowersPanel(_allTowerList, TowerUnit.TowerType.Defense);
+				_towerManager.InitializeTowersPanel(TowerUnit.TowerType.Defense);
 				break;
 			case GameGlobals.GameMode.Continue:
 				_saveManager._tdManager = this;
@@ -152,7 +152,7 @@ public partial class TDManager : Node
 				_availTowerList = _allTowerList;
 				break;
 		}
-		_towerManager.InitializeTowersPanel(_availTowerList, TowerUnit.TowerType.Defense);
+		_towerManager.InitializeTowersPanel(TowerUnit.TowerType.Defense);
 	}
 
 	public async void SpawnNextWave()
@@ -259,7 +259,7 @@ public partial class TDManager : Node
 	public void UpdatePortalLimitButtonText()
 	{
 		int cost = GetPortalLimitUpgradeCost();
-		_spawnerLimitIncreaseButtonText.Text = "Upgrade Portal Capacity \n" + Utils.MakeMoneyText(new Vector4I(cost, 0, 0, 0));
+		_spawnerLimitIncreaseButtonText.Text = "Portal Capacity +2\n" + Utils.MakeMoneyText(new Vector4I(cost, 0, 0, 0));
 		_spawnerLimitIncreaseButtonText.AddThemeColorOverride("default_color", GetSpawnerLimitIncreaseButtonTextColor());
 	}
 

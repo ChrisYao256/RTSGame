@@ -1,0 +1,84 @@
+[gd_scene format=3 uid="uid://c7av1bn7jojck"]
+
+[ext_resource type="PackedScene" uid="uid://yhbw0b164ui2" path="res://_Content/_Scenes/_Prefabs/Units/BaseTower.tscn" id="1_mlnql"]
+[ext_resource type="Script" uid="uid://b4jva1l23o6su" path="res://_Source/_Units/Spawner.cs" id="2_l0ch3"]
+[ext_resource type="Script" uid="uid://iamaod4iivlq" path="res://_Source/Effects/InvaderStatsIncrease/InvaderStatsIncreaseResource.cs" id="3_nggbb"]
+[ext_resource type="Script" uid="uid://cvroohkeaovqw" path="res://_Source/_Units/SpawnerDataResource.cs" id="4_4qmyh"]
+[ext_resource type="Texture2D" uid="uid://iocgjnp7i8td" path="res://_Assets/Portal.png" id="5_xekge"]
+[ext_resource type="Script" uid="uid://djbu8krhjrjib" path="res://_Source/Effects/SpawnerUpgradeResource/SpawnerUpgradeResource.cs" id="7_jgbh8"]
+[ext_resource type="Script" uid="uid://be80c57wd06d0" path="res://_Source/Effects/ImmediateTransform/ImmediateTransformResource.cs" id="8_ityxx"]
+
+[sub_resource type="Resource" id="Resource_uw73y"]
+script = ExtResource("3_nggbb")
+_unitName = "Duplicator"
+_hpBuff = 150
+_moneyBuff = Vector4i(1, 0, 1, 0)
+_startingEffects = null
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_puj6i"]
+script = ExtResource("4_4qmyh")
+_units = Array[ExtResource("3_nggbb")]([SubResource("Resource_uw73y")])
+metadata/_custom_type_script = "uid://cvroohkeaovqw"
+
+[sub_resource type="Resource" id="Resource_4imld"]
+script = ExtResource("3_nggbb")
+_hpBuff = 150
+_moneyBuff = Vector4i(1, 0, 1, 0)
+_startingEffects = null
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_hdwh2"]
+script = ExtResource("7_jgbh8")
+_units = Array[ExtResource("3_nggbb")]([SubResource("Resource_4imld")])
+metadata/_custom_type_script = "uid://djbu8krhjrjib"
+
+[sub_resource type="Resource" id="Resource_qkotg"]
+script = ExtResource("3_nggbb")
+_hpBuff = 175
+_moneyBuff = Vector4i(2, 0, 2, 0)
+_startingEffects = null
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_htg75"]
+script = ExtResource("7_jgbh8")
+_units = Array[ExtResource("3_nggbb")]([SubResource("Resource_qkotg")])
+metadata/_custom_type_script = "uid://djbu8krhjrjib"
+
+[sub_resource type="Resource" id="Resource_av2x7"]
+script = ExtResource("3_nggbb")
+_hpBuff = 270
+_moneyBuff = Vector4i(3, 0, 3, 0)
+_startingEffects = null
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_llm1m"]
+script = ExtResource("7_jgbh8")
+_units = Array[ExtResource("3_nggbb")]([SubResource("Resource_av2x7")])
+metadata/_custom_type_script = "uid://djbu8krhjrjib"
+
+[sub_resource type="Resource" id="Resource_jbo8f"]
+script = ExtResource("8_ityxx")
+_transformedUnit = "BlinkerSpawner"
+_description = "Spawns an extra Blinker that blinks when hit for the first time."
+metadata/_custom_type_script = "uid://be80c57wd06d0"
+
+[node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_mlnql")]
+script = ExtResource("2_l0ch3")
+_spawnerData = SubResource("Resource_puj6i")
+_spawnInterval = 1.0
+_isEnemy = true
+_iconTexture = ExtResource("5_xekge")
+_towerType = 2
+_firstUpgrade = Array[Object]([SubResource("Resource_hdwh2")])
+_secondUpgrade = Array[Object]([SubResource("Resource_htg75")])
+_thirdUpgrade = Array[Object]([SubResource("Resource_llm1m")])
+_fourthUpgradeA = Array[Object]([SubResource("Resource_jbo8f")])
+_fourthUpgradeATexture = ExtResource("5_xekge")
+LeashDistance = 200.0
+_startingEffects = Array[Object]([])
+_internalName = "DuplicatorSpawner"
+_name = "Duplicator Portal"
+
+[node name="MainSprite" parent="." index="1" unique_id=701942347]
+texture = ExtResource("5_xekge")

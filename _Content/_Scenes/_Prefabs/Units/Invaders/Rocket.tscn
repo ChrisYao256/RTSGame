@@ -1,0 +1,32 @@
+[gd_scene format=3 uid="uid://b7o5qhk0wnk7g"]
+
+[ext_resource type="PackedScene" uid="uid://bqn4h6d52i52" path="res://_Content/_Scenes/_Prefabs/Units/BaseInvaderUnit.tscn" id="1_whwba"]
+[ext_resource type="Script" uid="uid://50km4o3nbdym" path="res://_Source/Effects/SpeedUp/SpeedUpResource.cs" id="2_whwba"]
+[ext_resource type="Texture2D" uid="uid://bc230321nqto5" path="res://icon.svg" id="3_d2js7"]
+
+[sub_resource type="Resource" id="Resource_spagu"]
+script = ExtResource("2_whwba")
+_increase = 20.0
+_interval = 2.0
+_maxTriggers = 3
+metadata/_custom_type_script = "uid://50km4o3nbdym"
+
+[node name="BaseUnit" unique_id=481801141 instance=ExtResource("1_whwba")]
+_hpDeducted = 2
+_moveSpeed = 40.0
+_hpMax = 0
+_startingEffects = Array[Object]([SubResource("Resource_spagu")])
+_internalName = "Rocket"
+_name = "Rocket"
+_radius = 16.0
+_baseHealthBarHeight = 12.0
+
+[node name="MainSprite" parent="." index="1" unique_id=597948513]
+scale = Vector2(1, 1)
+texture = ExtResource("3_d2js7")
+
+[node name="HealthBar" parent="." index="5" unique_id=640038315]
+offset_left = -24.0
+offset_top = -32.0
+offset_right = 24.0
+offset_bottom = -20.0

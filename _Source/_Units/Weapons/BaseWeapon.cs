@@ -104,6 +104,7 @@ public abstract partial class BaseWeapon : Node2D
 		dpsLabel.Name = "DPSLabel";
 		dpsLabel.BbcodeEnabled = true;
 		dpsLabel.FitContent = true;
+		dpsLabel.CustomMinimumSize = new Vector2(150, 0);
 		infoV.AddChild(dpsLabel);
 
 		RichTextLabel damageLabel = new();
@@ -111,6 +112,7 @@ public abstract partial class BaseWeapon : Node2D
 		damageLabel.Name = "DamageLabel";
 		damageLabel.BbcodeEnabled = true;
 		damageLabel.FitContent = true;
+		damageLabel.CustomMinimumSize = new Vector2(150, 0);
 		infoV.AddChild(damageLabel);
 
 		RichTextLabel cooldownLabel = new();
@@ -118,6 +120,7 @@ public abstract partial class BaseWeapon : Node2D
 		cooldownLabel.Name = "CooldownLabel";
 		cooldownLabel.BbcodeEnabled = true;
 		cooldownLabel.FitContent = true;
+		cooldownLabel.CustomMinimumSize = new Vector2(150, 0);
 		infoV.AddChild(cooldownLabel);
 
 		RichTextLabel rangeLabel = new();
@@ -125,6 +128,7 @@ public abstract partial class BaseWeapon : Node2D
 		rangeLabel.Name = "RangeLabel";
 		rangeLabel.BbcodeEnabled = true;
 		rangeLabel.FitContent = true;
+		rangeLabel.CustomMinimumSize = new Vector2(150, 0);
 		infoV.AddChild(rangeLabel);
 
 		if (GetDescription() != "" && GetDescription() is not null)
