@@ -1,19 +1,113 @@
 [gd_scene format=3 uid="uid://qpcxcyq6y40n"]
 
 [ext_resource type="PackedScene" uid="uid://bqn4h6d52i52" path="res://_Content/_Scenes/_Prefabs/Units/BaseInvaderUnit.tscn" id="1_t5nkc"]
-[ext_resource type="Script" uid="uid://blleps1e6vdkq" path="res://_Source/Effects/OneTimeShield/OneTimeShieldResource.cs" id="2_t5nkc"]
+[ext_resource type="Script" uid="uid://iamaod4iivlq" path="res://_Source/Effects/InvaderStatsIncrease/InvaderStatsIncreaseResource.cs" id="2_t5nkc"]
 [ext_resource type="Texture2D" uid="uid://bc230321nqto5" path="res://icon.svg" id="3_6kxqy"]
+[ext_resource type="Script" uid="uid://dtpcxn7d2dqcy" path="res://_Source/Effects/EffectResource.cs" id="3_e2ca5"]
+[ext_resource type="Script" uid="uid://blleps1e6vdkq" path="res://_Source/Effects/OneTimeShield/OneTimeShieldResource.cs" id="4_orfog"]
 
-[sub_resource type="Resource" id="Resource_t5jjs"]
-script = ExtResource("2_t5nkc")
+[sub_resource type="Resource" id="Resource_gmfqk"]
+script = ExtResource("4_orfog")
 _stack = 3
 metadata/_custom_type_script = "uid://blleps1e6vdkq"
 
+[sub_resource type="Resource" id="Resource_bhxt8"]
+script = ExtResource("2_t5nkc")
+_hpBuff = 600
+_speedBuff = 40.0
+_moneyBuff = Vector4i(5, 5, 0, 0)
+_startingEffects = Array[ExtResource("3_e2ca5")]([SubResource("Resource_gmfqk")])
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_6kxqy"]
+script = ExtResource("4_orfog")
+metadata/_custom_type_script = "uid://blleps1e6vdkq"
+
+[sub_resource type="Resource" id="Resource_e2ca5"]
+script = ExtResource("2_t5nkc")
+_hpBuff = 380
+_moneyBuff = Vector4i(3, 3, 0, 0)
+_startingEffects = Array[ExtResource("3_e2ca5")]([SubResource("Resource_6kxqy")])
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_orfog"]
+script = ExtResource("4_orfog")
+_stack = 2
+metadata/_custom_type_script = "uid://blleps1e6vdkq"
+
+[sub_resource type="Resource" id="Resource_j2ujy"]
+script = ExtResource("2_t5nkc")
+_hpBuff = 660
+_moneyBuff = Vector4i(5, 5, 0, 0)
+_startingEffects = Array[ExtResource("3_e2ca5")]([SubResource("Resource_orfog")])
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_5shdo"]
+script = ExtResource("4_orfog")
+_stack = 2
+metadata/_custom_type_script = "uid://blleps1e6vdkq"
+
+[sub_resource type="Resource" id="Resource_wyfvh"]
+script = ExtResource("2_t5nkc")
+_hpBuff = 1410
+_moneyBuff = Vector4i(8, 8, 0, 0)
+_startingEffects = Array[ExtResource("3_e2ca5")]([SubResource("Resource_5shdo")])
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_5p0vk"]
+script = ExtResource("4_orfog")
+_stack = 3
+metadata/_custom_type_script = "uid://blleps1e6vdkq"
+
+[sub_resource type="Resource" id="Resource_c0c6m"]
+script = ExtResource("2_t5nkc")
+_hpBuff = 2500
+_moneyBuff = Vector4i(11, 11, 0, 0)
+_startingEffects = Array[ExtResource("3_e2ca5")]([SubResource("Resource_5p0vk")])
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_t6roa"]
+script = ExtResource("4_orfog")
+_stack = 3
+metadata/_custom_type_script = "uid://blleps1e6vdkq"
+
+[sub_resource type="Resource" id="Resource_dow8r"]
+script = ExtResource("2_t5nkc")
+_hpBuff = 3700
+_moneyBuff = Vector4i(14, 14, 0, 0)
+_startingEffects = Array[ExtResource("3_e2ca5")]([SubResource("Resource_t6roa")])
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_36aym"]
+script = ExtResource("4_orfog")
+_stack = 4
+metadata/_custom_type_script = "uid://blleps1e6vdkq"
+
+[sub_resource type="Resource" id="Resource_k83cs"]
+script = ExtResource("2_t5nkc")
+_hpBuff = 6400
+_moneyBuff = Vector4i(18, 18, 0, 0)
+_startingEffects = Array[ExtResource("3_e2ca5")]([SubResource("Resource_36aym")])
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_k42wq"]
+script = ExtResource("4_orfog")
+_stack = 4
+metadata/_custom_type_script = "uid://blleps1e6vdkq"
+
+[sub_resource type="Resource" id="Resource_ktim8"]
+script = ExtResource("2_t5nkc")
+_hpBuff = 13700
+_moneyBuff = Vector4i(32, 32, 0, 0)
+_startingEffects = Array[ExtResource("3_e2ca5")]([SubResource("Resource_k42wq")])
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
 [node name="BaseUnit" unique_id=481801141 instance=ExtResource("1_t5nkc")]
 _hpDeducted = 2
-_moveSpeed = 45.0
+_levelStats = Array[ExtResource("2_t5nkc")]([SubResource("Resource_bhxt8"), SubResource("Resource_e2ca5"), SubResource("Resource_j2ujy"), SubResource("Resource_wyfvh"), SubResource("Resource_c0c6m"), SubResource("Resource_dow8r"), SubResource("Resource_k83cs"), SubResource("Resource_ktim8")])
+_moveSpeed = 0.0
 _hpMax = 0
-_startingEffects = Array[Object]([SubResource("Resource_t5jjs")])
+_startingEffects = Array[Object]([])
 _internalName = "Shield"
 _name = "Shield"
 _radius = 24.0

@@ -19,10 +19,16 @@ public partial class StatsIncreaseResource : EffectResource, IStackable
 	public int _maxHpIncrease;
 
 	[Export]
+	public float _percentHpIncrease;
+
+	[Export]
 	public float _rangeIncrease;
 
 	[Export]
 	public float _speedIncrease;
+
+	[Export]
+	public float _percentSpeedIncrease;
 
 	[Export]
 	public double _attackDelayModifierIncrease;
@@ -32,6 +38,12 @@ public partial class StatsIncreaseResource : EffectResource, IStackable
 
 	[Export]
 	public int _pierceCount;
+
+	[Export]
+	public Vector4I _moneyIncrease;
+
+	[Export]
+	public float _percentMoneyIncrease;
 
 	[Export]
 	public ConvexPolygonShape2D _newZone;
@@ -86,7 +98,7 @@ public partial class StatsIncreaseResource : EffectResource, IStackable
 
 		if (_damagePercentIncrease != 0)
 		{
-			_effectDescription += $"Increase damage by {_damagePercentIncrease * 100:F2}%\n";
+			_effectDescription += $"Increase damage by {_damagePercentIncrease * 100:F0}%\n";
 		}
 
 

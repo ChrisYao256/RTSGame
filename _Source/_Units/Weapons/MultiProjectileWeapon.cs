@@ -27,44 +27,46 @@ public partial class MultiProjectileWeapon : ProjectileWeapon
 	public override void PerformAttack(Unit target, int d)
 	{
 		_parent.EmitSignal(Unit.SignalName.ShotFired);
+		int d_ = d;
+
 		if (_delayProjectile > 0)
 		{
 			Timer timer = new Timer();
 			timer.WaitTime = _delayProjectile;
-			timer.Timeout += () => ShootProjectiles();
+			timer.Timeout += () => ShootProjectiles(d_);
 			timer.OneShot = true;
 			AddChild(timer);
 			timer.Start();
 		}
 		else
 		{
-			ShootProjectiles();
+			ShootProjectiles(d);
 		}
 	}
 	
-	private async void ShootProjectiles()
+	private async void ShootProjectiles(int damage)
 	{
 		for (int i = 0; i < _hitCount; i++)
 		{
-			if (_attackTarget == null)
+			if (_attackTarget == null || !IsInstanceValid(_attackTarget))
 			{
 				return;
 			}
 			if (i % 2 == 0 || _firePoint2 is null)
 			{
-				Projectile projectile = SpawnProjectile(_firePoint1.GlobalPosition);
+				Projectile projectile = SpawnProjectile(_firePoint1.GlobalPosition, damage);
 				AddChild(projectile);
 			}
 			else
 			{
-				Projectile projectile = SpawnProjectile(_firePoint2.GlobalPosition);
+				Projectile projectile = SpawnProjectile(_firePoint2.GlobalPosition, damage);
 				AddChild(projectile);
 			}
 				
 
 			if (i < _hitCount - 1)
 			{
-				await Task.Delay(TimeSpan.FromSeconds(_shotInterval));
+				await ToSignal(GetTree().CreateTimer(_shotInterval, processAlways: false), SceneTreeTimer.SignalName.Timeout);
 			}
 		}
 		_parent.OnVolleyEnded();

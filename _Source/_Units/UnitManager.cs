@@ -56,6 +56,7 @@ public partial class UnitManager : Node2D
 		{ "RocketSpawner", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/RocketSpawner.tscn") },
 		{ "ShieldSpawner", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/ShieldSpawner.tscn") },
 		{ "DuplicatorSpawner", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/DuplicatorSpawner.tscn") },
+		{ "BigShieldSpawner", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/BigShieldSpawner.tscn") },
 
 		{ "DepoweredSpawner", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/DepoweredSpawner.tscn") },
 
@@ -117,10 +118,14 @@ public partial class UnitManager : Node2D
 		return null;
 	}
 
-	public static string InternalNameToName(string internalName)
+	public static string InternalNameToName(string internalName, int level)
 	{
 		Unit unit = UnitManager.GetUnit(internalName, false);
-		string name = unit._name;
+		if (unit is InvaderUnit invader && level > 0)
+		{
+			invader._level += level;
+		}
+		string name = unit.GetName();
 		unit.QueueFree();
 		return name;
 	}
@@ -132,11 +137,11 @@ public partial class UnitManager : Node2D
 	private bool _isDraggingRight = false;
 	private Vector2 _dragStart;
 	private Vector2 _dragEnd;
-	private Color _boxColor = new Color(0, 1, 0, 0.3f); // Transparent green
-	private Color _borderColor = new Color(0, 1, 0, 0.7f);
+	private Color _boxColor = new Color(119f/255f, 215f/255f, 112f/255f, 0.7f); // Transparent green
+	private Color _borderColor = new Color(56f/255f, 94f/255f, 53f/255f);
 
 	private List<Unit> _selectedUnits = new List<Unit>();
-	private List<Unit> _activeUnits = new List<Unit>();
+	public List<Unit> _activeUnits = new List<Unit>();
 
 	private bool _isAMovePending = false;
 	private bool _shiftMode = false;
@@ -224,18 +229,19 @@ public partial class UnitManager : Node2D
 		if (@event is InputEventMouseButton mouseEvent &&
 				mouseEvent.ButtonIndex == MouseButton.Right)
 		{
-			if (mouseEvent.Pressed)
-			{
-				_isDraggingRight = true;
-				_dragStart = GetGlobalMousePosition();
-				_dragEnd = _dragStart;
-				Vector2 targetPos = GetGlobalMousePosition();
-				GiveMoveOrder(targetPos);
-			}
-			else if (_isDraggingRight)
-			{
-				_isDraggingRight = false;
-			}
+			//if (mouseEvent.Pressed)
+			//{
+			//	_isDraggingRight = true;
+			//	_dragStart = GetGlobalMousePosition();
+			//	_dragEnd = _dragStart;
+			//	Vector2 targetPos = GetGlobalMousePosition();
+			//	GiveMoveOrder(targetPos);
+			//}
+			//else if (_isDraggingRight)
+			//{
+			//	_isDraggingRight = false;
+			//}
+			UpdatePlayerSelection([]);
 		}
 		else if (@event is InputEventMouseButton mouseEvent_ && mouseEvent_.ButtonIndex == MouseButton.Left)
 		{

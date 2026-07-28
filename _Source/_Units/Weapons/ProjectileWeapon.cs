@@ -18,9 +18,14 @@ public partial class ProjectileWeapon : BaseWeapon
 	/// <summary>
 	[Export] protected float _delayProjectile;
 
+	public ProjectileWeapon()
+	{
+		_weaponType = WeaponType.Projectile;
+	}
+
 	public override void PerformAttack(Unit target, int d)
 	{
-		Projectile projectile = SpawnProjectile(_firePoint.GlobalPosition);
+		Projectile projectile = SpawnProjectile(_firePoint.GlobalPosition, d);
 
 		if (_delayProjectile > 0)
 		{
@@ -38,7 +43,7 @@ public partial class ProjectileWeapon : BaseWeapon
 		_parent.EmitSignal(Unit.SignalName.ShotFired);
 	}
 
-	protected Projectile SpawnProjectile(Vector2 spawnPosition)
+	protected Projectile SpawnProjectile(Vector2 spawnPosition, int damage)
 	{
 		Vector2 targetDir = _attackTarget.GlobalPosition - GlobalPosition;
 		float targetAngle = targetDir.Angle();
@@ -50,8 +55,10 @@ public partial class ProjectileWeapon : BaseWeapon
 
 		dealDamage = new Action<Unit, Projectile>((Unit enemy, Projectile projectile) =>
 		{
-			_parent.OnBeforeHitEnemy(enemy);
-			enemy.Hit(GetDamage(), _parent);
+			DamageContext context = new DamageContext(_parent, enemy, damage, DamageType.DirectAttack);
+
+			_parent.OnBeforeHitEnemy(context);
+			enemy.Hit(context);
 			_parent.OnHitEnemy(enemy);
 		});
 

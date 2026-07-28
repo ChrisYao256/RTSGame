@@ -1,10 +1,40 @@
 [gd_scene format=3 uid="uid://bjudui5jhrtku"]
 
 [ext_resource type="Script" uid="uid://dltrnewg5aqrv" path="res://_Source/ExplosionVisualEffect.cs" id="1_r3q1s"]
-[ext_resource type="Texture2D" uid="uid://do1ng5pay0vf6" path="res://_Assets/Explosion.png" id="2_on828"]
+[ext_resource type="Texture2D" uid="uid://cxombydiraw8" path="res://_Assets/untitled.png" id="2_hdbiq"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4r1ju"]
+atlas = ExtResource("2_hdbiq")
+region = Rect2(0, 0, 720, 720)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xdv1g"]
+atlas = ExtResource("2_hdbiq")
+region = Rect2(720, 0, 720, 720)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dysvr"]
+atlas = ExtResource("2_hdbiq")
+region = Rect2(1440, 0, 720, 720)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_auw5p"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4r1ju")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xdv1g")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dysvr")
+}],
+"loop": false,
+"name": &"default",
+"speed": 10.0
+}]
 
 [node name="ExplosionVisualEffect" type="Node2D" unique_id=856898756]
 script = ExtResource("1_r3q1s")
 
-[node name="Sprite2D" type="Sprite2D" parent="." unique_id=124558391]
-texture = ExtResource("2_on828")
+[node name="Sprite2D" type="AnimatedSprite2D" parent="." unique_id=350110334]
+sprite_frames = SubResource("SpriteFrames_auw5p")
+autoplay = "default"

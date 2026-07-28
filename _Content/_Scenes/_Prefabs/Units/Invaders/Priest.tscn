@@ -3,6 +3,8 @@
 [ext_resource type="PackedScene" uid="uid://bqn4h6d52i52" path="res://_Content/_Scenes/_Prefabs/Units/BaseInvaderUnit.tscn" id="1_k3h8r"]
 [ext_resource type="PackedScene" uid="uid://duss40s7lcad3" path="res://_Content/_Scenes/_Prefabs/Effects/HealingVisualEffect.tscn" id="2_3co78"]
 [ext_resource type="Script" uid="uid://of8d3f3k7s7j" path="res://_Source/Effects/NearbyHealing/NearbyHealingResource.cs" id="2_o5oan"]
+[ext_resource type="Script" uid="uid://iamaod4iivlq" path="res://_Source/Effects/InvaderStatsIncrease/InvaderStatsIncreaseResource.cs" id="2_vl23e"]
+[ext_resource type="Script" uid="uid://dtpcxn7d2dqcy" path="res://_Source/Effects/EffectResource.cs" id="3_liwpy"]
 [ext_resource type="Texture2D" uid="uid://nerq2v8tepo4" path="res://_Assets/Priest.png" id="4_phpgk"]
 [ext_resource type="Texture2D" uid="uid://bc230321nqto5" path="res://icon.svg" id="5_phpgk"]
 
@@ -16,6 +18,99 @@ _isShield = true
 _effectName = "Protective Field"
 _displayType = 1
 metadata/_custom_type_script = "uid://of8d3f3k7s7j"
+
+[sub_resource type="Resource" id="Resource_2mu3q"]
+script = ExtResource("2_vl23e")
+_hpBuff = 140
+_speedBuff = 55.0
+_moneyBuff = Vector4i(0, 0, 2, 0)
+_startingEffects = Array[ExtResource("3_liwpy")]([SubResource("Resource_3co78")])
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_liwpy"]
+script = ExtResource("2_o5oan")
+_healAmount = 25
+_isShield = true
+metadata/_custom_type_script = "uid://of8d3f3k7s7j"
+
+[sub_resource type="Resource" id="Resource_siojo"]
+script = ExtResource("2_vl23e")
+_hpBuff = 70
+_moneyBuff = Vector4i(0, 0, 1, 0)
+_startingEffects = Array[ExtResource("3_liwpy")]([SubResource("Resource_liwpy")])
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_r4uno"]
+script = ExtResource("2_o5oan")
+_healAmount = 65
+_isShield = true
+metadata/_custom_type_script = "uid://of8d3f3k7s7j"
+
+[sub_resource type="Resource" id="Resource_qqwbb"]
+script = ExtResource("2_vl23e")
+_hpBuff = 150
+_startingEffects = Array[ExtResource("3_liwpy")]([SubResource("Resource_r4uno")])
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_bk0dx"]
+script = ExtResource("2_o5oan")
+_healAmount = 140
+_isShield = true
+metadata/_custom_type_script = "uid://of8d3f3k7s7j"
+
+[sub_resource type="Resource" id="Resource_n47w0"]
+script = ExtResource("2_vl23e")
+_hpBuff = 240
+_startingEffects = Array[ExtResource("3_liwpy")]([SubResource("Resource_bk0dx")])
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_5lc6m"]
+script = ExtResource("2_o5oan")
+_healAmount = 245
+_isShield = true
+metadata/_custom_type_script = "uid://of8d3f3k7s7j"
+
+[sub_resource type="Resource" id="Resource_1nwop"]
+script = ExtResource("2_vl23e")
+_hpBuff = 550
+_startingEffects = Array[ExtResource("3_liwpy")]([SubResource("Resource_5lc6m")])
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_fbihp"]
+script = ExtResource("2_o5oan")
+_healAmount = 550
+_isShield = true
+metadata/_custom_type_script = "uid://of8d3f3k7s7j"
+
+[sub_resource type="Resource" id="Resource_mguj0"]
+script = ExtResource("2_vl23e")
+_hpBuff = 1000
+_startingEffects = Array[ExtResource("3_liwpy")]([SubResource("Resource_fbihp")])
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_qjys8"]
+script = ExtResource("2_o5oan")
+_healAmount = 1140
+_isShield = true
+metadata/_custom_type_script = "uid://of8d3f3k7s7j"
+
+[sub_resource type="Resource" id="Resource_egy4p"]
+script = ExtResource("2_vl23e")
+_hpBuff = 1550
+_startingEffects = Array[ExtResource("3_liwpy")]([SubResource("Resource_qjys8")])
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_3gnst"]
+script = ExtResource("2_o5oan")
+_healAmount = 1800
+_isShield = true
+metadata/_custom_type_script = "uid://of8d3f3k7s7j"
+
+[sub_resource type="Resource" id="Resource_1363w"]
+script = ExtResource("2_vl23e")
+_hpBuff = 2250
+_startingEffects = Array[ExtResource("3_liwpy")]([SubResource("Resource_3gnst")])
+metadata/_custom_type_script = "uid://iamaod4iivlq"
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_8b2vx"]
 atlas = ExtResource("4_phpgk")
@@ -41,9 +136,10 @@ animations = [{
 
 [node name="BaseUnit" unique_id=481801141 instance=ExtResource("1_k3h8r")]
 _hpDeducted = 2
-_moveSpeed = 55.0
+_levelStats = Array[ExtResource("2_vl23e")]([SubResource("Resource_2mu3q"), SubResource("Resource_siojo"), SubResource("Resource_qqwbb"), SubResource("Resource_n47w0"), SubResource("Resource_1nwop"), SubResource("Resource_mguj0"), SubResource("Resource_egy4p"), SubResource("Resource_1363w")])
+_moveSpeed = 0.0
 _hpMax = 0
-_startingEffects = Array[Object]([SubResource("Resource_3co78")])
+_startingEffects = Array[Object]([])
 _internalName = "Priest"
 _name = "Priest"
 _radius = 24.0

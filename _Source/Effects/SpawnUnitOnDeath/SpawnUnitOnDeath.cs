@@ -46,15 +46,16 @@ public partial class SpawnUnitOnDeath : Effect
 
 				if (_resource._spawnedUnits != null)
 				{
+					newEnemy.AddEffect(unit);
 					// Apply your buffs directly to the returned reference
-					newEnemy.IncreaseHpMaxModifier(unit._hpBuff);
-					newEnemy.IncreaseSpeedModifier(unit._speedBuff);
-					newEnemy.IncreaseArmorModifier(unit._armorBuff);
-					newEnemy.SetMoneyModifier(-newEnemy.GetSelfMoneyDropped()); // spawned units with this effect always drop no money
-					foreach (EffectResource effect in unit._startingEffects)
-					{
-						newEnemy.AddEffect(effect);
-					}
+					//newEnemy.IncreaseHpMaxModifier(unit._hpBuff);
+					//newEnemy.IncreaseSpeedModifier(unit._speedBuff);
+					//newEnemy.IncreaseArmorModifier(unit._armorBuff);
+					//newEnemy.IncreaseMoneyModifier(unit._moneyBuff);
+					//foreach (EffectResource effect in unit._startingEffects)
+					//{
+					//	newEnemy.AddEffect(effect);
+					//}
 				}
 			}).CallDeferred();
 			spawnPositions.RemoveAt(index);

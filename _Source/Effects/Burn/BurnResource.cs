@@ -13,6 +13,12 @@ public partial class BurnResource : EffectResource
 	[Export]
 	public PackedScene _burnVisualScene;
 
+	public float _burnIntervalMultiplier = 1f;
+
+	public const float BaseBurnInterval = 1f;
+
+	public float _decayRate = 0.03f;
+
 	private Burn _effect;
 
 	public override bool MergeWithOld(EffectResource oldResource, List<EffectResource> allMatchingResource)
@@ -35,17 +41,7 @@ public partial class BurnResource : EffectResource
 	{
 		_displayType = DisplayTypes.Small;
 		_effectName = "Burning " + (_damage).ToString("F0");
-		_effectDescription = "Taking " + _damage.ToString() + " every second";
-	}
-
-	public override void SetUpgradeDescription()
-	{
-		_effectName = "Burning";
-		_effectDescription = "";
-		if (_damage != 0)
-		{
-			_effectDescription += $"{_effectName} damage +{_damage}";
-		}
+		_effectDescription = "Take " + _damage.ToString() + $" damage every second. This amount decreases by {_decayRate * 100:F0}% of target's max HP every second.";
 	}
 
 	public override Effect CreateNode()

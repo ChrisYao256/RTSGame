@@ -47,12 +47,6 @@ public partial class NearbyIncomeIncrease : Effect
 		Vector2I delta = tower._gridLocation - parentTower._gridLocation;
 		if (_resource._area.Contains(delta))
 		{
-			if (tower._name == "Mine" || tower._name == "Reactor")
-			{
-				MoneyOnWaveStartResource incomeResource = (tower._effects).OfType<MoneyOnWaveStartResource>().FirstOrDefault();
-				incomeResource._money += _resource._increaseAmount;
-				incomeResource.SetDescription();
-			}
 		}
 	}
 
@@ -71,12 +65,6 @@ public partial class NearbyIncomeIncrease : Effect
 			if (!parentTower._grid.IsCellVacant(position))
 			{
 				TowerUnit tower = parentTower._grid.GetTowerOnCell(position);
-				if (tower._name == "Mine" || tower._name == "Reactor")
-				{
-					MoneyOnWaveStartResource incomeResource = (tower._effects).OfType<MoneyOnWaveStartResource>().FirstOrDefault();
-					incomeResource._money -= _resource._increaseAmount;
-					incomeResource.SetDescription();
-				}
 			}
 		}
 		_parentUnit._effects.Remove(_resource);

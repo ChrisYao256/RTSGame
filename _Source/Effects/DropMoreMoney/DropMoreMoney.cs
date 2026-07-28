@@ -54,10 +54,11 @@ public partial class DropMoreMoney : Effect
 
 	protected override void OnUnitDied()
 	{
-		if (_firstResource._source != null)
-		{
-			_firstResource._source.IncreaseMoneyGainedStat(((InvaderUnit)_parentUnit)._moneyTempModifier);
-		}
+		//if (_firstResource._source != null)
+		//{
+		//	InvaderUnit invader = (InvaderUnit)_parentUnit;
+		//	_firstResource._source.IncreaseMoneyGainedStat(invader.GetBonusMoneyDropped());
+		//}
 	}
 
 	public void RecalculateDebuff()
@@ -99,7 +100,7 @@ public partial class DropMoreMoney : Effect
 			_longestTimer.Start(maxDuration);
 		}
 
-			((InvaderUnit)_parentUnit).SetMoneyTempModifier(maxIncrease);
+			((InvaderUnit)_parentUnit).SetMoneyTempModifierDMM(maxIncrease);
 		if (maxIncrease == 0)
 		{
 			RemoveEffectResource();

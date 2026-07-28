@@ -37,6 +37,11 @@ public partial class NearbyHealing : Effect
 
 	protected override void OnCreation()
 	{
+		if (!IsInsideTree())
+		{
+			QueueFree();
+			return;
+		}
 		_timer = new Timer();
 		_timer.Name = "Timer";
 		AddChild(_timer);

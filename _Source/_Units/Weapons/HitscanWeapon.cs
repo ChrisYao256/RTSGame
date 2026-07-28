@@ -35,8 +35,10 @@ public partial class HitscanWeapon : BaseWeapon
 		// Start (or restart) the timer for the set duration
 		_tracerTimer.Start(_tracerDuration);
 
-		_parent.OnBeforeHitEnemy(target);
-		target.Hit(GetDamage(), _parent);
+		DamageContext context = new DamageContext(_parent, target, d, DamageType.DirectAttack);
+
+		_parent.OnBeforeHitEnemy(context);
+		target.Hit(context);
 		_parent.OnHitEnemy(target);
 		_parent.EmitSignal(Unit.SignalName.ShotFired);
 	}

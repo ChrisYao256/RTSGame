@@ -1,0 +1,77 @@
+[gd_scene format=3 uid="uid://d0c5e21sf0glt"]
+
+[ext_resource type="PackedScene" uid="uid://yhbw0b164ui2" path="res://_Content/_Scenes/_Prefabs/Units/BaseTower.tscn" id="1_s20rv"]
+[ext_resource type="Script" uid="uid://b4jva1l23o6su" path="res://_Source/_Units/Spawner.cs" id="2_tbetk"]
+[ext_resource type="Script" uid="uid://iamaod4iivlq" path="res://_Source/Effects/InvaderStatsIncrease/InvaderStatsIncreaseResource.cs" id="3_tl8gk"]
+[ext_resource type="Script" uid="uid://dtpcxn7d2dqcy" path="res://_Source/Effects/EffectResource.cs" id="4_4kb3q"]
+[ext_resource type="Script" uid="uid://cvroohkeaovqw" path="res://_Source/_Units/SpawnerDataResource.cs" id="5_8ohhh"]
+[ext_resource type="Texture2D" uid="uid://iocgjnp7i8td" path="res://_Assets/Portal.png" id="6_70onw"]
+[ext_resource type="Script" uid="uid://djbu8krhjrjib" path="res://_Source/Effects/SpawnerUpgradeResource/SpawnerUpgradeResource.cs" id="8_frfr7"]
+[ext_resource type="Script" uid="uid://be80c57wd06d0" path="res://_Source/Effects/ImmediateTransform/ImmediateTransformResource.cs" id="9_n6cvk"]
+
+[sub_resource type="Resource" id="Resource_6d8vk"]
+script = ExtResource("3_tl8gk")
+_unitName = "Shield"
+_level = 5
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_d3jpy"]
+script = ExtResource("5_8ohhh")
+_units = Array[ExtResource("3_tl8gk")]([SubResource("Resource_6d8vk")])
+metadata/_custom_type_script = "uid://cvroohkeaovqw"
+
+[sub_resource type="Resource" id="Resource_q2jb2"]
+script = ExtResource("3_tl8gk")
+_level = 1
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_d63dk"]
+script = ExtResource("8_frfr7")
+_units = Array[ExtResource("3_tl8gk")]([SubResource("Resource_q2jb2")])
+metadata/_custom_type_script = "uid://djbu8krhjrjib"
+
+[sub_resource type="Resource" id="Resource_yf86q"]
+script = ExtResource("3_tl8gk")
+_level = 1
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_f0flp"]
+script = ExtResource("8_frfr7")
+_units = Array[ExtResource("3_tl8gk")]([SubResource("Resource_yf86q")])
+metadata/_custom_type_script = "uid://djbu8krhjrjib"
+
+[sub_resource type="Resource" id="Resource_yuxvw"]
+script = ExtResource("3_tl8gk")
+_level = 1
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_pabjm"]
+script = ExtResource("8_frfr7")
+_units = Array[ExtResource("3_tl8gk")]([SubResource("Resource_yuxvw")])
+metadata/_custom_type_script = "uid://djbu8krhjrjib"
+
+[sub_resource type="Resource" id="Resource_rn5l1"]
+script = ExtResource("9_n6cvk")
+_transformedUnit = "SentrySpawner"
+_description = "Spawns a sentry instead. "
+metadata/_custom_type_script = "uid://be80c57wd06d0"
+
+[node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_s20rv")]
+script = ExtResource("2_tbetk")
+_spawnerData = SubResource("Resource_d3jpy")
+_spawnInterval = 1.0
+_isEnemy = true
+_iconTexture = ExtResource("6_70onw")
+_towerType = 2
+_firstUpgrade = Array[Object]([SubResource("Resource_d63dk")])
+_secondUpgrade = Array[Object]([SubResource("Resource_f0flp")])
+_thirdUpgrade = Array[Object]([SubResource("Resource_pabjm")])
+_fourthUpgradeA = Array[Object]([SubResource("Resource_rn5l1")])
+LeashDistance = 200.0
+_startingEffects = Array[Object]([])
+_internalName = "BigShieldSpawner"
+_name = "Shield Portal"
+_radius = 0.0
+
+[node name="MainSprite" parent="." index="1" unique_id=701942347]
+texture = ExtResource("6_70onw")

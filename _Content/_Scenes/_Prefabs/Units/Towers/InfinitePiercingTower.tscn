@@ -10,18 +10,18 @@
 
 [sub_resource type="Resource" id="Resource_bpy14"]
 script = ExtResource("3_x762y")
-_damageIncrease = 240
+_damageIncrease = 460
 metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 
 [sub_resource type="Resource" id="Resource_2kx6n"]
 script = ExtResource("3_x762y")
-_damageIncrease = 540
+_damageIncrease = 790
 _pierceCount = 1
 metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 
 [sub_resource type="Resource" id="Resource_7mvqi"]
 script = ExtResource("3_x762y")
-_damageIncrease = 870
+_damageIncrease = 1500
 _pierceCount = 1
 metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 
@@ -38,13 +38,13 @@ animations = [{
 
 [node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_i6b2u")]
 _iconTexture = ExtResource("2_pbkif")
-_description = "Shoots piercing projectiles that can damage multiple enemies on a line."
+_description = "Upgraded from Piercer. Shots pierce through all enemies in a line."
 _firstUpgrade = Array[Object]([SubResource("Resource_bpy14")])
-_firstUpgradeCost = Vector4i(50, 90, 0, 0)
+_firstUpgradeCost = Vector4i(68, 202, 0, 0)
 _secondUpgrade = Array[Object]([SubResource("Resource_2kx6n")])
-_secondUpgradeCost = Vector4i(100, 180, 0, 0)
+_secondUpgradeCost = Vector4i(105, 315, 0, 0)
 _thirdUpgrade = Array[Object]([SubResource("Resource_7mvqi")])
-_thirdUpgradeCost = Vector4i(133, 267, 0, 0)
+_thirdUpgradeCost = Vector4i(177, 529, 0, 0)
 LeashDistance = 200.0
 _startingEffects = Array[ExtResource("5_lqan1")]([])
 _internalName = "InfinitePiercingTower"
@@ -73,3 +73,4 @@ _damage = 650
 _range = 260.0
 _attackCooldown = 1.5
 _attackDelayHigh = 0.1
+_weaponType = 5

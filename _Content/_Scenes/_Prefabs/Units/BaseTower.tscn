@@ -4,6 +4,7 @@
 [ext_resource type="Script" uid="uid://b2ck2c8ddtlw3" path="res://_Source/_Units/TowerUnit.cs" id="2_2i4cj"]
 [ext_resource type="Script" uid="uid://dtpcxn7d2dqcy" path="res://_Source/Effects/EffectResource.cs" id="3_2i4cj"]
 [ext_resource type="FontFile" uid="uid://cbsqj8u26ju8q" path="res://_Assets/Fonts/edit-undo.brk.ttf" id="4_l3ce5"]
+[ext_resource type="Script" uid="uid://dmsd1wjc5yk5v" path="res://_Source/_UI/TooltipRichTextLabel.cs" id="5_hmgo8"]
 
 [node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_q0otc")]
 script = ExtResource("2_2i4cj")
@@ -25,7 +26,13 @@ _fourthUpgradeBTexture = null
 _fourthUpgradeBCost = Vector4i(0, 0, 0, 0)
 _transformEffects = Array[ExtResource("3_2i4cj")]([])
 
-[node name="Level" type="Label" parent="." index="2" unique_id=1522381665]
+[node name="CollisionShape2D" parent="." index="2" unique_id=1381764660]
+visible = true
+
+[node name="HealthBar" parent="." index="4" unique_id=640038315]
+visible = false
+
+[node name="Level" type="Label" parent="." index="8" unique_id=1522381665]
 offset_left = 8.0
 offset_top = 23.0
 offset_right = 77.0
@@ -36,5 +43,20 @@ theme_override_fonts/font = ExtResource("4_l3ce5")
 theme_override_font_sizes/font_size = 24
 text = "Lv 1"
 
-[node name="HealthBar" parent="." index="5" unique_id=640038315]
-visible = false
+[node name="Income" type="RichTextLabel" parent="." index="9" unique_id=961722696]
+clip_contents = false
+custom_minimum_size = Vector2(75, 0)
+offset_left = -58.0
+offset_top = -58.0
+offset_right = -8.0
+offset_bottom = -18.0
+mouse_filter = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 12
+theme_override_fonts/normal_font = ExtResource("4_l3ce5")
+theme_override_fonts/italics_font = ExtResource("4_l3ce5")
+theme_override_font_sizes/normal_font_size = 24
+theme_override_font_sizes/italics_font_size = 24
+bbcode_enabled = true
+fit_content = true
+script = ExtResource("5_hmgo8")

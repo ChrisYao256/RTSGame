@@ -2,6 +2,8 @@ using Godot;
 using Godot.Collections; // Required for Godot.Collections.Dictionary
 using RTSGame.Source;
 using RTSGame.Units;
+using System;
+using System.Linq;
 
 public partial class SaveManager : Node
 {
@@ -12,7 +14,7 @@ public partial class SaveManager : Node
 	public TDManager _tdManager;
 
 	// A helper method to pack your current game data into a Godot Dictionary
-	public Dictionary<string, Variant> PackGameData(GameGlobals.GameMode gameMode,Vector4I money, int portalLimit, int hp, int waveCount, Array<TowerUnit> towers, Array<string> unlockedTowers)
+	public Dictionary<string, Variant> PackGameData(GameGlobals.GameMode gameMode,Vector4I money, int portalLimit, int hp, int waveCount, Array<TowerUnit> towers, Array<string> unlockedTowers, Array<GlobalEffectResource> globalEffects, Dictionary<int, Array<InvaderStatsIncreaseResource>>waveDict, Dictionary<int, Array<RogueManager.RewardType>> rewardDict, int speedUpWaveCount)
 	{
 		var gameData = new Dictionary<string, Variant>
 				{
@@ -20,7 +22,8 @@ public partial class SaveManager : Node
 						{ "Money", money },
 						{ "PortalLimit", portalLimit },
 			      { "WaveCount", waveCount},
-						{ "Hp", hp}
+						{ "Hp", hp},
+						{ "SpeedUpWaveCount", speedUpWaveCount}
 				};
 
 		// We will store the towers as an array of individual tower dictionaries
@@ -33,22 +36,51 @@ public partial class SaveManager : Node
 										{ "Name", tower._internalName },
 										{ "GridX", tower._gridLocation.X },
 										{ "GridY", tower._gridLocation.Y },
-										{ "Level", tower.GetTowerLevel() }
+										{ "Level", tower.GetTowerLevel() },
+										{ "Cost0", tower._cost[0]},
+										{ "Cost1", tower._cost[1]},
+										{ "Cost2", tower._cost[2]},
+										{ "Cost3", tower._cost[3]},
+										{ "Priority", (int)tower._targetPriority },
 								};
 			towerList.Add(towerData);
 		}
 
 		gameData.Add("Towers", towerList);
 
+		var effectsList = new Array<int>();
+
+		foreach (GlobalEffectResource effect in globalEffects)
+		{
+			effectsList.Add(_tdManager._allGlobalEffects.IndexOf(effect));
+		}
+
+		gameData.Add("GlobalEffects", effectsList);
+
+		var wavesList = new Dictionary<int, Array<string>>();
+
+		foreach (var (index, wave) in waveDict)
+		{
+			wavesList.Add(index, []);
+			foreach (InvaderStatsIncreaseResource unit in wave)
+			{
+				wavesList[index].Add(unit._unitName);
+			}
+		}
+
+		gameData.Add("Waves", wavesList);
+
+		gameData.Add("Rewards", rewardDict.Duplicate());
+
 		gameData.Add("UnlockedTowers", unlockedTowers);
+
 		return gameData;
 	}
 
-	public void SaveGame(GameGlobals.GameMode gameMode, Vector4I money, int portalLimit, int hp,int waveCount, Array<TowerUnit> currentTowers, Array<string> unlockedTowers)
+	public void SaveGame(GameGlobals.GameMode gameMode, Vector4I money, int portalLimit, int hp,int waveCount, Array<TowerUnit> currentTowers, Array<string> unlockedTowers, Array<GlobalEffectResource> globalEffects, Dictionary<int, Array<InvaderStatsIncreaseResource>> waveList, Dictionary<int, Array<RogueManager.RewardType>> rewardList, int speedUpWaveCount)
 	{
 		// Pack the data using your defined method
-		Dictionary<string, Variant> dataToSave = PackGameData(gameMode, money, portalLimit, hp, waveCount, currentTowers, unlockedTowers);
-
+		Dictionary<string, Variant> dataToSave = PackGameData(gameMode, money, portalLimit, hp, waveCount, currentTowers, unlockedTowers, globalEffects, waveList, rewardList, speedUpWaveCount);
 		// Convert the dictionary into a clean JSON text string
 		string jsonString = Json.Stringify(dataToSave);
 
@@ -118,14 +150,20 @@ public partial class SaveManager : Node
 		int loadedPortalLimit = (int)gameData["PortalLimit"];
 		int loadedWaveCount = (int)gameData["WaveCount"];
 		int loadedHp = (int)gameData["Hp"];
+		int loadedSpeedUpWaveCount = (int)gameData["SpeedUpWaveCount"];
 
 		// Extract the nested tower array
 		var loadedTowers = (Array<Dictionary<string, Variant>>)gameData["Towers"];
 
 		var loadedUnlockedTowers = (Array<string>)gameData["UnlockedTowers"];
 
+		var loadedGlobalEffects = (Array<int>)gameData["GlobalEffects"];
+
+		var loadedWaves = (Dictionary<int, Array<string>>)gameData["Waves"];
+		var loadedRewards = (Dictionary<int, Array<RogueManager.RewardType>>)gameData["Rewards"];
+
 		// Send everything off to be reconstructed in your main match loop
-		ApplyLoadedData(gameMode, loadedMoney, loadedPortalLimit, loadedHp, loadedWaveCount, loadedTowers, loadedUnlockedTowers);
+		ApplyLoadedData(gameMode, loadedMoney, loadedPortalLimit, loadedHp, loadedWaveCount, loadedTowers, loadedUnlockedTowers, loadedGlobalEffects, loadedWaves, loadedRewards, loadedSpeedUpWaveCount);
 	}
 
 	public bool HasSavedGame()
@@ -134,7 +172,7 @@ public partial class SaveManager : Node
 	}
 
 	// 3. Spawning / Applying Method
-	private void ApplyLoadedData(GameGlobals.GameMode gameMode, Vector4I money, int portalLimit, int hp, int waveCount, Array<Dictionary<string, Variant>> towers, Array<string> loadedUnlockedTowers)
+	private void ApplyLoadedData(GameGlobals.GameMode gameMode, Vector4I money, int portalLimit, int hp, int waveCount, Array<Dictionary<string, Variant>> towers, Array<string> loadedUnlockedTowers, Array<int> loadedGlobalEffects, Dictionary<int, Array<string>> waveList, Dictionary<int, Array<RogueManager.RewardType>> rewardList, int speedUpWaveCount)
 	{
 		_tdManager._gameMode = gameMode;
 		_tdManager.UpdateMoney(money);
@@ -144,17 +182,28 @@ public partial class SaveManager : Node
 		_tdManager.UpdateWaveIndexCounter();
 		_tdManager.UpdatePortalLimitButtonText(); 
 		_tdManager._availTowerList = loadedUnlockedTowers;
-
+		_tdManager._speedUpWaveCount = speedUpWaveCount;
+	
 		foreach (var towerData in towers)
 		{
 			string name = (string)towerData["Name"];
 			int gridX = (int)towerData["GridX"];
 			int gridY = (int)towerData["GridY"];
 			int level = (int)towerData["Level"];
+			int cost0 = (int)towerData["Cost0"];
+			int cost1 = (int)towerData["Cost1"];
+			int cost2 = (int)towerData["Cost2"];
+			int cost3 = (int)towerData["Cost3"];
+			TowerUnit.TargetPriority priority = (TowerUnit.TargetPriority)(int)towerData["Priority"];
 
 			// Your Spawner/Factory Logic should take over here:
 			// e.g., SpawnTowerAtGrid(name, new Vector2I(gridX, gridY), level);
 			TowerUnit tower = _tdManager._towerManager.PlaceTower(new(gridX, gridY), name);
+
+			tower._cost = new Vector4I(cost0, cost1, cost2, cost3);
+
+			tower._targetPriority = priority;
+
 			if (level == 2)
 			{
 				tower.UpgradeFirst();
@@ -170,6 +219,21 @@ public partial class SaveManager : Node
 				tower.UpgradeSecond();
 				tower.UpgradeThird();
 			}
+		}
+
+		foreach (int resourceIndex in loadedGlobalEffects)
+		{
+			_tdManager.ApplyGlobalEffect(resourceIndex);
+		}
+
+		foreach (var (key, value) in waveList)
+		{
+			_tdManager.AddBossToWave(key, value);
+		}
+
+		foreach (var (key, value) in rewardList)
+		{
+			_tdManager.AddRewardToWave(key, value);
 		}
 	}
 

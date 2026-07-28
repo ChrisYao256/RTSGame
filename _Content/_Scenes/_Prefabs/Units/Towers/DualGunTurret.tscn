@@ -1,33 +1,33 @@
 [gd_scene format=3 uid="uid://dw5vw4ftp80e4"]
 
 [ext_resource type="PackedScene" uid="uid://yhbw0b164ui2" path="res://_Content/_Scenes/_Prefabs/Units/BaseTower.tscn" id="1_ief3i"]
+[ext_resource type="Texture2D" uid="uid://c1qdggfwhdx6y" path="res://_Assets/DualGunTurret.png" id="2_5bhxu"]
 [ext_resource type="Script" uid="uid://c7ye5bgfhla5e" path="res://_Source/Effects/StatsIncrease/StatsIncreaseResource.cs" id="3_sssbq"]
 [ext_resource type="Texture2D" uid="uid://0q0kbyhyvbk" path="res://_Assets/GreenBase.png" id="4_jujgb"]
 [ext_resource type="Script" uid="uid://bva1xkjx08h5v" path="res://_Source/_Units/Weapons/TurretTurner.cs" id="7_hfhul"]
 [ext_resource type="Texture2D" uid="uid://b3lrividiwwga" path="res://_Assets/GreenGunShot.png" id="7_jujgb"]
-[ext_resource type="Texture2D" uid="uid://4s8818rs7ags" path="res://_Assets/DualGunTurretIdle.png" id="8_vw763"]
 [ext_resource type="Script" uid="uid://bc4day7luihlc" path="res://_Source/_Units/Weapons/MultiProjectileWeapon.cs" id="10_vw763"]
 
 [sub_resource type="Resource" id="Resource_cmo3r"]
 script = ExtResource("3_sssbq")
-_damageIncrease = 74
+_damageIncrease = 68
 metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 
 [sub_resource type="Resource" id="Resource_oh15a"]
 script = ExtResource("3_sssbq")
-_damageIncrease = 181
+_damageIncrease = 170
 metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 
 [sub_resource type="Resource" id="Resource_yglny"]
 script = ExtResource("3_sssbq")
-_damageIncrease = 390
+_damageIncrease = 362
 metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_oh15a"]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("8_vw763")
+"texture": ExtResource("2_5bhxu")
 }],
 "loop": false,
 "name": &"Idle",
@@ -35,7 +35,8 @@ animations = [{
 }]
 
 [node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_ief3i")]
-_iconTexture = ExtResource("8_vw763")
+_iconTexture = ExtResource("2_5bhxu")
+_description = "Upgraded from Gunner. Shoots twice. Cheaper than other T2 towers."
 _firstUpgrade = Array[Object]([SubResource("Resource_cmo3r")])
 _firstUpgradeCost = Vector4i(50, 0, 0, 30)
 _secondUpgrade = Array[Object]([SubResource("Resource_oh15a")])
@@ -81,7 +82,6 @@ _projectileTexture = ExtResource("7_jujgb")
 _lifeTime = 5.0
 _projectileRadius = 8.0
 _pierceCount = 1
-_damage = 200
-_range = 275.0
-_damageType = 1
+_damage = 190
+_range = 250.0
 _description = "Shoots twice"

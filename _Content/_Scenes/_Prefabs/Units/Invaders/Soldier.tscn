@@ -1,20 +1,77 @@
 [gd_scene format=3 uid="uid://ctgpqpcl3e2kb"]
 
 [ext_resource type="PackedScene" uid="uid://bqn4h6d52i52" path="res://_Content/_Scenes/_Prefabs/Units/BaseInvaderUnit.tscn" id="1_ksbbh"]
+[ext_resource type="Script" uid="uid://iamaod4iivlq" path="res://_Source/Effects/InvaderStatsIncrease/InvaderStatsIncreaseResource.cs" id="2_0mepk"]
 [ext_resource type="Script" uid="uid://bwnw1f3ti2dgi" path="res://_Source/Effects/SelfHealing/SelfHealingResource.cs" id="2_oxx1p"]
+[ext_resource type="Script" uid="uid://dtpcxn7d2dqcy" path="res://_Source/Effects/EffectResource.cs" id="3_2buii"]
 [ext_resource type="Texture2D" uid="uid://bc230321nqto5" path="res://icon.svg" id="3_oxx1p"]
 
-[sub_resource type="Resource" id="Resource_0mepk"]
+[sub_resource type="Resource" id="Resource_2buii"]
 script = ExtResource("2_oxx1p")
-_healAmount = 25
-_effectName = "Regenerative"
+_healPercent = 0.05
 metadata/_custom_type_script = "uid://bwnw1f3ti2dgi"
+
+[sub_resource type="Resource" id="Resource_7sdt5"]
+script = ExtResource("2_0mepk")
+_hpBuff = 500
+_moneyBuff = Vector4i(4, 8, 0, 0)
+_startingEffects = Array[ExtResource("3_2buii")]([SubResource("Resource_2buii")])
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_kh3lo"]
+script = ExtResource("2_0mepk")
+_hpBuff = 280
+_moneyBuff = Vector4i(2, 4, 0, 0)
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_wsrpy"]
+script = ExtResource("2_0mepk")
+_hpBuff = 600
+_moneyBuff = Vector4i(4, 8, 0, 0)
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_nsalx"]
+script = ExtResource("2_0mepk")
+_hpBuff = 1400
+_moneyBuff = Vector4i(6, 12, 0, 0)
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_vpgw2"]
+script = ExtResource("2_oxx1p")
+_healPercent = 0.02
+metadata/_custom_type_script = "uid://bwnw1f3ti2dgi"
+
+[sub_resource type="Resource" id="Resource_neqga"]
+script = ExtResource("2_0mepk")
+_hpBuff = 2300
+_moneyBuff = Vector4i(8, 16, 0, 0)
+_startingEffects = Array[ExtResource("3_2buii")]([SubResource("Resource_vpgw2")])
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_l3sb1"]
+script = ExtResource("2_0mepk")
+_hpBuff = 3600
+_moneyBuff = Vector4i(10, 20, 0, 0)
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_nvxnu"]
+script = ExtResource("2_0mepk")
+_hpBuff = 6200
+_moneyBuff = Vector4i(14, 28, 0, 0)
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_w24uq"]
+script = ExtResource("2_0mepk")
+_hpBuff = 12120
+_moneyBuff = Vector4i(24, 48, 0, 0)
+metadata/_custom_type_script = "uid://iamaod4iivlq"
 
 [node name="BaseUnit" unique_id=481801141 instance=ExtResource("1_ksbbh")]
 _hpDeducted = 2
+_levelStats = Array[ExtResource("2_0mepk")]([SubResource("Resource_7sdt5"), SubResource("Resource_kh3lo"), SubResource("Resource_wsrpy"), SubResource("Resource_nsalx"), SubResource("Resource_neqga"), SubResource("Resource_l3sb1"), SubResource("Resource_nvxnu"), SubResource("Resource_w24uq")])
 _moveSpeed = 45.0
 _hpMax = 0
-_startingEffects = Array[Object]([SubResource("Resource_0mepk")])
+_startingEffects = Array[Object]([])
 _internalName = "Soldier"
 _name = "Golem"
 _radius = 24.0

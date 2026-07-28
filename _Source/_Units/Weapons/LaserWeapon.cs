@@ -14,6 +14,11 @@ public partial class LaserWeapon : BaseWeapon
 
 	private Timer _timer;
 
+	public LaserWeapon()
+	{
+		_weaponType = WeaponType.Laser;
+	}
+
 	public override void _Ready()
 	{
 		_tracerLine = GetNode<Line2D>("TracerLine");
@@ -82,8 +87,10 @@ public partial class LaserWeapon : BaseWeapon
 
 	public override void PerformAttack(Unit target, int d)
 	{
-		_parent.OnBeforeHitEnemy(target);
-		target.Hit(d , _parent, true);
+		DamageContext context = new DamageContext(_parent, target, d, DamageType.DirectAttack);
+
+		_parent.OnBeforeHitEnemy(context);
+		target.Hit(context);
 		_parent.OnHitEnemy(target);
 	}
 }

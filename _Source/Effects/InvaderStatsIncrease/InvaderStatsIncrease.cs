@@ -67,10 +67,13 @@ public partial class InvaderStatsIncrease : Effect
 			throw new Exception("Parent is not an invader!");
 		}
 		InvaderUnit invader = (InvaderUnit)_parentUnit;
+		invader.IncreaseLevel(_resource._level);
 		invader.IncreaseHpMaxModifier(_resource._hpBuff);
+		invader.IncreasePercentHpMaxModifier(_resource._percentHpBuff);
 		invader.IncreaseSpeedModifier(_resource._speedBuff);
-		invader.IncreaseArmorModifier(_resource._armorBuff);
+		invader.IncreasePercentSpeedModifier(_resource._percentSpeedBuff);
 		invader.IncreaseMoneyModifier(_resource._moneyBuff);
+		invader.IncreasePercentMoneyModifier(_resource._percentMoneyBuff);
 		foreach (EffectResource effect in _resource._startingEffects)
 		{
 			invader.AddEffect(effect);

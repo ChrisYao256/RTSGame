@@ -15,7 +15,14 @@ public partial class ScannerWeapon : BaseWeapon
 	private Timer _tracerTimer;
 
 	private bool _scanning = false;
-	private Unit _queuedAttackTarget;
+	public Unit _queuedAttackTarget;
+
+	private int _currentDamage;
+
+	public ScannerWeapon()
+	{
+		_weaponType = WeaponType.Scanner;
+	}
 
 	public override void _Ready()
 	{
@@ -29,8 +36,10 @@ public partial class ScannerWeapon : BaseWeapon
 		_tracerTimer = GetNode<Timer>("TracerLine/Timer");
 		_tracerTimer.Timeout += () =>
 		{
-			_parent.OnBeforeHitEnemy(_attackTarget);
-			_attackTarget.Hit(GetDamage(), _parent);
+			DamageContext context = new DamageContext(_parent, _attackTarget, _currentDamage, DamageType.DirectAttack);
+
+			_parent.OnBeforeHitEnemy(context);
+			_attackTarget.Hit(context);
 			_parent.OnHitEnemy(_attackTarget);
 
 			ResetScanTarget();
@@ -73,6 +82,7 @@ public partial class ScannerWeapon : BaseWeapon
 				}
 				PerformAttack(_queuedAttackTarget, GetDamage());
 			}
+			bool test = GetParent().GetNode<TurretTurner>("TurretTurner")._finishedTurning;
 		}
 		else
 		{
@@ -91,6 +101,7 @@ public partial class ScannerWeapon : BaseWeapon
 
 	public override void PerformAttack(Unit target, int d)
 	{
+		_currentDamage = d;
 		_scanning = true;
 		_tracerLine.Visible = true;
 		_attackTarget = target;
@@ -136,7 +147,7 @@ public partial class ScannerWeapon : BaseWeapon
 		if (upgrade._damageIncrease != 0)
 		{
 			RichTextLabel damageLabel = infoV.GetNode<RichTextLabel>("DamageLabel");
-			damageLabel.Text = $"[color=#{greenHex}]Damage: {upgrade._damageIncrease + GetDamage()}[/color]";
+			damageLabel.Text = $"[color=#{greenHex}]Damage: {(upgrade._damageIncrease + GetRawDamage()) * (1f + _parent._data._damagePercentIncrease + upgrade._damagePercentIncrease):F0}[/color]";
 		}
 		if (upgrade._attackSpeedIncrease != 0)
 		{
@@ -146,7 +157,7 @@ public partial class ScannerWeapon : BaseWeapon
 		if (upgrade._attackSpeedIncrease != 0 || upgrade._damageIncrease != 0)
 		{
 			RichTextLabel dpsLabel = infoV.GetNode<RichTextLabel>("DPSLabel");
-			dpsLabel.Text = $"[color=#{greenHex}]DPS: {(GetDamage() + upgrade._damageIncrease) / (float)(GetCooldown() / (1 + upgrade._attackSpeedIncrease) + GetAttackDelay() / (1 + upgrade._attackDelayModifierIncrease)):F0}[/color]";
+			dpsLabel.Text = $"[color=#{greenHex}]DPS: {(upgrade._damageIncrease + GetRawDamage()) * (1f + _parent._data._damagePercentIncrease + upgrade._damagePercentIncrease) / (float)(GetCooldown() / (1 + upgrade._attackSpeedIncrease) + GetAttackDelay() / (1 + upgrade._attackDelayModifierIncrease)):F0}[/color]";
 		}
 		if (upgrade._rangeIncrease != 0)
 		{

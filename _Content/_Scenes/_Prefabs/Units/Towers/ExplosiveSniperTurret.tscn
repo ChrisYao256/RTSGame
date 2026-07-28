@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://c5njs80um8w7m"]
 
 [ext_resource type="PackedScene" uid="uid://yhbw0b164ui2" path="res://_Content/_Scenes/_Prefabs/Units/BaseTower.tscn" id="1_j0sbj"]
-[ext_resource type="Texture2D" uid="uid://cmjpp5evevh5r" path="res://_Assets/GunTurretIdle.png" id="2_qsjlu"]
+[ext_resource type="Texture2D" uid="uid://dwdi74frkgnl5" path="res://_Assets/ExplosiveSniperTurret.png" id="2_j0sbj"]
 [ext_resource type="Script" uid="uid://c7ye5bgfhla5e" path="res://_Source/Effects/StatsIncrease/StatsIncreaseResource.cs" id="3_0s2u8"]
 [ext_resource type="Texture2D" uid="uid://miulw7p5fqif" path="res://_Assets/RedBase.png" id="6_4rsa5"]
 [ext_resource type="PackedScene" uid="uid://bjudui5jhrtku" path="res://_Content/_Scenes/_Prefabs/Effects/ExplosionVisualEffect.tscn" id="7_0s2u8"]
@@ -12,50 +12,50 @@
 
 [sub_resource type="Resource" id="Resource_cmo3r"]
 script = ExtResource("3_0s2u8")
-_damageIncrease = 350
+_damageIncrease = 1200
 metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 
 [sub_resource type="Resource" id="Resource_0s2u8"]
 script = ExtResource("8_1ho41")
-_explosionDamage = 430
+_explosionDamage = 570
 metadata/_custom_type_script = "uid://bjtpxhe8yya7o"
 
 [sub_resource type="Resource" id="Resource_oh15a"]
 script = ExtResource("3_0s2u8")
-_damageIncrease = 860
+_damageIncrease = 1800
 metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 
 [sub_resource type="Resource" id="Resource_1ho41"]
 script = ExtResource("8_1ho41")
-_explosionDamage = 860
+_explosionDamage = 815
 metadata/_custom_type_script = "uid://bjtpxhe8yya7o"
 
 [sub_resource type="Resource" id="Resource_yglny"]
 script = ExtResource("3_0s2u8")
-_damageIncrease = 1960
+_damageIncrease = 3230
 metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 
 [sub_resource type="Resource" id="Resource_mbjci"]
 script = ExtResource("8_1ho41")
-_explosionDamage = 2370
+_explosionDamage = 1415
 metadata/_custom_type_script = "uid://bjtpxhe8yya7o"
 
 [sub_resource type="Resource" id="Resource_ymgfk"]
 script = ExtResource("8_1ho41")
-_explosionRadius = 200.0
-_explosionDamage = 800
+_explosionRadius = 150.0
+_explosionDamage = 450
 ExplosionVisualScene = ExtResource("7_0s2u8")
 metadata/_custom_type_script = "uid://bjtpxhe8yya7o"
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_e2eil"]
-atlas = ExtResource("2_qsjlu")
+[sub_resource type="AtlasTexture" id="AtlasTexture_4rsa5"]
+atlas = ExtResource("2_j0sbj")
 region = Rect2(0, 0, 64, 64)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_oh15a"]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_e2eil")
+"texture": SubResource("AtlasTexture_4rsa5")
 }],
 "loop": false,
 "name": &"Idle",
@@ -63,14 +63,14 @@ animations = [{
 }]
 
 [node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_j0sbj")]
-_iconTexture = ExtResource("2_qsjlu")
-_description = "Simple turret that shoots bullets at enemies."
+_iconTexture = ExtResource("2_j0sbj")
+_description = "Upgraded from Sniper. Killed enemies explode, dealing signficant aoe damage."
 _firstUpgrade = Array[Object]([SubResource("Resource_cmo3r"), SubResource("Resource_0s2u8")])
-_firstUpgradeCost = Vector4i(43, 43, 0, 0)
+_firstUpgradeCost = Vector4i(150, 150, 0, 0)
 _secondUpgrade = Array[Object]([SubResource("Resource_oh15a"), SubResource("Resource_1ho41")])
-_secondUpgradeCost = Vector4i(98, 98, 0, 0)
+_secondUpgradeCost = Vector4i(210, 210, 0, 0)
 _thirdUpgrade = Array[Object]([SubResource("Resource_yglny"), SubResource("Resource_mbjci")])
-_thirdUpgradeCost = Vector4i(202, 202, 0, 0)
+_thirdUpgradeCost = Vector4i(353, 353, 0, 0)
 _fourthUpgradeACost = Vector4i(100, 0, 0, 50)
 _fourthUpgradeBCost = Vector4i(100, 75, 0, 0)
 _hpMax = 1
@@ -84,7 +84,7 @@ _baseHealthBarWidth = 48.0
 scale = Vector2(1, 1)
 texture = ExtResource("6_4rsa5")
 
-[node name="AidArea" parent="." index="7" unique_id=724286163]
+[node name="AidArea" parent="." index="6" unique_id=724286163]
 visible = false
 
 [node name="AidAreaCollision" parent="AidArea" index="0" unique_id=1952573643]
@@ -103,6 +103,7 @@ position = Vector2(18, 0)
 
 [node name="WeaponComponent" parent="." index="9" unique_id=2120452932 instance=ExtResource("9_d201m")]
 script = ExtResource("10_8nr37")
-_damage = 1100
+_damage = 1370
 _range = 450.0
 _attackCooldown = 3.0
+_weaponType = 5

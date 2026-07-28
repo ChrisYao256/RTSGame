@@ -34,10 +34,10 @@ public partial class TeslaWeapon : BaseWeapon
 		{
 			return;
 		}
-		ShootProjectiles();
+		ShootProjectiles(d);
 	}
 
-	private async void ShootProjectiles()
+	private async void ShootProjectiles(int damage)
 	{
 		for (int i = 0; i < _hitCount; i++)
 		{
@@ -67,14 +67,16 @@ public partial class TeslaWeapon : BaseWeapon
 			// Start (or restart) the timer for the set duration
 			_tracerTimer.Start(_tracerDuration);
 
-			_parent.OnBeforeHitEnemy(target);
-			target.Hit(GetDamage(), _parent);
+			DamageContext context = new DamageContext(_parent, target, damage, DamageType.DirectAttack);
+
+			_parent.OnBeforeHitEnemy(context);
+			target.Hit(context);
 			_parent.OnHitEnemy(target);
 
 
 			if (i < _hitCount - 1)
 			{
-				await Task.Delay(TimeSpan.FromSeconds(_shotInterval));
+				await ToSignal(GetTree().CreateTimer(_shotInterval, processAlways: false), SceneTreeTimer.SignalName.Timeout);
 			}
 		}
 		_parent.OnVolleyEnded();

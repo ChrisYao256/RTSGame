@@ -7,11 +7,10 @@
 [ext_resource type="Script" uid="uid://be80c57wd06d0" path="res://_Source/Effects/ImmediateTransform/ImmediateTransformResource.cs" id="4_msjep"]
 [ext_resource type="Texture2D" uid="uid://t1lqgec5deqv" path="res://_Assets/StunRailgunTurret.png" id="5_7mvqi"]
 [ext_resource type="Texture2D" uid="uid://d3cj27sha64i8" path="res://_Assets/InfinitePiercingTower.png" id="6_m1b1x"]
-[ext_resource type="Texture2D" uid="uid://wswb4au2cnxn" path="res://_Assets/GunShot.png" id="7_msjep"]
 [ext_resource type="PackedScene" uid="uid://bc7mdwf374doj" path="res://_Content/_Scenes/_Prefabs/Weapons/ProjectileWeapon.tscn" id="7_vdetk"]
 [ext_resource type="Script" uid="uid://bva1xkjx08h5v" path="res://_Source/_Units/Weapons/TurretTurner.cs" id="8_2kx6n"]
 [ext_resource type="Texture2D" uid="uid://miulw7p5fqif" path="res://_Assets/RedBase.png" id="8_7mvqi"]
-[ext_resource type="Texture2D" uid="uid://mb44h82gnkel" path="res://_Assets/RailgunTurretIdle.png" id="9_bpy14"]
+[ext_resource type="Texture2D" uid="uid://c5phek5qufdeh" path="res://_Assets/RedGunShot.png" id="11_msjep"]
 
 [sub_resource type="Resource" id="Resource_bpy14"]
 script = ExtResource("3_7mvqi")
@@ -40,11 +39,15 @@ _transformedUnit = "InfinitePiercingTower"
 _description = "Piercing +∞"
 metadata/_custom_type_script = "uid://be80c57wd06d0"
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_msjep"]
+atlas = ExtResource("2_4kcl2")
+region = Rect2(0, 0, 64, 64)
+
 [sub_resource type="SpriteFrames" id="SpriteFrames_msjep"]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("9_bpy14")
+"texture": SubResource("AtlasTexture_msjep")
 }],
 "loop": false,
 "name": &"Idle",
@@ -91,7 +94,7 @@ position = Vector2(18, 0)
 
 [node name="WeaponComponent" parent="." index="9" unique_id=2120452932 instance=ExtResource("7_vdetk")]
 _projectileSpeed = 2000.0
-_projectileTexture = ExtResource("7_msjep")
+_projectileTexture = ExtResource("11_msjep")
 _lifeTime = 8.0
 _projectileRadius = 30.0
 _pierceCount = 4
@@ -101,4 +104,3 @@ _range = 260.0
 _attackCooldown = 2.0
 _attackDelayLow = 0.3
 _attackDelayHigh = 0.3
-_damageType = 1

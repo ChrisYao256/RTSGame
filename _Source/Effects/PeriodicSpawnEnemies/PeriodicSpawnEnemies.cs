@@ -60,19 +60,7 @@ public partial class PeriodicSpawnEnemies : Effect
 			Callable.From(() => {
 				// This whole block executes deferred
 				InvaderUnit newEnemy = invader._tdManager.SpawnEnemyAtGlobalPosition(unit._unitName, invader.GlobalPosition + specificSpawnPos);
-
-				if (_resource._buffResource != null)
-				{
-					// Apply your buffs directly to the returned reference
-					newEnemy.IncreaseHpMaxModifier(unit._hpBuff);
-					newEnemy.IncreaseSpeedModifier(unit._speedBuff);
-					newEnemy.IncreaseArmorModifier(unit._armorBuff);
-					newEnemy.SetMoneyModifier(-newEnemy.GetSelfMoneyDropped()); // spawned units with this effect always drop no money
-					foreach (EffectResource effect in unit._startingEffects)
-					{
-						newEnemy.AddEffect(effect);
-					}
-				}
+				newEnemy.AddEffect(unit);
 			}).CallDeferred();
 			spawnPositions.RemoveAt(index);
 		}

@@ -15,17 +15,17 @@ public partial class MultiHitRampUpDamage : Effect
 	public override void ConnectSignals(Unit unit)
 	{
 		_parentUnit = unit;
-		unit.Connect(Unit.SignalName.BeforeHitEnemy, Callable.From<Unit>(OnBeforeHitEnemy));
+		unit.Connect(Unit.SignalName.BeforeHitEnemy, Callable.From<DamageContext>(OnBeforeHitEnemy));
 		unit.Connect(Unit.SignalName.VolleyEnded, Callable.From(OnVolleyEnded));
 	}
 
-	protected override void OnBeforeHitEnemy(Unit target)
+	protected override void OnBeforeHitEnemy(DamageContext damageContext)
 	{
-		if (target == _lastTarget)
+		if (damageContext._target == _lastTarget)
 		{
 			_parentUnit.IncreaseWeaponBuffPercent(_resource._increaseAmount);
 		}
-		_lastTarget = target;
+		_lastTarget = damageContext._target;
 	}
 
 	protected override void OnVolleyEnded()

@@ -1,0 +1,40 @@
+[gd_scene format=3 uid="uid://c41f0vtplwk2v"]
+
+[ext_resource type="Script" uid="uid://dltrnewg5aqrv" path="res://_Source/ExplosionVisualEffect.cs" id="1_r745x"]
+[ext_resource type="Texture2D" uid="uid://cehpayyfmksdd" path="res://_Assets/SphericalFlameVX.png" id="2_3ntjr"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ckfdk"]
+atlas = ExtResource("2_3ntjr")
+region = Rect2(0, 0, 720, 720)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3ntjr"]
+atlas = ExtResource("2_3ntjr")
+region = Rect2(720, 0, 720, 720)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xbmwu"]
+atlas = ExtResource("2_3ntjr")
+region = Rect2(1440, 0, 720, 720)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_auw5p"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ckfdk")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3ntjr")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xbmwu")
+}],
+"loop": false,
+"name": &"default",
+"speed": 10.0
+}]
+
+[node name="ExplosionVisualEffect" type="Node2D" unique_id=856898756]
+script = ExtResource("1_r745x")
+
+[node name="Sprite2D" type="AnimatedSprite2D" parent="." unique_id=350110334]
+sprite_frames = SubResource("SpriteFrames_auw5p")
+autoplay = "default"

@@ -9,11 +9,18 @@ public class StringDB
 {
 	public static Dictionary<string, string> Entries = new()
 	{
-		{ "YellowMoneyDescription", "Electricity. Dropped by most enemies."},
-		{ "RedMoneyDescription", "Metals. Typically dropped by durable enemies."},
-		{ "BlueMoneyDescription", "Water. Typically dropped by enemies with potent magic."},
-		{ "GreenMoneyDescription", "Gas. Typically dropped by fast enemies."},
-		{ "UnknownMoneyDescription", "Undetermined type. Represents income from certain special effects."},
+		{ "YellowMoneyDescription", "Electricity"},
+		{ "RedMoneyDescription", "Metals"},
+		{ "BlueMoneyDescription", "Water"},
+		{ "GreenMoneyDescription", "Gas"},
+		{ "UnknownMoneyDescription", "Undetermined type"},
+
+		{ "ProjectileWeapon", "Projectile"},
+		{ "LaserWeapon", "Laser"},
+		{ "FlameWeapon", "Flame"},
+		{ "ScannerWeapon", "Scanner"},
+		{ "BallisticWeapon", "Ballistic"},
+		{ "ElectricWeapon", "Electric"},
 
 		{ "TargetPriorityFirst", "Target the enemy closest to the exit"},
 		{ "TargetPriorityLast", "Target the enemy furthest to the exit"},
@@ -23,5 +30,9 @@ public class StringDB
 		{ "TargetPrioritySniperHitscanWeapon", "Target the enemy with the lowest Hp."},
 
 		{ "TowerChoice", "Pick a tower to unlock this run.\n You are also given the cost of picked tower:)"},
+		{ "PassiveChoice", "Pick a passive to get this run."},
+
+		{ "MiniBoss", "A mini boss. Defeat it to get a tower and a passive. "},
+		{ "FinalBoss", "The final boss of this run."},
 	};
 }

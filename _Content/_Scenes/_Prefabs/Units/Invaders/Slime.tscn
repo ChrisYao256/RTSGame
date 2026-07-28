@@ -1,8 +1,59 @@
 [gd_scene format=3 uid="uid://cnfn84xm8m5mv"]
 
 [ext_resource type="PackedScene" uid="uid://bqn4h6d52i52" path="res://_Content/_Scenes/_Prefabs/Units/BaseInvaderUnit.tscn" id="1_d12es"]
+[ext_resource type="Script" uid="uid://iamaod4iivlq" path="res://_Source/Effects/InvaderStatsIncrease/InvaderStatsIncreaseResource.cs" id="2_4dwqt"]
+[ext_resource type="Script" uid="uid://dtpcxn7d2dqcy" path="res://_Source/Effects/EffectResource.cs" id="3_8pwuo"]
 [ext_resource type="Texture2D" uid="uid://dgki3rdi8d7fo" path="res://_Assets/Slime.png" id="3_tclxa"]
 [ext_resource type="Texture2D" uid="uid://bc230321nqto5" path="res://icon.svg" id="4_1sere"]
+
+[sub_resource type="Resource" id="Resource_pgkd3"]
+script = ExtResource("2_4dwqt")
+_hpBuff = 150
+_speedBuff = 50.0
+_moneyBuff = Vector4i(2, 0, 0, 0)
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_4dwqt"]
+script = ExtResource("2_4dwqt")
+_hpBuff = 100
+_moneyBuff = Vector4i(1, 0, 0, 0)
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_8pwuo"]
+script = ExtResource("2_4dwqt")
+_hpBuff = 250
+_moneyBuff = Vector4i(2, 0, 0, 0)
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_t3irf"]
+script = ExtResource("2_4dwqt")
+_hpBuff = 400
+_moneyBuff = Vector4i(2, 0, 0, 0)
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_5aqor"]
+script = ExtResource("2_4dwqt")
+_hpBuff = 750
+_moneyBuff = Vector4i(4, 0, 0, 0)
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_m5ks1"]
+script = ExtResource("2_4dwqt")
+_hpBuff = 1400
+_moneyBuff = Vector4i(6, 0, 0, 0)
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_8jh3o"]
+script = ExtResource("2_4dwqt")
+_hpBuff = 2500
+_moneyBuff = Vector4i(10, 0, 0, 0)
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_1xbns"]
+script = ExtResource("2_4dwqt")
+_hpBuff = 4450
+_moneyBuff = Vector4i(16, 0, 0, 0)
+metadata/_custom_type_script = "uid://iamaod4iivlq"
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_4dwqt"]
 atlas = ExtResource("3_tclxa")
@@ -34,7 +85,8 @@ animations = [{
 }]
 
 [node name="BaseUnit" unique_id=481801141 instance=ExtResource("1_d12es")]
-_moveSpeed = 50.0
+_levelStats = Array[ExtResource("2_4dwqt")]([SubResource("Resource_pgkd3"), SubResource("Resource_4dwqt"), SubResource("Resource_8pwuo"), SubResource("Resource_t3irf"), SubResource("Resource_5aqor"), SubResource("Resource_m5ks1"), SubResource("Resource_8jh3o"), SubResource("Resource_1xbns")])
+_moveSpeed = 0.0
 _hpMax = 0
 _startingEffects = Array[Object]([])
 _internalName = "Slime"

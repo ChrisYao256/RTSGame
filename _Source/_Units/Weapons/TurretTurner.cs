@@ -18,6 +18,8 @@ public partial class TurretTurner : Node2D
 	[Export] public float _knockbackDistance = 10f;
 	[Export] public float _knockbackRecoveryDuration = 0.3f;
 
+	const float AngleToleranceDegree = 3f;
+
 	private BaseWeapon _parentWeapon;
 	private TowerUnit _baseTower;
 
@@ -64,28 +66,51 @@ public partial class TurretTurner : Node2D
 
 	public override void _Process(double delta)
 	{
-		if (_turn && _parentWeapon._attackTarget != null && IsInstanceValid(_parentWeapon._attackTarget))
+		if (_parentWeapon is ScannerWeapon scanner)
 		{
-			float angle = RotateTowardsTarget(delta);
-			if (Math.Abs(angle) > Mathf.DegToRad(5.0f))
+			if (_turn && scanner._queuedAttackTarget != null && IsInstanceValid(scanner._queuedAttackTarget))
+			{
+				float angle = RotateTowardsTarget(delta, scanner._queuedAttackTarget);
+				if (Math.Abs(angle) > Mathf.DegToRad(AngleToleranceDegree))
+				{
+					_finishedTurning = false;
+				}
+				else
+				{
+					_finishedTurning = true;
+				}
+			}
+			else if (_turn)
 			{
 				_finishedTurning = false;
 			}
-			else
+		}
+		else
+		{
+			if (_turn && _parentWeapon._attackTarget != null && IsInstanceValid(_parentWeapon._attackTarget))
 			{
-				_finishedTurning = true;
+				float angle = RotateTowardsTarget(delta, _parentWeapon._attackTarget);
+				if (Math.Abs(angle) > Mathf.DegToRad(AngleToleranceDegree))
+				{
+					_finishedTurning = false;
+				}
+				else
+				{
+					_finishedTurning = true;
+				}
+			}
+			else if (_turn)
+			{
+				_finishedTurning = false;
 			}
 		}
-		else if (_turn)
-		{
-			_finishedTurning = false;
-		}
+
 	}
 
-	private float RotateTowardsTarget(double delta)
+	private float RotateTowardsTarget(double delta, Unit target)
 	{
 		// 1. Calculate the angle to the target
-		Vector2 targetDir = _parentWeapon._attackTarget.GlobalPosition - GlobalPosition;
+		Vector2 targetDir = target.GlobalPosition - GlobalPosition;
 		float targetAngle = targetDir.Angle();
 
 		// 2. Smoothly rotate the pivot toward that angle

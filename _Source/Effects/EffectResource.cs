@@ -151,7 +151,7 @@ public abstract partial class EffectResource: Resource
 
 		EffectResource copy = (EffectResource)DuplicateDeep();
 		EffectResource newCopy = (EffectResource)upgrade.DuplicateDeep();
-		newCopy.MergeWithOld(copy, [copy]);
+		//newCopy.MergeWithOld(copy, [copy]);
 		copy.SetDescription();
 
 		string greenHex = ThemePalette.Green.ToHtml(false);

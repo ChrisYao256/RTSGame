@@ -49,8 +49,10 @@ public partial class PiercingHitscanWeapon : BaseWeapon
 
 		Action<Unit> dealDamage = new Action<Unit>((Unit enemy) =>
 		{
-			_parent.OnBeforeHitEnemy(enemy);
-			enemy.Hit(GetDamage(), _parent);
+			DamageContext context = new DamageContext(_parent, enemy, d, DamageType.DirectAttack);
+
+			_parent.OnBeforeHitEnemy(context);
+			enemy.Hit(context);
 			_parent.OnHitEnemy(enemy);
 		});
 

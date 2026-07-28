@@ -28,7 +28,7 @@ public partial class PeriodicSpawnEnemiesResource : EffectResource
 	public override void SetDescription()
 	{
 		_displayType = DisplayTypes.Large;
-		_effectDescription = "Summons more enemies periodically.";
+		_effectDescription = "Summons " + Spawner.GetGroupEnemyNames(_buffResource, false) + $" every {_spawnInterval} seconds";
 	}
 
 	public override Effect CreateNode()

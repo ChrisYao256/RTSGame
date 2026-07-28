@@ -29,9 +29,9 @@ public partial class TDTowerManager : Node2D
 
 	public override void _Ready()
 	{
-		_rightPanel = GetParent().GetNode("RightPanelCanvasLayer").GetNode("RightPanel").GetNode<VBoxContainer>("VBoxContainer");
 		_grid = GetParent().GetNode<Grid>("TileMapLayer");
 		_tdManager = GetParent().GetNode<TDManager>("TdManager");
+		_rightPanel = _tdManager._rightPanel;
 		UpdateIncomeDisplay();
 		UpdateDPSDisplay();
 		UpdateTotalHpLabel();
@@ -55,70 +55,9 @@ public partial class TDTowerManager : Node2D
 		_tdManager._infoPanel.MakeAllTowersMenu(tab);
 	}
 
-	public void UpdateTowersPanel(Godot.Collections.Array<string> towers)
+	public void UpdateTowersPanel()
 	{
-		_towers = towers;
-		foreach (Node child in _towersBox.GetChildren())
-		{
-			child.QueueFree();
-		}
-		foreach (string name in towers)
-		{
-			VBoxContainer container = new VBoxContainer();
-
-			string name_ = name;
-			TowerUnit unit = (TowerUnit)UnitManager.GetUnit(name, true);
-
-			if (unit._towerType != _tab)
-			{
-				unit.QueueFree();
-				container.QueueFree();
-				continue;
-			}
-
-			Label nameLabel = new Label();
-			nameLabel.Text = unit._name;
-			nameLabel.CustomMinimumSize = new(160, 0);
-			nameLabel.HorizontalAlignment = HorizontalAlignment.Center;
-			container.AddChild(nameLabel);
-
-			AddChild(unit);
-
-			HoverInfoImage towerButton
-				= unit.MakeTowerTooltip(true);
-			towerButton.Pressed += (() =>
-			{
-				if (Utils.VectorLeq(unit._cost, _tdManager._money))
-				{
-					EnterPlacementMode(name_);
-				}
-			});
-			towerButton.MouseEntered += () => nameLabel.AddThemeColorOverride("font_color", ThemePalette.White);
-			towerButton.MouseExited += () => nameLabel.AddThemeColorOverride("font_color", ThemePalette.Yellow);
-
-			PanelContainer panelContainer = new();
-			panelContainer.AddChild(towerButton);
-			container.AddChild(panelContainer);
-
-			TooltipRichTextLabel costLabel = new TooltipRichTextLabel();
-			costLabel.FitContent = true;
-			costLabel.BbcodeEnabled = true;
-			if (unit is not Spawner)
-			{
-				costLabel.Text = Utils.MakeMoneyText(unit._cost);
-			}
-			else
-			{
-				costLabel.Text = "+" + Utils.MakeMoneyText(unit.GetIncome());
-			}
-			costLabel.HorizontalAlignment = HorizontalAlignment.Center;
-			container.AddChild(costLabel);
-
-			_towersBox.AddChild(container);
-
-			unit.QueueFree();
-
-		}
+		_tdManager._infoPanel.MakeAllTowersMenu();
 	}
 
 	public override void _Input(InputEvent @event)
@@ -243,7 +182,8 @@ public partial class TDTowerManager : Node2D
 		foreach (TowerUnit tower in allTowersCopy)
 		{
 			tower.OnPlacedTower(newTower);
-		}		
+		}
+		_tdManager.EmitSignal(TDManager.SignalName.GlobalPlacedTower, newTower);
 		newTower.EmitSignal(Unit.SignalName.Creation);
 		UpdateIncomeDisplay();
 		UpdateDPSDisplay();
@@ -275,6 +215,7 @@ public partial class TDTowerManager : Node2D
 		Vector4I oldCost = tower.GetTotalCost();
 		RemoveTower(gridCoords);
 		TowerUnit newTowerNode = PlaceTower(gridCoords, newTower);
+		_tdManager.EmitSignal(TDManager.SignalName.GlobalPlacedTower, newTowerNode);
 		newTowerNode._cost = oldCost;
 		_unitManager.UpdatePlayerSelection([newTowerNode]);
 	}

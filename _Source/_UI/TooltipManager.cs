@@ -41,7 +41,7 @@ public partial class TooltipManager : CanvasLayer
 			label.CustomMinimumSize = new Vector2(250, 0);
 		}
 
-			panel.AddChild(hbox);		
+		panel.AddChild(hbox);		
 		panel.ResetSize();
 
 		return panel;

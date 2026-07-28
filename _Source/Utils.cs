@@ -229,7 +229,7 @@ namespace RTSGame.Units
 			{
 				if (additionSigns)
 				{
-					output += "+";
+					output += $"[color=#{redHex}]+[/color]";
 				}
 				if (multiline)
 				{
@@ -244,7 +244,7 @@ namespace RTSGame.Units
 			{
 				if (additionSigns)
 				{
-					output += "+";
+					output += $"[color=#{blueHex}]+[/color]";
 				}
 				if (multiline)
 				{
@@ -259,7 +259,7 @@ namespace RTSGame.Units
 			{
 				if (additionSigns)
 				{
-					output += "+";
+					output += $"[color=#{greenHex}]+[/color]";
 				}
 				if (multiline)
 				{

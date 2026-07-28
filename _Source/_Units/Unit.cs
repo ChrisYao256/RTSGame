@@ -5,8 +5,10 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.Versioning;
 using System.Text;
 using System.Threading.Tasks;
+using static BaseWeapon;
 
 namespace RTSGame.Units;
 
@@ -25,11 +27,13 @@ public partial class Unit : CharacterBody2D
 
 	public BaseWeapon _weapon;
 
+	public BaseWeapon.WeaponType _weaponType;
+
 	public int _teamId;
 
 	public bool _aiControlled = false;
 
-	private TDManager _tdManager;
+	public TDManager _tdManager;
 
 	[Export] public int _tauntLevel = 0;
 
@@ -55,7 +59,7 @@ public partial class Unit : CharacterBody2D
 
 	[Export] public string _internalName;
 
-	[Export] public string _name;
+	[Export] private string _name;
 
 	[Export]
 	public float _radius = 100f;
@@ -112,7 +116,7 @@ public partial class Unit : CharacterBody2D
 	public delegate void ShotFiredEventHandler(Unit unit);
 
 	[Signal]
-	public delegate void BeforeHitEnemyEventHandler(Unit target);
+	public delegate void BeforeHitEnemyEventHandler(DamageContext damageContext);
 
 	[Signal]
 	public delegate void HitEnemyEventHandler(Unit target);
@@ -192,6 +196,8 @@ public partial class Unit : CharacterBody2D
 	public bool _isDisplayUnit = false;
 
 	public int _currentFloatingAnimationCount = 0;
+
+	protected bool _settingAttackRange = false;
 
 	public float _damageDealt = 0;
 	public Vector4I _moneyGained = new Vector4I(0,0,0,0);
@@ -277,22 +283,29 @@ public partial class Unit : CharacterBody2D
 		if (!_effects.Any(e => e.GetType() == resource.GetType()))
 		{
 			EffectResource resourceCopy = (EffectResource)resource.DuplicateDeep();
+			AddEffectContext context = new(this, resourceCopy);
+			_tdManager?.EmitSignal(TDManager.SignalName.GlobalAddEffect, context);
+
 			resourceCopy._source = resource._source;
 			_effects.Add(resourceCopy);
 			Effect node = EffectManager.Apply(resourceCopy, _effectsNode);
 			node.ConnectSignals(this);
+			
 			EmitSignal(SignalName.NewEffect, node);
 			EmitSignal(SignalName.UpdateInfo);
 			return node;
 		}
 		else
 		{
-			EffectResource oldEffect = _effects.First(e => e.GetType() == resource.GetType());
-			List<EffectResource> allMatchingEffects = (_effects.Where(e => e.GetType() == resource.GetType()).ToList());
-			bool addNewEffect = resource.MergeWithOld(oldEffect, allMatchingEffects);
+			EffectResource resourceCopy = (EffectResource)resource.DuplicateDeep();
+			AddEffectContext context = new(this, resourceCopy);
+			_tdManager?.EmitSignal(TDManager.SignalName.GlobalAddEffect, context);
+
+			EffectResource oldEffect = _effects.First(e => e.GetType() == resourceCopy.GetType());
+			List<EffectResource> allMatchingEffects = (_effects.Where(e => e.GetType() == resourceCopy.GetType()).ToList());
+			bool addNewEffect = resourceCopy.MergeWithOld(oldEffect, allMatchingEffects);
 			if (addNewEffect)
 			{
-				EffectResource resourceCopy = (EffectResource)resource.DuplicateDeep();
 				resourceCopy._source = resource._source;
 				_effects.Add(resourceCopy);
 				Effect node = EffectManager.Apply(resourceCopy, _effectsNode);
@@ -305,6 +318,31 @@ public partial class Unit : CharacterBody2D
 			{
 				EmitSignal(SignalName.UpdateInfo);
 				return null;
+			}
+		}
+	}
+
+	public static void AddEffectResourceToArray(Array<EffectResource> array, EffectResource resource)
+	{
+		//Use this to make effects with the same name merge
+		if (!array.Any(e => e.GetType() == resource.GetType()))
+		{
+			EffectResource resourceCopy = (EffectResource)resource.DuplicateDeep();
+
+			resourceCopy._source = resource._source;
+			array.Add(resourceCopy);
+		}
+		else
+		{
+			EffectResource resourceCopy = (EffectResource)resource.DuplicateDeep();
+
+			EffectResource oldEffect = array.First(e => e.GetType() == resourceCopy.GetType());
+			List<EffectResource> allMatchingEffects = (array.Where(e => e.GetType() == resourceCopy.GetType()).ToList());
+			bool addNewEffect = resourceCopy.MergeWithOld(oldEffect, allMatchingEffects);
+			if (addNewEffect)
+			{
+				resourceCopy._source = resource._source;
+				array.Add(resourceCopy);
 			}
 		}
 	}
@@ -327,6 +365,7 @@ public partial class Unit : CharacterBody2D
 		if (HasNode("WeaponComponent"))
 		{
 			_weapon = GetNode<BaseWeapon>("WeaponComponent");
+			_weaponType = _weapon._weaponType;
 			_weapon.SetDisplayWeapon();
 		}
 		else
@@ -347,7 +386,13 @@ public partial class Unit : CharacterBody2D
 			return;
 		}
 		_attackCollisionShape = GetNode<CollisionShape2D>("AttackArea/AttackAreaCollision");
+		if (_attackRange == _weapon.GetRange())
+		{
+			return;
+		}
 		_attackRange = _weapon.GetRange();
+
+		_weapon.SetAttackRange(_attackRange);
 
 		if (_attackCollisionShape.Shape is CircleShape2D circle)
 		{
@@ -363,10 +408,10 @@ public partial class Unit : CharacterBody2D
 			throw new Exception("Attack area shape is not a disk");
 		}
 
-		if (_attackTarget != null)
-		{
-			ScanForEnemies();
-		}
+		//if (_attackTarget != null)
+		//{
+		//	ScanForEnemies();
+		//}
 	}
 
 	public void UpdateAttackRange()
@@ -396,35 +441,32 @@ public partial class Unit : CharacterBody2D
 		
 	}
 
-	private void UpdateHpMax()
-	{
-		if (_healthBar != null)
-		{
-			UpdateHealthBar(_hp, GetHpMax(), _shield);
-		}
-	}
-
 	public int GetHpMax()
 	{
-		return  (int)(_hpMax + _data._maxHpIncrease);
+		return  (int)Math.Round((_hpMax + _data._maxHpIncrease) * (1f + _data._percentHpIncrease));
 	}
 
 	public float GetSpeed()
 	{
-		return (_moveSpeed + _data._speedIncrease) * (1 - _speedDebuff);
+		return (int)Math.Round((_moveSpeed + _data._speedIncrease) * (1f - _speedDebuff) * (1f + _data._percentSpeedIncrease));
 	}
 
-	public int GetArmor()
+	public virtual string GetName()
 	{
-		return _armor + _armorModifier + _armorDebuff;
+		return _name;
 	}
 
 	public virtual Godot.Collections.Dictionary<string, PanelContainer> MakeUnitInfoContainer()
 	{
 		_infoContainers = new();
 
-		HideAttackRange();
-		DisplayAttackRange();
+		Callable.From(() =>
+		{
+			SetAttackRange();
+			HideAttackRange();
+			DisplayAttackRange();
+		}).CallDeferred();
+
 
 		if (this is not Spawner)
 		{
@@ -436,7 +478,7 @@ public partial class Unit : CharacterBody2D
 			basicInfo.CustomMinimumSize = new(200, 0);
 
 			Label nameLabel = new();
-			nameLabel.Text = _name;
+			nameLabel.Text = GetName();
 			nameLabel.Name = "NameLabel";
 			nameLabel.HorizontalAlignment = HorizontalAlignment.Center;
 			basicInfoV.AddChild(nameLabel);
@@ -533,6 +575,40 @@ public partial class Unit : CharacterBody2D
 			weaponInfo.GetNode<VBoxContainer>("VBoxContainer").AddChild(totalDamageLabel);
 
 			_infoContainers.Add("WeaponInfo", weaponInfo);
+
+			TooltipRichTextLabel typeLabel = new();
+			switch (_weaponType)
+			{
+				case WeaponType.Projectile:
+					typeLabel.Text = $"[url={StringDB.Entries["ProjectileWeapon"]}]::projectile::[/url]";
+					break;
+				case WeaponType.Laser:
+					typeLabel.Text = $"[url={StringDB.Entries["LaserWeapon"]}]::laser::[/url]";
+					break;
+				case WeaponType.Scanner:
+					typeLabel.Text = $"[url={StringDB.Entries["ScannerWeapon"]}]::scanner::[/url]";
+					break;
+				case WeaponType.Flame:
+					typeLabel.Text = $"[url={StringDB.Entries["FlameWeapon"]}]::flame::[/url]";
+					break;
+				case WeaponType.Ballistic:
+					typeLabel.Text = $"[url={StringDB.Entries["BallisticWeapon"]}]::ballistic::[/url]";
+					break;
+				case WeaponType.Electric:
+					typeLabel.Text = $"[url={StringDB.Entries["ElectricWeapon"]}]::electric::[/url]";
+					break;
+				default:
+					typeLabel.Text = "";
+					break;
+			}
+
+			typeLabel.Name = "TypeLabel";
+			typeLabel.HorizontalAlignment = HorizontalAlignment.Center;
+			typeLabel.BbcodeEnabled = true;
+			typeLabel.FitContent = true;
+			typeLabel.CustomMinimumSize = new Vector2(150, 0);
+			_infoContainers["BasicInfo"].GetNode("VBoxContainer").AddChild(typeLabel);
+			_infoContainers["BasicInfo"].GetNode("VBoxContainer").MoveChild(typeLabel, 1);
 		}
 
 		bool hasDisplayEffects = false;
@@ -614,12 +690,15 @@ public partial class Unit : CharacterBody2D
 			DisplayAttackRange();
 		}).CallDeferred();
 
-
 		if (this is not Spawner)
 		{
 			PanelContainer basicInfo = _infoContainers["BasicInfo"];
 			basicInfo.CustomMinimumSize = new(200, 0);
+
 			VBoxContainer basicInfoV = basicInfo.GetNode<VBoxContainer>("VBoxContainer");
+
+			Label nameLabel = basicInfoV.GetNode<Label>("NameLabel");
+			nameLabel.Text = GetName();
 
 			if (this is not TowerUnit)
 			{
@@ -685,8 +764,6 @@ public partial class Unit : CharacterBody2D
 		{
 			_weapon.UpdateWeaponInfoContainer();
 		}
-
-
 
 		if (updateEffects)
 		{
@@ -761,121 +838,7 @@ public partial class Unit : CharacterBody2D
 		}
 	}
 
-	/// <summary>
-	/// Edits _infoContainers so that upgraded stats are displayed in green. Note that this method should be called on a unit with the upgrade already applied on. 
-	/// The upgrade resource that is inputted is only used to determine which stats were changed. 
-	/// </summary>
-	/// <param name="upgrade"></param>
-	/// <exception cref="Exception"></exception>
-	public virtual void UpdateUnitInfoContainerWithUpgrade(InvaderStatsIncreaseResource upgrade)
-	{
-		if (this is not InvaderUnit)
-		{
-			throw new Exception("attempting to give invader buff to non-invader");
-		}
-		PanelContainer basicInfo = _infoContainers["BasicInfo"];
-		basicInfo.CustomMinimumSize = new(200, 0);
-		VBoxContainer basicInfoV = basicInfo.GetNode<VBoxContainer>("VBoxContainer");
-		string greenHex = ThemePalette.Green.ToHtml(false);
-
-		if (upgrade._hpBuff != 0)
-		{
-			RichTextLabel hpLabel = basicInfoV.GetNode<RichTextLabel>("HpLabel");
-			hpLabel.Text = $"[color=#{greenHex}]Hp: {GetHpMax()}/{GetHpMax()}[/color]";
-		}
-
-		if (upgrade._speedBuff != 0)
-		{
-			RichTextLabel speedLabel = basicInfoV.GetNode<RichTextLabel>("SpeedLabel");
-			speedLabel.Text = $"[color=#{greenHex}]Move speed:{GetSpeed()}[/color]";
-		}
-
-		if (upgrade._moneyBuff != new Vector4I(0,0,0,0) || upgrade._startingEffects.Any(o => o.GetType() == typeof(SpawnUnitOnDeathResource)))
-		{
-			InvaderUnit invader = (InvaderUnit)this;
-			TooltipRichTextLabel moneyDropLabel = basicInfoV.GetNode<TooltipRichTextLabel>("MoneyDropLabel");
-			moneyDropLabel.Text = $"[color=#{greenHex}]Drops {Utils.MakeMoneyText(invader.GetTotalMoneyDropped())}[/color]"; 
-		}
-
-		if (upgrade._startingEffects.Count != 0)
-		{
-			Array<EffectResource> effectUpgrades = [];
-			foreach (EffectResource resource in upgrade._startingEffects)
-			{
-				if (_effects.Any(e => e.GetType() == resource.GetType()))
-				{
-					effectUpgrades.Add(resource);
-				}
-			}
-			if (effectUpgrades.Count == 0)
-			{
-				return;
-			}
-			PanelContainer effectsInfo = _infoContainers["EffectsInfo"];
-			foreach (var child in effectsInfo.GetChildren())
-			{
-				child.QueueFree();
-			}
-
-			HBoxContainer allEffectsH = new();
-
-			VBoxContainer smallEffectsV = new();
-
-			HBoxContainer largeEffectsH = new();
-
-			foreach (EffectResource effect in _effects)
-			{
-				switch (effect._displayType)
-				{
-					case (EffectResource.DisplayTypes.Large):
-						if (effectUpgrades.Any(o => o.GetType() == effect.GetType()))
-						{
-							EffectResource newEffect = effectUpgrades.First(o => o.GetType() == effect.GetType());
-							VBoxContainer container = new();
-							PanelContainer effectName = effect.MakeFullEffectDescriptionWithUpgrade(newEffect);
-							container.AddChild(effectName);
-							largeEffectsH.AddChild(container);
-							break;
-						}
-						else
-						{
-							VBoxContainer container = new();
-							PanelContainer effectName = effect.MakeFullEffectDescription();
-							container.AddChild(effectName);
-							largeEffectsH.AddChild(container);
-							break;
-						}
-
-					case (EffectResource.DisplayTypes.Small):
-						VBoxContainer container1 = new();
-						HoverInfoLabel effectName1 = effect.MakeEffectTooltip(false);
-						container1.AddChild(effectName1);
-						smallEffectsV.AddChild(container1);
-						break;
-					case (EffectResource.DisplayTypes.Hidden):
-						continue;
-				}
-			}
-
-			if (largeEffectsH.GetChildren().Count != 0)
-			{
-				allEffectsH.AddChild(largeEffectsH);
-			}
-			else
-			{
-				largeEffectsH.QueueFree();
-			}
-			if (smallEffectsV.GetChildren().Count != 0)
-			{
-				allEffectsH.AddChild(smallEffectsV);
-			}
-			else
-			{
-				smallEffectsV.QueueFree();
-			}
-			effectsInfo.AddChild(allEffectsH);
-		}
-	}
+	
 
 	public virtual void UpdateUnitDamageDealtInfo()
 	{
@@ -917,8 +880,15 @@ public partial class Unit : CharacterBody2D
 	public PanelContainer GetUnitInfoContainerWithUpgradeWithString(string name, InvaderStatsIncreaseResource upgrade)
 	{
 		Godot.Collections.Dictionary<string, PanelContainer> dict = MakeUnitInfoContainer();
-		UpdateUnitInfoContainerWithUpgrade(upgrade);
-		PanelContainer dictCopy = (PanelContainer)dict[name].Duplicate();
+		if (this is InvaderUnit invader)
+		{
+			invader.UpdateUnitInfoContainerWithUpgrade(upgrade);
+		}
+		else
+		{
+			throw new Exception("Must be an invader");
+		}
+			PanelContainer dictCopy = (PanelContainer)dict[name].Duplicate();
 		foreach (PanelContainer panelContainer in dict.Values)
 		{
 			panelContainer.QueueFree();
@@ -1115,19 +1085,24 @@ public partial class Unit : CharacterBody2D
 
 	protected void StopAttackingTarget()
 	{
-		Unit oldTarget = _attackTarget;
+		if (IsInstanceValid(_attackTarget))
+		{
+			Unit oldTarget = _attackTarget;
+			if (_weapon is not null)
+			{
+				EmitSignal(SignalName.StopAttack, oldTarget);
+			}
+		}
 		_state = State.Idle;
 		_attackTarget = null;
 		_weapon?.StopAttackingTarget();
-		if (_weapon is not null)
-		{
-			EmitSignal(SignalName.StopAttack, oldTarget);
-		}
+		
 	}
 
-	public void OnBeforeHitEnemy(Unit enemy)
+	public void OnBeforeHitEnemy(DamageContext damageContext)
 	{
-		EmitSignal(SignalName.BeforeHitEnemy, enemy);
+		EmitSignal(SignalName.BeforeHitEnemy, damageContext);
+		_tdManager.EmitSignal(TDManager.SignalName.GlobalBeforeDamage, damageContext);
 	}
 
 	public void OnHitEnemy(Unit enemy)
@@ -1145,39 +1120,44 @@ public partial class Unit : CharacterBody2D
 		EmitSignal(SignalName.VolleyEnded);
 	}
 
-	public void Hit(int damage, Unit source, bool ignoreArmor = false)
+	public void Hit(DamageContext damageContext)
 	{
 		if (_isDead)
 		{
 			return;
 		}
-		EmitSignal(SignalName.BeforeIsHit, source);
-		damage = (int)(damage * (1f + _damageTakenDebuff + _damageTakenModifier) * (1f - _damageReductionBuff));
-		if (source is TowerUnit tower)
+		if (damageContext._target != this)
 		{
-			source.IncreaseDamageDealtStat(Math.Min(damage, _hp));
+			throw new Exception("wrong target in context");
 		}
-		IncreaseHp(-damage, ignoreArmor);
+		EmitSignal(SignalName.BeforeIsHit, damageContext._attacker);
+		int damageTaken = (int)(damageContext._finalDamage * (1f + _damageTakenDebuff + _damageTakenModifier) * (1f - _damageReductionBuff));
+		if (damageContext._attacker is TowerUnit tower)
+		{
+			damageContext._attacker.IncreaseDamageDealtStat(Math.Min(damageTaken, _hp));
+		}
+		IncreaseHp(-damageTaken, true);
 		Area2D socialArea = GetNode<Area2D>("AidArea");
 		var nearbyBodies = socialArea.GetOverlappingBodies();
-		EmitSignal(SignalName.IsHit, source);
+		EmitSignal(SignalName.IsHit, damageContext._attacker);
 
 		foreach (var body in nearbyBodies)
 		{
 			// Check if the body is a Unit and on the same team
-			if (body is Unit ally && ally._teamId == this._teamId && source is Unit)
+			if (body is Unit ally && ally._teamId == this._teamId && damageContext._attacker is Unit)
 			{
-				ally.Retaliate(source);
+				ally.Retaliate(damageContext._attacker);
 			}
 		}
 
 		if (_hp <= 0)
 		{
-			Die();
-			if (source is not null)
+			_tdManager.EmitSignal(TDManager.SignalName.GlobalUnitKilled, damageContext);
+			if (damageContext._attacker is not null)
 			{
-				source.EmitSignal(Unit.SignalName.KilledUnit, this);
+				damageContext._attacker.EmitSignal(Unit.SignalName.KilledUnit, this);
 			}
+			Die();
 		}
 	}
 
@@ -1188,10 +1168,6 @@ public partial class Unit : CharacterBody2D
 			int newChange = Math.Min(change + _shield, 0);
 			IncreaseShield(change);
 			change = newChange;
-		}
-		if (change < 0 && !ignoreArmor)
-		{
-			change = Math.Min(change + GetArmor(), 0);
 		}
 		_hp += change;
 		_hp = Math.Min(_hp, GetHpMax());
@@ -1306,18 +1282,18 @@ public partial class Unit : CharacterBody2D
 
 	protected virtual void OnScanAreaBodyLeft(Node2D body)
 	{
-		if (!_active)
-		{
-			return;
-		}
-		if (body is Unit unit && unit == _attackTarget)
-		{
-			StopAttackingTarget();
-		}
-		else
-		{
-			return;
-		}
+		//if (!_active)
+		//{
+		//	return;
+		//}
+		//if (body is Unit unit && unit == _attackTarget)
+		//{
+		//	StopAttackingTarget();
+		//}
+		//else
+		//{
+		//	return;
+		//}
 	}
 
 	public void ScanForEnemies()
@@ -1416,12 +1392,29 @@ public partial class Unit : CharacterBody2D
 	{
 		var scanArea = GetNode<Area2D>("AttackArea");
 
-		var bodies = scanArea.GetOverlappingBodies();
-		foreach (Node2D body in bodies)
+		var spaceState = scanArea.GetWorld2D().DirectSpaceState;
+
+		var query = new PhysicsShapeQueryParameters2D
 		{
-			if (body == target)
+			Shape = _attackCollisionShape.Shape,
+			Transform = scanArea.GlobalTransform,
+			CollisionMask = scanArea.CollisionMask,
+			CollideWithBodies = true,
+			CollideWithAreas = false
+		};
+
+		// Performs an immediate mathematical overlap check
+		Array<Dictionary> results = spaceState.IntersectShape(query);
+
+		var bodies = new Array<Node2D>();
+		foreach (Dictionary hit in results)
+		{
+			if (hit["collider"].AsGodotObject() is Node2D body)
 			{
-				return true;
+				if (body == target)
+				{
+					return true;
+				}
 			}
 		}
 		return false;
@@ -1429,17 +1422,38 @@ public partial class Unit : CharacterBody2D
 
 	public void SetHpMaxModifier(int hpModifier)
 	{
-		int newMax = _hpMax + hpModifier;
-		int change = newMax - _hpMax;
-		_hp += change;
 		_data._maxHpIncrease = hpModifier;
+		
 		EmitSignal(SignalName.UpdateStatsInfo);
 	}
 
 	public void IncreaseHpMaxModifier(int change)
 	{
 		SetHpMaxModifier(_data._maxHpIncrease + change);
-		UpdateHpMax();
+		_hp += change;
+		if (_healthBar != null)
+		{
+			UpdateHealthBar(_hp, GetHpMax(), _shield);
+		}
+		EmitSignal(SignalName.UpdateStatsInfo);
+	}
+
+	public void SetPercentHpMaxModifier(float hpModifier)
+	{
+		_data._percentHpIncrease = hpModifier;
+		EmitSignal(SignalName.UpdateStatsInfo);
+	}
+
+	public void IncreasePercentHpMaxModifier(float change)
+	{
+		int oldMax = GetHpMax();
+		SetPercentHpMaxModifier(_data._percentHpIncrease + change);
+		_hp += GetHpMax() - oldMax;
+		if (_healthBar != null)
+		{
+			UpdateHealthBar(_hp, GetHpMax(), _shield);
+		}
+		EmitSignal(SignalName.UpdateStatsInfo);
 	}
 
 	public void SetWeaponModifier(int damageModifier)
@@ -1448,13 +1462,13 @@ public partial class Unit : CharacterBody2D
 		EmitSignal(SignalName.UpdateStatsInfo);
 	}
 
-	public void IncreaseWeaponModifier(int change, BaseWeapon.DamageType type = BaseWeapon.DamageType.Null)
+	public void IncreaseWeaponModifier(int change, BaseWeapon.WeaponType type = BaseWeapon.WeaponType.Null)
 	{
 		if (_weapon is null)
 		{
 			return;
 		}
-		if (type == BaseWeapon.DamageType.Null || _weapon._damageType == type)
+		if (type == BaseWeapon.WeaponType.Null || _weapon._weaponType == type)
 		{
 			SetWeaponModifier(_data._damageIncrease + change);
 		}
@@ -1478,13 +1492,13 @@ public partial class Unit : CharacterBody2D
 		SetWeaponBuffPercent(increase + _weapon._damageBuffPercent);
 	}
 
-	public void IncreaseWeaponPercentModifier(float change, BaseWeapon.DamageType type = BaseWeapon.DamageType.Null)
+	public void IncreaseWeaponPercentModifier(float change, BaseWeapon.WeaponType type = BaseWeapon.WeaponType.Null)
 	{
 		if (_weapon is null)
 		{
 			return;
 		}
-		if (type == BaseWeapon.DamageType.Null || _weapon._damageType == type)
+		if (type == BaseWeapon.WeaponType.Null || _weapon._weaponType == type)
 		{
 			SetWeaponPercentModifier(_data._damagePercentIncrease + change);
 		}
@@ -1527,6 +1541,22 @@ public partial class Unit : CharacterBody2D
 	public void IncreaseSpeedModifier(float change)
 	{
 		SetSpeedModifier(_data._speedIncrease + change);
+	}
+
+	public void SetPercentSpeedModifier(float speed)
+	{
+		if (this is StationaryUnit)
+		{
+			return;
+		}
+		_data._percentSpeedIncrease = speed;
+		SetPathFinder();
+		EmitSignal(SignalName.UpdateStatsInfo);
+	}
+
+	public void IncreasePercentSpeedModifier(float change)
+	{
+		SetPercentSpeedModifier(_data._percentSpeedIncrease + change);
 	}
 
 	public void SetSpeedDebuff(float debuff)
@@ -1625,20 +1655,13 @@ public partial class Unit : CharacterBody2D
 
 		_shieldBar = GetNode<TextureProgressBar>("ShieldBar");
 		_shieldBar.MaxValue = GetHpMax();
-		_shieldBar.Modulate = ThemePalette.Blue;
 		_shieldBar.Size = new Vector2(length, _baseHealthBarHeight);
 		_shieldBar.Position = new Vector2(-length / 2, -_healthBarOffset - _baseHealthBarHeight);
 
 		_healthBar.Value = currentHp;
 
-		// Transition from Green (0.33) to Red (0.0) using HSV
-		// Or use a simple Lerp between two specific colors:
-		Color healthyColor = ThemePalette.Green;
-		Color criticalColor = ThemePalette.Red;
-
-		// This blends the two colors based on the health percentage
-		//_healthBar.Modulate = criticalColor.Lerp(healthyColor, healthPercent);
-		_healthBar.TintProgress = healthyColor;
+		_healthBar.TintProgress = ThemePalette.Green;
+		_shieldBar.TintProgress = ThemePalette.Blue;
 
 		if (_shield > 0)
 		{

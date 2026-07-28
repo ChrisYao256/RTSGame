@@ -41,6 +41,7 @@ public partial class Spawner : TowerUnit
 			sprite.Texture = icon;
 			Utils.ScaleVisualToRadius(sprite, unit._radius);
 			AddChild(sprite);
+			MoveChild(sprite, 3);
 			unit.QueueFree();
 		}
 		else
@@ -63,6 +64,15 @@ public partial class Spawner : TowerUnit
 		if (_description == null || _description == "")
 		{
 			_description = "Enemies enter the battlefield through this portal each turn. Kill them to earn resources. ";
+		}
+
+		Vector4I income = GetIncome();
+		for (int i = 0; i < 4; i++)
+		{
+			if (income[i] > 0)
+			{
+				_colors.Add(i);
+			}
 		}
 	}
 
@@ -109,8 +119,8 @@ public partial class Spawner : TowerUnit
 	public void SetSpawnerEnemies(Array<InvaderStatsIncreaseResource> enemies)
 	{
 		_spawnerData._units = enemies;
-		EmitSignal(SignalName.UpdateStatsInfo);
 		ClearInfoCache();
+		EmitSignal(SignalName.UpdateInfo);
 	}
 
 	public void AddSpawnerEnemies(Array<InvaderStatsIncreaseResource> enemies)
@@ -131,12 +141,14 @@ public partial class Spawner : TowerUnit
 	{
 		resource.MergeWithOld(_spawnerData._units[index], []);
 		ClearInfoCache();
+		EmitSignal(SignalName.UpdateInfo);
 	}
 
 	public void RemoveSpawnerUnitStatsIncrease(int index, InvaderStatsIncreaseResource resource)
 	{
 		resource.RemoveFromOld(_spawnerData._units[index]);
 		ClearInfoCache();
+		EmitSignal(SignalName.UpdateInfo);
 	}
 
 	//public void SetSpawnerHpBuff(int hpBuff)
@@ -252,7 +264,58 @@ public partial class Spawner : TowerUnit
 		}
 	}
 
-	public string GetSpawns() // Assumes all units of the same name have the same money drop
+	public static string GetGroupEnemyNames(Array<InvaderStatsIncreaseResource> data, bool multiline = true)
+	{
+		Godot.Collections.Dictionary<string, int> nameCountDict = new Godot.Collections.Dictionary<string, int>();
+		Godot.Collections.Dictionary<string, int> nameLevelDict = new Godot.Collections.Dictionary<string, int>();
+		List<InvaderUnit> invaders = [];
+		foreach (InvaderStatsIncreaseResource unit in data)
+		{
+			if (!nameCountDict.Keys.Contains(unit._unitName))
+			{
+				nameCountDict.Add(unit._unitName, 1);
+				nameLevelDict.Add(unit._unitName, unit._level);
+				invaders.Add(unit.GetInvader());
+			}
+			else
+			{
+				nameCountDict[unit._unitName] += 1;
+			}
+		}
+		string spawnText = "";
+		for (int i = 0; i < nameCountDict.Keys.Count - 1; i++)
+		{
+			string name = nameCountDict.Keys.ElementAt(i);
+			Vector4I income = invaders[i].GetTotalMoneyDropped();
+			if (multiline)
+			{
+				spawnText += $"{nameCountDict[name]}x " + UnitManager.InternalNameToName(name, nameLevelDict[name]) + $"\n";
+			}
+			else
+			{
+				spawnText += $"{nameCountDict[name]}x " + UnitManager.InternalNameToName(name, nameLevelDict[name]) + ", ";
+			}
+		}
+		string lastName = nameCountDict.Keys.ElementAt(nameCountDict.Keys.Count - 1);
+		Vector4I lastIncome = invaders[nameCountDict.Keys.Count - 1].GetTotalMoneyDropped();
+		if (multiline)
+		{
+			spawnText += $"{nameCountDict[lastName]}x " + UnitManager.InternalNameToName(lastName, nameLevelDict[lastName]) + $"\n";
+		}
+		else
+		{
+			spawnText += $"{nameCountDict[lastName]}x " + UnitManager.InternalNameToName(lastName, nameLevelDict[lastName]);
+		}
+			
+		foreach (Node var in invaders)
+		{
+			var.QueueFree();
+		}
+		
+		return spawnText;
+	}
+
+	public string GetSpawns()
 	{
 		if (_infoDictionary.Keys.Contains("Spawns"))
 		{
@@ -260,34 +323,7 @@ public partial class Spawner : TowerUnit
 		}
 		else
 		{
-			Godot.Collections.Dictionary<string, int> nameCountDict = new Godot.Collections.Dictionary<string, int>();
-			List<InvaderUnit> invaders = [];
-			foreach (InvaderStatsIncreaseResource unit in _spawnerData._units)
-			{
-				if (!nameCountDict.Keys.Contains(unit._unitName))
-				{
-					nameCountDict.Add(unit._unitName, 1);
-					invaders.Add(unit.GetInvader());
-				}
-				else
-				{
-					nameCountDict[unit._unitName] += 1;
-				}
-			}
-			string spawnText = "";
-			for (int i = 0; i < nameCountDict.Keys.Count - 1; i++)
-			{
-				string name = nameCountDict.Keys.ElementAt(i);
-				Vector4I income = invaders[i].GetTotalMoneyDropped();
-				spawnText += nameCountDict[name] + " " + UnitManager.InternalNameToName(name) + "\n";
-			}
-			string lastName = nameCountDict.Keys.ElementAt(nameCountDict.Keys.Count - 1);
-			Vector4I lastIncome = invaders[nameCountDict.Keys.Count - 1].GetTotalMoneyDropped();
-			spawnText += nameCountDict[lastName] + " " + UnitManager.InternalNameToName(lastName) + "\n";
-			foreach (Node var in invaders)
-			{
-				var.QueueFree();
-			}
+			string spawnText = GetGroupEnemyNames(_spawnerData._units, true);
 			_infoDictionary.Add("Spawns", spawnText);
 			return spawnText;
 		}

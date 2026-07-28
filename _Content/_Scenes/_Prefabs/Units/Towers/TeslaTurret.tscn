@@ -12,7 +12,7 @@
 
 [sub_resource type="Resource" id="Resource_cmo3r"]
 script = ExtResource("3_rmeo8")
-_damageIncrease = 85
+_damageIncrease = 205
 metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 
 [sub_resource type="Resource" id="Resource_nrj0v"]
@@ -22,7 +22,7 @@ metadata/_custom_type_script = "uid://7kboh56vfc8d"
 
 [sub_resource type="Resource" id="Resource_oh15a"]
 script = ExtResource("3_rmeo8")
-_damageIncrease = 220
+_damageIncrease = 375
 metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 
 [sub_resource type="Resource" id="Resource_pnulm"]
@@ -32,12 +32,12 @@ metadata/_custom_type_script = "uid://7kboh56vfc8d"
 
 [sub_resource type="Resource" id="Resource_yglny"]
 script = ExtResource("3_rmeo8")
-_damageIncrease = 345
+_damageIncrease = 550
 metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 
 [sub_resource type="Resource" id="Resource_rmeo8"]
 script = ExtResource("5_nrj0v")
-_increaseAmount = 0.1
+_increaseAmount = 0.08
 metadata/_custom_type_script = "uid://7kboh56vfc8d"
 
 [sub_resource type="Resource" id="Resource_gpgta"]
@@ -60,11 +60,11 @@ animations = [{
 _iconTexture = ExtResource("2_pnulm")
 _description = "Shoots rays at random enemies. Increase damage when multiple rays hit the same enemy."
 _firstUpgrade = Array[Object]([SubResource("Resource_cmo3r"), SubResource("Resource_nrj0v")])
-_firstUpgradeCost = Vector4i(77, 0, 0, 77)
+_firstUpgradeCost = Vector4i(185, 0, 0, 185)
 _secondUpgrade = Array[Object]([SubResource("Resource_oh15a"), SubResource("Resource_pnulm")])
-_secondUpgradeCost = Vector4i(178, 0, 0, 178)
+_secondUpgradeCost = Vector4i(310, 0, 0, 310)
 _thirdUpgrade = Array[Object]([SubResource("Resource_yglny"), SubResource("Resource_rmeo8")])
-_thirdUpgradeCost = Vector4i(300, 0, 0, 300)
+_thirdUpgradeCost = Vector4i(450, 0, 0, 450)
 _fourthUpgradeA = Array[Object]([])
 _fourthUpgradeATexture = ExtResource("5_i4ir4")
 _fourthUpgradeB = Array[Object]([])
@@ -103,7 +103,7 @@ _shotInterval = 0.15
 _damage = 250
 _range = 255.0
 _attackCooldown = 3.0
-_damageType = 2
+_weaponType = 6
 _description = "Shoots 6 times each volley."
 
 [node name="TracerLine" type="Line2D" parent="WeaponComponent" index="0" unique_id=1706206416]

@@ -3,6 +3,7 @@ using Godot.Collections;
 using RTSGame.Units;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Xml.Linq;
 using static Godot.Control;
@@ -11,23 +12,41 @@ namespace RTSGame.Source;
 
 public partial class RogueManager : Node
 {
-	public static Array<int> _wavesWithTowerUnlock = [4, 9, 14, 19, 24];
+	/// <summary>
+	/// enums without All are chosen from 3, enums with all are chosen from all. 
+	/// </summary>
+	public enum RewardType
+	{
+		Defense,
+		Portal,
+		Tower,
+		Passive,
+		DefenseAll,
+		PortalAll,
+		TowerAll,
+		PassiveAll,
+	}
+
+	//public static Array<int> _wavesWithTowerUnlock = [4, 9, 14, 19, 24];
+	//public static Array<int> _wavesWithPassive = [2, 7, 12, 17, 22, 27];
+
+	public Array<GlobalEffectResource> _remainingEffects;
 
 	private TDManager _tdManager;
 
 	private CanvasLayer _choicesLayer;
 	private PanelContainer _choicesPanel;
 	private TooltipRichTextLabel _choicesTitle;
-	private HBoxContainer _choicesContainer;
+	private GridContainer _choicesContainer;
 
 	public Array<string> _remainingTowers;
 
 	/// <summary>
 	/// set to true if this the game was continued from a save. The initial choices won't appear
 	/// </summary>
-	public bool _loaded;
+	public bool _noStartingReward;
 
-	private Array<TowerUnit.TowerType> _choicesQueue;
+	public Array<RewardType> _choicesQueue;
 	
 	public RogueManager(TDManager tdManager)
 	{
@@ -36,11 +55,12 @@ public partial class RogueManager : Node
 
 	public override void _Ready()
 	{
-		_remainingTowers = _tdManager._allTowerList;
+		_remainingTowers = _tdManager._allTowerList.Duplicate();
+		_remainingEffects = _tdManager._allGlobalEffects.Duplicate();
 		InitializeRogueChoicePrompt();
-		if (!_loaded)
+		if (!_noStartingReward)
 		{
-			_choicesQueue = [TowerUnit.TowerType.Defense, TowerUnit.TowerType.Spawner, TowerUnit.TowerType.Null, TowerUnit.TowerType.Null];
+			_choicesQueue = [RewardType.Passive, RewardType.Defense, RewardType.Portal, RewardType.Defense, RewardType.Portal];
 			ProcessChoicesQueue();
 		}
 		else
@@ -49,6 +69,10 @@ public partial class RogueManager : Node
 			foreach (string tower in _tdManager._availTowerList)
 			{
 				_remainingTowers.Remove(tower);
+			}
+			foreach (GlobalEffectResource resource in _tdManager._globalEffects)
+			{
+				_remainingEffects.Remove(resource);
 			}
 		}
 	}
@@ -60,12 +84,17 @@ public partial class RogueManager : Node
 
 		_choicesTitle = new TooltipRichTextLabel();
 		_choicesTitle.FitContent = true;
-		_choicesTitle.CustomMinimumSize = new Vector2(0, 50);
+		_choicesTitle.CustomMinimumSize = new Vector2(300, 0);
 		_choicesTitle.HorizontalAlignment = HorizontalAlignment.Center;
 		vboxContainer.AddChild(_choicesTitle);
 
-		_choicesContainer = new HBoxContainer();
+		_choicesContainer = new GridContainer();
+		_choicesContainer.SizeFlagsHorizontal = Control.SizeFlags.ShrinkCenter;
+		_choicesContainer.AddThemeConstantOverride("h_separation", 32);
+		_choicesContainer.AddThemeConstantOverride("v_separation", 32);
+		//_choicesContainer.Alignment = BoxContainer.AlignmentMode.Center;
 		vboxContainer.AddChild(_choicesContainer);
+		
 
 		_choicesPanel.AddChild(vboxContainer);
 		_choicesPanel.SetAnchorsPreset(LayoutPreset.Center);
@@ -77,20 +106,36 @@ public partial class RogueManager : Node
 
 	public void MakeRogueTowerUnlockChoicePrompt(Array<string>towers)
 	{
+		if (towers.Count == 0)
+		{
+			if (_choicesQueue.Count > 0)
+			{
+				ProcessChoicesQueue();
+				return;
+			}
+		}
 		foreach (var child in _choicesContainer.GetChildren())
 		{
 			child.QueueFree();
 		}
 		_choicesTitle.Text = StringDB.Entries["TowerChoice"];
+		if (towers.Count < 6)
+		{
+			_choicesContainer.Columns = towers.Count;
+		}
+		else
+		{
+			_choicesContainer.Columns = 5;
+		}
 		foreach (string name in towers)
 		{
 			VBoxContainer container = new VBoxContainer();
 
-			string name_ = name;
+				string name_ = name;
 			TowerUnit unit = (TowerUnit)UnitManager.GetUnit(name, true);
 
 			Label nameLabel = new Label();
-			nameLabel.Text = unit._name;
+			nameLabel.Text = unit.GetName();
 			nameLabel.CustomMinimumSize = new(160, 0);
 			nameLabel.HorizontalAlignment = HorizontalAlignment.Center;
 			container.AddChild(nameLabel);
@@ -139,13 +184,53 @@ public partial class RogueManager : Node
 		_choicesLayer.Show();
 	}
 
-	public void OnNewWave(int count)
+	public void MakeRoguePassiveUnlockChoicePrompt(Array<GlobalEffectResource> resources)
 	{
-		if (_wavesWithTowerUnlock.Contains(count))
+		if (resources.Count == 0)
 		{
-			_choicesQueue.Add(TowerUnit.TowerType.Null);
-			ProcessChoicesQueue();
+			if (_choicesQueue.Count > 0)
+			{
+				ProcessChoicesQueue();
+				return;
+			}
 		}
+		foreach (var child in _choicesContainer.GetChildren())
+		{
+			child.QueueFree();
+		}
+		_choicesTitle.Text = StringDB.Entries["PassiveChoice"];
+		if (resources.Count < 6)
+		{
+			_choicesContainer.Columns = resources.Count;
+		}
+		else
+		{
+			_choicesContainer.Columns = 5;
+		}
+		foreach (GlobalEffectResource resource in resources)
+		{
+			VBoxContainer container = new VBoxContainer();
+
+			resource.SetDescription();
+
+			HoverInfoImage effectButton
+				= resource.MakeEffectTooltip(true);
+			effectButton.Pressed += (() =>
+			{
+				_choicesLayer.Hide();
+				int test = _tdManager._allGlobalEffects.IndexOf(resource);
+				GivePassive(resource);
+				if (_choicesQueue.Count > 0)
+				{
+					ProcessChoicesQueue();
+				}
+			});
+
+			container.AddChild(effectButton);
+
+			_choicesContainer.AddChild(container);
+		}
+		_choicesLayer.Show();
 	}
 
 	private void UnlockTower(string name)
@@ -155,6 +240,13 @@ public partial class RogueManager : Node
 		TowerUnit tower = (TowerUnit)UnitManager.GetUnit(name, false);
 		_tdManager.GainMoney(tower._cost);
 		tower.QueueFree();
+	}
+
+	private void GivePassive(GlobalEffectResource resource)
+	{
+		int test = _tdManager._allGlobalEffects.IndexOf(resource);
+		_remainingEffects.Remove(resource);
+		_tdManager.ApplyGlobalEffect(resource);
 	}
 
 	public Array<string> GetRandomTowers(int count, TowerUnit.TowerType type = TowerUnit.TowerType.Null)
@@ -172,13 +264,46 @@ public partial class RogueManager : Node
 		return Utils.GetRandomElements<string>(towers, count);
 	}
 
-	private void ProcessChoicesQueue()
+	public Array<GlobalEffectResource> GetRandomPassives(int count)
+	{
+		return Utils.GetRandomElements<GlobalEffectResource>(_remainingEffects, count);
+	}
+
+	public void ProcessChoicesQueue()
 	{
 		if (_choicesQueue.Count == 0)
 		{
 			return;
 		}
-		MakeRogueTowerUnlockChoicePrompt(GetRandomTowers(3, _choicesQueue[0]));
+		RewardType type = _choicesQueue[0];
 		_choicesQueue.RemoveAt(0);
+		switch (type)
+		{
+			case RewardType.Defense:
+				MakeRogueTowerUnlockChoicePrompt(GetRandomTowers(3, TowerUnit.TowerType.Defense));
+				break;
+			case RewardType.Portal:
+				MakeRogueTowerUnlockChoicePrompt(GetRandomTowers(3, TowerUnit.TowerType.Spawner));
+				break;
+			case RewardType.Tower:
+				MakeRogueTowerUnlockChoicePrompt(GetRandomTowers(3, TowerUnit.TowerType.Null));
+				break;
+			case RewardType.Passive:
+				MakeRoguePassiveUnlockChoicePrompt(GetRandomPassives(3));
+				break;
+			case RewardType.DefenseAll:
+				MakeRogueTowerUnlockChoicePrompt(GetRandomTowers(3, TowerUnit.TowerType.Defense));
+				break;
+			case RewardType.PortalAll:
+				MakeRogueTowerUnlockChoicePrompt(GetRandomTowers(3, TowerUnit.TowerType.Spawner));
+				break;
+			case RewardType.TowerAll:
+				MakeRogueTowerUnlockChoicePrompt(GetRandomTowers(_remainingTowers.Count, TowerUnit.TowerType.Null));
+				break;
+			case RewardType.PassiveAll:
+				MakeRoguePassiveUnlockChoicePrompt(GetRandomPassives(_remainingEffects.Count));
+				break;
+		}
+		
 	}
 }

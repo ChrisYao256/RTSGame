@@ -9,6 +9,9 @@ public partial class RampUpDamageResource : EffectResource
 	public int _increaseAmount;
 
 	[Export]
+	public float _percentIncreaseAmount;
+
+	[Export]
 	public double _increaseInterval;
 
 	[Export]
@@ -19,6 +22,7 @@ public partial class RampUpDamageResource : EffectResource
 		RampUpDamageResource typedOldResource = (RampUpDamageResource)oldResource;
 
 		typedOldResource._increaseAmount += _increaseAmount;
+		typedOldResource._percentIncreaseAmount += _percentIncreaseAmount;
 		typedOldResource._increaseMaxCount += _increaseMaxCount;
 		typedOldResource.SetDescription();
 		return false;
@@ -27,12 +31,14 @@ public partial class RampUpDamageResource : EffectResource
 	public override void SetDescription()
 	{
 		_displayType = DisplayTypes.Large;
-		_effectDescription = $"Increases tower damage by {_increaseAmount} for every {_increaseInterval} seconds the tower has spent attacking the same enemy, up to {_increaseMaxCount} times";
-	}
-
-	public override void SetUpgradeDescription()
-	{
-		_effectDescription = $"Increases an extra +{_increaseAmount} damage each time.";
+		if (_increaseAmount > 0)
+		{
+			_effectDescription = $"Increases tower damage by {_increaseAmount} for every {_increaseInterval} seconds the tower has spent attacking the same enemy, up to {_increaseMaxCount} times";
+		}
+		else if (_percentIncreaseAmount > 0)
+		{
+			_effectDescription = $"Increases tower damage by {_percentIncreaseAmount*100:F0}% for every {_increaseInterval} seconds the tower has spent attacking the same enemy, up to {_increaseMaxCount} times";
+		}
 	}
 
 	public override Effect CreateNode()

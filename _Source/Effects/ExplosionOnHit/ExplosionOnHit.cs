@@ -53,7 +53,8 @@ public partial class ExplosionOnHit : Effect
 
 			if (collider is Unit unit && unit != enemy && unit._teamId != _parentUnit._teamId)
 			{
-				unit.Hit(_resource._explosionDamage, _parentUnit);
+				DamageContext context = new DamageContext(_parentUnit, unit, _resource._explosionDamage, DamageType.Explosion);
+				unit.Hit(context);
 			}
 		}
 		if (_resource.ExplosionVisualScene != null)
@@ -69,7 +70,7 @@ public partial class ExplosionOnHit : Effect
 
 			// If you want to scale the sprite to match the radius:
 			float radius = _resource._explosionRadius; // Get this from your shape
-			Utils.ScaleVisualToRadius(viz.GetNode<Sprite2D>("Sprite2D"), radius);
+			Utils.ScaleVisualToRadius(viz.GetNode<AnimatedSprite2D>("Sprite2D"), radius / 1.2f);
 		}
 	}
 }

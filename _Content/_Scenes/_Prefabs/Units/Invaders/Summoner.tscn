@@ -3,21 +3,20 @@
 [ext_resource type="PackedScene" uid="uid://bqn4h6d52i52" path="res://_Content/_Scenes/_Prefabs/Units/BaseInvaderUnit.tscn" id="1_45kf3"]
 [ext_resource type="Script" uid="uid://iamaod4iivlq" path="res://_Source/Effects/InvaderStatsIncrease/InvaderStatsIncreaseResource.cs" id="2_nu4fx"]
 [ext_resource type="Script" uid="uid://bu6prnkxpfjo0" path="res://_Source/Effects/PeriodicSpawnEnemies/PeriodicSpawnEnemiesResource.cs" id="3_45kf3"]
+[ext_resource type="Script" uid="uid://dtpcxn7d2dqcy" path="res://_Source/Effects/EffectResource.cs" id="3_nu4fx"]
 [ext_resource type="Texture2D" uid="uid://dgki3rdi8d7fo" path="res://_Assets/Slime.png" id="4_th8uk"]
 [ext_resource type="Texture2D" uid="uid://bc230321nqto5" path="res://icon.svg" id="5_ik8aj"]
 
 [sub_resource type="Resource" id="Resource_nu4fx"]
 script = ExtResource("2_nu4fx")
 _unitName = "Summoned"
-_hpBuff = 500
-_startingEffects = null
+_level = 1
 metadata/_custom_type_script = "uid://iamaod4iivlq"
 
 [sub_resource type="Resource" id="Resource_y5yar"]
 script = ExtResource("2_nu4fx")
 _unitName = "Summoned"
 _hpBuff = 500
-_startingEffects = null
 metadata/_custom_type_script = "uid://iamaod4iivlq"
 
 [sub_resource type="Resource" id="Resource_th8uk"]
@@ -25,6 +24,55 @@ script = ExtResource("3_45kf3")
 _buffResource = Array[Object]([SubResource("Resource_nu4fx"), SubResource("Resource_y5yar")])
 _spawnInterval = 8.0
 metadata/_custom_type_script = "uid://bu6prnkxpfjo0"
+
+[sub_resource type="Resource" id="Resource_ik8aj"]
+script = ExtResource("2_nu4fx")
+_hpBuff = 1500
+_speedBuff = 45.0
+_moneyBuff = Vector4i(0, 0, 16, 0)
+_startingEffects = Array[ExtResource("3_nu4fx")]([SubResource("Resource_th8uk")])
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_mum78"]
+script = ExtResource("2_nu4fx")
+_level = 1
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_svcop"]
+script = ExtResource("2_nu4fx")
+_level = 1
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_1lhdv"]
+script = ExtResource("3_45kf3")
+_buffResource = Array[Object]([SubResource("Resource_mum78"), SubResource("Resource_svcop")])
+metadata/_custom_type_script = "uid://bu6prnkxpfjo0"
+
+[sub_resource type="Resource" id="Resource_k3adm"]
+script = ExtResource("2_nu4fx")
+_hpBuff = 1300
+_moneyBuff = Vector4i(0, 0, 10, 0)
+_startingEffects = Array[ExtResource("3_nu4fx")]([SubResource("Resource_1lhdv")])
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_dwr8y"]
+script = ExtResource("3_45kf3")
+_buffResource = Array[Object]([SubResource("Resource_mum78"), SubResource("Resource_svcop")])
+metadata/_custom_type_script = "uid://bu6prnkxpfjo0"
+
+[sub_resource type="Resource" id="Resource_ifyec"]
+script = ExtResource("2_nu4fx")
+_hpBuff = 2300
+_moneyBuff = Vector4i(0, 0, 16, 0)
+_startingEffects = Array[ExtResource("3_nu4fx")]([SubResource("Resource_dwr8y")])
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_denrh"]
+script = ExtResource("2_nu4fx")
+_hpBuff = 3500
+_moneyBuff = Vector4i(0, 0, 20, 0)
+_startingEffects = Array[ExtResource("3_nu4fx")]([SubResource("Resource_dwr8y")])
+metadata/_custom_type_script = "uid://iamaod4iivlq"
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_4dwqt"]
 atlas = ExtResource("4_th8uk")
@@ -57,9 +105,9 @@ animations = [{
 
 [node name="BaseUnit" unique_id=481801141 instance=ExtResource("1_45kf3")]
 _hpDeducted = 4
-_moveSpeed = 45.0
+_levelStats = Array[ExtResource("2_nu4fx")]([SubResource("Resource_ik8aj"), SubResource("Resource_k3adm"), SubResource("Resource_ifyec"), SubResource("Resource_denrh")])
+_moveSpeed = 0.0
 _hpMax = 0
-_startingEffects = Array[Object]([SubResource("Resource_th8uk")])
 _internalName = "Summoner"
 _name = "Portal Mage"
 _radius = 30.0

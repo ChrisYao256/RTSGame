@@ -1,101 +1,86 @@
 using Godot;
+using Godot.Collections;
 using System;
 
 public partial class StripeManager : Control
 {
-	private TextureProgressBar _healthBar;
+	protected TextureProgressBar _progressBar;
 
-	// How much HP does each vertical segment represent?
-	[Export] public float HpPerSmallStripe { get; set; } = 100.0f;
+	[Export] public Color StripeColor { get; set; } = new Color(0, 0, 0);
 
-	[Export] public float HpPerBigStripe { get; set; } = 500.0f;
-	[Export] public Color StripeColor { get; set; } = new Color(0, 0, 0, 0.4f); // Semi-transparent black
+	[Export] public Color LargeStripeColor = new Color(0, 0, 0);
 	[Export] public float StripeWidth { get; set; } = 2.0f;
 
-	[Export] public float BigStripeWidth { get; set; } = 4.0f;
+	[Export] public float BigStripeWidth { get; set; } = 3.0f;
 
-	private float MinimumSmallIntervalWidth = 5;
-	private float MinimumBigIntervalWidth = 5;
+  public Array<float> _smallStripeLocations = [];
+
+	public Array<float> _largeStripeLocations = [];
+
+	protected float MinimumSmallIntervalWidth = 5;
+	protected float MinimumBigIntervalWidth = 5;
 
 	public override void _Ready()
 	{
 		// Get the parent TextureProgressBar
-		_healthBar = GetParent<TextureProgressBar>();
+		_progressBar = GetParent<TextureProgressBar>();
 
-		if (_healthBar != null)
+		if (_progressBar != null)
 		{
 			// Recalculate stripes whenever the health bar's max_value or layout changes
-			_healthBar.Changed += QueueRedraw;
+			_progressBar.Changed += QueueRedraw;
 		}
 	}
 
 	public override void _Draw()
 	{
-		if (_healthBar == null) return;
+		if (_progressBar == null) return;
 
-		double maxHp = _healthBar.MaxValue;
-		float barWidth = _healthBar.Size.X;
-		float barHeight = _healthBar.Size.Y;
-
-		// Calculate how many stripes we need
-		double test = Math.Floor(maxHp / HpPerSmallStripe);
-
-		int totalStripes = (int)Math.Floor(maxHp / HpPerSmallStripe);
-
-		// If max HP is too low for even one stripe, don't draw anything
-		if (totalStripes <= 0) return;
-
-		// Find out exactly how many pixels represent 1 HP on the screen
-		float pixelsPerHp = barWidth / (float)maxHp;
-
-		// Don't draw small stripes if they are too dense
-		if (pixelsPerHp * HpPerSmallStripe > MinimumSmallIntervalWidth)
+		foreach (float location in _smallStripeLocations)
 		{
-			// Loop and draw each vertical line
-			for (int i = 1; i < totalStripes + 1; i++)
+			Vector2 startPoint;
+			Vector2 endPoint;
+			switch ((TextureProgressBar.FillModeEnum)_progressBar.FillMode)
 			{
-				float hpMilestone = i * HpPerSmallStripe;
-				float xPos = hpMilestone * pixelsPerHp;
-
-				// Draw a line from the top of the bar to the bottom
-				Vector2 startPoint = new Vector2(xPos, 0);
-				Vector2 endPoint = new Vector2(xPos, barHeight / 2);
-
-				DrawLine(startPoint, endPoint, StripeColor, StripeWidth);
+				case TextureProgressBar.FillModeEnum.LeftToRight:
+					startPoint = new Vector2(location, 0);
+					endPoint = new Vector2(location, _progressBar.Size.Y / 2);
+					DrawLine(startPoint, endPoint, StripeColor, StripeWidth);
+					break;
+				case TextureProgressBar.FillModeEnum.BottomToTop:
+					startPoint = new Vector2(0, _progressBar.Size.Y - location);
+					endPoint = new Vector2(_progressBar.Size.X / 2, _progressBar.Size.Y - location);
+					DrawLine(startPoint, endPoint, StripeColor, StripeWidth);
+					break;
 			}
 		}
 
-
-
-		int totalBigStripes = (int)Math.Floor(maxHp / HpPerBigStripe);
-
-		// If max HP is too low for even one stripe, don't draw anything
-		if (totalBigStripes <= 0) return;
-
-		if (pixelsPerHp * HpPerBigStripe > MinimumBigIntervalWidth)
+		foreach (float location in _largeStripeLocations)
 		{
-			// Loop and draw each vertical line
-			for (int i = 1; i < totalBigStripes + 1; i++)
+			Vector2 startPoint;
+			Vector2 endPoint;
+			switch ((TextureProgressBar.FillModeEnum)_progressBar.FillMode)
 			{
-				float hpMilestone = i * HpPerBigStripe;
-				float xPos = hpMilestone * pixelsPerHp;
-
-				// Draw a line from the top of the bar to the bottom
-				Vector2 startPoint = new Vector2(xPos, 0);
-				Vector2 endPoint = new Vector2(xPos, barHeight);
-
-				DrawLine(startPoint, endPoint, StripeColor, BigStripeWidth);
+				case TextureProgressBar.FillModeEnum.LeftToRight:
+					startPoint = new Vector2(location, 0);
+					endPoint = new Vector2(location, _progressBar.Size.Y);
+					DrawLine(startPoint, endPoint, LargeStripeColor, StripeWidth);
+					break;
+				case TextureProgressBar.FillModeEnum.BottomToTop:
+					startPoint = new Vector2(0, _progressBar.Size.Y - location);
+					endPoint = new Vector2(_progressBar.Size.X, _progressBar.Size.Y - location);
+					DrawLine(startPoint, endPoint, LargeStripeColor, StripeWidth);
+					break;
 			}
 		}
-			
 	}
 
 	// Clean up event subscription when the node leaves the scene tree
 	public override void _ExitTree()
 	{
-		if (_healthBar != null)
+		if (_progressBar != null)
 		{
-			_healthBar.Changed -= QueueRedraw;
+			_progressBar.Changed -= QueueRedraw;
 		}
 	}
 }

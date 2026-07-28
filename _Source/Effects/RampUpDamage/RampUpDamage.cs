@@ -31,7 +31,14 @@ public partial class RampUpDamage : Effect
 		{
 			if (_increaseCount < _resource._increaseMaxCount)
 			{
-				_parentUnit.IncreaseWeaponModifier(_resource._increaseAmount);
+				if (_resource._increaseAmount > 0)
+				{
+					_parentUnit.IncreaseWeaponModifier(_resource._increaseAmount);
+				}
+				else if (_resource._percentIncreaseAmount > 0)
+				{
+					_parentUnit.IncreaseWeaponPercentModifier(_resource._percentIncreaseAmount);
+				}
 				_increaseCount++;
 				_timer.Start();
 			}
@@ -43,7 +50,14 @@ public partial class RampUpDamage : Effect
 	{
 		if (_increaseCount > 0)
 		{
-			_parentUnit.IncreaseWeaponModifier(-_resource._increaseAmount * _increaseCount);
+			if (_resource._increaseAmount > 0)
+			{
+				_parentUnit.IncreaseWeaponModifier(-_resource._increaseAmount * _increaseCount);
+			}
+			else if (_resource._percentIncreaseAmount > 0)
+			{
+				_parentUnit.IncreaseWeaponPercentModifier(-_resource._percentIncreaseAmount * _increaseCount);
+			}
 			_timer?.Stop();
 			_increaseCount = 0;
 		}

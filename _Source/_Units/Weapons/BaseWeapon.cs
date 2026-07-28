@@ -6,13 +6,15 @@ using static System.Net.Mime.MediaTypeNames;
 
 public abstract partial class BaseWeapon : Node2D
 {
-	public enum DamageType
+	public enum WeaponType
 	{
 		Null,
-		Physical,
-		Energy,
+		Projectile,
+		Laser,
 		Flame,
-		Explosive
+		Scanner,
+		Ballistic,
+		Electric,
 	}
 
 	[Export] protected int _damage;
@@ -24,7 +26,7 @@ public abstract partial class BaseWeapon : Node2D
 
 	[Export] public bool _useAttackDelay = false;
 
-	[Export] public DamageType _damageType;
+	[Export] public WeaponType _weaponType;
 
 	[Export] private string _description;
 
@@ -52,6 +54,11 @@ public abstract partial class BaseWeapon : Node2D
 	public void SetDisplayWeapon()
 	{
 		_parent = GetParent<Unit>();
+	}
+
+	public virtual void SetAttackRange(float range)
+	{
+
 	}
 
 	public override void _PhysicsProcess(double delta)
@@ -172,7 +179,7 @@ public abstract partial class BaseWeapon : Node2D
 		if (upgrade._damageIncrease != 0)
 		{
 			RichTextLabel damageLabel = infoV.GetNode<RichTextLabel>("DamageLabel");
-			damageLabel.Text = $"[color=#{greenHex}]Damage: {upgrade._damageIncrease + GetDamage()}[/color]";
+			damageLabel.Text = $"[color=#{greenHex}]Damage: {(upgrade._damageIncrease + GetRawDamage()) * (1f + _parent._data._damagePercentIncrease + upgrade._damagePercentIncrease):F0}[/color]";
 		}
 		if (upgrade._attackSpeedIncrease != 0)
 		{
@@ -182,7 +189,7 @@ public abstract partial class BaseWeapon : Node2D
 		if (upgrade._attackSpeedIncrease != 0 || upgrade._damageIncrease != 0)
 		{
 			RichTextLabel dpsLabel = infoV.GetNode<RichTextLabel>("DPSLabel");
-			dpsLabel.Text = $"[color=#{greenHex}]DPS: {(GetDamage() + upgrade._damageIncrease) / (float)(GetCooldown() / (1 + upgrade._attackSpeedIncrease)):F0}[/color]";
+			dpsLabel.Text = $"[color=#{greenHex}]DPS: {(upgrade._damageIncrease + GetRawDamage()) * (1f + _parent._data._damagePercentIncrease + upgrade._damagePercentIncrease) / (float)(GetCooldown() / (1 + upgrade._attackSpeedIncrease)):F0}[/color]";
 		}
 		if (upgrade._rangeIncrease != 0)
 		{
@@ -206,9 +213,14 @@ public abstract partial class BaseWeapon : Node2D
 		return (_range + _parent._data._rangeIncrease) * (1 - _rangeDebuffPercent);
 	}
 
+	public int GetRawDamage()
+	{
+		return (_damage + _parent._data._damageIncrease);
+	}
+
 	public int GetDamage()
 	{
-		return (int)Math.Ceiling((_damage + _parent._data._damageIncrease) * (1f + _parent._data._damagePercentIncrease) * (1f + _damageBuffPercent));
+		return (int)Math.Round(GetRawDamage() * (1f + _parent._data._damagePercentIncrease) * (1f + _damageBuffPercent));
 	}
 
 	public double GetCooldown()

@@ -11,7 +11,7 @@ public partial class ImmediateTransformResource : EffectResource
 	public string _transformedUnit;
 
 	[Export]
-	private string _description;
+	private string _description = "";
 
 	public override void SetDescription()
 	{

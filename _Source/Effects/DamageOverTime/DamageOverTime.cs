@@ -120,7 +120,8 @@ public partial class DamageOverTime : Effect
 		_queuedDamage += delta * _totalDamage;
 		if (_queuedDamage > 1)
 		{
-			_parentUnit.Hit((int)Mathf.FloorToInt(_queuedDamage), null, true);
+			DamageContext context = new DamageContext(null, _parentUnit, _firstResource._damage, DamageType.Burn);
+			_parentUnit.Hit(context);
 			_queuedDamage -= Mathf.FloorToInt(_queuedDamage);
 		}
 	}

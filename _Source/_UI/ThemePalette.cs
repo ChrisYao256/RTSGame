@@ -9,4 +9,6 @@ public static class ThemePalette
 	public static readonly Color Blue = Color.FromHtml("#8BBDE0");
 	public static readonly Color Green = Color.FromHtml("#77D770");
 	public static readonly Color White = Color.FromHtml("#ffffff");
+
+	public static readonly Font EditUndo = GD.Load<Font>("res://_Assets/Fonts/edit-undo.brk.ttf");
 }

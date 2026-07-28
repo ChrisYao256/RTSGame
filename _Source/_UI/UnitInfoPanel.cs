@@ -187,11 +187,15 @@ public partial class UnitInfoPanel : CanvasLayer
 		//MakeAllTowersMenu(_tab);
 	}
 
-	public void MakeAllTowersMenu(TowerUnit.TowerType tab)
+	public void MakeAllTowersMenu(TowerUnit.TowerType tab = TowerUnit.TowerType.Null)
 	{
 		if (_tab == tab && _buildContainer.Visible)
 		{
 			return;
+		}
+		if (tab == TowerUnit.TowerType.Null)
+		{
+			tab = _tab;
 		}
 		_tab = tab;
 		_infoContainer.Hide();
@@ -225,7 +229,7 @@ public partial class UnitInfoPanel : CanvasLayer
 			VBoxContainer container = new VBoxContainer();
 
 			Label nameLabel = new Label();
-			nameLabel.Text = unit._name;
+			nameLabel.Text = unit.GetName();
 			nameLabel.HorizontalAlignment = HorizontalAlignment.Center;
 			container.AddChild(nameLabel);
 

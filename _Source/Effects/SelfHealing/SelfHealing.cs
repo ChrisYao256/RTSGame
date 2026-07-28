@@ -22,7 +22,15 @@ public partial class SelfHealing : Effect
 
 	public override void _PhysicsProcess(double delta)
 	{
-		_queuedHealing += (float)delta * _resource._healAmount;
+		if (_resource._healAmount > 0)
+		{
+			_queuedHealing += (float)delta * _resource._healAmount;
+		}
+		else
+		{
+			_queuedHealing += (float)delta * _resource._healPercent * _parentUnit.GetHpMax();
+		}
+
 		if (_queuedHealing > 1)
 		{
 			_parentUnit.IncreaseHp((int)Mathf.FloorToInt(_queuedHealing), true);

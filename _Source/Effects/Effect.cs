@@ -112,7 +112,7 @@ public abstract partial class Effect : Node2D
 
 	}
 
-	protected virtual void OnBeforeHitEnemy(Unit target)
+	protected virtual void OnBeforeHitEnemy(DamageContext damageContext)
 	{
 
 	}

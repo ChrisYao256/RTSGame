@@ -1,19 +1,19 @@
 [gd_scene format=3 uid="uid://cot6ertbpqoty"]
 
 [ext_resource type="PackedScene" uid="uid://yhbw0b164ui2" path="res://_Content/_Scenes/_Prefabs/Units/BaseTower.tscn" id="1_375o7"]
-[ext_resource type="Texture2D" uid="uid://ciji7d7547t05" path="res://_Assets/FlamethrowerTurret.png" id="2_uxnb3"]
+[ext_resource type="Texture2D" uid="uid://ds1x8queqo3dw" path="res://_Assets/BigFlameTurret.png" id="2_udt7r"]
 [ext_resource type="Script" uid="uid://b1o222pk7rw3x" path="res://_Source/Effects/Burn/BurnResource.cs" id="3_xkhdw"]
 [ext_resource type="Script" uid="uid://cxg3f5ateuini" path="res://_Source/Effects/DebuffOnHit/DebuffOnHitResource.cs" id="4_2pko1"]
 [ext_resource type="PackedScene" uid="uid://tjf5vmfcot3t" path="res://_Content/_Scenes/_Prefabs/Effects/Burn.tscn" id="8_w1bnc"]
 [ext_resource type="Texture2D" uid="uid://miulw7p5fqif" path="res://_Assets/RedBase.png" id="9_attt0"]
 [ext_resource type="Script" uid="uid://bva1xkjx08h5v" path="res://_Source/_Units/Weapons/TurretTurner.cs" id="10_hkqy7"]
+[ext_resource type="PackedScene" uid="uid://c41f0vtplwk2v" path="res://_Content/_Scenes/_Prefabs/Effects/FlameVisualEffect.tscn" id="10_udt7r"]
 [ext_resource type="Texture2D" uid="uid://56k5f8f2dyke" path="res://_Assets/GunTurretFire.png" id="11_56n1i"]
-[ext_resource type="Texture2D" uid="uid://dhsfbtnfthjpj" path="res://_Assets/FlamethrowerTurretIdle.png" id="12_ghmgo"]
 [ext_resource type="PackedScene" uid="uid://ynqfp128ardg" path="res://_Content/_Scenes/_Prefabs/Weapons/ZoneWeapon.tscn" id="13_ds4dl"]
 
 [sub_resource type="Resource" id="Resource_ein6h"]
 script = ExtResource("3_xkhdw")
-_damage = 115
+_damage = 280
 metadata/_custom_type_script = "uid://b1o222pk7rw3x"
 
 [sub_resource type="Resource" id="Resource_p3jvl"]
@@ -23,7 +23,7 @@ metadata/_custom_type_script = "uid://cxg3f5ateuini"
 
 [sub_resource type="Resource" id="Resource_6wr3n"]
 script = ExtResource("3_xkhdw")
-_damage = 275
+_damage = 485
 metadata/_custom_type_script = "uid://b1o222pk7rw3x"
 
 [sub_resource type="Resource" id="Resource_arvu4"]
@@ -33,7 +33,7 @@ metadata/_custom_type_script = "uid://cxg3f5ateuini"
 
 [sub_resource type="Resource" id="Resource_geji6"]
 script = ExtResource("3_xkhdw")
-_damage = 440
+_damage = 750
 metadata/_custom_type_script = "uid://b1o222pk7rw3x"
 
 [sub_resource type="Resource" id="Resource_s7m3k"]
@@ -105,6 +105,10 @@ region = Rect2(704, 0, 64, 64)
 atlas = ExtResource("11_56n1i")
 region = Rect2(768, 0, 64, 64)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_gj4hf"]
+atlas = ExtResource("2_udt7r")
+region = Rect2(0, 0, 64, 64)
+
 [sub_resource type="SpriteFrames" id="SpriteFrames_1k1ln"]
 animations = [{
 "frames": [{
@@ -153,7 +157,7 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("12_ghmgo")
+"texture": SubResource("AtlasTexture_gj4hf")
 }],
 "loop": false,
 "name": &"Idle",
@@ -164,15 +168,14 @@ animations = [{
 radius = 225.0
 
 [node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_375o7")]
-_cost = Vector4i(15, 15, 0, 0)
-_iconTexture = ExtResource("2_uxnb3")
-_description = "Spews flame that damages and ignites all enemies in an area."
+_iconTexture = ExtResource("2_udt7r")
+_description = "Upgraded from Flame. Flame hits a much larger area. "
 _firstUpgrade = Array[Object]([SubResource("Resource_p3jvl")])
-_firstUpgradeCost = Vector4i(0, 120, 0, 0)
+_firstUpgradeCost = Vector4i(0, 300, 0, 0)
 _secondUpgrade = Array[Object]([SubResource("Resource_arvu4")])
-_secondUpgradeCost = Vector4i(0, 260, 0, 0)
+_secondUpgradeCost = Vector4i(0, 500, 0, 0)
 _thirdUpgrade = Array[Object]([SubResource("Resource_s7m3k")])
-_thirdUpgradeCost = Vector4i(0, 366, 0, 0)
+_thirdUpgradeCost = Vector4i(0, 750, 0, 0)
 _fourthUpgradeA = Array[Object]([])
 _fourthUpgradeACost = Vector4i(0, 100, 0, 0)
 _fourthUpgradeBCost = Vector4i(0, 120, 0, 120)
@@ -199,7 +202,9 @@ animation = &"Idle"
 
 [node name="WeaponComponent" parent="." index="9" unique_id=2120452932 instance=ExtResource("13_ds4dl")]
 _shape = SubResource("CircleShape2D_jjii2")
+_attackVisualEffect = ExtResource("10_udt7r")
 _damage = 0
 _range = 225.0
 _attackCooldown = 2.0
 _attackDelayHigh = 0.1
+_weaponType = 3

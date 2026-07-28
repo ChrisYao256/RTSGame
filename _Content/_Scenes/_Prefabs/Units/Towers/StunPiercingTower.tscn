@@ -13,12 +13,12 @@
 
 [sub_resource type="Resource" id="Resource_bpy14"]
 script = ExtResource("3_w6qd3")
-_damageIncrease = 95
+_damageIncrease = 195
 metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 
 [sub_resource type="Resource" id="Resource_c2kqo"]
 script = ExtResource("7_p50xu")
-_time = 0.03
+_time = 0.06
 metadata/_custom_type_script = "uid://y1enulr4b71h"
 
 [sub_resource type="Resource" id="Resource_6yrhm"]
@@ -28,12 +28,12 @@ metadata/_custom_type_script = "uid://cxg3f5ateuini"
 
 [sub_resource type="Resource" id="Resource_2kx6n"]
 script = ExtResource("3_w6qd3")
-_damageIncrease = 205
+_damageIncrease = 345
 metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 
 [sub_resource type="Resource" id="Resource_exuq6"]
 script = ExtResource("7_p50xu")
-_time = 0.04
+_time = 0.08
 metadata/_custom_type_script = "uid://y1enulr4b71h"
 
 [sub_resource type="Resource" id="Resource_p50xu"]
@@ -43,12 +43,12 @@ metadata/_custom_type_script = "uid://cxg3f5ateuini"
 
 [sub_resource type="Resource" id="Resource_7mvqi"]
 script = ExtResource("3_w6qd3")
-_damageIncrease = 350
+_damageIncrease = 630
 metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 
 [sub_resource type="Resource" id="Resource_w6qd3"]
 script = ExtResource("7_p50xu")
-_time = 0.08
+_time = 0.11
 metadata/_custom_type_script = "uid://y1enulr4b71h"
 
 [sub_resource type="Resource" id="Resource_d7kk5"]
@@ -59,7 +59,7 @@ metadata/_custom_type_script = "uid://cxg3f5ateuini"
 [sub_resource type="Resource" id="Resource_e2toe"]
 script = ExtResource("7_p50xu")
 _percentDecrease = 1.0
-_time = 0.15
+_time = 0.05
 _effectName = "Stunned"
 _displayType = 2
 metadata/_custom_type_script = "uid://y1enulr4b71h"
@@ -82,13 +82,14 @@ animations = [{
 
 [node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_e4c1j")]
 _iconTexture = ExtResource("2_bafjt")
-_description = "Shoots piercing projectiles that stuns and damages multiple enemies on a line."
+_description = "Upgraded from Piercer. Shots briefly stun enemies. "
 _firstUpgrade = Array[Object]([SubResource("Resource_bpy14"), SubResource("Resource_6yrhm")])
-_firstUpgradeCost = Vector4i(0, 60, 60, 0)
+_firstUpgradeCost = Vector4i(0, 125, 125, 0)
 _secondUpgrade = Array[Object]([SubResource("Resource_2kx6n"), SubResource("Resource_p50xu")])
-_secondUpgradeCost = Vector4i(0, 120, 120, 0)
+_secondUpgradeCost = Vector4i(0, 200, 200, 0)
 _thirdUpgrade = Array[Object]([SubResource("Resource_7mvqi"), SubResource("Resource_d7kk5")])
-_thirdUpgradeCost = Vector4i(0, 190, 190, 0)
+_thirdUpgradeCost = Vector4i(0, 330, 330, 0)
+_fourthUpgradeB = Array[Object]([])
 LeashDistance = 200.0
 _startingEffects = Array[ExtResource("4_e2toe")]([SubResource("Resource_y5ry5")])
 _internalName = "StunPiercingTower"
@@ -122,4 +123,3 @@ _damage = 300
 _range = 260.0
 _attackDelayLow = 0.3
 _attackDelayHigh = 0.3
-_damageType = 1

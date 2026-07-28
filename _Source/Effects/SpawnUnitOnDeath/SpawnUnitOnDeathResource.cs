@@ -25,7 +25,8 @@ public partial class SpawnUnitOnDeathResource : EffectResource
 	public override void SetDescription()
 	{
 		_displayType = DisplayTypes.Large;
-		_effectDescription = "Spawns units when dying.";
+		_effectDescription = "Spawns " + Spawner.GetGroupEnemyNames(_spawnedUnits, false) + " on death.";
+
 	}
 
 	public override Effect CreateNode()

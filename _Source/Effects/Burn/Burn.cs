@@ -16,7 +16,6 @@ public partial class Burn : Effect
 
 	Node2D _visualSceneInstance;
 
-	float _decayRate = 0.05f;
 	float _queuedDecrease;
 
 	public Burn(BurnResource resource) : base(resource)
@@ -34,11 +33,13 @@ public partial class Burn : Effect
 
 	protected override void OnCreation()
 	{
+		_damageCooldown = _damageCooldown / (1f + _firstResource._burnIntervalMultiplier);
 		_visualSceneInstance = ((BurnResource)_resource)._burnVisualScene.Instantiate<Node2D>();
 		Utils.ScaleVisualToRadius(_visualSceneInstance.GetNode<AnimatedSprite2D>("AnimatedSprite2D"), _parentUnit._radius);
 		_parentUnit.AddChild(_visualSceneInstance);
 		_visualSceneInstance.GetNode<AnimatedSprite2D>("AnimatedSprite2D").Play();
-		_parentUnit.Hit(_firstResource._damage, null, true);
+		DamageContext context = new DamageContext(null, _parentUnit, _firstResource._damage, DamageType.Burn);
+		_parentUnit.Hit(context);
 	}
 
 	public void AddResource(BurnResource newResource)
@@ -52,7 +53,7 @@ public partial class Burn : Effect
 	{
 		if (!_parentUnit._effects.Any(e => e.GetType() == typeof(PermBurnResource)))
 		{
-			float decrease = _parentUnit.GetHpMax() * _decayRate * (float)delta + _queuedDecrease;
+			float decrease = _parentUnit.GetHpMax() * _firstResource._decayRate * (float)delta + _queuedDecrease;
 			_queuedDecrease = decrease - (float)Math.Floor(decrease);
 			if (decrease >= 1.0)
 			{
@@ -71,8 +72,9 @@ public partial class Burn : Effect
 		_damageCooldown -= delta;
 		if (_damageCooldown <= 0.0)
 		{
-			_damageCooldown += 1.0;
-			_parentUnit.Hit(_firstResource._damage, null, true);
+			_damageCooldown += BurnResource.BaseBurnInterval / _firstResource._burnIntervalMultiplier;
+			DamageContext context = new DamageContext(null, _parentUnit, _firstResource._damage, DamageType.Burn);
+			_parentUnit.Hit(context);
 		}
 	}
 }

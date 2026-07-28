@@ -1,10 +1,34 @@
 [gd_scene format=3 uid="uid://bvfksklry28wb"]
 
 [ext_resource type="PackedScene" uid="uid://bqn4h6d52i52" path="res://_Content/_Scenes/_Prefabs/Units/BaseInvaderUnit.tscn" id="1_py0g3"]
+[ext_resource type="Script" uid="uid://iamaod4iivlq" path="res://_Source/Effects/InvaderStatsIncrease/InvaderStatsIncreaseResource.cs" id="2_stxen"]
+[ext_resource type="Script" uid="uid://dtpcxn7d2dqcy" path="res://_Source/Effects/EffectResource.cs" id="3_6lm2u"]
 [ext_resource type="Texture2D" uid="uid://bc230321nqto5" path="res://icon.svg" id="3_76o52"]
 
+[sub_resource type="Resource" id="Resource_r1bl2"]
+script = ExtResource("2_stxen")
+_hpBuff = 500
+_speedBuff = 60.0
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_7plyg"]
+script = ExtResource("2_stxen")
+_hpBuff = 450
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_5x3oy"]
+script = ExtResource("2_stxen")
+_hpBuff = 950
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_k4spn"]
+script = ExtResource("2_stxen")
+_hpBuff = 1600
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
 [node name="BaseUnit" unique_id=481801141 instance=ExtResource("1_py0g3")]
-_moveSpeed = 60.0
+_levelStats = Array[ExtResource("2_stxen")]([SubResource("Resource_r1bl2"), SubResource("Resource_7plyg"), SubResource("Resource_5x3oy"), SubResource("Resource_k4spn")])
+_moveSpeed = 0.0
 _hpMax = 0
 _startingEffects = Array[Object]([])
 _internalName = "Summoned"

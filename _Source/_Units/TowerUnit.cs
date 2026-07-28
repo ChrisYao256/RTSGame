@@ -109,10 +109,12 @@ public partial class TowerUnit : StationaryUnit
 
 	public TargetPriority _targetPriority;
 
-	public TDManager _tdManager;
+	public Array<int> _colors = [];
+
 	public Grid _grid;
 	public Vector2I _gridLocation;
 	private Label _lvLabel;
+	private TooltipRichTextLabel _incomeLabel;
 
 	public override void _Ready()
 	{
@@ -123,10 +125,21 @@ public partial class TowerUnit : StationaryUnit
 		CollisionLayer = UnitManager.TowerLayerMask;
 		_aiControlled = false;
 		_lvLabel = GetNode<Label>("Level");
+		_incomeLabel = GetNode<TooltipRichTextLabel>("Income");
+		_incomeLabel.Text = $"{Utils.MakeMoneyText(GetIncome(), additionSigns: true, multiline: true)}";
+		Connect(Unit.SignalName.UpdateInfo, Callable.From(UpdateIncomeDisplay));
+		Connect(Unit.SignalName.UpdateStatsInfo, Callable.From(UpdateIncomeDisplay));
 		if (_weapon is not null && _weapon._hasCustomPriority)
 		{
 			_priorityCount += 1;
 			_targetPriority = (TargetPriority)_priorityCount - 1;
+		}
+		for (int i = 0; i < 4; i++)
+		{
+			if (_firstUpgradeCost[i] > 0)
+			{
+				_colors.Add(i);
+			}
 		}
 	}
 
@@ -176,6 +189,10 @@ public partial class TowerUnit : StationaryUnit
 	public override void SetSize()
 	{
 		base.SetSize();
+		CollisionShape2D collision = GetNode<CollisionShape2D>("CollisionShape2D");
+		RectangleShape2D collisionSquare = new RectangleShape2D();
+		collisionSquare.Size = new (2*_radius, 2*_radius);
+		collision.Shape = collisionSquare;
 		if (HasNode("TurretTurner"))
 		{
 			TurretTurner turret = GetNode<TurretTurner>("TurretTurner"); 
@@ -460,7 +477,7 @@ public partial class TowerUnit : StationaryUnit
 		if (this is Spawner spawner && spawner._spawnerData._units.Count() > 0)
 		{
 			TooltipRichTextLabel spawnLabel = new();
-			spawnLabel.Text = "Spawns " + spawner.GetSpawns();
+			spawnLabel.Text = "Spawns: \n" + spawner.GetSpawns();
 			spawnLabel.Name = "SpawnLabel";
 			spawnLabel.CustomMinimumSize = new(200, 0);
 			spawnLabel.BbcodeEnabled = true;
@@ -628,7 +645,7 @@ public partial class TowerUnit : StationaryUnit
 		if (this is Spawner spawner && spawner._spawnerData._units.Count() > 0)
 		{
 			TooltipRichTextLabel spawnLabel = moneyInfoV.GetNode<TooltipRichTextLabel>("SpawnLabel");
-			spawnLabel.Text = "Spawns " + spawner.GetSpawns();
+			spawnLabel.Text = "Spawns: \n" + spawner.GetSpawns();
 			if (updateEffects)
 			{
 				foreach (var child in _infoContainers["SpawnedUnitInfo"].GetChildren())
@@ -688,6 +705,7 @@ public partial class TowerUnit : StationaryUnit
 				incomeLabel.FitContent = true;
 				moneyInfoV.AddChild(incomeLabel);
 			}
+			_incomeLabel.Text = $"{Utils.MakeMoneyText(GetIncome(), additionSigns: true, multiline: true)}";
 		}
 		else
 		{
@@ -776,7 +794,7 @@ public partial class TowerUnit : StationaryUnit
 					VBoxContainer moneyInfoV = _infoContainers["MoneyInfo"].GetNode<VBoxContainer>("VBoxContainer");
 
 					TooltipRichTextLabel spawnLabel = moneyInfoV.GetNode<TooltipRichTextLabel>("SpawnLabel");
-					spawnLabel.Text = "Spawns " + spawner.GetSpawns();
+					spawnLabel.Text = "Spawns: \n" + spawner.GetSpawns();
 					foreach (var child in _infoContainers["SpawnedUnitInfo"].GetChildren())
 					{
 						child.QueueFree();
@@ -791,13 +809,14 @@ public partial class TowerUnit : StationaryUnit
 					spawnedUnitTotalInfoV.AddChild(spawnedUnitTotalInfoH);
 
 					Vector4I newIncome = new(0, 0, 0, 0);
+					Array<InvaderStatsIncreaseResource> newUnits = [];
 					foreach (InvaderStatsIncreaseResource unit in spawner._spawnerData._units)
 					{
 						if (spawnUpgrade._applySameUpgradeForAllUnits)
 						{
 							InvaderStatsIncreaseResource unitCopy = (InvaderStatsIncreaseResource)unit.DuplicateDeep();
+							newUnits.Add(unitCopy);
 							spawnUpgrade._units[0].MergeWithOld(unitCopy, []);
-							unitCopy._startingEffects = [];
 							InvaderUnit newSpawnedUnit = unitCopy.GetInvader();
 							newIncome += newSpawnedUnit.GetTotalMoneyDropped();
 							PanelContainer spawnedUnitInfo = newSpawnedUnit.GetUnitInfoContainerWithUpgradeWithString("BasicInfo", spawnUpgrade._units[0]);
@@ -810,6 +829,7 @@ public partial class TowerUnit : StationaryUnit
 						{
 							int i = spawner._spawnerData._units.IndexOf(unit);
 							InvaderStatsIncreaseResource unitCopy = (InvaderStatsIncreaseResource)unit.DuplicateDeep();
+							newUnits.Add(unitCopy);
 							spawnUpgrade._units[i].MergeWithOld(unitCopy, []);
 							InvaderUnit newSpawnedUnit = unitCopy.GetInvader();
 							newIncome += newSpawnedUnit.GetTotalMoneyDropped();
@@ -838,7 +858,11 @@ public partial class TowerUnit : StationaryUnit
 							incomeLabel.FitContent = true;
 							moneyInfoV.AddChild(incomeLabel);
 						}
+						_incomeLabel.Text = $"{Utils.MakeMoneyText(GetIncome(), additionSigns: true, multiline: true)}";
 					}
+
+					TooltipRichTextLabel totalSpawnLabel = moneyInfoV.GetNode<TooltipRichTextLabel>("SpawnLabel");
+					totalSpawnLabel.Text = "Spawns: \n" + Spawner.GetGroupEnemyNames(newUnits); ;
 
 					_infoContainers["SpawnedUnitInfo"].AddChild(spawnedUnitTotalInfoV);
 				}
@@ -916,6 +940,11 @@ public partial class TowerUnit : StationaryUnit
 			smallEffectsV.QueueFree();
 		}
 		effectsInfo.AddChild(allEffectsH);
+	}
+
+	public void UpdateIncomeDisplay()
+	{
+		_incomeLabel.Text = $"{Utils.MakeMoneyText(GetIncome(), additionSigns: true, multiline: true)}";
 	}
 
 	private void MakeUpgradeUI(HBoxContainer upgradesH)

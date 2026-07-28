@@ -3,6 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://85drlqgmmj8i" path="res://_Content/_Scenes/_Prefabs/Units/BaseUnit.tscn" id="1_hdosh"]
 [ext_resource type="Script" uid="uid://bcn571k6p4sdo" path="res://_Source/_Units/InvaderUnit.cs" id="2_l4a7x"]
 [ext_resource type="PackedScene" uid="uid://bls83bjgatgd8" path="res://_Content/_Scenes/_Prefabs/UI/FloatingText.tscn" id="3_l4a7x"]
+[ext_resource type="Script" uid="uid://iamaod4iivlq" path="res://_Source/Effects/InvaderStatsIncrease/InvaderStatsIncreaseResource.cs" id="4_4hl24"]
 
 [node name="BaseUnit" unique_id=481801141 instance=ExtResource("1_hdosh")]
 script = ExtResource("2_l4a7x")
@@ -10,6 +11,7 @@ _moneyDropped = Vector4i(0, 0, 0, 0)
 _floatingTextScene = ExtResource("3_l4a7x")
 _hpDeducted = 1
 _moneyDeducted = Vector4i(0, 0, 0, 0)
+_levelStats = Array[ExtResource("4_4hl24")]([])
 
 [node name="HealthBar" parent="." index="5" unique_id=640038315]
 offset_right = 48.0

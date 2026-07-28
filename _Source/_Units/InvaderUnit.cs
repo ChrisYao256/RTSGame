@@ -20,13 +20,20 @@ public partial class InvaderUnit : Unit
 	[Export]
 	public Vector4I _moneyDeducted = new Vector4I();
 
-	public Vector4I _moneyModifier;
-	public Vector4I _moneyTempModifier;
+	/// <summary>
+	/// Write level stat gains here. Index n means increasing from n to n+1. 
+	/// </summary>
+	[Export]
+	public Array<InvaderStatsIncreaseResource> _levelStats = [];
+
+	public int _level;
+
+	public float _moneyTempModifierDMM;
+
+	public float _moneyTempModifierDMMOK;
 
 	private Vector2 _pathOffset;
 	private Array<Vector2> _pathToExit;
-
-	public TDManager _tdManager;
 
 	public override void _Ready()
 	{
@@ -93,24 +100,70 @@ public partial class InvaderUnit : Unit
 		_pathToExit = path;
 	}
 
+	public void IncreaseLevel(int n)
+	{	
+		if (n <= 0)
+		{
+			return;
+		}
+		for (int i = 0; i < n; i++)
+		{
+			if (_levelStats.Count <= _level + i)
+			{
+				break;
+			}
+			
+			AddEffect(_levelStats[_level + i]);
+		}
+		_level += n;
+	}
+
+	public InvaderStatsIncreaseResource GetIncreaseLevelData(int n)
+	{
+		InvaderStatsIncreaseResource totalStats = new InvaderStatsIncreaseResource();
+		if (n <= 0)
+		{
+			return totalStats;
+		}
+		for (int i = 0; i < n; i++)
+		{
+			if (_levelStats.Count <= i + _level)
+			{
+				break;
+			}
+			_levelStats[i + _level].MergeWithOld(totalStats, []);
+		}
+		return totalStats;
+	}
+
 	public void SetMoneyModifier(Vector4I money)
 	{
-		_moneyModifier = money;
+		_data._moneyIncrease = money;
 	}
 
 	public void IncreaseMoneyModifier(Vector4I change)
 	{
-		_moneyModifier += change;
+		_data._moneyIncrease += change;
 	}
 
-	public void SetMoneyTempModifier(Vector4I money)
+	public void SetPercentMoneyModifier(float increase)
 	{
-		_moneyTempModifier = money;
+		_data._percentMoneyIncrease = increase;
 	}
 
-	public void SetMoneyTempModifier(float percentIncrease)
+	public void IncreasePercentMoneyModifier(float change)
 	{
-		_moneyTempModifier = Utils.VectorScalarMultiplication(GetNormalMoneyDropped(), percentIncrease);
+		_data._percentMoneyIncrease += change;
+	}
+
+	public void SetMoneyTempModifierDMM(float percentIncrease)
+	{
+		_moneyTempModifierDMM = percentIncrease;
+	}
+
+	public void SetMoneyTempModifierDMMOK(float percentIncrease)
+	{
+		_moneyTempModifierDMMOK = percentIncrease;
 	}
 
 	protected override void Die()
@@ -123,9 +176,9 @@ public partial class InvaderUnit : Unit
 			textNode.BbcodeEnabled = true;
 			textNode.FitContent = true;
 
-			if (_moneyTempModifier != new Vector4I(0, 0, 0, 0))
+			if (_moneyTempModifierDMM != 0 || _moneyTempModifierDMMOK != 0)
 			{
-				textNode.Text = "+" + Utils.MakeMoneyText(GetNormalMoneyDropped()) + "\n+bonus " + Utils.MakeMoneyText(_moneyTempModifier);
+				textNode.Text = "+" + Utils.MakeMoneyText(GetNormalMoneyDropped()) + "\n+bonus " + Utils.MakeMoneyText(GetBonusMoneyDropped());
 			}
 			else
 			{
@@ -177,12 +230,135 @@ public partial class InvaderUnit : Unit
 	}
 
 	/// <summary>
+	/// Edits _infoContainers so that upgraded stats are displayed in green. Note that this method should be called on a unit with the upgrade already applied on. 
+	/// The upgrade resource that is inputted is only used to determine which stats were changed. 
+	/// </summary>
+	/// <param name="upgrade"></param>
+	/// <exception cref="Exception"></exception>
+	public void UpdateUnitInfoContainerWithUpgrade(InvaderStatsIncreaseResource upgrade)
+	{
+		if (this is not InvaderUnit)
+		{
+			throw new Exception("attempting to give invader buff to non-invader");
+		}
+		InvaderStatsIncreaseResource totalUpgrade = (InvaderStatsIncreaseResource)upgrade.DuplicateDeep();
+
+		// construct totalUpgrade which includes both buffs from upgrade itself and buffs from level. (totalUpgrade is only used to determine which texts should be green)
+		_level -= upgrade._level;
+		GetIncreaseLevelData(upgrade._level).MergeWithOld(totalUpgrade, []);
+		_level += upgrade._level;
+
+		PanelContainer basicInfo = _infoContainers["BasicInfo"];
+		basicInfo.CustomMinimumSize = new(200, 0);
+		VBoxContainer basicInfoV = basicInfo.GetNode<VBoxContainer>("VBoxContainer");
+		string greenHex = ThemePalette.Green.ToHtml(false);
+
+		if (totalUpgrade._hpBuff != 0)
+		{
+			RichTextLabel hpLabel = basicInfoV.GetNode<RichTextLabel>("HpLabel");
+			hpLabel.Text = $"[color=#{greenHex}]Hp: {GetHpMax()}/{GetHpMax()}[/color]";
+		}
+
+		if (totalUpgrade._speedBuff != 0)
+		{
+			RichTextLabel speedLabel = basicInfoV.GetNode<RichTextLabel>("SpeedLabel");
+			speedLabel.Text = $"[color=#{greenHex}]Move speed: {GetSpeed()}[/color]";
+		}
+
+		if (totalUpgrade._moneyBuff != new Vector4I(0, 0, 0, 0) || upgrade._startingEffects.Any(o => o.GetType() == typeof(SpawnUnitOnDeathResource)))
+		{
+			InvaderUnit invader = (InvaderUnit)this;
+			TooltipRichTextLabel moneyDropLabel = basicInfoV.GetNode<TooltipRichTextLabel>("MoneyDropLabel");
+			moneyDropLabel.Text = $"[color=#{greenHex}]Drops {Utils.MakeMoneyText(invader.GetTotalMoneyDropped())}[/color]";
+		}
+
+		if (totalUpgrade._startingEffects.Count != 0)
+		{
+			Array<EffectResource> effectUpgrades = [];
+			foreach (EffectResource resource in totalUpgrade._startingEffects)
+			{
+				if (_effects.Any(e => e.GetType() == resource.GetType()))
+				{
+					effectUpgrades.Add(resource);
+				}
+			}
+			if (effectUpgrades.Count == 0)
+			{
+				return;
+			}
+			PanelContainer effectsInfo = _infoContainers["EffectsInfo"];
+			foreach (var child in effectsInfo.GetChildren())
+			{
+				child.QueueFree();
+			}
+
+			HBoxContainer allEffectsH = new();
+
+			VBoxContainer smallEffectsV = new();
+
+			HBoxContainer largeEffectsH = new();
+
+			foreach (EffectResource effect in _effects)
+			{
+				switch (effect._displayType)
+				{
+					case (EffectResource.DisplayTypes.Large):
+						if (effectUpgrades.Any(o => o.GetType() == effect.GetType()))
+						{
+							EffectResource newEffect = effectUpgrades.First(o => o.GetType() == effect.GetType());
+							VBoxContainer container = new();
+							PanelContainer effectName = effect.MakeFullEffectDescriptionWithUpgrade(newEffect);
+							container.AddChild(effectName);
+							largeEffectsH.AddChild(container);
+							break;
+						}
+						else
+						{
+							VBoxContainer container = new();
+							PanelContainer effectName = effect.MakeFullEffectDescription();
+							container.AddChild(effectName);
+							largeEffectsH.AddChild(container);
+							break;
+						}
+
+					case (EffectResource.DisplayTypes.Small):
+						VBoxContainer container1 = new();
+						HoverInfoLabel effectName1 = effect.MakeEffectTooltip(false);
+						container1.AddChild(effectName1);
+						smallEffectsV.AddChild(container1);
+						break;
+					case (EffectResource.DisplayTypes.Hidden):
+						continue;
+				}
+			}
+
+			if (largeEffectsH.GetChildren().Count != 0)
+			{
+				allEffectsH.AddChild(largeEffectsH);
+			}
+			else
+			{
+				largeEffectsH.QueueFree();
+			}
+			if (smallEffectsV.GetChildren().Count != 0)
+			{
+				allEffectsH.AddChild(smallEffectsV);
+			}
+			else
+			{
+				smallEffectsV.QueueFree();
+			}
+			effectsInfo.AddChild(allEffectsH);
+		}
+	}
+
+	/// <summary>
 	/// Returns the money that will be dropped if this unit dies now. Used to actually award money for kills. Is equivalent ot GetNormalMoneyDropped() if the unit is not added to TD. 
 	/// </summary>
 	/// <returns></returns>
 	public Vector4I GetSelfMoneyDropped()
 	{
-		return _moneyDropped + _moneyModifier + _moneyTempModifier;
+		return Utils.VectorScalarMultiplication((_moneyDropped + _data._moneyIncrease), (1f + _data._percentMoneyIncrease) * (1f + _moneyTempModifierDMM) * (1f + _moneyTempModifierDMMOK));
 	}
 
 	/// <summary>
@@ -215,7 +391,17 @@ public partial class InvaderUnit : Unit
 	/// <returns></returns>
 	public Vector4I GetNormalMoneyDropped()
 	{
-		return _moneyDropped + _moneyModifier;
+		return Utils.VectorScalarMultiplication((_moneyDropped + _data._moneyIncrease), (1f + _data._percentMoneyIncrease));
+	}
+
+	public Vector4I GetBonusMoneyDropped()
+	{
+		return Utils.VectorScalarMultiplication(GetNormalMoneyDropped(), (1f + _moneyTempModifierDMMOK) * (1f + _moneyTempModifierDMM) - 1f);
+	}
+
+	public override string GetName()
+	{
+		return base.GetName() + $" Lv {_level}";
 	}
 
 	public Array<Vector2> GetPathToExit() => _pathToExit;

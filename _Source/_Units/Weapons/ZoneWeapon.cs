@@ -16,38 +16,54 @@ public partial class ZoneWeapon : BaseWeapon
 		_firePoint = GetParent().GetNode("TurretTurner").GetNode<Marker2D>("Marker2D");
 	}
 
-	public override void PerformAttack(Unit target, int d)
-  {
-		if (_attackVisualEffect != null)
+	public override void SetAttackRange(float range)
+	{
+		if (_shape is CircleShape2D circleShape)
 		{
-			// Instantiate the blueprint into a live node
-			Node2D visualInstance = _attackVisualEffect.Instantiate<Node2D>();
-
-			// Move it to the strike location and add it to the game world
-			visualInstance.GlobalPosition = target.GlobalPosition;
-			GetTree().CurrentScene.AddChild(visualInstance);
-
-			// (Note: The scene should handle its own animation and QueueFree() when done!)
+			circleShape.Radius = range;
 		}
+	}
 
-		var visualizer = new DynamicShapeVisualizer();
-		visualizer.SetShape(_shape);
-    Timer timer = new Timer();
-    timer.Timeout += (() => { visualizer.QueueFree(); });
-    timer.WaitTime = 0.2;
-    visualizer.AddChild(timer);
-    GetTree().Root.AddChild(visualizer);
-   
-		timer.Start();
-
+	public override void PerformAttack(Unit target, int d)
+	{
 		float angleToTarget = GlobalPosition.AngleToPoint(target.GlobalPosition);
 		Transform2D queryTransform = new Transform2D(angleToTarget, GlobalPosition);
 
-    visualizer.Transform = queryTransform;
-    visualizer.GlobalPosition = _firePoint.GlobalPosition;
+		if (_shape is CircleShape2D circleShape)
+		{
+			if (_attackVisualEffect != null)
+			{
+				// Create the visual instance
+				var viz = _attackVisualEffect.Instantiate<Node2D>();
 
-	 // 1. Get the direct space state for the current 2D world
-	  PhysicsDirectSpaceState2D spaceState = GetWorld2D().DirectSpaceState;
+				// Add it to the world (Level), NOT the projectile
+				GetTree().Root.AddChild(viz);
+
+				// Move it to where the hit happened
+				viz.GlobalPosition = _firePoint.GlobalPosition;
+
+
+				// If you want to scale the sprite to match the radius:
+				float radius = circleShape.Radius; // Get this from your shape
+				Utils.ScaleVisualToRadius(viz.GetNode<AnimatedSprite2D>("Sprite2D"), radius / 1.2f);
+			}
+		}
+		else
+		{
+			var visualizer = new DynamicShapeVisualizer();
+			visualizer.SetShape(_shape);
+			Timer timer = new Timer();
+			timer.Timeout += (() => { visualizer.QueueFree(); });
+			timer.WaitTime = 0.2;
+			visualizer.AddChild(timer);
+			GetTree().Root.AddChild(visualizer);
+			visualizer.Transform = queryTransform;
+			visualizer.GlobalPosition = _firePoint.GlobalPosition;
+			timer.Start();
+		}
+
+		// 1. Get the direct space state for the current 2D world
+		PhysicsDirectSpaceState2D spaceState = GetWorld2D().DirectSpaceState;
 
     // 3. Configure the query parameters
     var query = new PhysicsShapeQueryParameters2D();
@@ -70,8 +86,10 @@ public partial class ZoneWeapon : BaseWeapon
         // Example: If you use an interface for your entities
         if (entity is InvaderUnit invader)
         {
-					_parent.OnBeforeHitEnemy(invader);
-					invader.Hit(GetDamage(), _parent);
+					DamageContext context = new DamageContext(_parent, invader, d, DamageType.DirectAttack);
+
+					_parent.OnBeforeHitEnemy(context);
+					invader.Hit(context);
 					_parent.OnHitEnemy(invader);
 				}
       }
