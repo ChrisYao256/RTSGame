@@ -26,6 +26,11 @@ public partial class ApplyEffectToTower : Effect
 
 	protected override void OnCreation()
 	{
+		if (!IsInsideTree())
+		{
+			QueueFree();
+			return;
+		}
 		_tracerLine = new Line2D();
 		_tracerLine.AddPoint(Vector2.Zero);
 		_tracerLine.AddPoint(Vector2.Zero);

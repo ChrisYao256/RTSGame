@@ -1,0 +1,107 @@
+[gd_scene format=3 uid="uid://btkxim4g32i67"]
+
+[ext_resource type="PackedScene" uid="uid://bqn4h6d52i52" path="res://_Content/_Scenes/_Prefabs/Units/BaseInvaderUnit.tscn" id="1_t141b"]
+[ext_resource type="Script" uid="uid://iamaod4iivlq" path="res://_Source/Effects/InvaderStatsIncrease/InvaderStatsIncreaseResource.cs" id="2_yhj7n"]
+[ext_resource type="Script" uid="uid://dtpcxn7d2dqcy" path="res://_Source/Effects/EffectResource.cs" id="3_17ak8"]
+[ext_resource type="Texture2D" uid="uid://dgki3rdi8d7fo" path="res://_Assets/Slime.png" id="4_843kp"]
+[ext_resource type="Texture2D" uid="uid://bc230321nqto5" path="res://icon.svg" id="5_ih56s"]
+
+[sub_resource type="Resource" id="Resource_pgkd3"]
+script = ExtResource("2_yhj7n")
+_hpBuff = 300
+_speedBuff = 60.0
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_4dwqt"]
+script = ExtResource("2_yhj7n")
+_hpBuff = 200
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_8pwuo"]
+script = ExtResource("2_yhj7n")
+_hpBuff = 500
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_t3irf"]
+script = ExtResource("2_yhj7n")
+_hpBuff = 800
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_5aqor"]
+script = ExtResource("2_yhj7n")
+_hpBuff = 1500
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_m5ks1"]
+script = ExtResource("2_yhj7n")
+_hpBuff = 2800
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_8jh3o"]
+script = ExtResource("2_yhj7n")
+_hpBuff = 5000
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_1xbns"]
+script = ExtResource("2_yhj7n")
+_hpBuff = 8900
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4dwqt"]
+atlas = ExtResource("4_843kp")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8pwuo"]
+atlas = ExtResource("4_843kp")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pgkd3"]
+atlas = ExtResource("4_843kp")
+region = Rect2(128, 0, 64, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_t3irf"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4dwqt")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8pwuo")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pgkd3")
+}],
+"loop": true,
+"name": &"default",
+"speed": 6.0
+}]
+
+[node name="BaseUnit" unique_id=481801141 instance=ExtResource("1_t141b")]
+_levelStats = Array[ExtResource("2_yhj7n")]([SubResource("Resource_pgkd3"), SubResource("Resource_4dwqt"), SubResource("Resource_8pwuo"), SubResource("Resource_t3irf"), SubResource("Resource_5aqor"), SubResource("Resource_m5ks1"), SubResource("Resource_8jh3o"), SubResource("Resource_1xbns")])
+_moveSpeed = 0.0
+_hpMax = 0
+_startingEffects = Array[Object]([])
+_internalName = "Pilot"
+_name = "Pilot"
+_radius = 24.0
+_baseHealthBarHeight = 12.0
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." index="1" unique_id=113917100]
+texture_filter = 1
+sprite_frames = SubResource("SpriteFrames_t3irf")
+autoplay = "default"
+frame_progress = 0.69199115
+
+[node name="MainSprite" parent="." index="2" unique_id=597948513]
+visible = false
+scale = Vector2(1, 1)
+texture = ExtResource("5_ih56s")
+
+[node name="HealthBar" parent="." index="6" unique_id=640038315]
+offset_left = -24.0
+offset_top = -24.0
+offset_right = 24.0
+offset_bottom = -12.0
+
+[node name="AidAreaCollision" parent="AidArea" parent_id_path=PackedInt32Array(818912131) index="0" unique_id=1883932864]
+texture_filter = 0

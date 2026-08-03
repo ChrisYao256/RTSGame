@@ -23,15 +23,13 @@ offset_right = 154.0
 offset_bottom = 123.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_constants/separation = 32
 alignment = 1
-
-[node name="StartButton" type="Button" parent="HBoxContainer" unique_id=598364671]
-layout_mode = 2
-text = "Free Play"
 
 [node name="RogueButton" type="Button" parent="HBoxContainer" unique_id=1888692875]
 layout_mode = 2
-text = "rogue-like"
+text = "Start
+"
 
 [node name="ContinueButton" type="Button" parent="HBoxContainer" unique_id=335516551]
 visible = false
@@ -39,14 +37,23 @@ layout_mode = 2
 text = "Continue
 "
 
+[node name="StartButton" type="Button" parent="HBoxContainer" unique_id=598364671]
+layout_mode = 2
+text = "Free Play"
+
 [node name="TestingButton" type="Button" parent="HBoxContainer" unique_id=1029595328]
 layout_mode = 2
 text = "Sandbox"
 
 [node name="TutorialButton" type="Button" parent="HBoxContainer" unique_id=896442955]
+visible = false
 layout_mode = 2
 text = "Tutorial
 "
+
+[node name="MetaButton" type="Button" parent="HBoxContainer" unique_id=52046773]
+layout_mode = 2
+text = "Progress"
 
 [node name="OptionsButton" type="Button" parent="HBoxContainer" unique_id=674764667]
 layout_mode = 2
@@ -67,4 +74,5 @@ offset_bottom = 1081.0
 text = "Delete Save
 "
 
+[connection signal="pressed" from="HBoxContainer/MetaButton" to="." method="OnMetaButtonPressed"]
 [connection signal="pressed" from="HBoxContainer/OptionsButton" to="." method="OnOptionsButtonPressed"]

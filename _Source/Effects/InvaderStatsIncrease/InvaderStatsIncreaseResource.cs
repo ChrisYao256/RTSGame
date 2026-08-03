@@ -114,42 +114,42 @@ public partial class InvaderStatsIncreaseResource : EffectResource
 
 		if (_hpBuff != 0)
 		{
-			_effectDescription += "Increase spawned enemy HP by " + _hpBuff + "\n";
+			_effectDescription += "Increase HP by " + _hpBuff + "\n";
 		}
 
 		if (_percentHpBuff != 0)
 		{
-			_effectDescription += $"Increase spawned enemy HP by {_percentHpBuff * 100:F0}%\n";
+			_effectDescription += $"Increase HP by {_percentHpBuff * 100:F0}%\n";
 		}
 
 		if (_speedBuff != 0)
 		{
-			_effectDescription += "Increase spawned enemy speed by " + _speedBuff + "\n";
+			_effectDescription += "Increase speed by " + _speedBuff + "\n";
 		}
 
 		if (_percentSpeedBuff != 0)
 		{
-			_effectDescription += $"Increase spawned enemy speed by {_percentSpeedBuff * 100:F0}%\n";
+			_effectDescription += $"Increase speed by {_percentSpeedBuff * 100:F0}%\n";
 		}
 
 		if (_moneyBuff != new Vector4I(0,0,0,0))
 		{
-			_effectDescription += "Increase spawned enemy resources drop by " + Utils.MakeMoneyText(_moneyBuff) + "\n";
+			_effectDescription += "Increase resource drop by " + Utils.MakeMoneyText(_moneyBuff) + "\n";
 		}
 
 		if (_level != 0)
 		{
-			_effectDescription += "Increase spawned enemy level by " + _level + "\n";
+			_effectDescription += "Increase level by " + _level + "\n";
 		}
 
 		if (_percentMoneyBuff != 0)
 		{
-			_effectDescription += $"Increase spawned enemy resources drop by {_percentMoneyBuff * 100:F0}%\n";
+			_effectDescription += $"Increase resource drop by {_percentMoneyBuff * 100:F0}%\n";
 		}
 
 		if (_startingEffects.Count > 0)
 		{
-			_effectDescription += "Gives spawned units the following effects: \n";
+			_effectDescription += "Gains the following effects: \n";
 			foreach (EffectResource effect in _startingEffects)
 			{
 				effect.SetDescription();

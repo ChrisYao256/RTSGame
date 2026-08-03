@@ -1,0 +1,68 @@
+[gd_scene format=3 uid="uid://e6a7uat0yl6v"]
+
+[ext_resource type="PackedScene" uid="uid://yhbw0b164ui2" path="res://_Content/_Scenes/_Prefabs/Units/BaseTower.tscn" id="1_tgl31"]
+[ext_resource type="Script" uid="uid://b4jva1l23o6su" path="res://_Source/_Units/Spawner.cs" id="2_3c0ra"]
+[ext_resource type="Script" uid="uid://iamaod4iivlq" path="res://_Source/Effects/InvaderStatsIncrease/InvaderStatsIncreaseResource.cs" id="3_cv141"]
+[ext_resource type="Script" uid="uid://cvroohkeaovqw" path="res://_Source/_Units/SpawnerDataResource.cs" id="4_g4y2o"]
+[ext_resource type="Texture2D" uid="uid://iocgjnp7i8td" path="res://_Assets/Portal.png" id="5_mh4f0"]
+[ext_resource type="Script" uid="uid://dtpcxn7d2dqcy" path="res://_Source/Effects/EffectResource.cs" id="6_66rso"]
+[ext_resource type="Script" uid="uid://djbu8krhjrjib" path="res://_Source/Effects/SpawnerUpgradeResource/SpawnerUpgradeResource.cs" id="7_j1cv1"]
+
+[sub_resource type="Resource" id="Resource_uw73y"]
+script = ExtResource("3_cv141")
+_unitName = "Rocket"
+_level = 5
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_puj6i"]
+script = ExtResource("4_g4y2o")
+_units = Array[ExtResource("3_cv141")]([SubResource("Resource_uw73y")])
+metadata/_custom_type_script = "uid://cvroohkeaovqw"
+
+[sub_resource type="Resource" id="Resource_4imld"]
+script = ExtResource("3_cv141")
+_level = 1
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_hdwh2"]
+script = ExtResource("7_j1cv1")
+_units = Array[ExtResource("3_cv141")]([SubResource("Resource_4imld")])
+metadata/_custom_type_script = "uid://djbu8krhjrjib"
+
+[sub_resource type="Resource" id="Resource_qkotg"]
+script = ExtResource("3_cv141")
+_level = 1
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_htg75"]
+script = ExtResource("7_j1cv1")
+_units = Array[ExtResource("3_cv141")]([SubResource("Resource_qkotg")])
+metadata/_custom_type_script = "uid://djbu8krhjrjib"
+
+[sub_resource type="Resource" id="Resource_av2x7"]
+script = ExtResource("3_cv141")
+_level = 1
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_llm1m"]
+script = ExtResource("7_j1cv1")
+_units = Array[ExtResource("3_cv141")]([SubResource("Resource_av2x7")])
+metadata/_custom_type_script = "uid://djbu8krhjrjib"
+
+[node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_tgl31")]
+script = ExtResource("2_3c0ra")
+_spawnerData = SubResource("Resource_puj6i")
+_spawnInterval = 1.0
+_isEnemy = true
+_iconTexture = ExtResource("5_mh4f0")
+_towerType = 2
+_firstUpgrade = Array[Object]([SubResource("Resource_hdwh2")])
+_secondUpgrade = Array[Object]([SubResource("Resource_htg75")])
+_thirdUpgrade = Array[Object]([SubResource("Resource_llm1m")])
+LeashDistance = 200.0
+_startingEffects = Array[Object]([])
+_internalName = "BigRocketSpawner"
+_name = "Rocket Portal"
+
+[node name="MainSprite" parent="." index="1" unique_id=701942347]
+texture = ExtResource("5_mh4f0")

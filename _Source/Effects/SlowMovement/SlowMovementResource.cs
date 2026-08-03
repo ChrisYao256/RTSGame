@@ -6,7 +6,7 @@ using System.ComponentModel.Design;
 namespace RTSGame.Units;
 
 [GlobalClass]
-public partial class SlowMovementResource : EffectResource, IStackable
+public partial class SlowMovementResource : EffectResource, IStackable, IStatus
 {
 	[Export]
 	public float _percentDecrease;

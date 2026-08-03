@@ -1,17 +1,26 @@
 using Godot;
+using RTSGame._Source.Units;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
 namespace RTSGame.Units;
 
 [GlobalClass]
-public partial class VulnerableResource : EffectResource
+public partial class VulnerableResource : EffectResource, IStatus
 {
 	[Export]
 	public float _percentIncrease;
 
 	[Export]
 	public float _time;
+
+	public EffectResource MultiplyEffect(int n)
+	{
+		VulnerableResource newResource = (VulnerableResource)Duplicate();
+		newResource._percentIncrease *= n;
+		newResource.SetDescription();
+		return newResource;
+	}
 
 	public override bool MergeWithOld(EffectResource oldResource, List<EffectResource> allMatchingResource)
 	{

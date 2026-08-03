@@ -40,6 +40,7 @@ public partial class UnitManager : Node2D
 		{ "SlowTurret", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/SlowTurret.tscn") },
 		{ "GatlinTurret", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/GatlinTurret.tscn") },
 		{ "RampUpGatlinTurret", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/RampUpGatlinTurret.tscn") },
+		{ "AreaSlowTurret", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/AreaSlowTurret.tscn") },
 
 		{ "SlimeSpawner", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/SlimeSpawner.tscn") },
 		{ "HoundSpawner", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/HoundSpawner.tscn") },
@@ -57,6 +58,9 @@ public partial class UnitManager : Node2D
 		{ "ShieldSpawner", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/ShieldSpawner.tscn") },
 		{ "DuplicatorSpawner", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/DuplicatorSpawner.tscn") },
 		{ "BigShieldSpawner", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/BigShieldSpawner.tscn") },
+		{ "BigRocketSpawner", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/BigRocketSpawner.tscn")},
+		{ "BigGeneratorSpawner", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/BigGeneratorSpawner.tscn")},
+		{ "BigHoundSpawner", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/BigHoundSpawner.tscn")},
 
 		{ "DepoweredSpawner", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/DepoweredSpawner.tscn") },
 
@@ -87,6 +91,7 @@ public partial class UnitManager : Node2D
 		{ "Escapee", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Invaders/Escapee.tscn")},
 		{ "Shield", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Invaders/Shield.tscn")},
 		{ "Rocket", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Invaders/Rocket.tscn")},
+		{ "Pilot", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Invaders/Pilot.tscn")},
 		{ "Duplicator", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Invaders/Duplicator.tscn")},
 	};
 

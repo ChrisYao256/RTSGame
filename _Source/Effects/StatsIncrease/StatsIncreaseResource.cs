@@ -98,7 +98,7 @@ public partial class StatsIncreaseResource : EffectResource, IStackable
 
 		if (_damagePercentIncrease != 0)
 		{
-			_effectDescription += $"Increase damage by {_damagePercentIncrease * 100:F0}%\n";
+			_effectDescription += $"Increase damage by {_damagePercentIncrease * 100:F1}%\n";
 		}
 
 

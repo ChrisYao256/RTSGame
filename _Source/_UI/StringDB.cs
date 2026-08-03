@@ -29,10 +29,15 @@ public class StringDB
 		{ "TargetPriorityScannerWeapon", "Same as First, but prioritize enemies that don't have Analyzed."},
 		{ "TargetPrioritySniperHitscanWeapon", "Target the enemy with the lowest Hp."},
 
-		{ "TowerChoice", "Pick a tower to unlock this run.\n You are also given the cost of picked tower:)"},
+		{ "TowerChoice", "Pick a defense or portal to unlock this run."},
+		{ "DefenseChoice", "Pick a defense to unlock this run."},
+		{ "PortalChoice", "Pick a portal to unlock this run."},
 		{ "PassiveChoice", "Pick a passive to get this run."},
 
 		{ "MiniBoss", "A mini boss. Defeat it to get a tower and a passive. "},
 		{ "FinalBoss", "The final boss of this run."},
+
+		{ "WinWindow", "Run complete!"},
+		{ "LossWindow", "Run failed!"},
 	};
 }

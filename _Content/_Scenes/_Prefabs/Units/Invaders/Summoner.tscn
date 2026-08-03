@@ -16,7 +16,7 @@ metadata/_custom_type_script = "uid://iamaod4iivlq"
 [sub_resource type="Resource" id="Resource_y5yar"]
 script = ExtResource("2_nu4fx")
 _unitName = "Summoned"
-_hpBuff = 500
+_level = 1
 metadata/_custom_type_script = "uid://iamaod4iivlq"
 
 [sub_resource type="Resource" id="Resource_th8uk"]

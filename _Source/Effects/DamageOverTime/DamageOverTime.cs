@@ -13,9 +13,8 @@ public partial class DamageOverTime : Effect
 
 	List<(DamageOverTimeResource, Timer)> _debuffs = [];
 
-	const int MaxDamage = 1000;
-
 	int _totalDamage;
+	float _maxPercentDamage;
 	double _queuedDamage = 0;
 
 	Node2D _visualSceneInstance;
@@ -36,26 +35,36 @@ public partial class DamageOverTime : Effect
 
 	protected override void OnCreation()
 	{
-		_visualSceneInstance = ((DamageOverTimeResource)_resource)._burnVisualScene.Instantiate<Node2D>();
-		Utils.ScaleVisualToRadius(_visualSceneInstance.GetNode<AnimatedSprite2D>("AnimatedSprite2D"), _parentUnit._radius);
-		_parentUnit.AddChild(_visualSceneInstance);
-		_visualSceneInstance.GetNode<AnimatedSprite2D>("AnimatedSprite2D").Play();
+		if (((DamageOverTimeResource)_resource)._burnVisualScene is not null)
+		{
+			_visualSceneInstance = ((DamageOverTimeResource)_resource)._burnVisualScene.Instantiate<Node2D>();
+			Utils.ScaleVisualToRadius(_visualSceneInstance.GetNode<AnimatedSprite2D>("AnimatedSprite2D"), _parentUnit._radius);
+			_parentUnit.AddChild(_visualSceneInstance);
+			_visualSceneInstance.GetNode<AnimatedSprite2D>("AnimatedSprite2D").Play();
+		}
 	}
 
 	public void AddResource(DamageOverTimeResource newResource)
 	{
-		_parentUnit.IncreaseDamageDealtStat(newResource._damage * newResource._time);
-		Timer timer = new Timer();
-		AddChild(timer);
-		timer.WaitTime = newResource._time;
-		timer.OneShot = true;
-		timer.Start();
-		timer.Timeout += (() => {
-			_debuffs.Remove((newResource, timer));
+		if (newResource._time != -1)
+		{
+			Timer timer = new Timer();
+			AddChild(timer);
+			timer.WaitTime = newResource._time;
+			timer.OneShot = true;
+			timer.Start();
+			timer.Timeout += (() => {
+				_debuffs.Remove((newResource, timer));
+				RecalculateDebuff();
+			});
+			_debuffs.Add((newResource, timer));
 			RecalculateDebuff();
-		});
-		_debuffs.Add((newResource, timer));
-		RecalculateDebuff();
+		}
+		else
+		{
+			_debuffs.Add((newResource, null));
+			RecalculateDebuff();
+		}
 	}
 
 	protected override void UpdateTempDebuffIcon(UpgradeButton button)
@@ -70,19 +79,29 @@ public partial class DamageOverTime : Effect
 	public void RecalculateDebuff()
 	{
 		_totalDamage = 0;
+		_maxPercentDamage = 0;
 		foreach (var e in _debuffs)
 		{
 			_totalDamage += e.Item1._damage;
+			_maxPercentDamage = Math.Max(e.Item1._percent, _maxPercentDamage);
 		}
 		int firstDamage = _firstResource._damage;
+		float firstPercentDamage = _firstResource._percent;
+
 		_firstResource._damage = _totalDamage;
+		_firstResource._percent = _maxPercentDamage;
+
 		_firstResource.SetDescription();
 		_parentUnit.EmitSignal(Unit.SignalName.UpdateInfo);
 		
 		float maxDuration = 0;
 		foreach (var e in _debuffs)
 		{
-			if (e.Item2.TimeLeft > maxDuration)
+			if (e.Item2 is null)
+			{
+				maxDuration = 9999;
+			}
+			else if (e.Item2.TimeLeft > maxDuration)
 			{
 				maxDuration = (float)e.Item2.TimeLeft;
 			}
@@ -104,11 +123,15 @@ public partial class DamageOverTime : Effect
 		}
 
 		_firstResource._damage = firstDamage;
-		_totalDamage = Math.Min(MaxDamage, _totalDamage);
+		_firstResource._percent = firstPercentDamage;
 
-		if (_totalDamage == 0)
+
+		if (_totalDamage <= 0 && _maxPercentDamage <= 0)
 		{
-			_parentUnit.RemoveChild(_visualSceneInstance);
+			if (_visualSceneInstance != null)
+			{
+				_parentUnit.RemoveChild(_visualSceneInstance);
+			}
 			RemoveEffectResource();
 			RemoveEffectNode();
 			_parentUnit.EmitSignal(Unit.SignalName.UpdateInfo);
@@ -117,10 +140,18 @@ public partial class DamageOverTime : Effect
 
 	public override void _PhysicsProcess(double delta)
 	{
-		_queuedDamage += delta * _totalDamage;
+		if (_totalDamage > 0)
+		{
+			_queuedDamage += delta * _totalDamage;
+		}
+		else if (_maxPercentDamage > 0)
+		{
+			_queuedDamage += delta * _maxPercentDamage * _parentUnit.GetHpMax();
+		}
+		
 		if (_queuedDamage > 1)
 		{
-			DamageContext context = new DamageContext(null, _parentUnit, _firstResource._damage, DamageType.Burn);
+			DamageContext context = new DamageContext(null, _parentUnit, Mathf.FloorToInt(_queuedDamage), DamageType.Other);
 			_parentUnit.Hit(context);
 			_queuedDamage -= Mathf.FloorToInt(_queuedDamage);
 		}

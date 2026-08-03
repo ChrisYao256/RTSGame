@@ -2,7 +2,9 @@
 
 [ext_resource type="PackedScene" uid="uid://bqn4h6d52i52" path="res://_Content/_Scenes/_Prefabs/Units/BaseInvaderUnit.tscn" id="1_cvtdm"]
 [ext_resource type="Script" uid="uid://7ugg3ogqpxk7" path="res://_Source/Effects/DecreaseRange/DecreaseRangeResource.cs" id="2_4wpwn"]
+[ext_resource type="Script" uid="uid://iamaod4iivlq" path="res://_Source/Effects/InvaderStatsIncrease/InvaderStatsIncreaseResource.cs" id="2_cvtdm"]
 [ext_resource type="Texture2D" uid="uid://bc230321nqto5" path="res://icon.svg" id="3_irswb"]
+[ext_resource type="Script" uid="uid://dtpcxn7d2dqcy" path="res://_Source/Effects/EffectResource.cs" id="3_tx0d7"]
 [ext_resource type="Script" uid="uid://d1m1yhs64wcoj" path="res://_Source/Effects/ApplyEffectToTower/ApplyEffectToTowerResource.cs" id="3_xjb3u"]
 
 [sub_resource type="Resource" id="Resource_irswb"]
@@ -22,11 +24,95 @@ _effectName = "Power Syphon"
 _displayType = 1
 metadata/_custom_type_script = "uid://d1m1yhs64wcoj"
 
+[sub_resource type="Resource" id="Resource_52l82"]
+script = ExtResource("2_cvtdm")
+_hpBuff = 500
+_speedBuff = 40.0
+_moneyBuff = Vector4i(4, 0, 4, 0)
+_startingEffects = Array[ExtResource("3_tx0d7")]([SubResource("Resource_34mel")])
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_ebofp"]
+script = ExtResource("2_cvtdm")
+_hpBuff = 280
+_moneyBuff = Vector4i(2, 0, 2, 0)
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_xjb3u"]
+script = ExtResource("2_4wpwn")
+_time = 0.5
+metadata/_custom_type_script = "uid://7ugg3ogqpxk7"
+
+[sub_resource type="Resource" id="Resource_tx0d7"]
+script = ExtResource("3_xjb3u")
+_debuffs = Array[Object]([SubResource("Resource_xjb3u")])
+metadata/_custom_type_script = "uid://d1m1yhs64wcoj"
+
+[sub_resource type="Resource" id="Resource_plufj"]
+script = ExtResource("2_cvtdm")
+_hpBuff = 650
+_moneyBuff = Vector4i(4, 0, 4, 0)
+_startingEffects = Array[ExtResource("3_tx0d7")]([SubResource("Resource_tx0d7")])
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_1bdo3"]
+script = ExtResource("2_cvtdm")
+_hpBuff = 1270
+_moneyBuff = Vector4i(6, 0, 6, 0)
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_qa5yr"]
+script = ExtResource("2_4wpwn")
+_time = 0.5
+metadata/_custom_type_script = "uid://7ugg3ogqpxk7"
+
+[sub_resource type="Resource" id="Resource_abqsu"]
+script = ExtResource("3_xjb3u")
+_debuffs = Array[Object]([SubResource("Resource_qa5yr")])
+metadata/_custom_type_script = "uid://d1m1yhs64wcoj"
+
+[sub_resource type="Resource" id="Resource_86toh"]
+script = ExtResource("2_cvtdm")
+_hpBuff = 2000
+_moneyBuff = Vector4i(8, 0, 8, 0)
+_startingEffects = Array[ExtResource("3_tx0d7")]([SubResource("Resource_abqsu")])
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_3k34b"]
+script = ExtResource("2_cvtdm")
+_hpBuff = 3300
+_moneyBuff = Vector4i(11, 0, 11, 0)
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_mvyj1"]
+script = ExtResource("2_4wpwn")
+_time = 0.5
+metadata/_custom_type_script = "uid://7ugg3ogqpxk7"
+
+[sub_resource type="Resource" id="Resource_ipna6"]
+script = ExtResource("3_xjb3u")
+_debuffs = Array[Object]([SubResource("Resource_mvyj1")])
+metadata/_custom_type_script = "uid://d1m1yhs64wcoj"
+
+[sub_resource type="Resource" id="Resource_ahqcs"]
+script = ExtResource("2_cvtdm")
+_hpBuff = 5000
+_moneyBuff = Vector4i(14, 0, 14, 0)
+_startingEffects = Array[ExtResource("3_tx0d7")]([SubResource("Resource_ipna6")])
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_d70md"]
+script = ExtResource("2_cvtdm")
+_hpBuff = 7250
+_moneyBuff = Vector4i(17, 0, 17, 0)
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
 [node name="BaseUnit" unique_id=481801141 instance=ExtResource("1_cvtdm")]
 _hpDeducted = 2
-_moveSpeed = 40.0
+_levelStats = Array[ExtResource("2_cvtdm")]([SubResource("Resource_52l82"), SubResource("Resource_ebofp"), SubResource("Resource_plufj"), SubResource("Resource_1bdo3"), SubResource("Resource_86toh"), SubResource("Resource_3k34b"), SubResource("Resource_ahqcs"), SubResource("Resource_d70md")])
+_moveSpeed = 0.0
 _hpMax = 0
-_startingEffects = Array[Object]([SubResource("Resource_34mel")])
+_startingEffects = Array[Object]([])
 _internalName = "Disabler"
 _name = "Disabler"
 _radius = 10.0

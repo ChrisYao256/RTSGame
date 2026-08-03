@@ -98,10 +98,14 @@ public partial class NearbySpawnerStatsIncrease : Effect
 		}
 		foreach (Spawner spawner in _affectedSpawners)
 		{
-			for (int i = 0; i < spawner._spawnerData._units.Count; i++)
+			if (IsInstanceValid(spawner))
 			{
-				spawner.RemoveSpawnerUnitStatsIncrease(i, (InvaderStatsIncreaseResource)_resource._buffResource.DuplicateDeep());
+				for (int i = 0; i < spawner._spawnerData._units.Count; i++)
+				{
+					spawner.RemoveSpawnerUnitStatsIncrease(i, (InvaderStatsIncreaseResource)_resource._buffResource.DuplicateDeep());
+				}
 			}
+
 		}
 		QueueFree();
 	}

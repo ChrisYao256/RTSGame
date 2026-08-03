@@ -594,17 +594,21 @@ public partial class TowerUnit : StationaryUnit
 			_infoContainers.Add("AttackPriority", attackPriority);
 		}
 		
+		if (!(_hasThirdUpgrade && _fourthUpgradeA.Count == 0 && _fourthUpgradeB.Count == 0))
+		{
+			PanelContainer upgrades = new();
 
-		PanelContainer upgrades = new();
+			HBoxContainer upgradesH = new();
+			upgradesH.Name = "HBoxContainer";
 
-		HBoxContainer upgradesH = new();
-		upgradesH.Name = "HBoxContainer";
+			MakeUpgradeUI(upgradesH);
 
-		MakeUpgradeUI(upgradesH);
+			upgrades.AddChild(upgradesH);
 
-		upgrades.AddChild(upgradesH);
+			_infoContainers.Add("Upgrades", upgrades);
+		}
 
-		_infoContainers.Add("Upgrades", upgrades);
+		
 
 		return _infoContainers;
 	}
@@ -753,21 +757,33 @@ public partial class TowerUnit : StationaryUnit
 			}
 		}
 
-		if (updateEffects)
+		if ((_hasThirdUpgrade && _fourthUpgradeA.Count == 0 && _fourthUpgradeB.Count == 0))
 		{
-			HBoxContainer upgradesH = _infoContainers["Upgrades"].GetNode<HBoxContainer>("HBoxContainer");
-
-			foreach (var child in upgradesH.GetChildren())
+			if (_infoContainers.Keys.Contains("Upgrades"))
 			{
-				child.QueueFree();
+				_infoContainers["Upgrades"].Hide();
 			}
-
-			MakeUpgradeUI(upgradesH);
 		}
 		else
 		{
-			UpdateUpgradeButtonProgress();
+			if (updateEffects)
+			{
+
+				HBoxContainer upgradesH = _infoContainers["Upgrades"].GetNode<HBoxContainer>("HBoxContainer");
+
+				foreach (var child in upgradesH.GetChildren())
+				{
+					child.QueueFree();
+				}
+
+				MakeUpgradeUI(upgradesH);
+			}
+			else
+			{
+				UpdateUpgradeButtonProgress();
+			}
 		}
+		
 
 		_tdManager._towerManager.UpdateIncomeDisplay();
 		_tdManager._towerManager.UpdateDPSDisplay();
@@ -898,7 +914,7 @@ public partial class TowerUnit : StationaryUnit
 					{
 						EffectResource newEffect = effectUpgrades.First(o => o.GetType() == effect.GetType());
 						VBoxContainer container = new();
-						PanelContainer effectName = effect.MakeFullEffectDescriptionWithUpgrade(newEffect);
+						PanelContainer effectName = effect.MakeFullEffectDescriptionWithUpgrade(newEffect, true);
 						container.AddChild(effectName);
 						largeEffectsH.AddChild(container);
 						break;

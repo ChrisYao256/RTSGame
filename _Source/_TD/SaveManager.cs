@@ -11,10 +11,25 @@ public partial class SaveManager : Node
 	// "user://" maps to a safe, persistent folder provided by the OS.
 	private const string SavePath = "user://savegame.json";
 
+	public static SaveManager Instance = new SaveManager();
+
 	public TDManager _tdManager;
 
+	public override void _Ready()
+	{
+		if (Instance == null)
+		{
+			Instance = this;
+		}
+		else
+		{
+			QueueFree();
+			return;
+		}
+	}
+
 	// A helper method to pack your current game data into a Godot Dictionary
-	public Dictionary<string, Variant> PackGameData(GameGlobals.GameMode gameMode,Vector4I money, int portalLimit, int hp, int waveCount, Array<TowerUnit> towers, Array<string> unlockedTowers, Array<GlobalEffectResource> globalEffects, Dictionary<int, Array<InvaderStatsIncreaseResource>>waveDict, Dictionary<int, Array<RogueManager.RewardType>> rewardDict, int speedUpWaveCount)
+	public Dictionary<string, Variant> PackGameData(GameGlobals.GameMode gameMode,Vector4I money, int portalLimit, int hp, int waveCount, Array<TowerUnit> towers, Array<string> unlockedTowers, Array<GlobalEffectResource> globalEffects, Dictionary<int, Array<InvaderStatsIncreaseResource>>waveDict, Dictionary<int, Array<RewardManager.RewardType>> rewardDict, int speedUpWaveCount)
 	{
 		var gameData = new Dictionary<string, Variant>
 				{
@@ -77,7 +92,7 @@ public partial class SaveManager : Node
 		return gameData;
 	}
 
-	public void SaveGame(GameGlobals.GameMode gameMode, Vector4I money, int portalLimit, int hp,int waveCount, Array<TowerUnit> currentTowers, Array<string> unlockedTowers, Array<GlobalEffectResource> globalEffects, Dictionary<int, Array<InvaderStatsIncreaseResource>> waveList, Dictionary<int, Array<RogueManager.RewardType>> rewardList, int speedUpWaveCount)
+	public void SaveGame(GameGlobals.GameMode gameMode, Vector4I money, int portalLimit, int hp,int waveCount, Array<TowerUnit> currentTowers, Array<string> unlockedTowers, Array<GlobalEffectResource> globalEffects, Dictionary<int, Array<InvaderStatsIncreaseResource>> waveList, Dictionary<int, Array<RewardManager.RewardType>> rewardList, int speedUpWaveCount)
 	{
 		// Pack the data using your defined method
 		Dictionary<string, Variant> dataToSave = PackGameData(gameMode, money, portalLimit, hp, waveCount, currentTowers, unlockedTowers, globalEffects, waveList, rewardList, speedUpWaveCount);
@@ -160,7 +175,7 @@ public partial class SaveManager : Node
 		var loadedGlobalEffects = (Array<int>)gameData["GlobalEffects"];
 
 		var loadedWaves = (Dictionary<int, Array<string>>)gameData["Waves"];
-		var loadedRewards = (Dictionary<int, Array<RogueManager.RewardType>>)gameData["Rewards"];
+		var loadedRewards = (Dictionary<int, Array<RewardManager.RewardType>>)gameData["Rewards"];
 
 		// Send everything off to be reconstructed in your main match loop
 		ApplyLoadedData(gameMode, loadedMoney, loadedPortalLimit, loadedHp, loadedWaveCount, loadedTowers, loadedUnlockedTowers, loadedGlobalEffects, loadedWaves, loadedRewards, loadedSpeedUpWaveCount);
@@ -172,7 +187,7 @@ public partial class SaveManager : Node
 	}
 
 	// 3. Spawning / Applying Method
-	private void ApplyLoadedData(GameGlobals.GameMode gameMode, Vector4I money, int portalLimit, int hp, int waveCount, Array<Dictionary<string, Variant>> towers, Array<string> loadedUnlockedTowers, Array<int> loadedGlobalEffects, Dictionary<int, Array<string>> waveList, Dictionary<int, Array<RogueManager.RewardType>> rewardList, int speedUpWaveCount)
+	private void ApplyLoadedData(GameGlobals.GameMode gameMode, Vector4I money, int portalLimit, int hp, int waveCount, Array<Dictionary<string, Variant>> towers, Array<string> loadedUnlockedTowers, Array<int> loadedGlobalEffects, Dictionary<int, Array<string>> waveList, Dictionary<int, Array<RewardManager.RewardType>> rewardList, int speedUpWaveCount)
 	{
 		_tdManager._gameMode = gameMode;
 		_tdManager.UpdateMoney(money);

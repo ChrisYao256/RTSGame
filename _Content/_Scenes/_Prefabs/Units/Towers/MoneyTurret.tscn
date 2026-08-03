@@ -65,13 +65,11 @@ metadata/_custom_type_script = "uid://cxg3f5ateuini"
 [sub_resource type="Resource" id="Resource_0m3ok"]
 script = ExtResource("6_dpnr0")
 _transformedUnit = "GunScannerTurret"
-_description = "Shoots capsules that instantly scans unit. Analyzed lasts longer and give more resources. "
 metadata/_custom_type_script = "uid://be80c57wd06d0"
 
 [sub_resource type="Resource" id="Resource_dpnr0"]
 script = ExtResource("6_dpnr0")
 _transformedUnit = "VulnerableScannerTurret"
-_description = "Scanned enemies take more damage, but no longer drop more resources."
 metadata/_custom_type_script = "uid://be80c57wd06d0"
 
 [sub_resource type="Resource" id="Resource_fvb8t"]
@@ -151,4 +149,3 @@ _range = 300.0
 _attackDelayLow = 0.5
 _attackDelayHigh = 0.5
 _useAttackDelay = true
-_damageType = 1

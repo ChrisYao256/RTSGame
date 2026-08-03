@@ -6,6 +6,7 @@ public enum DamageType
 	DirectAttack,
 	Burn,
 	Explosion,
+	Other,
 }
 
 public partial class DamageContext : RefCounted

@@ -19,7 +19,7 @@ public partial class GlobalSpawnerUpgradeResource : GlobalEffectResource
 
 	public override void SetDescription()
 	{
-		_effectDescription = $"All portals gain: \n";
+		_effectDescription = $"Enemies from Portals gain: \n";
 		_statsIncrease.SetDescription();
 		_effectDescription += _statsIncrease._effectDescription;
 	}

@@ -42,6 +42,7 @@ metadata/_custom_type_script = "uid://djbu8krhjrjib"
 
 [sub_resource type="Resource" id="Resource_av2x7"]
 script = ExtResource("3_uw73y")
+_level = 1
 metadata/_custom_type_script = "uid://iamaod4iivlq"
 
 [sub_resource type="Resource" id="Resource_llm1m"]
@@ -51,8 +52,7 @@ metadata/_custom_type_script = "uid://djbu8krhjrjib"
 
 [sub_resource type="Resource" id="Resource_jbo8f"]
 script = ExtResource("6_y4xig")
-_transformedUnit = "BlinkerSpawner"
-_description = "Spawns an extra Blinker that blinks when hit for the first time."
+_transformedUnit = "BigHoundSpawner"
 metadata/_custom_type_script = "uid://be80c57wd06d0"
 
 [node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_hr2c0")]
@@ -70,7 +70,7 @@ _fourthUpgradeATexture = ExtResource("4_uw73y")
 LeashDistance = 200.0
 _startingEffects = Array[Object]([])
 _internalName = "HoundSpawner"
-_name = "Goblin Portal"
+_name = "Rider Portal"
 
 [node name="MainSprite" parent="." index="1" unique_id=701942347]
 texture = ExtResource("4_uw73y")

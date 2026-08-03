@@ -254,7 +254,7 @@ public partial class UnitInfoPanel : CanvasLayer
 			TooltipRichTextLabel costLabel = new TooltipRichTextLabel();
 			costLabel.FitContent = true;
 			costLabel.BbcodeEnabled = true;
-			costLabel.CustomMinimumSize = new(80, 0);
+			costLabel.CustomMinimumSize = new(80, 60);
 			if (unit is not Spawner)
 			{
 				costLabel.Text = Utils.MakeMoneyText(unit._cost, multiline: true);

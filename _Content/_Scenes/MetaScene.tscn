@@ -1,0 +1,120 @@
+[gd_scene format=3 uid="uid://d3umf2x3pffrv"]
+
+[ext_resource type="Script" uid="uid://d4f12coccn1ie" path="res://_Source/Scenes/MetaScene.cs" id="1_kv6el"]
+[ext_resource type="Script" uid="uid://dmsd1wjc5yk5v" path="res://_Source/_UI/TooltipRichTextLabel.cs" id="2_qypii"]
+
+[node name="MetaScene" type="Node2D" unique_id=1260493899]
+script = ExtResource("1_kv6el")
+
+[node name="PanelContainer" type="PanelContainer" parent="." unique_id=1937620086]
+offset_right = 24.0
+offset_bottom = 24.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer" unique_id=507995668]
+layout_mode = 2
+
+[node name="Money" type="RichTextLabel" parent="PanelContainer/HBoxContainer" unique_id=1369827164]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+fit_content = true
+script = ExtResource("2_qypii")
+
+[node name="Wins" type="RichTextLabel" parent="PanelContainer/HBoxContainer" unique_id=1877537315]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+fit_content = true
+script = ExtResource("2_qypii")
+
+[node name="Losses" type="RichTextLabel" parent="PanelContainer/HBoxContainer" unique_id=1121268066]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+fit_content = true
+script = ExtResource("2_qypii")
+
+[node name="Return" type="Button" parent="." unique_id=699023649]
+offset_left = 57.0
+offset_top = 902.0
+offset_right = 154.0
+offset_bottom = 948.0
+text = "Return
+"
+
+[node name="DeleteSave" type="Button" parent="." unique_id=2058856785]
+offset_left = 1699.0
+offset_top = 1034.0
+offset_right = 1920.0
+offset_bottom = 1080.0
+text = "Delete meta save
+"
+
+[node name="PanelContainer2" type="PanelContainer" parent="." unique_id=1413340426]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 460.0
+offset_top = 140.0
+offset_right = 1460.0
+offset_bottom = 940.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer2" unique_id=17000736]
+layout_mode = 2
+theme_override_constants/separation = 32
+
+[node name="PanelContainer" type="PanelContainer" parent="PanelContainer2/VBoxContainer" unique_id=1539558977]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer2/VBoxContainer/PanelContainer" unique_id=1418322030]
+layout_mode = 2
+
+[node name="Available" type="Label" parent="PanelContainer2/VBoxContainer/PanelContainer/VBoxContainer" unique_id=668859140]
+layout_mode = 2
+text = "Available Passives:"
+
+[node name="AvailablePassives" type="GridContainer" parent="PanelContainer2/VBoxContainer/PanelContainer/VBoxContainer" unique_id=135085630]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+theme_override_constants/h_separation = 32
+theme_override_constants/v_separation = 32
+columns = 8
+
+[node name="PanelContainer2" type="PanelContainer" parent="PanelContainer2/VBoxContainer" unique_id=2055069563]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer2/VBoxContainer/PanelContainer2" unique_id=983404272]
+layout_mode = 2
+
+[node name="Obtained" type="Label" parent="PanelContainer2/VBoxContainer/PanelContainer2/VBoxContainer" unique_id=79820483]
+layout_mode = 2
+text = "Obtained Passives:"
+
+[node name="ObtainedPassives" type="GridContainer" parent="PanelContainer2/VBoxContainer/PanelContainer2/VBoxContainer" unique_id=1757479622]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+theme_override_constants/h_separation = 32
+theme_override_constants/v_separation = 32
+columns = 8
+
+[node name="SpinBox" type="SpinBox" parent="." unique_id=759920456]
+offset_left = 1712.0
+offset_top = 766.0
+offset_right = 1798.5
+offset_bottom = 797.0
+
+[node name="Label" type="Label" parent="." unique_id=191361924]
+offset_left = 1703.0
+offset_top = 730.0
+offset_right = 1805.0
+offset_bottom = 756.0
+text = "Cheat: set $"
+
+[connection signal="pressed" from="Return" to="." method="OnReturnButtonPressed"]
+[connection signal="pressed" from="DeleteSave" to="." method="OnDeleteButtonPressed"]

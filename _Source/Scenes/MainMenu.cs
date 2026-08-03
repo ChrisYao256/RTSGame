@@ -14,10 +14,13 @@ public partial class MainMenu : Control
 	[Export]
 	public string OptionsScenePath = "res://_Content/_Scenes/OptionsScene.tscn";
 
+	[Export]
+	public string MetaScenePath = "res://_Content/_Scenes/MetaScene.tscn";
+
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		if (GetNode<SaveManager>("/root/SaveManager").HasSavedGame())
+		if (SaveManager.Instance.HasSavedGame())
 		{
 			GetNode<Button>("HBoxContainer/ContinueButton").Visible = true;
 		}
@@ -74,6 +77,16 @@ public partial class MainMenu : Control
 		if (result != Error.Ok)
 		{
 			GD.PrintErr("Failed to load scene: " + OptionsScenePath);
+		}
+	}
+
+	public void OnMetaButtonPressed()
+	{
+		Error result = GetTree().ChangeSceneToFile(MetaScenePath);
+
+		if (result != Error.Ok)
+		{
+			GD.PrintErr("Failed to load scene: " + MetaScenePath);
 		}
 	}
 }

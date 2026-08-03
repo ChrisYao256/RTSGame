@@ -783,6 +783,15 @@ public partial class Unit : CharacterBody2D
 				child.QueueFree();
 			}
 
+			if (_effects.Count == 0)
+			{
+				effectsInfo.Hide();
+			}
+			else
+			{
+				effectsInfo.Show();
+			}
+				
 			HBoxContainer allEffectsH = new();
 
 			VBoxContainer smallEffectsV = new();

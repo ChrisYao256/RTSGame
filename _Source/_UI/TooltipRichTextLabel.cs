@@ -82,9 +82,8 @@ public partial class TooltipRichTextLabel : RichTextLabel
 		Text = SetBoldText(Text);
 		BbcodeEnabled = true;
 		Godot.Collections.Array<Node> nodes = GetTree().Root.GetChildren();
-		TooltipManager tooltipManager = GetTree().Root.GetNode<TooltipManager>("TdScene/TooltipManager");
-		MetaHoverStarted += (meta) => tooltipManager.ShowTooltip(DecodeMetaString(meta.AsString()));
-		MetaHoverEnded += (_) => tooltipManager.HideTooltip();
+		MetaHoverStarted += (meta) => TooltipManager.Instance.ShowTooltip(DecodeMetaString(meta.AsString()));
+		MetaHoverEnded += (_) => TooltipManager.Instance.HideTooltip();
 	}
 
 	private static string ResolveImageAliases(string input)

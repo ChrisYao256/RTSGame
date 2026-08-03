@@ -140,7 +140,7 @@ public abstract partial class EffectResource: Resource
 		return panelContainer;
 	}
 
-	public virtual PanelContainer MakeFullEffectDescriptionWithUpgrade(EffectResource upgrade)
+	public virtual PanelContainer MakeFullEffectDescriptionWithUpgrade(EffectResource upgrade, bool mergeEffect)
 	{
 		if (upgrade.GetType() != GetType())
 		{
@@ -151,7 +151,10 @@ public abstract partial class EffectResource: Resource
 
 		EffectResource copy = (EffectResource)DuplicateDeep();
 		EffectResource newCopy = (EffectResource)upgrade.DuplicateDeep();
-		//newCopy.MergeWithOld(copy, [copy]);
+		if (mergeEffect)
+		{
+			newCopy.MergeWithOld(copy, [copy]);
+		}
 		copy.SetDescription();
 
 		string greenHex = ThemePalette.Green.ToHtml(false);

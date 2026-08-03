@@ -129,4 +129,3 @@ _attackCooldown = 0.67
 _attackDelayLow = 0.33
 _attackDelayHigh = 0.33
 _useAttackDelay = true
-_damageType = 1

@@ -3,6 +3,8 @@
 [ext_resource type="PackedScene" uid="uid://bqn4h6d52i52" path="res://_Content/_Scenes/_Prefabs/Units/BaseInvaderUnit.tscn" id="1_7qlbt"]
 [ext_resource type="Script" uid="uid://dlf3d2oy6u4uv" path="res://_Source/Effects/SlowAttack/SlowAttackResource.cs" id="2_7qlbt"]
 [ext_resource type="Script" uid="uid://l43pmp147h4r" path="res://_Source/Effects/DebuffNearbyTowers/DebuffNearbyTowersResource.cs" id="2_a54bf"]
+[ext_resource type="Script" uid="uid://iamaod4iivlq" path="res://_Source/Effects/InvaderStatsIncrease/InvaderStatsIncreaseResource.cs" id="2_mignd"]
+[ext_resource type="Script" uid="uid://dtpcxn7d2dqcy" path="res://_Source/Effects/EffectResource.cs" id="3_c0bpi"]
 [ext_resource type="PackedScene" uid="uid://dncqptowjkcx3" path="res://_Content/_Scenes/_Prefabs/Effects/SlowVisualEffect.tscn" id="3_h4fil"]
 [ext_resource type="Texture2D" uid="uid://bc230321nqto5" path="res://icon.svg" id="6_amxnn"]
 
@@ -19,11 +21,48 @@ _radius = 200.0
 _slowVisualScene = ExtResource("3_h4fil")
 metadata/_custom_type_script = "uid://l43pmp147h4r"
 
+[sub_resource type="Resource" id="Resource_v6q1y"]
+script = ExtResource("2_mignd")
+_hpBuff = 6000
+_speedBuff = 35.0
+_moneyBuff = Vector4i(22, 0, 22, 0)
+_startingEffects = Array[ExtResource("3_c0bpi")]([SubResource("Resource_7qlbt")])
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_bpyec"]
+script = ExtResource("2_mignd")
+_hpBuff = 3200
+_moneyBuff = Vector4i(10, 0, 10, 0)
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_mignd"]
+script = ExtResource("2_7qlbt")
+_percentDecrease = 0.1
+metadata/_custom_type_script = "uid://dlf3d2oy6u4uv"
+
+[sub_resource type="Resource" id="Resource_c0bpi"]
+script = ExtResource("2_a54bf")
+_debuffs = Array[Object]([SubResource("Resource_mignd")])
+metadata/_custom_type_script = "uid://l43pmp147h4r"
+
+[sub_resource type="Resource" id="Resource_orw5t"]
+script = ExtResource("2_mignd")
+_hpBuff = 4800
+_moneyBuff = Vector4i(12, 0, 12, 0)
+_startingEffects = Array[ExtResource("3_c0bpi")]([SubResource("Resource_c0bpi")])
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_j7tpa"]
+script = ExtResource("2_mignd")
+_hpBuff = 8000
+_moneyBuff = Vector4i(15, 0, 15, 0)
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
 [node name="BaseUnit" unique_id=481801141 instance=ExtResource("1_7qlbt")]
 _hpDeducted = 2
-_moveSpeed = 50.0
+_levelStats = Array[ExtResource("2_mignd")]([SubResource("Resource_v6q1y"), SubResource("Resource_bpyec"), SubResource("Resource_orw5t"), SubResource("Resource_j7tpa")])
+_moveSpeed = 0.0
 _hpMax = 0
-_startingEffects = Array[Object]([SubResource("Resource_7qlbt")])
 _internalName = "Yeti"
 _name = "Ice mage"
 _radius = 16.0

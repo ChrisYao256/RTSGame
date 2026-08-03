@@ -20,6 +20,9 @@ public abstract partial class GlobalEffect : Node2D
 		_tdManager.Connect(TDManager.SignalName.GlobalPlacedTower, Callable.From<TowerUnit>(OnPlacedTower));
 		_tdManager.Connect(TDManager.SignalName.GlobalBeforeDamage, Callable.From<DamageContext>(OnBeforeDamage));
 		_tdManager.Connect(TDManager.SignalName.GlobalAddEffect, Callable.From<AddEffectContext>(OnAddNewEffect));
+		_tdManager.Connect(TDManager.SignalName.GlobalExplosion, Callable.From<ExplosionContext>(OnExplosion));
+		_tdManager.Connect(TDManager.SignalName.GlobalBossSpawned, Callable.From(OnBossSpawned));
+		_tdManager.Connect(TDManager.SignalName.NewWave, Callable.From(OnNewWave));
 	}
 
 	public virtual void OnCreation()
@@ -33,6 +36,11 @@ public abstract partial class GlobalEffect : Node2D
 	}
 
 	protected virtual void OnHpChange(int change)
+	{
+
+	}
+
+	protected virtual void OnExplosion(ExplosionContext context)
 	{
 
 	}
@@ -88,6 +96,11 @@ public abstract partial class GlobalEffect : Node2D
 	}
 
 	protected virtual void OnNewWave()
+	{
+
+	}
+
+	protected virtual void OnBossSpawned()
 	{
 
 	}

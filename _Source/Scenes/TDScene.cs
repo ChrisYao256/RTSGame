@@ -14,7 +14,7 @@ public partial class TDScene : Node2D
 		UnitManager unitManager = UnitManager.Instantiate<UnitManager>();
 		AddChild(unitManager);
 
-		var globals = GetNode<GameGlobals>("/root/GameGlobals");
+		var globals = GameGlobals.Instance;
 
 		_tdManager = GetNode<TDManager>("TdManager");
 		_tdManager.Initialize(globals.CurrentMode);

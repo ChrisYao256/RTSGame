@@ -6,10 +6,23 @@ namespace RTSGame.Units;
 
 public partial class TooltipManager : CanvasLayer
 {
+	public static TooltipManager Instance { get; private set; }
+
 	private PanelContainer _panel;
 
 	public override void _Ready()
 	{
+		if (Instance == null)
+		{
+			Instance = this;
+			Layer = 10;
+		}
+		else
+		{
+			QueueFree();
+			return;
+		}
+		ProcessMode = ProcessModeEnum.Always;
 	}
 
 	public void ShowTooltip((string, string) texts)

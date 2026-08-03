@@ -1,8 +1,11 @@
 [gd_scene format=3 uid="uid://b7o5qhk0wnk7g"]
 
 [ext_resource type="PackedScene" uid="uid://bqn4h6d52i52" path="res://_Content/_Scenes/_Prefabs/Units/BaseInvaderUnit.tscn" id="1_whwba"]
+[ext_resource type="Script" uid="uid://iamaod4iivlq" path="res://_Source/Effects/InvaderStatsIncrease/InvaderStatsIncreaseResource.cs" id="2_d2js7"]
 [ext_resource type="Script" uid="uid://50km4o3nbdym" path="res://_Source/Effects/SpeedUp/SpeedUpResource.cs" id="2_whwba"]
 [ext_resource type="Texture2D" uid="uid://bc230321nqto5" path="res://icon.svg" id="3_d2js7"]
+[ext_resource type="Script" uid="uid://dtpcxn7d2dqcy" path="res://_Source/Effects/EffectResource.cs" id="3_ktcir"]
+[ext_resource type="Script" uid="uid://bdm0qucxud2yr" path="res://_Source/Effects/SpawnUnitOnDeath/SpawnUnitOnDeathResource.cs" id="5_ktcir"]
 
 [sub_resource type="Resource" id="Resource_spagu"]
 script = ExtResource("2_whwba")
@@ -11,11 +14,87 @@ _interval = 2.0
 _maxTriggers = 3
 metadata/_custom_type_script = "uid://50km4o3nbdym"
 
+[sub_resource type="Resource" id="Resource_lulft"]
+script = ExtResource("2_d2js7")
+_hpBuff = 450
+_speedBuff = 35.0
+_moneyBuff = Vector4i(4, 0, 0, 4)
+_startingEffects = Array[ExtResource("3_ktcir")]([SubResource("Resource_spagu")])
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_8hcay"]
+script = ExtResource("2_d2js7")
+_hpBuff = 270
+_moneyBuff = Vector4i(2, 0, 0, 2)
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_prhfp"]
+script = ExtResource("2_d2js7")
+_hpBuff = 650
+_moneyBuff = Vector4i(4, 0, 0, 4)
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_o6yu0"]
+script = ExtResource("2_d2js7")
+_hpBuff = 1400
+_moneyBuff = Vector4i(7, 0, 0, 7)
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_tp0aq"]
+script = ExtResource("2_d2js7")
+_unitName = "Pilot"
+_level = 5
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_vaw0t"]
+script = ExtResource("5_ktcir")
+_spawnedUnits = Array[Object]([SubResource("Resource_tp0aq")])
+metadata/_custom_type_script = "uid://bdm0qucxud2yr"
+
+[sub_resource type="Resource" id="Resource_5wm8b"]
+script = ExtResource("2_d2js7")
+_hpBuff = 1930
+_moneyBuff = Vector4i(8, 0, 0, 8)
+_startingEffects = Array[ExtResource("3_ktcir")]([SubResource("Resource_vaw0t")])
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_ktcir"]
+script = ExtResource("2_d2js7")
+_level = 1
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_h2gq1"]
+script = ExtResource("5_ktcir")
+_spawnedUnits = Array[Object]([SubResource("Resource_ktcir")])
+metadata/_custom_type_script = "uid://bdm0qucxud2yr"
+
+[sub_resource type="Resource" id="Resource_25564"]
+script = ExtResource("2_d2js7")
+_hpBuff = 2900
+_moneyBuff = Vector4i(10, 0, 0, 10)
+_startingEffects = Array[ExtResource("3_ktcir")]([SubResource("Resource_h2gq1")])
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_c3jiv"]
+script = ExtResource("2_d2js7")
+_hpBuff = 4000
+_moneyBuff = Vector4i(13, 0, 0, 13)
+_startingEffects = Array[ExtResource("3_ktcir")]([SubResource("Resource_h2gq1")])
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_ea4yr"]
+script = ExtResource("2_d2js7")
+_hpBuff = 6400
+_moneyBuff = Vector4i(18, 0, 0, 18)
+_startingEffects = Array[ExtResource("3_ktcir")]([SubResource("Resource_h2gq1")])
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
 [node name="BaseUnit" unique_id=481801141 instance=ExtResource("1_whwba")]
 _hpDeducted = 2
-_moveSpeed = 40.0
+_levelStats = Array[ExtResource("2_d2js7")]([SubResource("Resource_lulft"), SubResource("Resource_8hcay"), SubResource("Resource_prhfp"), SubResource("Resource_o6yu0"), SubResource("Resource_5wm8b"), SubResource("Resource_25564"), SubResource("Resource_c3jiv"), SubResource("Resource_ea4yr")])
+_moveSpeed = 0.0
 _hpMax = 0
-_startingEffects = Array[Object]([SubResource("Resource_spagu")])
+_startingEffects = Array[Object]([])
 _internalName = "Rocket"
 _name = "Rocket"
 _radius = 16.0

@@ -4,6 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://bgso1s77onsqj" path="res://_Assets/SlowTurret.png" id="2_1rxw6"]
 [ext_resource type="Script" uid="uid://c7ye5bgfhla5e" path="res://_Source/Effects/StatsIncrease/StatsIncreaseResource.cs" id="3_mqaiv"]
 [ext_resource type="Script" uid="uid://cxg3f5ateuini" path="res://_Source/Effects/DebuffOnHit/DebuffOnHitResource.cs" id="5_u05y1"]
+[ext_resource type="Script" uid="uid://be80c57wd06d0" path="res://_Source/Effects/ImmediateTransform/ImmediateTransformResource.cs" id="6_1rxw6"]
 [ext_resource type="Texture2D" uid="uid://s1ywp7jtyat" path="res://_Assets/BlueBase.png" id="7_yeps2"]
 [ext_resource type="Script" uid="uid://bva1xkjx08h5v" path="res://_Source/_Units/Weapons/TurretTurner.cs" id="8_e7nhc"]
 [ext_resource type="PackedScene" uid="uid://bwym8b0opf06j" path="res://_Content/_Scenes/_Prefabs/Weapons/ScannerWeapon.tscn" id="9_wqvwd"]
@@ -57,6 +58,11 @@ script = ExtResource("5_u05y1")
 _debuffs = Array[Object]([SubResource("Resource_1rxw6")])
 metadata/_custom_type_script = "uid://cxg3f5ateuini"
 
+[sub_resource type="Resource" id="Resource_32lr7"]
+script = ExtResource("6_1rxw6")
+_transformedUnit = "AreaSlowTurret"
+metadata/_custom_type_script = "uid://be80c57wd06d0"
+
 [sub_resource type="Resource" id="Resource_fx2rp"]
 script = ExtResource("10_fx2rp")
 _percentDecrease = 0.18
@@ -91,14 +97,15 @@ metadata/_custom_type_script = "uid://y1enulr4b71h"
 [node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_1rxw6")]
 _cost = Vector4i(23, 0, 12, 0)
 _iconTexture = ExtResource("2_1rxw6")
-_description = "Scans enemies to increase their resources yield. Deals damage when scan finishes."
+_description = "Scans enemies to slow them. Deals damage when scan finishes. "
 _firstUpgrade = Array[Object]([SubResource("Resource_5cain"), SubResource("Resource_j4w61")])
 _firstUpgradeCost = Vector4i(12, 0, 8, 0)
 _secondUpgrade = Array[Object]([SubResource("Resource_oh15a"), SubResource("Resource_c4lc3")])
 _secondUpgradeCost = Vector4i(33, 0, 17, 0)
 _thirdUpgrade = Array[Object]([SubResource("Resource_yglny"), SubResource("Resource_87nd2")])
 _thirdUpgradeCost = Vector4i(57, 0, 28, 0)
-_fourthUpgradeACost = Vector4i(90, 0, 90, 0)
+_fourthUpgradeA = Array[Object]([SubResource("Resource_32lr7")])
+_fourthUpgradeACost = Vector4i(0, 90, 90, 0)
 _fourthUpgradeBCost = Vector4i(0, 100, 100, 0)
 _hpMax = 1
 _startingEffects = Array[Object]([SubResource("Resource_bvd4s")])

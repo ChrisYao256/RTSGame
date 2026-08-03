@@ -27,6 +27,9 @@ public abstract partial class GlobalEffectResource : Resource
 	[Export]
 	public PackedScene _floatingTextScene;
 
+	[Export]
+	public int _cost = 300;
+
 	private HoverInfoImage _iconNode;
 
 	public GlobalEffect _effect;

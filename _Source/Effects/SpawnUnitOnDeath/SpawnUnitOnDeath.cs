@@ -34,6 +34,8 @@ public partial class SpawnUnitOnDeath : Effect
 				new Vector2(-_resource._jitter, -_resource._jitter),
 				];
 
+		Vector2 position = invader.GlobalPosition;
+
 		foreach (InvaderStatsIncreaseResource unit in _resource._spawnedUnits)
 		{
 			Random random = new Random();
@@ -42,20 +44,11 @@ public partial class SpawnUnitOnDeath : Effect
 
 			Callable.From(() => {
 				// This whole block executes deferred
-				InvaderUnit newEnemy = invader._tdManager.SpawnEnemyAtGlobalPosition(unit._unitName, invader.GlobalPosition + specificSpawnPos);
+				InvaderUnit newEnemy = invader._tdManager.SpawnEnemyAtGlobalPosition(unit._unitName, position + specificSpawnPos);
 
 				if (_resource._spawnedUnits != null)
 				{
 					newEnemy.AddEffect(unit);
-					// Apply your buffs directly to the returned reference
-					//newEnemy.IncreaseHpMaxModifier(unit._hpBuff);
-					//newEnemy.IncreaseSpeedModifier(unit._speedBuff);
-					//newEnemy.IncreaseArmorModifier(unit._armorBuff);
-					//newEnemy.IncreaseMoneyModifier(unit._moneyBuff);
-					//foreach (EffectResource effect in unit._startingEffects)
-					//{
-					//	newEnemy.AddEffect(effect);
-					//}
 				}
 			}).CallDeferred();
 			spawnPositions.RemoveAt(index);

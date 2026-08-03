@@ -1,4 +1,5 @@
 using Godot;
+using RTSGame.Source;
 using RTSGame.Units;
 using System;
 
@@ -29,10 +30,11 @@ public partial class ExplosionOnKill : Effect
 		Vector2 enemyPosition = enemy.GlobalPosition;
 		timer.Timeout += () =>
 		{
-			CircleShape2D explosionCircle = new CircleShape2D();
-			explosionCircle.Radius = _resource._explosionRadius;
+			ExplosionContext explosionContext = new(_resource._explosionRadius, _resource._explosionDamage);
+			_parentUnit._tdManager.EmitSignal(TDManager.SignalName.GlobalExplosion, explosionContext);
 
-			
+			CircleShape2D explosionCircle = new CircleShape2D();
+			explosionCircle.Radius = explosionContext._radius;
 
 			// 2. Setup the query parameters
 			var query = new PhysicsShapeQueryParameters2D();
@@ -55,7 +57,7 @@ public partial class ExplosionOnKill : Effect
 
 				if (collider is Unit unit && unit._teamId != _parentUnit._teamId)
 				{
-					DamageContext context = new DamageContext(_parentUnit, unit, _resource._explosionDamage, DamageType.Explosion);
+					DamageContext context = new DamageContext(_parentUnit, unit, explosionContext._damage, DamageType.Explosion);
 					unit.Hit(context);
 				}
 			}

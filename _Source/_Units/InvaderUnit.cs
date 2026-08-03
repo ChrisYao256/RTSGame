@@ -222,7 +222,7 @@ public partial class InvaderUnit : Unit
 
 		textNode.GlobalPosition = GlobalPosition;
 
-		GetTree().Root.AddChild(textNode);
+		GetTree().CurrentScene.AddChild(textNode);
 
 		textNode.StartFloatingAnimation();
 
@@ -307,7 +307,7 @@ public partial class InvaderUnit : Unit
 						{
 							EffectResource newEffect = effectUpgrades.First(o => o.GetType() == effect.GetType());
 							VBoxContainer container = new();
-							PanelContainer effectName = effect.MakeFullEffectDescriptionWithUpgrade(newEffect);
+							PanelContainer effectName = effect.MakeFullEffectDescriptionWithUpgrade(newEffect, false);
 							container.AddChild(effectName);
 							largeEffectsH.AddChild(container);
 							break;

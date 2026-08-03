@@ -20,6 +20,8 @@ config/icon="res://icon.svg"
 SaveManager="*uid://co8r624wyqbsk"
 GameGlobals="*uid://dhgn5kejn6rqb"
 SettingsManager="*uid://bwjsdgjfyfthp"
+TooltipManager="*uid://b88b1wxtshdjv"
+MetaManager="*uid://dwg4teh1jrqch"
 
 [display]
 
@@ -87,3 +89,4 @@ Space={
 
 textures/canvas_textures/default_texture_filter=0
 rendering_device/driver.windows="d3d12"
+textures/vram_compression/import_etc2_astc=true

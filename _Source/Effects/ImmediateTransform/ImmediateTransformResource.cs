@@ -10,12 +10,14 @@ public partial class ImmediateTransformResource : EffectResource
 	[Export]
 	public string _transformedUnit;
 
-	[Export]
-	private string _description = "";
-
 	public override void SetDescription()
 	{
-		_effectDescription = _description;
+		Unit unit = UnitManager.GetUnit(_transformedUnit, false);
+		if (unit is TowerUnit tower)
+		{
+			_effectDescription = tower._description;
+		}
+		unit.QueueFree();
 	}
 
 	public override Effect CreateNode()

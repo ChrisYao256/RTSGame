@@ -45,7 +45,7 @@ metadata/_custom_type_script = "uid://bonjif38a25r3"
 
 [sub_resource type="Resource" id="Resource_we67n"]
 script = ExtResource("5_prthp")
-_explosionRadius = 80.0
+_explosionRadius = 60.0
 _explosionDamage = 100
 ExplosionVisualScene = ExtResource("5_we67n")
 _effectName = "Explosive shells"

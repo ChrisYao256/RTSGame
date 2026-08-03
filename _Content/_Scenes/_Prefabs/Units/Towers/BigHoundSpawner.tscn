@@ -1,0 +1,77 @@
+[gd_scene format=3 uid="uid://d2abjaqcnfury"]
+
+[ext_resource type="PackedScene" uid="uid://yhbw0b164ui2" path="res://_Content/_Scenes/_Prefabs/Units/BaseTower.tscn" id="1_urjyf"]
+[ext_resource type="Script" uid="uid://b4jva1l23o6su" path="res://_Source/_Units/Spawner.cs" id="2_oluae"]
+[ext_resource type="Script" uid="uid://iamaod4iivlq" path="res://_Source/Effects/InvaderStatsIncrease/InvaderStatsIncreaseResource.cs" id="3_f5h2k"]
+[ext_resource type="Script" uid="uid://dtpcxn7d2dqcy" path="res://_Source/Effects/EffectResource.cs" id="4_4v0ln"]
+[ext_resource type="Script" uid="uid://cvroohkeaovqw" path="res://_Source/_Units/SpawnerDataResource.cs" id="5_2rc8r"]
+[ext_resource type="Texture2D" uid="uid://iocgjnp7i8td" path="res://_Assets/Portal.png" id="6_32l35"]
+[ext_resource type="Script" uid="uid://djbu8krhjrjib" path="res://_Source/Effects/SpawnerUpgradeResource/SpawnerUpgradeResource.cs" id="7_nkffr"]
+[ext_resource type="Script" uid="uid://be80c57wd06d0" path="res://_Source/Effects/ImmediateTransform/ImmediateTransformResource.cs" id="8_ws3lv"]
+
+[sub_resource type="Resource" id="Resource_uw73y"]
+script = ExtResource("3_f5h2k")
+_unitName = "Hound"
+_level = 5
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_puj6i"]
+script = ExtResource("5_2rc8r")
+_units = Array[ExtResource("3_f5h2k")]([SubResource("Resource_uw73y")])
+metadata/_custom_type_script = "uid://cvroohkeaovqw"
+
+[sub_resource type="Resource" id="Resource_4imld"]
+script = ExtResource("3_f5h2k")
+_level = 1
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_hdwh2"]
+script = ExtResource("7_nkffr")
+_units = Array[ExtResource("3_f5h2k")]([SubResource("Resource_4imld")])
+metadata/_custom_type_script = "uid://djbu8krhjrjib"
+
+[sub_resource type="Resource" id="Resource_qkotg"]
+script = ExtResource("3_f5h2k")
+_level = 1
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_htg75"]
+script = ExtResource("7_nkffr")
+_units = Array[ExtResource("3_f5h2k")]([SubResource("Resource_qkotg")])
+metadata/_custom_type_script = "uid://djbu8krhjrjib"
+
+[sub_resource type="Resource" id="Resource_av2x7"]
+script = ExtResource("3_f5h2k")
+_level = 1
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_llm1m"]
+script = ExtResource("7_nkffr")
+_units = Array[ExtResource("3_f5h2k")]([SubResource("Resource_av2x7")])
+metadata/_custom_type_script = "uid://djbu8krhjrjib"
+
+[sub_resource type="Resource" id="Resource_jbo8f"]
+script = ExtResource("8_ws3lv")
+_transformedUnit = "BlinkerSpawner"
+_description = "Spawns an extra Blinker that blinks when hit for the first time."
+metadata/_custom_type_script = "uid://be80c57wd06d0"
+
+[node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_urjyf")]
+script = ExtResource("2_oluae")
+_spawnerData = SubResource("Resource_puj6i")
+_spawnInterval = 1.0
+_isEnemy = true
+_iconTexture = ExtResource("6_32l35")
+_towerType = 2
+_firstUpgrade = Array[Object]([SubResource("Resource_hdwh2")])
+_secondUpgrade = Array[Object]([SubResource("Resource_htg75")])
+_thirdUpgrade = Array[Object]([SubResource("Resource_llm1m")])
+_fourthUpgradeA = Array[Object]([SubResource("Resource_jbo8f")])
+_fourthUpgradeATexture = ExtResource("6_32l35")
+LeashDistance = 200.0
+_startingEffects = Array[Object]([])
+_internalName = "BigHoundSpawner"
+_name = "Rider Portal"
+
+[node name="MainSprite" parent="." index="1" unique_id=701942347]
+texture = ExtResource("6_32l35")

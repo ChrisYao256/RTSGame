@@ -1,0 +1,94 @@
+[gd_scene format=3 uid="uid://cf0xg8odkautd"]
+
+[ext_resource type="PackedScene" uid="uid://yhbw0b164ui2" path="res://_Content/_Scenes/_Prefabs/Units/BaseTower.tscn" id="1_n8t8b"]
+[ext_resource type="Script" uid="uid://b4jva1l23o6su" path="res://_Source/_Units/Spawner.cs" id="2_b2ky6"]
+[ext_resource type="Script" uid="uid://iamaod4iivlq" path="res://_Source/Effects/InvaderStatsIncrease/InvaderStatsIncreaseResource.cs" id="3_7iv4t"]
+[ext_resource type="Script" uid="uid://cvroohkeaovqw" path="res://_Source/_Units/SpawnerDataResource.cs" id="4_p048j"]
+[ext_resource type="Texture2D" uid="uid://iocgjnp7i8td" path="res://_Assets/Portal.png" id="5_670dp"]
+[ext_resource type="Script" uid="uid://djbu8krhjrjib" path="res://_Source/Effects/SpawnerUpgradeResource/SpawnerUpgradeResource.cs" id="6_3k1xw"]
+[ext_resource type="Script" uid="uid://oka53ec6ds3" path="res://_Source/Effects/MoneyOnWaveStartOneType/MoneyOnWaveStartOneTypeResource.cs" id="7_22n0l"]
+
+[sub_resource type="Resource" id="Resource_1tabr"]
+script = ExtResource("3_7iv4t")
+_unitName = "Escapee"
+_level = 5
+_startingEffects = null
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_hedbo"]
+script = ExtResource("4_p048j")
+_units = Array[ExtResource("3_7iv4t")]([SubResource("Resource_1tabr")])
+metadata/_custom_type_script = "uid://cvroohkeaovqw"
+
+[sub_resource type="Resource" id="Resource_45p1p"]
+script = ExtResource("3_7iv4t")
+_level = 1
+_startingEffects = null
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_fflv8"]
+script = ExtResource("6_3k1xw")
+_units = Array[ExtResource("3_7iv4t")]([SubResource("Resource_45p1p")])
+metadata/_custom_type_script = "uid://djbu8krhjrjib"
+
+[sub_resource type="Resource" id="Resource_cnvj6"]
+script = ExtResource("7_22n0l")
+_money = 6
+metadata/_custom_type_script = "uid://oka53ec6ds3"
+
+[sub_resource type="Resource" id="Resource_0bcix"]
+script = ExtResource("3_7iv4t")
+_level = 1
+_startingEffects = null
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_lh454"]
+script = ExtResource("6_3k1xw")
+_units = Array[ExtResource("3_7iv4t")]([SubResource("Resource_0bcix")])
+metadata/_custom_type_script = "uid://djbu8krhjrjib"
+
+[sub_resource type="Resource" id="Resource_ylm6c"]
+script = ExtResource("7_22n0l")
+_money = 10
+metadata/_custom_type_script = "uid://oka53ec6ds3"
+
+[sub_resource type="Resource" id="Resource_q3hbh"]
+script = ExtResource("3_7iv4t")
+_level = 1
+_startingEffects = null
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_02mu3"]
+script = ExtResource("6_3k1xw")
+_units = Array[ExtResource("3_7iv4t")]([SubResource("Resource_q3hbh")])
+metadata/_custom_type_script = "uid://djbu8krhjrjib"
+
+[sub_resource type="Resource" id="Resource_4xgbq"]
+script = ExtResource("7_22n0l")
+_money = 14
+metadata/_custom_type_script = "uid://oka53ec6ds3"
+
+[sub_resource type="Resource" id="Resource_0m2oa"]
+script = ExtResource("7_22n0l")
+_money = 12
+_giveLowest = true
+metadata/_custom_type_script = "uid://oka53ec6ds3"
+
+[node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_n8t8b")]
+script = ExtResource("2_b2ky6")
+_spawnerData = SubResource("Resource_hedbo")
+_spawnInterval = 1.0
+_isEnemy = true
+_iconTexture = ExtResource("5_670dp")
+_towerType = 2
+_firstUpgrade = Array[Object]([SubResource("Resource_fflv8"), SubResource("Resource_cnvj6")])
+_secondUpgrade = Array[Object]([SubResource("Resource_lh454"), SubResource("Resource_ylm6c")])
+_thirdUpgrade = Array[Object]([SubResource("Resource_02mu3"), SubResource("Resource_4xgbq")])
+LeashDistance = 200.0
+_startingEffects = Array[Object]([SubResource("Resource_0m2oa")])
+_internalName = "BigGeneratorSpawner"
+_name = "Generator"
+_radius = 0.0
+
+[node name="MainSprite" parent="." index="1" unique_id=701942347]
+texture = ExtResource("5_670dp")

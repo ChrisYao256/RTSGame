@@ -8,16 +8,13 @@
 [ext_resource type="Script" uid="uid://djbu8krhjrjib" path="res://_Source/Effects/SpawnerUpgradeResource/SpawnerUpgradeResource.cs" id="6_o7dds"]
 [ext_resource type="Script" uid="uid://c7ye5bgfhla5e" path="res://_Source/Effects/StatsIncrease/StatsIncreaseResource.cs" id="7_yphip"]
 [ext_resource type="Script" uid="uid://dby4w7fetnae6" path="res://_Source/Effects/NearbyTowerStatsIncrease/NearbyTowerStatsIncreaseResource.cs" id="8_bmmis"]
-[ext_resource type="Script" uid="uid://7ugg3ogqpxk7" path="res://_Source/Effects/DecreaseRange/DecreaseRangeResource.cs" id="9_xjdfn"]
-[ext_resource type="Script" uid="uid://d1m1yhs64wcoj" path="res://_Source/Effects/ApplyEffectToTower/ApplyEffectToTowerResource.cs" id="10_xjdfn"]
+[ext_resource type="Script" uid="uid://dtpcxn7d2dqcy" path="res://_Source/Effects/EffectResource.cs" id="9_rvo7w"]
 [ext_resource type="Script" uid="uid://be80c57wd06d0" path="res://_Source/Effects/ImmediateTransform/ImmediateTransformResource.cs" id="11_jhx8r"]
 
 [sub_resource type="Resource" id="Resource_o7dds"]
 script = ExtResource("3_k4a1k")
 _unitName = "Disabler"
-_hpBuff = 400
-_moneyBuff = Vector4i(4, 0, 4, 0)
-_startingEffects = null
+_level = 1
 metadata/_custom_type_script = "uid://iamaod4iivlq"
 
 [sub_resource type="Resource" id="Resource_ufs7f"]
@@ -27,9 +24,7 @@ metadata/_custom_type_script = "uid://cvroohkeaovqw"
 
 [sub_resource type="Resource" id="Resource_35fnd"]
 script = ExtResource("3_k4a1k")
-_hpBuff = 225
-_moneyBuff = Vector4i(2, 0, 2, 0)
-_startingEffects = null
+_level = 1
 metadata/_custom_type_script = "uid://iamaod4iivlq"
 
 [sub_resource type="Resource" id="Resource_yphip"]
@@ -47,21 +42,9 @@ script = ExtResource("8_bmmis")
 _buffResource = SubResource("Resource_r5rbk")
 metadata/_custom_type_script = "uid://dby4w7fetnae6"
 
-[sub_resource type="Resource" id="Resource_shgte"]
-script = ExtResource("9_xjdfn")
-_time = 0.5
-metadata/_custom_type_script = "uid://7ugg3ogqpxk7"
-
-[sub_resource type="Resource" id="Resource_6yfum"]
-script = ExtResource("10_xjdfn")
-_debuffs = Array[Object]([SubResource("Resource_shgte")])
-metadata/_custom_type_script = "uid://d1m1yhs64wcoj"
-
 [sub_resource type="Resource" id="Resource_bmmis"]
 script = ExtResource("3_k4a1k")
-_hpBuff = 500
-_moneyBuff = Vector4i(4, 0, 4, 0)
-_startingEffects = Array[Object]([SubResource("Resource_6yfum")])
+_level = 1
 metadata/_custom_type_script = "uid://iamaod4iivlq"
 
 [sub_resource type="Resource" id="Resource_xjdfn"]
@@ -81,9 +64,7 @@ metadata/_custom_type_script = "uid://dby4w7fetnae6"
 
 [sub_resource type="Resource" id="Resource_jhx8r"]
 script = ExtResource("3_k4a1k")
-_hpBuff = 800
-_moneyBuff = Vector4i(6, 0, 6, 0)
-_startingEffects = null
+_level = 1
 metadata/_custom_type_script = "uid://iamaod4iivlq"
 
 [sub_resource type="Resource" id="Resource_rvo7w"]
@@ -129,6 +110,7 @@ _firstUpgrade = Array[Object]([SubResource("Resource_yphip"), SubResource("Resou
 _secondUpgrade = Array[Object]([SubResource("Resource_xjdfn"), SubResource("Resource_inaiy")])
 _thirdUpgrade = Array[Object]([SubResource("Resource_rvo7w"), SubResource("Resource_dye5b")])
 _fourthUpgradeA = Array[Object]([SubResource("Resource_e3okh")])
+_fourthUpgradeATexture = ExtResource("4_yphip")
 LeashDistance = 200.0
 _startingEffects = Array[Object]([SubResource("Resource_mp780")])
 _internalName = "DisablerSpawner"

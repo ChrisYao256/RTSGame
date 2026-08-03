@@ -1,0 +1,72 @@
+[gd_scene format=3 uid="uid://dwg4teh1jrqch"]
+
+[ext_resource type="Script" uid="uid://c0oqy6m41tl6e" path="res://_Source/_TD/MetaManager.cs" id="1_pc618"]
+[ext_resource type="Script" uid="uid://c5wc5hsobh1d2" path="res://_Source/GlobalEffects/GlobalEffectResource.cs" id="2_r3w4g"]
+[ext_resource type="Script" uid="uid://c7ye5bgfhla5e" path="res://_Source/Effects/StatsIncrease/StatsIncreaseResource.cs" id="3_tv4ua"]
+[ext_resource type="Script" uid="uid://d3qvvh1ko17dm" path="res://_Source/GlobalEffects/GlobalStatsIncrease/GlobalStatsIncreaseResource.cs" id="4_2hxu3"]
+[ext_resource type="Script" uid="uid://dtpcxn7d2dqcy" path="res://_Source/Effects/EffectResource.cs" id="5_tnjod"]
+[ext_resource type="Script" uid="uid://iamaod4iivlq" path="res://_Source/Effects/InvaderStatsIncrease/InvaderStatsIncreaseResource.cs" id="6_7lr2o"]
+[ext_resource type="Script" uid="uid://d3ixfo58oeqbc" path="res://_Source/GlobalEffects/GlobalSpawnerUpgrade/GlobalSpawnerUpgradeResource.cs" id="7_mqda2"]
+[ext_resource type="Script" uid="uid://dw3j23px6buhr" path="res://_Source/GlobalEffects/GlobalNextBossStatsIncrease/GlobalNextBossStatsIncreaseResource.cs" id="8_7lr2o"]
+[ext_resource type="Script" uid="uid://bjdes23ajjshs" path="res://_Source/GlobalEffects/GlobalGetMoney/GlobalGetMoneyResource.cs" id="9_mqda2"]
+[ext_resource type="Script" uid="uid://bfgasvek3723w" path="res://_Source/GlobalEffects/GlobalGetHp/GlobalGetHpResource.cs" id="10_dvhci"]
+[ext_resource type="Script" uid="uid://d2fjiaxud7qit" path="res://_Source/GlobalEffects/GlobalGetReward/GlobalGetRewardResource.cs" id="11_tp2ik"]
+
+[sub_resource type="Resource" id="Resource_tnjod"]
+script = ExtResource("3_tv4ua")
+_damagePercentIncrease = 0.05
+metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
+
+[sub_resource type="Resource" id="Resource_7lr2o"]
+script = ExtResource("4_2hxu3")
+_statsIncrease = SubResource("Resource_tnjod")
+metadata/_custom_type_script = "uid://d3qvvh1ko17dm"
+
+[sub_resource type="Resource" id="Resource_mqda2"]
+script = ExtResource("3_tv4ua")
+_attackSpeedIncrease = 0.05
+metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
+
+[sub_resource type="Resource" id="Resource_dvhci"]
+script = ExtResource("4_2hxu3")
+_statsIncrease = SubResource("Resource_mqda2")
+metadata/_custom_type_script = "uid://d3qvvh1ko17dm"
+
+[sub_resource type="Resource" id="Resource_tp2ik"]
+script = ExtResource("6_7lr2o")
+_moneyBuff = Vector4i(1, 0, 0, 0)
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_462c7"]
+script = ExtResource("7_mqda2")
+_statsIncrease = SubResource("Resource_tp2ik")
+metadata/_custom_type_script = "uid://d3ixfo58oeqbc"
+
+[sub_resource type="Resource" id="Resource_2sj0t"]
+script = ExtResource("6_7lr2o")
+_percentHpBuff = -0.5
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_4yam1"]
+script = ExtResource("8_7lr2o")
+_statsIncrease = SubResource("Resource_2sj0t")
+metadata/_custom_type_script = "uid://dw3j23px6buhr"
+
+[sub_resource type="Resource" id="Resource_o0ani"]
+script = ExtResource("9_mqda2")
+_money = Vector4i(25, 25, 25, 25)
+metadata/_custom_type_script = "uid://bjdes23ajjshs"
+
+[sub_resource type="Resource" id="Resource_lj8kw"]
+script = ExtResource("10_dvhci")
+_hp = 10
+metadata/_custom_type_script = "uid://bfgasvek3723w"
+
+[sub_resource type="Resource" id="Resource_rjr1e"]
+script = ExtResource("11_tp2ik")
+_rewards = Array[int]([2])
+metadata/_custom_type_script = "uid://d2fjiaxud7qit"
+
+[node name="MetaManager" type="Node" unique_id=2005366118]
+script = ExtResource("1_pc618")
+_allMetaUpgrades = Array[ExtResource("2_r3w4g")]([SubResource("Resource_7lr2o"), SubResource("Resource_dvhci"), SubResource("Resource_462c7"), SubResource("Resource_4yam1"), SubResource("Resource_o0ani"), SubResource("Resource_lj8kw"), SubResource("Resource_rjr1e")])

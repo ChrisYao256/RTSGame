@@ -6,7 +6,7 @@ using System.ComponentModel.Design;
 namespace RTSGame.Units;
 
 [GlobalClass]
-public partial class SlowAttackResource : EffectResource, IStackable
+public partial class SlowAttackResource : EffectResource, IStackable, IStatus
 {
 	[Export]
 	public float _percentDecrease;
@@ -44,11 +44,8 @@ public partial class SlowAttackResource : EffectResource, IStackable
 	public override void SetDescription()
 	{
 		_displayType = DisplayTypes.Small;
-		if (_effectName == "")
-		{
-			_effectName = "Slowed " + (_percentDecrease * 100).ToString("F0");
-		}
-		_effectDescription = "Attack speed slowed by " + Math.Truncate(_percentDecrease * 100) + "%";
+		_effectName = "Slowed " + (_percentDecrease * 100).ToString("F0");
+		_effectDescription = $"Attack speed slowed by {_percentDecrease * 100 : F0}%";
 		if (_time != -1)
 		{
 			_effectTopRightString = _time + "::duration::";

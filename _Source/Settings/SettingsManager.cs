@@ -14,7 +14,15 @@ public partial class SettingsManager : Node
 
 	public override void _Ready()
 	{
-		Instance = this;
+		if (Instance == null)
+		{
+			Instance = this;
+		}
+		else
+		{
+			QueueFree();
+			return;
+		}
 		LoadSettings();
 	}
 

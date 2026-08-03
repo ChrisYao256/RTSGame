@@ -11,6 +11,9 @@ public partial class DamageOverTimeResource : EffectResource
 	public int _damage;
 
 	[Export]
+	public float _percent;
+
+	[Export]
 	public float _time;
 
 	[Export]
@@ -29,6 +32,7 @@ public partial class DamageOverTimeResource : EffectResource
 		else
 		{
 			typedOldResource._damage += _damage;
+			typedOldResource._percent += _percent;
 			typedOldResource._time += _time;
 			typedOldResource.SetDescription();
 		}
@@ -38,23 +42,18 @@ public partial class DamageOverTimeResource : EffectResource
 	public override void SetDescription()
 	{
 		_displayType = DisplayTypes.Small;
-		_effectName = "Burning " + (_damage).ToString("F0");
-		_effectDescription = "Taking " + _damage.ToString() + " every second";
+		
+		if (_percent == 0)
+		{
+			_effectName = "Maimed " + (_damage).ToString("F0");
+			_effectDescription = "Taking " + _damage.ToString() + " damage every second";
+		}
+		else
+		{
+			_effectName = $"Maimed {_percent* 100 :F0}%";
+			_effectDescription = $"Taking {_percent* 100 :F0}% max HP damage every second";
+		}
 		_effectTopRightString = _time + "::duration::";
-	}
-
-	public override void SetUpgradeDescription()
-	{
-		_effectName = "Burning";
-		_effectDescription = "";
-		if (_damage != 0)
-		{
-			_effectDescription += $"{_effectName} damage +{_damage}";
-		}
-		if (_time != 0)
-		{
-			_effectDescription += $"{_effectName} duration +{_time}::duration::";
-		}
 	}
 
 	public override Effect CreateNode()

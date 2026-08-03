@@ -20,11 +20,11 @@ public partial class BuffNearbyUnitsResource : EffectResource
 		bool matchFound = false;
 		foreach (EffectResource resource in allMatchingResource)
 		{
-			DebuffNearbyTowersResource typedResource = resource as DebuffNearbyTowersResource;
+			BuffNearbyUnitsResource typedResource = resource as BuffNearbyUnitsResource;
 			bool mismatch = false;
 			for (int i = 0; i < _buffs.Count; i++)
 			{
-				if (_buffs[i].GetType() != typedResource._debuffs[i].GetType())
+				if (_buffs[i].GetType() != typedResource._buffs[i].GetType())
 				{
 					mismatch = true;
 					break;
@@ -41,7 +41,7 @@ public partial class BuffNearbyUnitsResource : EffectResource
 			matchFound = true;
 			for (int i = 0; i < _buffs.Count; i++)
 			{
-				_buffs[i].MergeWithOld(typedResource._debuffs[i], []);
+				_buffs[i].MergeWithOld(typedResource._buffs[i], []);
 			}
 			typedResource.SetDescription();
 		}

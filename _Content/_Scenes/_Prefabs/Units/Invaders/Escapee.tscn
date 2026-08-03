@@ -1,8 +1,51 @@
 [gd_scene format=3 uid="uid://dbylql6jpr8ru"]
 
 [ext_resource type="PackedScene" uid="uid://bqn4h6d52i52" path="res://_Content/_Scenes/_Prefabs/Units/BaseInvaderUnit.tscn" id="1_xk40v"]
+[ext_resource type="Script" uid="uid://iamaod4iivlq" path="res://_Source/Effects/InvaderStatsIncrease/InvaderStatsIncreaseResource.cs" id="2_a64fv"]
 [ext_resource type="Texture2D" uid="uid://dgki3rdi8d7fo" path="res://_Assets/Slime.png" id="2_keqdg"]
 [ext_resource type="Texture2D" uid="uid://bc230321nqto5" path="res://icon.svg" id="3_a64fv"]
+[ext_resource type="Script" uid="uid://dtpcxn7d2dqcy" path="res://_Source/Effects/EffectResource.cs" id="3_diqmt"]
+
+[sub_resource type="Resource" id="Resource_irlq6"]
+script = ExtResource("2_a64fv")
+_hpBuff = 200
+_speedBuff = 60.0
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_o4o1t"]
+script = ExtResource("2_a64fv")
+_hpBuff = 130
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_8kqqy"]
+script = ExtResource("2_a64fv")
+_hpBuff = 330
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_da703"]
+script = ExtResource("2_a64fv")
+_hpBuff = 600
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_mle3q"]
+script = ExtResource("2_a64fv")
+_hpBuff = 900
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_0ywp5"]
+script = ExtResource("2_a64fv")
+_hpBuff = 1600
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_d45po"]
+script = ExtResource("2_a64fv")
+_hpBuff = 3040
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_etbm3"]
+script = ExtResource("2_a64fv")
+_hpBuff = 5000
+metadata/_custom_type_script = "uid://iamaod4iivlq"
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_4dwqt"]
 atlas = ExtResource("2_keqdg")
@@ -35,7 +78,8 @@ animations = [{
 
 [node name="BaseUnit" unique_id=481801141 instance=ExtResource("1_xk40v")]
 _hpDeducted = 0
-_moveSpeed = 65.0
+_levelStats = Array[ExtResource("2_a64fv")]([SubResource("Resource_irlq6"), SubResource("Resource_o4o1t"), SubResource("Resource_8kqqy"), SubResource("Resource_da703"), SubResource("Resource_mle3q"), SubResource("Resource_0ywp5"), SubResource("Resource_d45po"), SubResource("Resource_etbm3")])
+_moveSpeed = 0.0
 _hpMax = 0
 _startingEffects = Array[Object]([])
 _internalName = "Escapee"

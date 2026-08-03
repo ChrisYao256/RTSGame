@@ -1,11 +1,12 @@
 using Godot;
+using RTSGame._Source.Units;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
 namespace RTSGame.Units;
 
 [GlobalClass]
-public partial class BurnResource : EffectResource
+public partial class BurnResource : EffectResource, IStatus
 {
 	[Export]
 	public int _damage;

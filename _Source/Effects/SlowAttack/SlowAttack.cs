@@ -104,9 +104,9 @@ public partial class SlowAttack : Effect
 		{
 			if (e.Item2 is null)
 			{
-				continue;
+				maxDuration = 9999;
 			}
-			if (e.Item2.TimeLeft > maxDuration)
+			else if (e.Item2.TimeLeft > maxDuration)
 			{
 				maxDuration = (float)e.Item2.TimeLeft;
 			}

@@ -17,10 +17,18 @@ public partial class StatsIncreaseOnKillResource : EffectResource
 
 	public override void SetDescription()
 	{
+		_displayType = DisplayTypes.Large;
 		_effectDescription = $"For each enemy killed: \n";
 		_buffResource.SetDescription();
 		_effectDescription += _buffResource._effectDescription;
-		_effectDescription += "Currently killed " + _stack;
+		if (_cap != -1)
+		{
+			_effectDescription += $"Kills: {_stack}/{_cap}";
+		}
+		else
+		{
+			_effectDescription += $"Kills: {_stack}";
+		}
 	}
 
 	public override Effect CreateNode()

@@ -26,6 +26,12 @@ public partial class TDManager : Node
 	[Signal]
 	public delegate void GlobalUnitKilledEventHandler(DamageContext damageContext);
 
+	[Signal]
+	public delegate void GlobalExplosionEventHandler(ExplosionContext explosionContext);
+
+	[Signal]
+	public delegate void GlobalBossSpawnedEventHandler();
+
 	[Export]
 	public string MenuPath = "res://_Content/_Scenes/StartScene.tscn";
 
@@ -56,7 +62,7 @@ public partial class TDManager : Node
 	private int _startingSpawnerLimit = 5;
 
 	[Export]
-	private int _finalWave = 25;
+	private int _finalWave = 10;
 
 	[Export]
 	private int _midBossStartsAt = 2;
@@ -65,10 +71,14 @@ public partial class TDManager : Node
 	private int _lateBossStartsAt = 4;
 
 	[Export]
-	private int _bossInterval = 5;
+	public int BossInterval = 5;
 
 	[Export]
 	public Array<GlobalEffectResource> _allGlobalEffects { get; private set; }
+
+	public InvaderStatsIncreaseResource _finalBossBuff;
+
+	public InvaderStatsIncreaseResource _miniBossBuff;
 
 	public float _bossHpMultiplier = 1.3f;
 
@@ -79,7 +89,7 @@ public partial class TDManager : Node
 	public const float TileSize = 120f;
 
 	public Godot.Collections.Dictionary<int, Array<InvaderStatsIncreaseResource>> _waveList = [];
-	public Godot.Collections.Dictionary<int, Array<RogueManager.RewardType>> _rewardList = [];
+	public Godot.Collections.Dictionary<int, Array<RewardManager.RewardType>> _rewardList = [];
 	public Array<InvaderStatsIncreaseResource> _finalBoss;
 	public int _waveIndex = 0;
 
@@ -87,7 +97,7 @@ public partial class TDManager : Node
 	public TDTowerManager _towerManager;
 	private TutorialManager _tutorialManager;
 	private SaveManager _saveManager;
-	private RogueManager _rogueManager;
+	private RewardManager _rewardManager;
 
 	public VBoxContainer _rightPanel;
 	public UnitInfoPanel _infoPanel;
@@ -103,12 +113,13 @@ public partial class TDManager : Node
 	private TooltipRichTextLabel _spawnerLimitIncreaseButtonText;
 	public UpgradeButton _speedUpWaveButton;
 	private TooltipRichTextLabel _speedUpWaveButtonText;
-	private Control _fullscreenOverlay;
+	private CanvasLayer _fullscreenOverlay;
 	private GridContainer _globalEffectsContainer;
 
 	private Exit _exit;
 
 	private int _invaderCount;
+	private bool _waveRewardGiven = false;
 
 	private Array<SpawnerDataResource> _remainingBosses = [];
 
@@ -146,7 +157,7 @@ public partial class TDManager : Node
 		_progressionBar = GetParent().GetNode("RightPanelCanvasLayer").GetNode("RightPanel").GetNode<VBoxContainer>("VBoxContainer").GetNode<HBoxContainer>("HBoxContainer").GetNode<TextureProgressBar>("Progression");
 		_progressionBarStripes = _progressionBar.GetNode<StripeManager>("StripeManager");
 
-		_fullscreenOverlay = GetParent().GetNode<Control>("FullscreenOverlay");
+		_fullscreenOverlay = GetParent().GetNode<CanvasLayer>("FullscreenOverlay");
 		_infoPanel = GetParent().GetNode<UnitInfoPanel>("UnitInfoPanel");
 	}
 
@@ -160,7 +171,7 @@ public partial class TDManager : Node
 		_exit._tdManager = this;
 		_exit._radius = TDManager.TileSize / (float)Math.Sqrt(2);
 		_exit.SetSize();
-		_saveManager = GetNode<SaveManager>("/root/SaveManager");
+		_saveManager = SaveManager.Instance;
 		_saveManager._tdManager = this;
 
 		_gameMode = mode;
@@ -169,33 +180,42 @@ public partial class TDManager : Node
 		_remainingBosses.AddRange(_midBosses.Duplicate());
 		_remainingBosses.AddRange(_lateBosses.Duplicate());
 
+		_finalBossBuff = new();
+		_miniBossBuff = new();
+
+		_rewardManager = GetParent().GetNode<RewardManager>("RewardLayer");
+
 		switch (mode)
 		{
 			case GameGlobals.GameMode.Debug:
 				UpdateHp(1000);
 				IncreaseSpawnerLimit(_startingSpawnerLimit);
-				UpdateMoney(new Vector4I(99999,99999,99999,99999));
-				UpdateWaveIndexCounter();
+				
+
 				_availTowerList = _allTowerList;
-				_rogueManager = new RogueManager(this);
-				_rogueManager._noStartingReward = true;
-				GetParent().AddChild(_rogueManager);
+				
+				_rewardManager._noStartingReward = true;
 				UpdatePortalLimitButtonText();
-				UpdateSpeedUpWaveButtonText();
+				
 				_rightPanel.GetNode<Button>("GetPassive").Show();
 				_rightPanel.GetNode<Button>("GetAnyPassive").Show();
 				InitializeFinalBoss();
 
 				InitializeBossesArray();
 
+				UpdateWaveIndexCounter();
+				UpdateSpeedUpWaveButtonText();
+
+				UpdateMoney(new Vector4I(99999, 99999, 99999, 99999));
+				
+
 				break;
 			case GameGlobals.GameMode.Tutorial:
 				UpdateHp(20);
 				IncreaseSpawnerLimit(_startingSpawnerLimit);
-				UpdateMoney(_sandboxStartingMoney);
-				UpdateWaveIndexCounter();
+				
 				UpdatePortalLimitButtonText();
-				UpdateSpeedUpWaveButtonText();
+				
 
 				_tutorialManager = GetParent().GetNode<TutorialManager>("TutorialLayer/TutorialManager");
 				_tutorialManager.Initialize(this, _grid, _unitManager);
@@ -204,14 +224,20 @@ public partial class TDManager : Node
 				InitializeFinalBoss();
 
 				InitializeBossesArray();
+				UpdateWaveIndexCounter();
+				UpdateSpeedUpWaveButtonText();
+				UpdateMoney(_sandboxStartingMoney);
+				
 				break;
 			case GameGlobals.GameMode.Continue:
 				_saveManager.LoadGame();
 				if (_gameMode == GameGlobals.GameMode.Rogue || _gameMode == GameGlobals.GameMode.Debug)
 				{
-					_rogueManager = new RogueManager(this);
-					_rogueManager._noStartingReward = true;
-					GetParent().AddChild(_rogueManager);
+					_rewardManager._noStartingReward = true;
+				}
+				else
+				{
+					_rewardManager._noStartingReward = false;
 				}
 				if (_gameMode == GameGlobals.GameMode.Debug)
 				{
@@ -224,32 +250,47 @@ public partial class TDManager : Node
 			case GameGlobals.GameMode.Rogue:
 				UpdateHp(20);
 				IncreaseSpawnerLimit(_startingSpawnerLimit);
-				UpdateMoney(_rogueStartingMoney);
-				UpdateWaveIndexCounter();
+				
+				
 				UpdatePortalLimitButtonText();
-				UpdateSpeedUpWaveButtonText();
+				
 				_availTowerList = [];
-				_rogueManager = new RogueManager(this);
-				_rogueManager._noStartingReward = false;
-				GetParent().AddChild(_rogueManager);
+				_rewardManager._noStartingReward = false;
 				InitializeFinalBoss();
 
 				InitializeBossesArray();
+				UpdateWaveIndexCounter();
+				UpdateSpeedUpWaveButtonText();
+				UpdateMoney(_rogueStartingMoney);
 				break;
 			case GameGlobals.GameMode.Normal:
 			default:
 				UpdateHp(20);
 				IncreaseSpawnerLimit(_startingSpawnerLimit);
-				UpdateMoney(_sandboxStartingMoney);
-				UpdateWaveIndexCounter();
-				UpdatePortalLimitButtonText();
-				UpdateSpeedUpWaveButtonText();
 				_availTowerList = _allTowerList;
+
+				_rewardManager._noStartingReward = false;
+
+				UpdatePortalLimitButtonText();
+				
 				InitializeFinalBoss();
 
 				InitializeBossesArray();
+				UpdateWaveIndexCounter();
+				UpdateMoney(_sandboxStartingMoney);
+				UpdateSpeedUpWaveButtonText();
 				break;
 		}
+
+		if (mode != GameGlobals.GameMode.Continue)
+		{
+			foreach (GlobalEffectResource resource in MetaManager.Instance._obtainedMetaUpgrades)
+			{
+				ApplyGlobalEffect(resource);
+			}
+		}
+
+		_rewardManager.Initialize();
 
 		InitializeWaveProgressionBar();
 
@@ -262,6 +303,7 @@ public partial class TDManager : Node
 		waveCopy.Add(_finalWave, _finalBoss);
 		_saveManager.SaveGame(_gameMode, _money, _spawnerLimit, _hp, _waveIndex, _towerManager._allTowers, _availTowerList, _globalEffects, waveCopy, _rewardList, _speedUpWaveCount);
 		_waveIndex++;
+		_waveRewardGiven = false;
 		EmitSignal(SignalName.NewWave);
 		UpdateWaveIndexCounter();
 		UpdateWaveProgressionBar();
@@ -273,7 +315,8 @@ public partial class TDManager : Node
 				(InvaderStatsIncreaseResource enemy, float delay) = (enemyList[i], SpawnInterval * (float)Math.Pow(0.9f, enemyList.Count));
 				InvaderUnit unit = SpawnEnemyAtEntrance(enemy._unitName);
 				InvaderStatsIncreaseResource buff = new InvaderStatsIncreaseResource();
-				buff._percentHpBuff = GetBossHpMultiplier(_waveIndex);
+				_miniBossBuff.MergeWithOld(buff, []);
+				buff._percentHpBuff += GetBossHpMultiplier(_waveIndex);
 				buff.MergeWithOld(enemy, []);
 				unit.AddEffect(enemy);
 				if (delay > 0)
@@ -281,6 +324,7 @@ public partial class TDManager : Node
 					await ToSignal(GetTree().CreateTimer(delay, processAlways: false), SceneTreeTimer.SignalName.Timeout);
 				}
 			}
+			EmitSignal(SignalName.GlobalBossSpawned);
 		}
 		else if (_waveIndex == _finalWave)
 		{
@@ -289,12 +333,14 @@ public partial class TDManager : Node
 			{
 				(InvaderStatsIncreaseResource enemy, float delay) = (enemyList[i], SpawnInterval);
 				InvaderUnit unit = SpawnEnemyAtEntrance(enemy._unitName);
+				_finalBossBuff.MergeWithOld(enemy, []);
 				unit.AddEffect(enemy);
 				if (delay > 0)
 				{
 					await ToSignal(GetTree().CreateTimer(delay, processAlways: false), SceneTreeTimer.SignalName.Timeout);
 				}
 			}
+			EmitSignal(SignalName.GlobalBossSpawned);
 		}
 		else
 		{
@@ -314,22 +360,29 @@ public partial class TDManager : Node
 		}
 	}
 
+	public void AddRewardNow(RewardManager.RewardType reward)
+	{
+		_rewardManager._choicesQueue.Add(reward);
+		_rewardManager.MakeRewardPrompt(RewardManager.RewardSource.GlobalEffect);
+	}
+
 	public void OnWaveEnded()
 	{
+		_waveRewardGiven = true;
 		if (_tutorialManager is not null)
 		{
 			_tutorialManager.NextWave();
 			_tutorialManager.Show();
 		}
-		if (_rogueManager is not null)
+		if (_rewardManager is not null)
 		{
 			if (_rewardList.Keys.Contains(_waveIndex))
 			{
-				foreach (RogueManager.RewardType type in _rewardList[_waveIndex])
+				foreach (RewardManager.RewardType type in _rewardList[_waveIndex])
 				{
-					_rogueManager._choicesQueue.Add(type);
+					_rewardManager._choicesQueue.Add(type);
 				}
-				_rogueManager.ProcessChoicesQueue();
+				_rewardManager.MakeRewardPrompt(RewardManager.RewardSource.Boss);
 			}
 		}
 	}
@@ -337,7 +390,7 @@ public partial class TDManager : Node
 	public void UpdateWaveIndexCounter()
 	{
 		_waveCounter.Text = "Cycle " + _waveIndex;
-		//_bossWaveLabel.Text = "Next Inspection: Cycle " + GetNextBossWave();
+		UpdateSpeedUpWaveButtonText();
 	}
 
 	public void InitializeWaveProgressionBar()
@@ -511,9 +564,9 @@ public partial class TDManager : Node
 			
 		_remainingBosses.Remove(boss[0]);
 		_waveList.Add(wave, boss[0]._units);
-		if (_rogueManager is not null)
+		if (_rewardManager is not null)
 		{
-			_rewardList.Add(wave, [RogueManager.RewardType.Tower, RogueManager.RewardType.Passive]);
+			_rewardList.Add(wave, [RewardManager.RewardType.Tower, RewardManager.RewardType.Passive]);
 		}
 	}
 
@@ -576,7 +629,7 @@ public partial class TDManager : Node
 		}	
 	}
 
-	public void AddRewardToWave(int wave, Array<RogueManager.RewardType>reward)
+	public void AddRewardToWave(int wave, Array<RewardManager.RewardType>reward)
 	{
 		_rewardList.Add(wave, reward);
 	}
@@ -586,7 +639,7 @@ public partial class TDManager : Node
 		int index = 1;
 		while (index < _finalWave)
 		{
-			if (index % _bossInterval == 0)
+			if (index % BossInterval == 0)
 			{
 				AddRandomBossToWave(index);
 			}
@@ -602,6 +655,12 @@ public partial class TDManager : Node
 
 	public void SpeedUpBosses(int n)
 	{
+		int m = _waveList.Keys.Max();
+		if (_finalWave - m >= BossInterval - 1)
+		{
+			AddRandomBossToWave(m + BossInterval);
+		}
+
 		var newWaveList = new Godot.Collections.Dictionary<int, Array<InvaderStatsIncreaseResource>>();
 
 		foreach (var (key, value) in _waveList)
@@ -618,7 +677,7 @@ public partial class TDManager : Node
 
 		_waveList = newWaveList;
 
-		var newRewardList = new Godot.Collections.Dictionary<int, Array<RogueManager.RewardType>>();
+		var newRewardList = new Godot.Collections.Dictionary<int, Array<RewardManager.RewardType>>();
 
 		foreach (var (key, value) in _rewardList)
 		{
@@ -634,10 +693,10 @@ public partial class TDManager : Node
 
 		_rewardList = newRewardList;
 
-		int m = _waveList.Keys.Max();
-		if (_finalWave - m > _bossInterval)
+		m = _waveList.Keys.Max();
+		if (_finalWave - m >= BossInterval - 1)
 		{
-			AddRandomBossToWave(m + _bossInterval);
+			AddRandomBossToWave(m + BossInterval);
 		}
 		UpdateWaveProgressionBar();
 	}
@@ -676,7 +735,7 @@ public partial class TDManager : Node
 		{
 			return;
 		}
-		IncreaseSpawnerLimit(2);
+		IncreaseSpawnerLimit(1);
 		SpendMoney(new Vector4I(cost, 0, 0, 0));
 		UpdatePortalLimitButtonText();
 	}
@@ -684,7 +743,7 @@ public partial class TDManager : Node
 	public void UpdatePortalLimitButtonText()
 	{
 		int cost = GetPortalLimitUpgradeCost();
-		_spawnerLimitIncreaseButtonText.Text = "Portal Capacity +2\n" + Utils.MakeMoneyText(new Vector4I(cost, 0, 0, 0));
+		_spawnerLimitIncreaseButtonText.Text = "Portal Capacity +1\n" + Utils.MakeMoneyText(new Vector4I(cost, 0, 0, 0));
 		_spawnerLimitIncreaseButtonText.AddThemeColorOverride("default_color", GetSpawnerLimitIncreaseButtonTextColor());
 	}
 
@@ -708,6 +767,16 @@ public partial class TDManager : Node
 
 	}
 
+	public void AddMiniBossBuff(InvaderStatsIncreaseResource buff)
+	{
+		buff.MergeWithOld(_miniBossBuff, []);
+	}
+
+	public void AddFinalBossBuff(InvaderStatsIncreaseResource buff)
+	{
+		buff.MergeWithOld(_finalBossBuff, []);
+	}
+
 	public void BuySpeedUpWave()
 	{
 		if (_waveList.Keys.Contains(_waveIndex + 1))
@@ -720,29 +789,37 @@ public partial class TDManager : Node
 			return;
 		}
 		_speedUpWaveCount++;
-		int n = _finalWave;
-		foreach (int m in _waveList.Keys)
-		{
-			if (m < n && m > _waveIndex)
-			{
-				n = m;
-			}
-		}
-		SpeedUpBosses(n - _waveIndex - 1);
+		
+		SpeedUpBosses(GetNextBossWave() - _waveIndex - 1);
 		SpendMoney(new Vector4I(cost, 0, 0, 0));
 		UpdateSpeedUpWaveButtonText();
 	}
 
 	public void UpdateSpeedUpWaveButtonText()
 	{
-		int cost = GetSpeedUpWaveCost();
-		_speedUpWaveButtonText.Text = "Call mini boss now\n" + Utils.MakeMoneyText(new Vector4I(cost, 0, 0, 0));
-		_speedUpWaveButtonText.AddThemeColorOverride("default_color", GetSpeedUpWaveButtonTextColor());
+		if (!_waveList.Keys.Contains(_waveIndex + 1))
+		{
+			int cost = GetSpeedUpWaveCost();
+			_speedUpWaveButtonText.Text = "Call mini boss now\n" + Utils.MakeMoneyText(new Vector4I(cost, 0, 0, 0));
+			_speedUpWaveButtonText.AddThemeColorOverride("default_color", GetSpeedUpWaveButtonTextColor());
+		}
+		else
+		{
+			_speedUpWaveButtonText.Text = "Mini boss next wave!\n";
+			_speedUpWaveButtonText.AddThemeColorOverride("default_color", GetSpeedUpWaveButtonTextColor());
+		}
 	}
 
 	public int GetSpeedUpWaveCost()
 	{
-		return 20 * (int)Math.Pow(2, _speedUpWaveCount);
+		if (_waveList.Count > 0)
+		{
+			return 20 * (int)Math.Pow(2, _speedUpWaveCount) / 4 * (GetNextBossWave() - _waveIndex - 1);
+		}
+		else
+		{
+			return 0;
+		}
 	}
 
 	public void FlashMoney()
@@ -758,7 +835,7 @@ public partial class TDManager : Node
 	private InvaderUnit SpawnEnemyAtEntrance(string name)
 	{
 		Unit unit = _unitManager.SpawnUnit(_grid.GetEntrancePosition(), 1, name, true);
-		
+
 		List<Vector2> waypoints = _grid.GetPath(_grid.GetEntrancePosition(), _grid.GetExitLocation());
 		if (unit is InvaderUnit invader)
 		{
@@ -846,8 +923,13 @@ public partial class TDManager : Node
 		_hpLabel.Text = "Hp: " + _hp.ToString();
 		if (_hp <= 0)
 		{
-			EndTD();
+			LoseTD();
 		}
+	}
+
+	public void IncreaseHp(int change)
+	{
+		UpdateHp(_hp + change);
 	}
 
 	public void UnlockTower(string name)
@@ -866,10 +948,83 @@ public partial class TDManager : Node
 		GetTree().CallDeferred(SceneTree.MethodName.ChangeSceneToFile, MenuPath);
 	}
 
-	private void EndTD()
+	private void LoseTD()
+	{
+		GetTree().Paused = true;
+		_saveManager.DeleteSave();
+		MetaManager.Instance.IncreaseLosses(1);
+		MakeEndTDWindow(false);
+	}
+
+	private void WinTD()
+	{
+		GetTree().Paused = true;
+		_saveManager.DeleteSave();
+		MetaManager.Instance.IncreaseWins(1);
+		MakeEndTDWindow(true);
+	}
+
+	private void MakeEndTDWindow(bool win)
+	{
+		GetParent().GetNode<CanvasLayer>("EndLayer").Show();
+		string mainText;
+		int rewardAmount = 0;
+		if (win)
+		{
+			mainText = StringDB.Entries["WinWindow"] + "\n";
+		}
+		else
+		{
+			mainText = StringDB.Entries["LossWindow"] + "\n";
+		}
+		switch (_gameMode)
+		{
+			case GameGlobals.GameMode.Normal:
+				mainText += $"${(_waveIndex - 1) * 5} -- Survived {(_waveIndex - 1)} waves \n";
+				mainText += $"${GetMiniBossDefeated() * 5} -- Defeated {GetMiniBossDefeated()} mini bosses \n";
+				if (win)
+				{
+					mainText += $"$20 -- Defeated final boss \n";
+					rewardAmount = (_waveIndex - 1) * 5 + GetMiniBossDefeated() * 5 + 20;
+				}
+				else
+				{
+					rewardAmount = (_waveIndex - 1) * 5 + GetMiniBossDefeated() * 5;
+				}
+				break;
+			case GameGlobals.GameMode.Rogue:
+				mainText += $"${(_waveIndex - 1) * 5} -- Survived {(_waveIndex - 1)} waves \n";
+				mainText += $"${_availTowerList.Count * 5} -- Obtained {_availTowerList.Count} towers \n";
+				mainText += $"${_globalEffects.Count * 5} -- Obtained {_globalEffects.Count} passives \n";
+				mainText += $"${GetMiniBossDefeated() * 5} -- Defeated {GetMiniBossDefeated()} mini bosses \n";
+				if (win)
+				{
+					mainText += $"$20 -- Defeated final boss \n";
+					rewardAmount = (_waveIndex - 1) * 5 + _availTowerList.Count * 5 + _globalEffects.Count * 5 + GetMiniBossDefeated() * 5 + 20;
+				}
+				else
+				{
+					rewardAmount = (_waveIndex - 1) * 5 + _availTowerList.Count * 5 + _globalEffects.Count * 5 + GetMiniBossDefeated() * 5;
+				}
+				break;
+			case GameGlobals.GameMode.Debug:
+				mainText += $"$Survived {(_waveIndex - 1)} waves \n";
+				mainText += $"$Defeated {GetMiniBossDefeated()} mini bosses \n";
+				break;
+		}
+		
+
+		MetaManager.Instance.IncreaseMoney(rewardAmount);
+
+		GetParent().GetNode<Button>("EndLayer/PanelContainer/VBoxContainer/Button").Text = $"Claim ${rewardAmount} and return to menu";
+
+		GetParent().GetNode<TooltipRichTextLabel>("EndLayer/PanelContainer/VBoxContainer/RichTextLabel").Text = mainText;
+	}
+
+	private void OnCompleteButtonPressed()
 	{
 		GetTree().CallDeferred(SceneTree.MethodName.ChangeSceneToFile, MenuPath);
-		_saveManager.DeleteSave();
+		GetTree().Paused = false;
 	}
 
 	private void SwitchPauseState()
@@ -953,6 +1108,10 @@ public partial class TDManager : Node
 
 	private Color GetSpeedUpWaveButtonTextColor()
 	{
+		if (GetSpeedUpWaveCost() <= 0)
+		{
+			return ThemePalette.Green;
+		}
 		if (Utils.VectorDivision(_money, new(GetSpeedUpWaveCost(), 0, 0, 0)) >= 1f)
 		{
 			return ThemePalette.Green;
@@ -981,7 +1140,7 @@ public partial class TDManager : Node
 			_invaderCount--;
 			GetTree().CreateTimer(0.5f, processAlways: false).Timeout += () =>
 			{
-				if (CheckWaveFinished())
+				if (CheckWaveFinished() && !_waveRewardGiven)
 				{
 					OnWaveEnded();
 				}
@@ -1015,28 +1174,41 @@ public partial class TDManager : Node
 		}
 		else
 		{
-			return -1;
+			return (int)waves.Max() + BossInterval;
 		}
+	}
+
+	public int GetMiniBossDefeated()
+	{
+		int count = 0;
+		for (int i = 0; i < _waveIndex; i++)
+		{
+			if (_waveList.Keys.Contains(i))
+			{
+				count ++;
+			}
+		}
+		return count;
 	}
 
 	public void GetNewPassive()
 	{
-		if (_rogueManager is null)
+		if (_rewardManager is null)
 		{
 			return;
 		}
-		_rogueManager._choicesQueue.Add(RogueManager.RewardType.Passive);
-		_rogueManager.ProcessChoicesQueue();
+		_rewardManager._choicesQueue.Add(RewardManager.RewardType.Passive);
+		_rewardManager.MakeRewardPrompt(RewardManager.RewardSource.GlobalEffect);
 	}
 
 	public void GetNewAnyPassive()
 	{
-		if (_rogueManager is null)
+		if (_rewardManager is null)
 		{
 			return;
 		}
-		_rogueManager._choicesQueue.Add(RogueManager.RewardType.PassiveAll);
-		_rogueManager.ProcessChoicesQueue();
+		_rewardManager._choicesQueue.Add(RewardManager.RewardType.PassiveAll);
+		_rewardManager.MakeRewardPrompt(RewardManager.RewardSource.GlobalEffect);
 	}
 
 	public void ApplyGlobalEffect(GlobalEffectResource resource)

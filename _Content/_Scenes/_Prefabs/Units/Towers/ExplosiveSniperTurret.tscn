@@ -42,7 +42,7 @@ metadata/_custom_type_script = "uid://bjtpxhe8yya7o"
 
 [sub_resource type="Resource" id="Resource_ymgfk"]
 script = ExtResource("8_1ho41")
-_explosionRadius = 150.0
+_explosionRadius = 100.0
 _explosionDamage = 450
 ExplosionVisualScene = ExtResource("7_0s2u8")
 metadata/_custom_type_script = "uid://bjtpxhe8yya7o"
