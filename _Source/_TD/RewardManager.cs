@@ -101,6 +101,7 @@ public partial class RewardManager : CanvasLayer
 			}
 			else
 			{
+				Hide();
 				return;
 			}
 		}
@@ -246,7 +247,7 @@ public partial class RewardManager : CanvasLayer
 	{
 		int test = _tdManager._allGlobalEffects.IndexOf(resource);
 		_remainingEffects.Remove(resource);
-		_tdManager.ApplyGlobalEffect(resource);
+		_tdManager.ApplyGlobalEffect(resource, false);
 	}
 
 	public Array<string> GetRandomTowers(int count, TowerUnit.TowerType type = TowerUnit.TowerType.Null)
@@ -301,7 +302,7 @@ public partial class RewardManager : CanvasLayer
 			Button button = new Button();
 			button.Pressed += () =>
 			{
-				_choicesQueue.RemoveAt(0);
+				_choicesQueue.Remove(type);
 			};
 
 			switch (type)

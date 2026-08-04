@@ -22,7 +22,7 @@ public partial class GlobalWeaponTypeEffect : GlobalEffect
 
 	public override void OnCreation()
 	{
-		foreach (TowerUnit towerUnit in _tdManager._towerManager._allTowers)
+		foreach (TowerUnit towerUnit in _tdManager._towerManager._towersOnField)
 		{
 			if (towerUnit is Spawner)
 			{

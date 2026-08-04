@@ -1,7 +1,8 @@
-using System;
 using Godot;
 using RTSGame.Source;
 using RTSGame.Units;
+using System;
+using System.Reflection.Emit;
 
 public partial class TDScene : Node2D
 {
@@ -14,10 +15,11 @@ public partial class TDScene : Node2D
 		UnitManager unitManager = UnitManager.Instantiate<UnitManager>();
 		AddChild(unitManager);
 
-		var globals = GameGlobals.Instance;
-
 		_tdManager = GetNode<TDManager>("TdManager");
-		_tdManager.Initialize(globals.CurrentMode);
+		Callable.From(() =>
+		{
+			_tdManager.Initialize(GameGlobals.Instance.CurrentMode, GameGlobals.Instance.CurrentLevel);
+		}).CallDeferred();
 	}
 
 	public void OnNextWavePressed()

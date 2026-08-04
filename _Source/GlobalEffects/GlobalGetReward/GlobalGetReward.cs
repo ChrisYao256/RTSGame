@@ -17,6 +17,7 @@ public partial class GlobalGetReward : GlobalEffect
 
 	public override void OnCreation()
 	{
+		if (_noImmediateEffect) return;
 		foreach (RewardManager.RewardType reward in _resource._rewards)
 		{
 			_tdManager.AddRewardNow(reward);

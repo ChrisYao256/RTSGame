@@ -23,13 +23,12 @@ public partial class TDTowerManager : Node2D
 	private string _towerToPlace;
 	private TowerUnit _previewTower;
 
-	public Array<TowerUnit> _allTowers = [];
+	public Array<TowerUnit> _towersOnField = [];
 
 	private TowerUnit.TowerType _tab;
 
 	public override void _Ready()
 	{
-		_grid = GetParent().GetNode<Grid>("TileMapLayer");
 		_tdManager = GetParent().GetNode<TDManager>("TdManager");
 		_rightPanel = _tdManager._rightPanel;
 		UpdateIncomeDisplay();
@@ -40,6 +39,7 @@ public partial class TDTowerManager : Node2D
 	public void Initialize(UnitManager unitManager)
 	{
 		_unitManager = unitManager;
+		_grid = GetParent().GetNode<Grid>("TileMapLayer");
 	}
 
 	public override void _Process(double delta)
@@ -151,13 +151,13 @@ public partial class TDTowerManager : Node2D
 			_tdManager.IncreaseSpawnerCount(1);
 		}
 		_grid.OccupyCell(gridCoords, (TowerUnit)newTower);
-		List<TowerUnit> allTowersCopy = _allTowers.ToList();
-		_allTowers.Add(newTower);
+		List<TowerUnit> allTowersCopy = _towersOnField.ToList();
+		_towersOnField.Add(newTower);
 		foreach (TowerUnit tower in allTowersCopy)
 		{
 			tower.OnPlacedTower(newTower);
 		}
-		
+		_tdManager.EmitSignal(TDManager.SignalName.GlobalPlacedTower, newTower);
 		newTower.EmitSignal(Unit.SignalName.Creation);
 		UpdateIncomeDisplay();
 		UpdateDPSDisplay();
@@ -177,8 +177,8 @@ public partial class TDTowerManager : Node2D
 			_tdManager.IncreaseSpawnerCount(1);
 		}
 		_grid.OccupyCell(gridCoords, (TowerUnit)newTower);
-		List<TowerUnit> allTowersCopy = _allTowers.ToList();
-		_allTowers.Add(newTower);
+		List<TowerUnit> allTowersCopy = _towersOnField.ToList();
+		_towersOnField.Add(newTower);
 		foreach (TowerUnit tower in allTowersCopy)
 		{
 			tower.OnPlacedTower(newTower);
@@ -202,7 +202,7 @@ public partial class TDTowerManager : Node2D
 		{
 			_tdManager.IncreaseSpawnerCount(-1);
 		}
-		_allTowers.Remove(tower);
+		_towersOnField.Remove(tower);
 		tower.EmitSignal(Unit.SignalName.Removed);
 		tower.RemoveAllEffects();
 		_grid.UnoccupyCell(gridCoords);
@@ -226,13 +226,13 @@ public partial class TDTowerManager : Node2D
 
 		Vector4I income = new Vector4I(0,0,0,0);
 
-		foreach (TowerUnit tower in _allTowers)
+		foreach (TowerUnit tower in _towersOnField)
 		{
 			income += tower.GetIncome();
 		}
 
 		int unknownIncome = 0;
-		foreach (TowerUnit tower in _allTowers)
+		foreach (TowerUnit tower in _towersOnField)
 		{
 			unknownIncome += tower.GetUnknownIncome();
 		}
@@ -246,7 +246,7 @@ public partial class TDTowerManager : Node2D
 
 		float dps = 0;
 
-		foreach (TowerUnit tower in _allTowers)
+		foreach (TowerUnit tower in _towersOnField)
 		{
 			if (tower._weapon is not null)
 			{
@@ -263,7 +263,7 @@ public partial class TDTowerManager : Node2D
 
 		int hp = 0;
 
-		foreach (TowerUnit tower in _allTowers)
+		foreach (TowerUnit tower in _towersOnField)
 		{
 			if (tower is Spawner spawner)
 			{

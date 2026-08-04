@@ -32,6 +32,7 @@ public class StringDB
 		{ "TowerChoice", "Pick a defense or portal to unlock this run."},
 		{ "DefenseChoice", "Pick a defense to unlock this run."},
 		{ "PortalChoice", "Pick a portal to unlock this run."},
+		{ "TowerAnyChoice", "Pick any defense or portal to get this run."},
 		{ "PassiveChoice", "Pick a passive to get this run."},
 
 		{ "MiniBoss", "A mini boss. Defeat it to get a tower and a passive. "},

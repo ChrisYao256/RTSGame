@@ -203,7 +203,17 @@ namespace RTSGame.Units
 			return a;
 		}
 
-		public static string MakeMoneyText(Vector4I money, bool displayAll = false, bool multiline = false, int unknownMoney = 0, bool additionSigns = false)
+		/// <summary>
+		/// Make string given Vector4I money. 
+		/// </summary>
+		/// <param name="money"></param>
+		/// <param name="displayAll">shows all types of resources regardless if they are zero</param>
+		/// <param name="multiline">use a new line for each type</param>
+		/// <param name="unknownMoney">enter amount of unknown money here</param>
+		/// <param name="additionSigns">addition signs before each type</param>
+		/// <param name="big">single line, 24x24</param>
+		/// <returns></returns>
+		public static string MakeMoneyText(Vector4I money, bool displayAll = false, bool multiline = false, int unknownMoney = 0, bool additionSigns = false, bool big = false)
 		{
 			string yellowHex = ThemePalette.Yellow.ToHtml(false);
 			string redHex = ThemePalette.Red.ToHtml(false);
@@ -220,6 +230,10 @@ namespace RTSGame.Units
 				{
 					output += $"[color=#{yellowHex}][url={StringDB.Entries["YellowMoneyDescription"]}][img=18x18]res://_Assets/Electricity.png[/img]{money[0]}[/url][/color]\n";
 				}
+				else if (big)
+				{
+					output += $"[color=#{yellowHex}][url={StringDB.Entries["YellowMoneyDescription"]}][img=24x24]res://_Assets/Electricity.png[/img]{money[0]}[/url][/color]  ";
+				}
 				else
 				{
 					output += $"[color=#{yellowHex}][url={StringDB.Entries["YellowMoneyDescription"]}][img=18x18]res://_Assets/Electricity.png[/img]{money[0]}[/url][/color]  ";
@@ -234,6 +248,10 @@ namespace RTSGame.Units
 				if (multiline)
 				{
 					output += $"[color=#{redHex}][url={StringDB.Entries["RedMoneyDescription"]}][img=18x18]res://_Assets/Steel.png[/img]{money[1]}[/url][/color]\n";
+				}
+				else if (big)
+				{
+					output += $"[color=#{redHex}][url={StringDB.Entries["RedMoneyDescription"]}][img=24x24]res://_Assets/Steel.png[/img]{money[1]}[/url][/color]  ";
 				}
 				else
 				{
@@ -250,6 +268,10 @@ namespace RTSGame.Units
 				{
 					output += $"[color=#{blueHex}][url={StringDB.Entries["BlueMoneyDescription"]}][img=18x18]res://_Assets/Water.png[/img]{money[2]}[/url][/color]\n";
 				}
+				else if (big)
+				{
+					output += $"[color=#{blueHex}][url={StringDB.Entries["BlueMoneyDescription"]}][img=24x24]res://_Assets/Water.png[/img]{money[2]}[/url][/color]  ";
+				}
 				else
 				{
 					output += $"[color=#{blueHex}][url={StringDB.Entries["BlueMoneyDescription"]}][img=18x18]res://_Assets/Water.png[/img]{money[2]}[/url][/color]  ";
@@ -264,6 +286,10 @@ namespace RTSGame.Units
 				if (multiline)
 				{
 					output += $"[color=#{greenHex}][url={StringDB.Entries["GreenMoneyDescription"]}][img=18x18]res://_Assets/Gas.png[/img]{money[3]}[/url][/color]\n";
+				}
+				else if (big)
+				{
+					output += $"[color=#{greenHex}][url={StringDB.Entries["GreenMoneyDescription"]}][img=24x24]res://_Assets/Gas.png[/img]{money[3]}[/url][/color]  ";
 				}
 				else
 				{

@@ -93,6 +93,7 @@ public partial class UnitManager : Node2D
 		{ "Rocket", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Invaders/Rocket.tscn")},
 		{ "Pilot", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Invaders/Pilot.tscn")},
 		{ "Duplicator", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Invaders/Duplicator.tscn")},
+		{ "Inspector", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Invaders/Inspector.tscn")},
 	};
 
 	public static uint UnitLayerMask = 2;

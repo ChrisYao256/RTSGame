@@ -17,6 +17,7 @@ public partial class GlobalGetHp : GlobalEffect
 
 	public override void OnCreation()
 	{
+		if (!_resource._everyTurn && _noImmediateEffect) return;
 		_tdManager.IncreaseHp(_resource._hp);
 	}
 

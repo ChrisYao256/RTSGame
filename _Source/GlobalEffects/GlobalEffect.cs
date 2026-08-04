@@ -8,6 +8,7 @@ public abstract partial class GlobalEffect : Node2D
 {
 	protected GlobalEffectResource _resource;
 	public TDManager _tdManager;
+	public bool _noImmediateEffect;
 
 	public GlobalEffect(GlobalEffectResource resource)
 	{

@@ -5,16 +5,12 @@ using System.Net.Sockets;
 
 public partial class MainMenu : Control
 {
-	[Export]
-	public string BattleScenePath = "res://_Content/_Scenes/BattleScene.tscn";
-
-	[Export]
-	public string TDScenePath = "res://_Content/_Scenes/TDScene.tscn";
-
-	[Export]
 	public string OptionsScenePath = "res://_Content/_Scenes/OptionsScene.tscn";
 
-	[Export]
+	public string TDScenePath = "res://_Content/_Scenes/TDScene.tscn";
+
+	public string LevelsScenePath = "res://_Content/_Scenes/LevelsScene.tscn";
+
 	public string MetaScenePath = "res://_Content/_Scenes/MetaScene.tscn";
 
 	// Called when the node enters the scene tree for the first time.
@@ -38,7 +34,7 @@ public partial class MainMenu : Control
 
 		GetNode<Button>("HBoxContainer/RogueButton").Pressed += () => OnStartButtonPressed(GameGlobals.GameMode.Rogue);
 
-		GetNode<Button>("HBoxContainer/ContinueButton").Pressed += () => OnStartButtonPressed(GameGlobals.GameMode.Continue);
+		GetNode<Button>("HBoxContainer/ContinueButton").Pressed += () => OnContinueButtonPressed();
 
 		GetNode<Button>("DeleteSaveButton").Pressed += () =>
 		{
@@ -61,6 +57,22 @@ public partial class MainMenu : Control
 	{
 		var globals = GetNode<GameGlobals>("/root/GameGlobals");
 		globals.CurrentMode = selectedMode;
+
+		Error result = GetTree().ChangeSceneToFile(LevelsScenePath);
+
+		if (result != Error.Ok)
+		{
+			GD.PrintErr("Failed to load scene: " + LevelsScenePath);
+		}
+	}
+
+	public void OnContinueButtonPressed()
+	{
+		var globals = GetNode<GameGlobals>("/root/GameGlobals");
+		globals.CurrentMode = GameGlobals.GameMode.Continue;
+
+		LevelResource level = SaveManager.Instance.GetLoadedLevelResource();
+		globals.CurrentLevel = level;
 
 		Error result = GetTree().ChangeSceneToFile(TDScenePath);
 

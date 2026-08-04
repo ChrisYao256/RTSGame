@@ -28,6 +28,7 @@ public partial class TooltipRichTextLabel : RichTextLabel
 				{ "::ballistic::", "[img=18x18]res://_Assets/BallisticWeapon.png[/img]" },
 				{ "::electric::", "[img=18x18]res://_Assets/ElectricWeapon.png[/img]" },
 
+				{ "::inspection::",  "[img=18x18]res://_Assets/MiniBoss.png[/img]"},
 				{	"::miniboss::",  "[img=18x18]res://_Assets/MiniBoss.png[/img]"},
 				{ "::lateminiboss::",  "[img=18x18]res://_Assets/LateMiniBoss.png[/img]"},
 				{ "::midminiboss::",  "[img=18x18]res://_Assets/MidMiniBoss.png[/img]"},

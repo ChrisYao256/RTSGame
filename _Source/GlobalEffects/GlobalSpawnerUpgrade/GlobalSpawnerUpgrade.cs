@@ -17,7 +17,7 @@ public partial class GlobalSpawnerUpgrade : GlobalEffect
 
 	public override void OnCreation()
 	{
-		foreach (TowerUnit towerUnit in _tdManager._towerManager._allTowers)
+		foreach (TowerUnit towerUnit in _tdManager._towerManager._towersOnField)
 		{
 			if (towerUnit is not Spawner)
 			{

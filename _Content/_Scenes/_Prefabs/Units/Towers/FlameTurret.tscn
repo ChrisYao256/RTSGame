@@ -46,13 +46,11 @@ metadata/_custom_type_script = "uid://cxg3f5ateuini"
 [sub_resource type="Resource" id="Resource_jjii2"]
 script = ExtResource("5_jjii2")
 _transformedUnit = "BigFlameTurret"
-_description = "Flame covers a much larger area"
 metadata/_custom_type_script = "uid://be80c57wd06d0"
 
 [sub_resource type="Resource" id="Resource_wca21"]
 script = ExtResource("5_jjii2")
 _transformedUnit = "PermFlameTurret"
-_description = "Burn does not decrease for some time after each attack"
 metadata/_custom_type_script = "uid://be80c57wd06d0"
 
 [sub_resource type="Resource" id="Resource_1k1ln"]

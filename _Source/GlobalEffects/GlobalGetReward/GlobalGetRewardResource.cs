@@ -37,6 +37,13 @@ public partial class GlobalGetRewardResource : GlobalEffectResource
 				case RewardManager.RewardType.Passive:
 					_effectDescription += StringDB.Entries["PassiveChoice"];
 					break;
+				case RewardManager.RewardType.TowerAll:
+					_effectDescription += StringDB.Entries["TowerAnyChoice"];
+					break;
+			}
+			if (_rewards.IndexOf(reward) != _rewards.Count - 1)
+			{
+				_effectDescription += "\n";
 			}
 		}
 

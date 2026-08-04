@@ -4,6 +4,7 @@ using RTSGame.Source;
 using RTSGame.Units;
 using System;
 using System.Linq;
+using System.Reflection;
 
 public partial class SaveManager : Node
 {
@@ -29,8 +30,9 @@ public partial class SaveManager : Node
 	}
 
 	// A helper method to pack your current game data into a Godot Dictionary
-	public Dictionary<string, Variant> PackGameData(GameGlobals.GameMode gameMode,Vector4I money, int portalLimit, int hp, int waveCount, Array<TowerUnit> towers, Array<string> unlockedTowers, Array<GlobalEffectResource> globalEffects, Dictionary<int, Array<InvaderStatsIncreaseResource>>waveDict, Dictionary<int, Array<RewardManager.RewardType>> rewardDict, int speedUpWaveCount)
+	public Dictionary<string, Variant> PackGameData(GameGlobals.GameMode gameMode,Vector4I money, int portalLimit, int hp, int waveCount, Array<TowerUnit> towers, Array<string> unlockedTowers, Array<GlobalEffectResource> globalEffects, Array<InvaderStatsIncreaseResource> finalBoss, LevelResource level, int challengeCount, int inspectionFailedCount, Array<InvaderStatsIncreaseResource> nextChallengeUnits)
 	{
+
 		var gameData = new Dictionary<string, Variant>
 				{
 						{ "GameMode", (int)gameMode },
@@ -38,8 +40,39 @@ public partial class SaveManager : Node
 						{ "PortalLimit", portalLimit },
 			      { "WaveCount", waveCount},
 						{ "Hp", hp},
-						{ "SpeedUpWaveCount", speedUpWaveCount}
+						{ "FinalWave", level._finalWave},
+						{ "Map", level._mapID},
+						{ "InspectionFailedCount", inspectionFailedCount},
+						{ "ChallengeCount", challengeCount},
+						{ "InspectionInterval", level._inspectionInterval},
+
+						{ "ChallengeEnabled", level._challengeEnabled},
+						{ "InspectionEnabled", level._inspectionEnabled},
+						{ "PortalsEnabled", level._portalsEnabled},
 				};
+
+		var finalBossNameLevel = new Array<Array<Variant>>();
+
+		foreach (InvaderStatsIncreaseResource unit in finalBoss)
+		{
+			Array<Variant> array = new Array<Variant>();
+			array.Add(unit._unitName);
+			array.Add(unit._level);
+			finalBossNameLevel.Add(array);
+		}
+
+		gameData.Add("FinalBoss", finalBossNameLevel);
+
+		var nextChallengeUnitsNameLevel = new Array<Array<Variant>>();
+		foreach (InvaderStatsIncreaseResource unit in nextChallengeUnits)
+		{
+			Array<Variant> array = new Array<Variant>();
+			array.Add(unit._unitName);
+			array.Add(unit._level);
+			nextChallengeUnitsNameLevel.Add(array);
+		}
+
+		gameData.Add("NextChallenge", nextChallengeUnitsNameLevel);
 
 		// We will store the towers as an array of individual tower dictionaries
 		var towerList = new Array<Dictionary<string, Variant>>();
@@ -72,30 +105,15 @@ public partial class SaveManager : Node
 
 		gameData.Add("GlobalEffects", effectsList);
 
-		var wavesList = new Dictionary<int, Array<string>>();
-
-		foreach (var (index, wave) in waveDict)
-		{
-			wavesList.Add(index, []);
-			foreach (InvaderStatsIncreaseResource unit in wave)
-			{
-				wavesList[index].Add(unit._unitName);
-			}
-		}
-
-		gameData.Add("Waves", wavesList);
-
-		gameData.Add("Rewards", rewardDict.Duplicate());
-
 		gameData.Add("UnlockedTowers", unlockedTowers);
 
 		return gameData;
 	}
 
-	public void SaveGame(GameGlobals.GameMode gameMode, Vector4I money, int portalLimit, int hp,int waveCount, Array<TowerUnit> currentTowers, Array<string> unlockedTowers, Array<GlobalEffectResource> globalEffects, Dictionary<int, Array<InvaderStatsIncreaseResource>> waveList, Dictionary<int, Array<RewardManager.RewardType>> rewardList, int speedUpWaveCount)
+	public void SaveGame(GameGlobals.GameMode gameMode, Vector4I money, int portalLimit, int hp,int waveCount, Array<TowerUnit> currentTowers, Array<string> unlockedTowers, Array<GlobalEffectResource> globalEffects, Array<InvaderStatsIncreaseResource>finalBoss, LevelResource level, int challengeCount, int inspectionFailedCount, Array<InvaderStatsIncreaseResource> nextChallengeUnits)
 	{
 		// Pack the data using your defined method
-		Dictionary<string, Variant> dataToSave = PackGameData(gameMode, money, portalLimit, hp, waveCount, currentTowers, unlockedTowers, globalEffects, waveList, rewardList, speedUpWaveCount);
+		Dictionary<string, Variant> dataToSave = PackGameData(gameMode, money, portalLimit, hp, waveCount, currentTowers, unlockedTowers, globalEffects, finalBoss, level, challengeCount, inspectionFailedCount, nextChallengeUnits);
 		// Convert the dictionary into a clean JSON text string
 		string jsonString = Json.Stringify(dataToSave);
 
@@ -165,7 +183,17 @@ public partial class SaveManager : Node
 		int loadedPortalLimit = (int)gameData["PortalLimit"];
 		int loadedWaveCount = (int)gameData["WaveCount"];
 		int loadedHp = (int)gameData["Hp"];
-		int loadedSpeedUpWaveCount = (int)gameData["SpeedUpWaveCount"];
+		int loadedMap = (int)gameData["Map"];
+		int loadedFinalWave = (int)gameData["FinalWave"];
+		int loadedInspectionFailedCount = (int)gameData["InspectionFailedCount"];
+		int loadedChallengeCount = (int)gameData["ChallengeCount"];
+
+		bool loadedChallengeEnabled = (bool)gameData["ChallengeEnabled"];
+		bool loadedInspectionEnabled = (bool)gameData["InspectionEnabled"];
+		bool loadedPortalsEnabled = (bool)gameData["PortalsEnabled"];
+
+		var loadedFinalBoss = (Array<Array<Variant>>)gameData["FinalBoss"];
+		var loadedNextChallenge = (Array<Array<Variant>>)gameData["NextChallenge"];
 
 		// Extract the nested tower array
 		var loadedTowers = (Array<Dictionary<string, Variant>>)gameData["Towers"];
@@ -174,11 +202,10 @@ public partial class SaveManager : Node
 
 		var loadedGlobalEffects = (Array<int>)gameData["GlobalEffects"];
 
-		var loadedWaves = (Dictionary<int, Array<string>>)gameData["Waves"];
-		var loadedRewards = (Dictionary<int, Array<RewardManager.RewardType>>)gameData["Rewards"];
 
 		// Send everything off to be reconstructed in your main match loop
-		ApplyLoadedData(gameMode, loadedMoney, loadedPortalLimit, loadedHp, loadedWaveCount, loadedTowers, loadedUnlockedTowers, loadedGlobalEffects, loadedWaves, loadedRewards, loadedSpeedUpWaveCount);
+		// Send everything off to be reconstructed in your main match loop
+		ApplyLoadedData(gameMode, loadedMoney, loadedPortalLimit, loadedHp, loadedMap, loadedWaveCount, loadedTowers, loadedUnlockedTowers, loadedGlobalEffects, loadedFinalWave, loadedInspectionFailedCount, loadedChallengeCount, loadedChallengeEnabled, loadedInspectionEnabled, loadedPortalsEnabled, loadedFinalBoss, loadedNextChallenge);
 	}
 
 	public bool HasSavedGame()
@@ -186,8 +213,76 @@ public partial class SaveManager : Node
 		return FileAccess.FileExists(SavePath);
 	}
 
+	public LevelResource GetLoadedLevelResource()
+	{
+		if (!FileAccess.FileExists(SavePath))
+		{
+			throw new Exception("No Save Found");
+		}
+
+		using var file = FileAccess.Open(SavePath, FileAccess.ModeFlags.Read);
+		string jsonString = file.GetAsText();
+
+		Json json = new Json();
+		Error error = json.Parse(jsonString);
+
+		if (error != Error.Ok)
+		{
+			throw new Exception("Failed to parse");
+		}
+
+		var gameData = (Dictionary<string, Variant>)json.Data;
+
+		int loadedMap = (int)gameData["Map"];
+		int loadedFinalWave = (int)gameData["FinalWave"];
+		int loadedInspectionInterval = (int)gameData["InspectionInterval"];
+
+		bool loadedChallengeEnabled = (bool)gameData["ChallengeEnabled"];
+		bool loadedInspectionEnabled = (bool)gameData["InspectionEnabled"];
+		bool loadedPortalsEnabled = (bool)gameData["PortalsEnabled"];
+
+		var loadedFinalBoss = (Array<Array<Variant>>)gameData["FinalBoss"];
+
+		LevelResource levelResource = new LevelResource();
+		levelResource._finalBoss = new();
+		levelResource._finalBoss._units = [];
+		foreach (Array<Variant> nameLevel in loadedFinalBoss)
+		{
+			InvaderStatsIncreaseResource unit = new();
+			unit._unitName = (string)nameLevel[0];
+			unit._level = (int)nameLevel[1];
+			levelResource._finalBoss._units.Add(unit);
+		}
+		levelResource._finalWave = loadedFinalWave;
+		levelResource._inspectionInterval = loadedInspectionInterval;
+		levelResource._mapID = loadedMap;
+
+		levelResource._challengeEnabled = loadedChallengeEnabled;
+		levelResource._portalsEnabled = loadedPortalsEnabled;
+		levelResource._inspectionEnabled = loadedInspectionEnabled;
+		return levelResource;
+	}
+
 	// 3. Spawning / Applying Method
-	private void ApplyLoadedData(GameGlobals.GameMode gameMode, Vector4I money, int portalLimit, int hp, int waveCount, Array<Dictionary<string, Variant>> towers, Array<string> loadedUnlockedTowers, Array<int> loadedGlobalEffects, Dictionary<int, Array<string>> waveList, Dictionary<int, Array<RewardManager.RewardType>> rewardList, int speedUpWaveCount)
+	private void ApplyLoadedData(
+		GameGlobals.GameMode gameMode,
+		Vector4I money,
+		int portalLimit,
+		int hp,
+		int map, 
+		int waveCount,
+		Array<Dictionary<string, Variant>> towers,
+		Array<string> loadedUnlockedTowers,
+		Array<int> loadedGlobalEffects,
+		int finalWave,
+		int inspectionFailedCount,
+		int challengeCount,
+		bool challengeEnabled,
+		bool inspectionEnabled,
+		bool portalsEnabled,
+		Array<Array<Variant>> finalBoss,
+		Array<Array<Variant>> nextChallenge
+	)
 	{
 		_tdManager._gameMode = gameMode;
 		_tdManager.UpdateMoney(money);
@@ -197,8 +292,18 @@ public partial class SaveManager : Node
 		_tdManager.UpdateWaveIndexCounter();
 		_tdManager.UpdatePortalLimitButtonText(); 
 		_tdManager._availTowerList = loadedUnlockedTowers;
-		_tdManager._speedUpWaveCount = speedUpWaveCount;
-	
+		_tdManager._challengeCount = challengeCount;
+		_tdManager._inspectionFailedCount = inspectionFailedCount;
+
+		_tdManager._nextChallengeUnits = [];
+		foreach (Array<Variant> nameLevel in nextChallenge)
+		{
+			InvaderStatsIncreaseResource unit = new();
+			unit._unitName = (string)nameLevel[0];
+			unit._level = (int)nameLevel[1];
+			_tdManager._nextChallengeUnits.Add(unit);
+		}
+
 		foreach (var towerData in towers)
 		{
 			string name = (string)towerData["Name"];
@@ -238,17 +343,7 @@ public partial class SaveManager : Node
 
 		foreach (int resourceIndex in loadedGlobalEffects)
 		{
-			_tdManager.ApplyGlobalEffect(resourceIndex);
-		}
-
-		foreach (var (key, value) in waveList)
-		{
-			_tdManager.AddBossToWave(key, value);
-		}
-
-		foreach (var (key, value) in rewardList)
-		{
-			_tdManager.AddRewardToWave(key, value);
+			_tdManager.ApplyGlobalEffect(resourceIndex, true);
 		}
 	}
 

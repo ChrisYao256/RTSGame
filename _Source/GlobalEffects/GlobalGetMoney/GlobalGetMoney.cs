@@ -17,6 +17,7 @@ public partial class GlobalGetMoney : GlobalEffect
 
 	public override void OnCreation()
 	{
+		if (_noImmediateEffect) return;
 		if (_resource._percent != 0)
 		{
 			_tdManager.GainMoney(Utils.VectorScalarMultiplication(_tdManager._money, _resource._percent));

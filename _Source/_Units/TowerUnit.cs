@@ -1044,8 +1044,8 @@ public partial class TowerUnit : StationaryUnit
 				{
 					if (Utils.VectorLeq(_secondUpgradeCost, _tdManager._money))
 					{
-						_tdManager.SpendMoney(_secondUpgradeCost);
 						UpgradeSecond();
+						_tdManager.SpendMoney(_secondUpgradeCost);
 					}
 					else
 					{
@@ -1098,8 +1098,8 @@ public partial class TowerUnit : StationaryUnit
 				{
 					if (Utils.VectorLeq(_thirdUpgradeCost, _tdManager._money))
 					{
-						_tdManager.SpendMoney(_thirdUpgradeCost);
 						UpgradeThird();
+						_tdManager.SpendMoney(_thirdUpgradeCost);
 					}
 					else
 					{
@@ -1152,8 +1152,8 @@ public partial class TowerUnit : StationaryUnit
 				{
 					if (Utils.VectorLeq(_fourthUpgradeACost, _tdManager._money))
 					{
-						_tdManager.SpendMoney(_fourthUpgradeACost);
 						UpgradeFourthA();
+						_tdManager.SpendMoney(_fourthUpgradeACost);
 					}
 					else
 					{
@@ -1207,8 +1207,8 @@ public partial class TowerUnit : StationaryUnit
 				{
 					if (Utils.VectorLeq(_fourthUpgradeBCost, _tdManager._money))
 					{
-						_tdManager.SpendMoney(_fourthUpgradeBCost);
 						UpgradeFourthB();
+						_tdManager.SpendMoney(_fourthUpgradeBCost);
 					}
 					else
 					{

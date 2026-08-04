@@ -1,10 +1,12 @@
-[gd_scene format=4 uid="uid://ccjmsw17g3tm6"]
+[gd_scene format=3 uid="uid://ccjmsw17g3tm6"]
 
 [ext_resource type="Script" uid="uid://7ybvhykusw2c" path="res://_Source/Scenes/TDScene.cs" id="1_d7nqx"]
 [ext_resource type="PackedScene" uid="uid://clx6sk7mljed3" path="res://_Content/_Scenes/_Prefabs/Units/UnitManager.tscn" id="2_4rvgl"]
 [ext_resource type="Script" uid="uid://ce6y6raslv15c" path="res://_Source/Camera.cs" id="2_473pp"]
+[ext_resource type="PackedScene" uid="uid://dn06wuyu78ttv" path="res://_Content/_Scenes/_Prefabs/Maps/Map0.tscn" id="3_4f8lp"]
 [ext_resource type="PackedScene" uid="uid://baks6mq2g1jjx" path="res://_Content/_Scenes/_Prefabs/UI/BattleUI.tscn" id="3_na4n4"]
 [ext_resource type="PackedScene" uid="uid://cq3t80c5vyoxi" path="res://_Content/_Scenes/_Prefabs/TDManager.tscn" id="3_v6k6q"]
+[ext_resource type="PackedScene" uid="uid://bfiw4i06erj2y" path="res://_Content/_Scenes/_Prefabs/Maps/Map1.tscn" id="6_2tfwb"]
 [ext_resource type="Script" uid="uid://c7ye5bgfhla5e" path="res://_Source/Effects/StatsIncrease/StatsIncreaseResource.cs" id="6_6wcfn"]
 [ext_resource type="Script" uid="uid://bk7cmv6d4884o" path="res://_Source/_TD/TDTowerManager.cs" id="6_ih04x"]
 [ext_resource type="TileSet" uid="uid://dvtw5c2hlwcre" path="res://_Assets/TileSet.tres" id="7_5ivv1"]
@@ -14,7 +16,6 @@
 [ext_resource type="Script" uid="uid://d3qvvh1ko17dm" path="res://_Source/GlobalEffects/GlobalStatsIncrease/GlobalStatsIncreaseResource.cs" id="7_ikq3i"]
 [ext_resource type="Script" uid="uid://btuej683nli5d" path="res://_Source/_UI/UpgradeButton.cs" id="8_5ivv1"]
 [ext_resource type="Script" uid="uid://bsunqifbwrvbx" path="res://_Source/GlobalEffects/GlobalColoredStatsIncrease/GlobalColoredStatsIncreaseResource.cs" id="8_ikq3i"]
-[ext_resource type="Script" uid="uid://c4bawx8voikwb" path="res://_Source/_TD/Grid.cs" id="8_r27g4"]
 [ext_resource type="Script" uid="uid://iamaod4iivlq" path="res://_Source/Effects/InvaderStatsIncrease/InvaderStatsIncreaseResource.cs" id="9_o6hv2"]
 [ext_resource type="Script" uid="uid://dmsd1wjc5yk5v" path="res://_Source/_UI/TooltipRichTextLabel.cs" id="10_2i1sm"]
 [ext_resource type="Script" uid="uid://d3ixfo58oeqbc" path="res://_Source/GlobalEffects/GlobalSpawnerUpgrade/GlobalSpawnerUpgradeResource.cs" id="10_dntla"]
@@ -53,26 +54,26 @@ script = ExtResource("7_ff0ka")
 _units = Array[ExtResource("9_o6hv2")]([SubResource("Resource_rsgja"), SubResource("Resource_rsgja"), SubResource("Resource_rsgja"), SubResource("Resource_rsgja"), SubResource("Resource_rsgja"), SubResource("Resource_rsgja"), SubResource("Resource_rsgja"), SubResource("Resource_rsgja"), SubResource("Resource_rsgja"), SubResource("Resource_rsgja")])
 metadata/_custom_type_script = "uid://cvroohkeaovqw"
 
+[sub_resource type="Resource" id="Resource_laf8x"]
+script = ExtResource("9_o6hv2")
+_unitName = "Yeti"
+_level = 3
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
 [sub_resource type="Resource" id="Resource_wbulx"]
+script = ExtResource("7_ff0ka")
+_units = Array[ExtResource("9_o6hv2")]([SubResource("Resource_laf8x")])
+metadata/_custom_type_script = "uid://cvroohkeaovqw"
+
+[sub_resource type="Resource" id="Resource_pvs3l"]
 script = ExtResource("9_o6hv2")
 _unitName = "Soldier"
 _level = 2
 metadata/_custom_type_script = "uid://iamaod4iivlq"
 
-[sub_resource type="Resource" id="Resource_laf8x"]
-script = ExtResource("7_ff0ka")
-_units = Array[ExtResource("9_o6hv2")]([SubResource("Resource_wbulx")])
-metadata/_custom_type_script = "uid://cvroohkeaovqw"
-
 [sub_resource type="Resource" id="Resource_piuxs"]
-script = ExtResource("9_o6hv2")
-_unitName = "Disabler"
-_level = 3
-metadata/_custom_type_script = "uid://iamaod4iivlq"
-
-[sub_resource type="Resource" id="Resource_pvs3l"]
 script = ExtResource("7_ff0ka")
-_units = Array[ExtResource("9_o6hv2")]([SubResource("Resource_piuxs")])
+_units = Array[ExtResource("9_o6hv2")]([SubResource("Resource_pvs3l")])
 metadata/_custom_type_script = "uid://cvroohkeaovqw"
 
 [sub_resource type="Resource" id="Resource_n7h35"]
@@ -145,6 +146,50 @@ metadata/_custom_type_script = "uid://iamaod4iivlq"
 [sub_resource type="Resource" id="Resource_2r4dh"]
 script = ExtResource("7_ff0ka")
 _units = Array[ExtResource("9_o6hv2")]([SubResource("Resource_jmtj1"), SubResource("Resource_jmtj1"), SubResource("Resource_jmtj1")])
+metadata/_custom_type_script = "uid://cvroohkeaovqw"
+
+[sub_resource type="Resource" id="Resource_fivp5"]
+script = ExtResource("9_o6hv2")
+_unitName = "Inspector"
+_level = 1
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_xxchu"]
+script = ExtResource("7_ff0ka")
+_units = Array[ExtResource("9_o6hv2")]([SubResource("Resource_fivp5")])
+metadata/_custom_type_script = "uid://cvroohkeaovqw"
+
+[sub_resource type="Resource" id="Resource_n5lj1"]
+script = ExtResource("9_o6hv2")
+_unitName = "Inspector"
+_level = 2
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_7ayci"]
+script = ExtResource("7_ff0ka")
+_units = Array[ExtResource("9_o6hv2")]([SubResource("Resource_n5lj1")])
+metadata/_custom_type_script = "uid://cvroohkeaovqw"
+
+[sub_resource type="Resource" id="Resource_mogcf"]
+script = ExtResource("9_o6hv2")
+_unitName = "Inspector"
+_level = 3
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_xdlyi"]
+script = ExtResource("7_ff0ka")
+_units = Array[ExtResource("9_o6hv2")]([SubResource("Resource_mogcf")])
+metadata/_custom_type_script = "uid://cvroohkeaovqw"
+
+[sub_resource type="Resource" id="Resource_7ww5u"]
+script = ExtResource("9_o6hv2")
+_unitName = "Inspector"
+_level = 4
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_gtmwp"]
+script = ExtResource("7_ff0ka")
+_units = Array[ExtResource("9_o6hv2")]([SubResource("Resource_7ww5u")])
 metadata/_custom_type_script = "uid://cvroohkeaovqw"
 
 [sub_resource type="Resource" id="Resource_rrl2g"]
@@ -444,27 +489,19 @@ texture_margin_bottom = 12.0
 script = ExtResource("1_d7nqx")
 UnitManager = ExtResource("2_4rvgl")
 
-[node name="TileMapLayer" type="TileMapLayer" parent="." unique_id=2102084703]
-texture_filter = 1
-scale = Vector2(7.375, 7.375)
-tile_map_data = PackedByteArray("AAAMAAAAAAAGAAIAAAAKAAAAAAAFAAIAAAAJAAAAAAAHAAIAAAAIAAAAAAADAAIAAAAHAAAAAAAJAAIAAAAGAAAAAAADAAIAAAAFAAAAAAAIAAIAAAAEAAAAAAAIAAIAAAADAAAAAAADAAIAAAACAAAAAAAIAAIAAAABAAAAAAACAAIAAAAAAAAAAAAEAAIAAAAAAAEAAAAAAAIAAAAMAAEAAAAKAAIAAAAMAAIAAAABAAIAAAAMAAMAAAALAAIAAAAGAAEAAAABAAAAAAAHAAEAAAAGAAAAAAAIAAEAAAABAAIAAAAIAAIAAAADAAIAAAAHAAIAAAAFAAAAAAAJAAMAAAAAAAIAAAAJAAIAAAALAAIAAAAJAAEAAAACAAIAAAAKAAEAAAAJAAIAAAAKAAMAAAAGAAIAAAABAAMAAAAJAAAAAAAAAAMAAAADAAAAAAABAAEAAAAHAAAAAAABAAIAAAAFAAAAAAAFAAEAAAABAAAAAAAEAAEAAAABAAAAAAADAAEAAAABAAAAAAACAAEAAAABAAAAAAAHAAMAAAAFAAAAAAAIAAMAAAAKAAIAAAAGAAIAAAAJAAIAAAAFAAIAAAALAAIAAAAEAAIAAAALAAIAAAADAAIAAAADAAIAAAACAAIAAAALAAIAAAACAAMAAAAFAAIAAAADAAMAAAAIAAIAAAAEAAMAAAAIAAIAAAAFAAMAAAAFAAIAAAAGAAMAAAAAAAIAAAAAAAIAAAAJAAIAAAAAAAQAAAAAAAIAAAABAAQAAAAFAAAAAAACAAQAAAAAAAIAAAADAAQAAAADAAIAAAAEAAQAAAAAAAIAAAAFAAQAAAADAAIAAAAGAAQAAAACAAIAAAAKAAQAAAAIAAIAAAAJAAQAAAAKAAIAAAAIAAQAAAAIAAIAAAAAAAUAAAAJAAIAAAABAAUAAAAIAAAAAAACAAUAAAABAAAAAAADAAUAAAABAAAAAAAEAAUAAAABAAAAAAAFAAUAAAABAAAAAAAGAAUAAAABAAAAAAAHAAQAAAAFAAAAAAAHAAUAAAAIAAAAAAAIAAUAAAABAAAAAAAJAAUAAAABAAAAAAAKAAUAAAABAAAAAAAKAAIAAAAIAAIAAAAAAAYAAAAKAAIAAAABAAYAAAAJAAIAAAACAAYAAAAEAAIAAAADAAYAAAAIAAIAAAAEAAYAAAAEAAIAAAAFAAYAAAABAAIAAAAGAAYAAAAFAAIAAAAHAAYAAAADAAIAAAALAAAAAAACAAIAAAALAAEAAAAGAAIAAAALAAIAAAAGAAIAAAALAAMAAAABAAIAAAALAAQAAAADAAIAAAALAAUAAAABAAAAAAALAAYAAAACAAIAAAAMAAYAAAAHAAIAAAAMAAUAAAAEAAAAAAAMAAQAAAADAAIAAAAIAAYAAAABAAIAAAAJAAYAAAAKAAIAAAAKAAYAAAAEAAIAAAA=")
-tile_set = ExtResource("7_5ivv1")
-navigation_enabled = false
-script = ExtResource("8_r27g4")
-
 [node name="OverlayLayer" type="TileMapLayer" parent="." unique_id=33268211]
 scale = Vector2(8.5, 8.5)
 tile_set = ExtResource("7_5ivv1")
 
 [node name="TdManager" parent="." unique_id=116729899 instance=ExtResource("3_v6k6q")]
+_allMaps = Array[PackedScene]([ExtResource("3_4f8lp"), ExtResource("6_2tfwb")])
 _allTowerList = Array[String](["GunTurret", "PiercingTower", "MoneyTurret", "LaserTurret", "SniperTurret", "FlameTurret", "SlowTurret", "GatlinTurret", "SlimeSpawner", "ShieldSpawner", "SoldierSpawner", "PriestSpawner", "DisablerSpawner", "RocketSpawner", "HoundSpawner", "GeneratorSpawner"])
-_earlyBosses = Array[Object]([SubResource("Resource_3yiie"), SubResource("Resource_laf8x"), SubResource("Resource_pvs3l")])
+_earlyBosses = Array[Object]([SubResource("Resource_3yiie"), SubResource("Resource_wbulx"), SubResource("Resource_piuxs")])
 _midBosses = Array[Object]([SubResource("Resource_t78eu"), SubResource("Resource_0ndgw"), SubResource("Resource_mjw58")])
 _lateBosses = Array[Object]([SubResource("Resource_l5rss"), SubResource("Resource_fvgc1"), SubResource("Resource_2r4dh")])
+_inspectionBosses = Array[Object]([SubResource("Resource_xxchu"), SubResource("Resource_7ayci"), SubResource("Resource_xdlyi"), SubResource("Resource_gtmwp")])
 _finalBosses = Array[Object]([SubResource("Resource_emq71")])
-_sandboxStartingMoney = Vector4i(100, 100, 100, 100)
-_rogueStartingMoney = Vector4i(80, 80, 80, 80)
-_finalWave = 25
+_startingMoney = Vector4i(80, 80, 80, 80)
 _allGlobalEffects = Array[Object]([SubResource("Resource_dntla"), SubResource("Resource_bjl3e"), SubResource("Resource_q6tlc"), SubResource("Resource_0kvg5"), SubResource("Resource_4qasu"), SubResource("Resource_jpjpv"), SubResource("Resource_ftcvg"), SubResource("Resource_6dmqx"), SubResource("Resource_v0mgk"), SubResource("Resource_r3yin"), SubResource("Resource_4f8lp"), SubResource("Resource_2tfwb"), SubResource("Resource_7kp2f"), SubResource("Resource_ap1w4"), SubResource("Resource_8lxj5"), SubResource("Resource_i1dr5"), SubResource("Resource_dmkyn"), SubResource("Resource_okxfi"), SubResource("Resource_ndjxy"), SubResource("Resource_qc10m"), SubResource("Resource_jroq3"), SubResource("Resource_0uvfj"), SubResource("Resource_vi170"), SubResource("Resource_8ac4n")])
 
 [node name="NavigationRegion2D" type="NavigationRegion2D" parent="." unique_id=1731619863]
@@ -497,12 +534,36 @@ theme_override_styles/panel = SubResource("StyleBoxTexture_dqwu5")
 [node name="VBoxContainer" type="VBoxContainer" parent="RightPanelCanvasLayer/RightPanel" unique_id=1604422613]
 layout_mode = 2
 
-[node name="MoneyLabel" type="RichTextLabel" parent="RightPanelCanvasLayer/RightPanel/VBoxContainer" unique_id=1274819536]
-custom_minimum_size = Vector2(250, 20)
+[node name="GridContainer" type="GridContainer" parent="RightPanelCanvasLayer/RightPanel/VBoxContainer" unique_id=1146771664]
+layout_mode = 2
+columns = 2
+
+[node name="Yellow" type="RichTextLabel" parent="RightPanelCanvasLayer/RightPanel/VBoxContainer/GridContainer" unique_id=746544694]
+custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
 bbcode_enabled = true
 fit_content = true
-scroll_active = false
+script = ExtResource("10_2i1sm")
+
+[node name="Red" type="RichTextLabel" parent="RightPanelCanvasLayer/RightPanel/VBoxContainer/GridContainer" unique_id=1527513823]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+script = ExtResource("10_2i1sm")
+
+[node name="Blue" type="RichTextLabel" parent="RightPanelCanvasLayer/RightPanel/VBoxContainer/GridContainer" unique_id=1446422905]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+script = ExtResource("10_2i1sm")
+
+[node name="Green" type="RichTextLabel" parent="RightPanelCanvasLayer/RightPanel/VBoxContainer/GridContainer" unique_id=547767582]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
 script = ExtResource("10_2i1sm")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="RightPanelCanvasLayer/RightPanel/VBoxContainer" unique_id=1459673420]
@@ -539,7 +600,7 @@ size_flags_horizontal = 3
 
 [node name="HpLabel" type="Label" parent="RightPanelCanvasLayer/RightPanel/VBoxContainer/HBoxContainer/VBoxContainer" unique_id=1228266498]
 layout_mode = 2
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 24
 
 [node name="WaveCounter" type="Label" parent="RightPanelCanvasLayer/RightPanel/VBoxContainer/HBoxContainer/VBoxContainer" unique_id=1760873018]
 layout_mode = 2
@@ -590,45 +651,6 @@ bbcode_enabled = true
 fit_content = true
 script = ExtResource("10_2i1sm")
 
-[node name="HBoxContainer2" type="VBoxContainer" parent="RightPanelCanvasLayer/RightPanel/VBoxContainer/HBoxContainer/VBoxContainer" unique_id=1409386680]
-layout_mode = 2
-
-[node name="SpawnerLimitLabel" type="RichTextLabel" parent="RightPanelCanvasLayer/RightPanel/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer2" unique_id=1764816618]
-layout_mode = 2
-fit_content = true
-script = ExtResource("10_2i1sm")
-
-[node name="Button" type="Button" parent="RightPanelCanvasLayer/RightPanel/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer2" unique_id=1097813405]
-custom_minimum_size = Vector2(250, 88)
-layout_mode = 2
-theme_override_font_sizes/font_size = 24
-theme_override_styles/normal = SubResource("StyleBoxEmpty_j46br")
-theme_override_styles/pressed = SubResource("StyleBoxEmpty_j46br")
-theme_override_styles/hover = SubResource("StyleBoxEmpty_j46br")
-script = ExtResource("8_5ivv1")
-metadata/_custom_type_script = "uid://btuej683nli5d"
-
-[node name="RichTextLabel" type="RichTextLabel" parent="RightPanelCanvasLayer/RightPanel/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer2/Button" unique_id=1047263969]
-custom_minimum_size = Vector2(250, 0)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -113.0
-offset_top = -20.0
-offset_right = 137.0
-offset_bottom = 20.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-theme_override_fonts/normal_font = ExtResource("11_hcr7m")
-theme_override_font_sizes/normal_font_size = 24
-bbcode_enabled = true
-fit_content = true
-script = ExtResource("10_2i1sm")
-
 [node name="IncomeLabel" type="RichTextLabel" parent="RightPanelCanvasLayer/RightPanel/VBoxContainer/HBoxContainer/VBoxContainer" unique_id=1319773152]
 layout_mode = 2
 bbcode_enabled = true
@@ -647,7 +669,7 @@ script = ExtResource("10_2i1sm")
 [node name="TotalHpLabel" type="RichTextLabel" parent="RightPanelCanvasLayer/RightPanel/VBoxContainer/HBoxContainer/VBoxContainer" unique_id=595661229]
 layout_mode = 2
 bbcode_enabled = true
-text = "Total Hp: 0"
+text = "Total Hp of Enemies: 0"
 fit_content = true
 script = ExtResource("10_2i1sm")
 
@@ -668,13 +690,35 @@ text = "Next Cycle
 
 "
 
-[node name="VBoxContainer" type="VBoxContainer" parent="RightPanelCanvasLayer/RightPanel/VBoxContainer/HBoxContainer/VBoxContainer" unique_id=1323112993]
+[node name="Challenge" type="Button" parent="RightPanelCanvasLayer/RightPanel/VBoxContainer/HBoxContainer/VBoxContainer" unique_id=1383851800]
+custom_minimum_size = Vector2(250, 88)
 layout_mode = 2
+theme_override_font_sizes/font_size = 24
+theme_override_styles/normal = SubResource("StyleBoxEmpty_j46br")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_j46br")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_j46br")
+script = ExtResource("8_5ivv1")
+metadata/_custom_type_script = "uid://btuej683nli5d"
 
-[node name="RichTextLabel" type="RichTextLabel" parent="RightPanelCanvasLayer/RightPanel/VBoxContainer/HBoxContainer/VBoxContainer/VBoxContainer" unique_id=296859253]
-layout_mode = 2
-text = "
-"
+[node name="RichTextLabel" type="RichTextLabel" parent="RightPanelCanvasLayer/RightPanel/VBoxContainer/HBoxContainer/VBoxContainer/Challenge" unique_id=1022697043]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -113.0
+offset_top = -20.0
+offset_right = 137.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_fonts/normal_font = ExtResource("11_hcr7m")
+theme_override_font_sizes/normal_font_size = 24
+bbcode_enabled = true
+fit_content = true
 script = ExtResource("10_2i1sm")
 
 [node name="GetPassive" type="Button" parent="RightPanelCanvasLayer/RightPanel/VBoxContainer/HBoxContainer/VBoxContainer" unique_id=650379205]
@@ -686,6 +730,24 @@ text = "Get passive"
 visible = false
 layout_mode = 2
 text = "Get Any passive"
+
+[node name="Inspection" type="Label" parent="RightPanelCanvasLayer/RightPanel/VBoxContainer/HBoxContainer/VBoxContainer" unique_id=1275304905]
+layout_mode = 2
+text = "Inspection"
+
+[node name="InspectionProgression" type="TextureProgressBar" parent="RightPanelCanvasLayer/RightPanel/VBoxContainer/HBoxContainer/VBoxContainer" unique_id=1043577582]
+custom_minimum_size = Vector2(250, 30)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+nine_patch_stretch = true
+stretch_margin_left = 3
+stretch_margin_top = 3
+stretch_margin_right = 3
+stretch_margin_bottom = 3
+texture_under = SubResource("GradientTexture2D_5vmbn")
+texture_over = ExtResource("25_5vmbn")
+texture_progress = SubResource("GradientTexture2D_jpjpv")
 
 [node name="UnitInfoPanel" parent="." unique_id=1871383984 instance=ExtResource("3_na4n4")]
 process_mode = 3
@@ -746,6 +808,45 @@ script = ExtResource("12_j46br")
 [node name="Debug" type="Node" parent="." unique_id=510760044]
 script = ExtResource("15_d7nqx")
 
+[node name="InspectionLayer" type="CanvasLayer" parent="." unique_id=1198489133]
+visible = false
+
+[node name="ColorRect" type="ColorRect" parent="InspectionLayer" unique_id=2145631651]
+offset_right = 1920.0
+offset_bottom = 1080.0
+color = Color(0.0023445894, 0.0023445901, 0.0023445883, 0.627451)
+
+[node name="PanelContainer" type="PanelContainer" parent="InspectionLayer" unique_id=1446205322]
+custom_minimum_size = Vector2(600, 0)
+offset_left = 660.0
+offset_top = 390.0
+offset_right = 1260.0
+offset_bottom = 498.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="InspectionLayer/PanelContainer" unique_id=1538287066]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="InspectionLayer/PanelContainer/VBoxContainer" unique_id=505603629]
+layout_mode = 2
+text = "Inspection!"
+
+[node name="Requirement" type="RichTextLabel" parent="InspectionLayer/PanelContainer/VBoxContainer" unique_id=1607131410]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+script = ExtResource("10_2i1sm")
+
+[node name="Summary" type="RichTextLabel" parent="InspectionLayer/PanelContainer/VBoxContainer" unique_id=1686297161]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+script = ExtResource("10_2i1sm")
+
+[node name="Button" type="Button" parent="InspectionLayer/PanelContainer/VBoxContainer" unique_id=840708108]
+layout_mode = 2
+text = "Done
+"
+
 [node name="RewardLayer" type="CanvasLayer" parent="." unique_id=986343627]
 visible = false
 script = ExtResource("39_4f8lp")
@@ -756,11 +857,11 @@ offset_bottom = 1080.0
 color = Color(0.0023445894, 0.0023445901, 0.0023445883, 0.627451)
 
 [node name="PanelContainer" type="PanelContainer" parent="RewardLayer" unique_id=2061759869]
-custom_minimum_size = Vector2(500, 300)
-offset_left = 730.0
+custom_minimum_size = Vector2(600, 0)
+offset_left = 660.0
 offset_top = 390.0
-offset_right = 1230.0
-offset_bottom = 690.0
+offset_right = 1260.0
+offset_bottom = 444.0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="RewardLayer/PanelContainer" unique_id=364953204]
 layout_mode = 2
@@ -874,7 +975,6 @@ layout_mode = 2
 text = "Complete"
 
 [connection signal="pressed" from="RightPanelCanvasLayer/RightPanel/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/Button" to="TdManager" method="BuyExtraPortalLimit"]
-[connection signal="pressed" from="RightPanelCanvasLayer/RightPanel/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer2/Button" to="TdManager" method="BuySpeedUpWave"]
 [connection signal="pressed" from="RightPanelCanvasLayer/RightPanel/VBoxContainer/HBoxContainer/VBoxContainer/NextWave" to="." method="OnNextWavePressed"]
 [connection signal="pressed" from="RightPanelCanvasLayer/RightPanel/VBoxContainer/HBoxContainer/VBoxContainer/GetPassive" to="TdManager" method="GetNewPassive"]
 [connection signal="pressed" from="RightPanelCanvasLayer/RightPanel/VBoxContainer/HBoxContainer/VBoxContainer/GetAnyPassive" to="TdManager" method="GetNewAnyPassive"]

@@ -1,4 +1,5 @@
 using Godot;
+using RTSGame.Units;
 
 public partial class GameGlobals : Node
 {
@@ -16,6 +17,8 @@ public partial class GameGlobals : Node
 
 	// Store the current mode globally
 	public GameMode CurrentMode { get; set; } = GameMode.Normal;
+
+	public LevelResource CurrentLevel;
 
 	public override void _Ready()
 	{
