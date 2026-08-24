@@ -130,7 +130,6 @@ public partial class RewardManager : CanvasLayer
 
 			Label nameLabel = new Label();
 			nameLabel.Text = unit.GetName();
-			nameLabel.CustomMinimumSize = new(160, 0);
 			nameLabel.HorizontalAlignment = HorizontalAlignment.Center;
 			container.AddChild(nameLabel);
 
@@ -154,6 +153,34 @@ public partial class RewardManager : CanvasLayer
 			PanelContainer panelContainer = new();
 			panelContainer.AddChild(towerButton);
 			container.AddChild(panelContainer);
+
+			StyleBoxFlat flatStyle = new StyleBoxFlat();
+
+			// 2. Set your solid background color
+			flatStyle.BgColor = ThemePalette.Gray;
+			flatStyle.BorderWidthLeft = 6;
+			flatStyle.BorderWidthTop = 6;
+			flatStyle.BorderWidthRight = 6;
+			flatStyle.BorderWidthBottom = 6;
+
+			flatStyle.ContentMarginLeft = 12;
+			flatStyle.ContentMarginTop = 12;
+			flatStyle.ContentMarginRight = 12;
+			flatStyle.ContentMarginBottom = 12;
+
+			if (unit._towerType == TowerUnit.TowerType.Defense)
+			{
+				flatStyle.BorderColor = ThemePalette.Blue;
+			}
+			else
+			{
+				flatStyle.BorderColor = ThemePalette.Red;
+			}
+
+			panelContainer.SizeFlagsHorizontal = Control.SizeFlags.ShrinkCenter;
+			panelContainer.SizeFlagsVertical = Control.SizeFlags.ShrinkCenter;
+
+			panelContainer.AddThemeStyleboxOverride("panel", flatStyle);
 
 			TooltipRichTextLabel costLabel = new TooltipRichTextLabel();
 			costLabel.FitContent = true;

@@ -16,9 +16,19 @@ public partial class InvaderUnit : Unit
 	[Export] 
 	private PackedScene _floatingTextScene;
 	[Export]
+	private PackedScene _deathAnimationScene;
+	[Export]
 	public int _hpDeducted = 1;
 	[Export]
 	public Vector4I _moneyDeducted = new Vector4I();
+
+	public enum Directions
+	{
+		Right, 
+		Left, 
+		Up, 
+		Down
+	}
 
 	/// <summary>
 	/// Write level stat gains here. Index n means increasing from n to n+1. 
@@ -53,6 +63,7 @@ public partial class InvaderUnit : Unit
 		else if (_pathToExit.Count > 0)
 		{
 			command = new AttackMove(this, _pathToExit[0]);
+			UpdateSpriteDirection(GetDirectionToFace(_pathToExit[0]));
 			_pathToExit.RemoveAt(0);
 		}
 		else
@@ -78,6 +89,50 @@ public partial class InvaderUnit : Unit
 		else if (command is NoCommand noCommand)
 		{
 			ScanForEnemies();
+		}
+	}
+
+	/// <summary>
+	/// determines which direction the unit is facing when moving from current position to target
+	/// </summary>
+	/// <param name="target"></param>
+	/// <returns></returns>
+	private Directions GetDirectionToFace(Vector2 target)
+	{
+		Vector2 delta = target - GlobalPosition;
+		float angleRad = delta.Angle();
+		if (angleRad <= Math.PI / 4 && angleRad >= -Math.PI/4)
+		{
+			return Directions.Right;
+		}
+		else if (angleRad <= Math.PI * 3 / 4 && angleRad > Math.PI / 4)
+		{
+			return Directions.Down;
+		}
+		else if (angleRad >= -Math.PI * 3 / 4 && angleRad < -Math.PI / 4)
+		{
+			return Directions.Up;
+		}
+		else
+		{
+			return Directions.Left;
+		}
+	}
+
+	private void UpdateSpriteDirection(Directions direction)
+	{
+		if (!HasNode("AnimatedSprite2D"))
+		{
+			return;
+		}
+		switch (direction)
+		{
+			case Directions.Right:
+				GetNode<AnimatedSprite2D>("AnimatedSprite2D").FlipH = false;
+				break;
+			case Directions.Left:
+				GetNode<AnimatedSprite2D>("AnimatedSprite2D").FlipH = true;
+				break;
 		}
 	}
 
@@ -204,6 +259,16 @@ public partial class InvaderUnit : Unit
 			timer.Start(1f);
 
 			textNode.StartFloatingAnimation();
+		}
+		if (_deathAnimationScene != null)
+		{
+			Node2D viz = _deathAnimationScene.Instantiate<Node2D>();
+
+			GetTree().Root.AddChild(viz);
+
+			viz.GlobalPosition = GlobalPosition;
+
+			Utils.ScaleVisualToRadius(viz.GetNode<AnimatedSprite2D>("Sprite2D"), _radius / 0.8f);
 		}
 		base.Die();
 	}

@@ -5,6 +5,7 @@
 [ext_resource type="Script" uid="uid://bx5p53eu0mmmn" path="res://_Source/Effects/SpeedUpOnHit/SpeedUpOnHitResource.cs" id="2_u68lq"]
 [ext_resource type="Script" uid="uid://dtpcxn7d2dqcy" path="res://_Source/Effects/EffectResource.cs" id="3_3nyki"]
 [ext_resource type="Texture2D" uid="uid://bc230321nqto5" path="res://icon.svg" id="3_htjgi"]
+[ext_resource type="Texture2D" uid="uid://ccp7t0ynekp77" path="res://_Assets/Rider.png" id="5_3nyki"]
 
 [sub_resource type="Resource" id="Resource_j6d0n"]
 script = ExtResource("2_u68lq")
@@ -68,6 +69,28 @@ _hpBuff = 6000
 _moneyBuff = Vector4i(15, 0, 0, 15)
 metadata/_custom_type_script = "uid://iamaod4iivlq"
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_j6d0n"]
+atlas = ExtResource("5_3nyki")
+region = Rect2(0, 0, 720, 720)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qtqnf"]
+atlas = ExtResource("5_3nyki")
+region = Rect2(720, 0, 720, 720)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_yvfel"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_j6d0n")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qtqnf")
+}],
+"loop": true,
+"name": &"default",
+"speed": 6.0
+}]
+
 [node name="BaseUnit" unique_id=481801141 instance=ExtResource("1_dafsc")]
 _hpDeducted = 2
 _levelStats = Array[ExtResource("2_1eg86")]([SubResource("Resource_qtqnf"), SubResource("Resource_yvfel"), SubResource("Resource_or2vx"), SubResource("Resource_ke54r"), SubResource("Resource_i5krd"), SubResource("Resource_2nnn3"), SubResource("Resource_ipq1r"), SubResource("Resource_12eca")])
@@ -76,14 +99,20 @@ _hpMax = 0
 _startingEffects = Array[Object]([])
 _internalName = "Hound"
 _name = "Rider"
-_radius = 16.0
+_radius = 26.0
 _baseHealthBarHeight = 12.0
 
-[node name="MainSprite" parent="." index="1" unique_id=597948513]
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." index="1" unique_id=327805833]
+texture_filter = 1
+sprite_frames = SubResource("SpriteFrames_yvfel")
+autoplay = "default"
+
+[node name="MainSprite" parent="." index="2" unique_id=597948513]
+visible = false
 scale = Vector2(1, 1)
 texture = ExtResource("3_htjgi")
 
-[node name="HealthBar" parent="." index="5" unique_id=640038315]
+[node name="HealthBar" parent="." index="6" unique_id=640038315]
 offset_left = -24.0
 offset_top = -32.0
 offset_right = 24.0

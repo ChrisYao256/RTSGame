@@ -17,6 +17,7 @@ public partial class UnitManager : Node2D
 		{ "Turret", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Turret.tscn") },
 
 		{ "Exit", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Exit.tscn") },
+		{ "Entrance", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Entrance.tscn") },
 
 		// towers
 		{ "GunTurret", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Towers/GunTurret.tscn") },
@@ -530,7 +531,11 @@ public partial class UnitManager : Node2D
 				tower._gridLocation = (Vector2I)gridLocation;
 			}
 
-			newUnit._hasEffects = hasEffects;
+			//if (!hasEffects)
+			//{
+			//	newUnit._isDisplayUnit = true;
+			//	newUnit.SetDisplayUnit();
+			//}
 
 			GetParent().AddChild(newUnit);
 

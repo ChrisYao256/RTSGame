@@ -6,6 +6,7 @@
 [sub_resource type="Resource" id="Resource_pn7h3"]
 script = ExtResource("2_0lb24")
 _mapID = 1
+_mapSize = Vector2i(24, 12)
 _inspectionInterval = 5
 _finalWave = 15
 _randomizeFinalBoss = true
@@ -13,6 +14,7 @@ metadata/_custom_type_script = "uid://cnkokvx12lrm4"
 
 [sub_resource type="Resource" id="Resource_l1br1"]
 script = ExtResource("2_0lb24")
+_mapSize = Vector2i(24, 12)
 _inspectionInterval = 5
 _finalWave = 25
 _randomizeFinalBoss = true

@@ -21,6 +21,9 @@ public partial class TDTowerManager : Node2D
 
 	public bool _placementMode { get; private set; } = false;
 	private string _towerToPlace;
+	public bool _movementMode { get; private set; } = false;
+	private MoveIndicator _movementIndicator;
+	private TowerUnit _towerMoving;
 	private TowerUnit _previewTower;
 
 	public Array<TowerUnit> _towersOnField = [];
@@ -48,6 +51,10 @@ public partial class TDTowerManager : Node2D
 		{
 			UpdatePlacement();
 		}
+		else if (_movementMode)
+		{
+			UpdateMovement();
+		}
 	}
 
 	public void InitializeTowersPanel(TowerUnit.TowerType tab)
@@ -72,6 +79,11 @@ public partial class TDTowerManager : Node2D
 					ExitPlacementMode();
 					GetViewport().SetInputAsHandled();
 				}
+				else if (_movementMode)
+				{
+					ExitMovementMode();
+					GetViewport().SetInputAsHandled();
+				}
 			}
 		}
 	}
@@ -80,11 +92,20 @@ public partial class TDTowerManager : Node2D
 	{
 		_placementMode = true;
 		_towerToPlace = towerName;
-		_previewTower = (TowerUnit)_unitManager.SpawnUnit(GetGlobalMousePosition(), 0 ,towerName, hasEffects: false);
+		_previewTower = (TowerUnit)_unitManager.SpawnUnit(GetGlobalMousePosition(), 0, towerName, hasEffects: false);
 		_previewTower.Modulate = new Color(0.5f, 0.5f, 0.5f, 1f);
 		_previewTower.SetAttackRange();
 		_previewTower.DisablePhysicsProcess();
 		_unitManager.UpdatePlayerSelection([_previewTower]);
+	}
+
+	public void EnterMoveMode(TowerUnit unit)
+	{
+		_movementMode = true;
+		unit.Modulate = new Color(1, 1, 1, 0.5f);
+		_movementIndicator = new MoveIndicator();
+		AddChild(_movementIndicator);
+		_towerMoving = unit;
 	}
 
 	public void ExitPlacementMode()
@@ -108,7 +129,7 @@ public partial class TDTowerManager : Node2D
 		// Convert mouse position to grid coordinates (e.g., Vector2I(5, 3))
 		Vector2I gridCoords = _grid.LocalToMap(mousePos);
 		Vector2I buildableGridCoords;
-		if (_previewTower is Spawner)
+		if (_previewTower._mustBeNextToPath)
 		{
 			buildableGridCoords = _grid.FindClosestBuildableCell(gridCoords, true);
 		}
@@ -137,7 +158,64 @@ public partial class TDTowerManager : Node2D
 				ExitPlacementMode();
 			}
 		}
+	}
+
+	private void UpdateMovement()
+	{
+		Vector2 mousePos = GetGlobalMousePosition();
+		mousePos = _grid.ToLocal(mousePos);
+
+		// Convert mouse position to grid coordinates (e.g., Vector2I(5, 3))
+		Vector2I gridCoords = _grid.LocalToMap(mousePos);
+		Vector2I buildableGridCoords;
+		if (_towerMoving._mustBeNextToPath)
+		{
+			buildableGridCoords = _grid.FindClosestBuildableCell(gridCoords, true);
+		}
+		else
+		{
+			buildableGridCoords = _grid.FindClosestBuildableCell(gridCoords, false);
+		}
+		_movementIndicator.UpdatePositions(_towerMoving.GlobalPosition, _grid.MapToGlobal(buildableGridCoords));
+
+		if (Input.IsActionJustPressed("Left_click"))
+		{
 		
+			ConfirmTowerMovement(buildableGridCoords);
+		}
+	}
+
+	private void ConfirmTowerMovement(Vector2I gridCoords)
+	{
+		Vector2I origin = _towerMoving._gridLocation;
+		_grid.UnoccupyCell(_towerMoving._gridLocation);
+		_grid.OccupyCell(gridCoords, _towerMoving);
+		Vector2 position = _grid.ToGlobal(_grid.MapToLocal(gridCoords));
+		_towerMoving.GlobalPosition = position;
+		_towerMoving._gridLocation = gridCoords;
+
+		foreach (TowerUnit tower in _towersOnField)
+		{
+			if (tower != _towerMoving)
+			{
+				tower.OnMovedTower(_towerMoving);
+			}
+		}
+		_towerMoving.EmitSignal(Unit.SignalName.Movement, origin, gridCoords);
+		UpdateIncomeDisplay();
+		UpdateDPSDisplay();
+		UpdateTotalHpLabel();
+
+		ExitMovementMode();
+	}
+
+	private void ExitMovementMode()
+	{
+		_towerMoving.Modulate = new Color(1, 1, 1, 1f);
+		_unitManager.UpdatePlayerSelection([]);
+		_movementMode = false;
+		_movementIndicator.QueueFree();
+		_towerMoving = null;
 	}
 
 	// for automatically placing tower

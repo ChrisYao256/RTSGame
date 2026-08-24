@@ -128,6 +128,9 @@ public partial class Unit : CharacterBody2D
 	public delegate void PlacedTowerEventHandler(TowerUnit tower);
 
 	[Signal]
+	public delegate void MovedTowerEventHandler(TowerUnit tower);
+
+	[Signal]
 	public delegate void BeforeIsHitEventHandler(Unit unit);
 
 	[Signal]
@@ -150,6 +153,9 @@ public partial class Unit : CharacterBody2D
 
 	[Signal]
 	public delegate void CreationEventHandler(); // used only by transform effects that may remove this unit when created. Allows the tower to be fully placed before OnCreation effects activate. 
+
+	[Signal]
+	public delegate void MovementEventHandler(Vector2I original, Vector2I target); // Emitted after tower is moved
 
 	public enum State
 	{
@@ -188,8 +194,6 @@ public partial class Unit : CharacterBody2D
 	public bool _isDead = false;
 
 	protected bool _navigationPaused = false;
-
-	public bool _hasEffects = true;
 
 	protected Godot.Collections.Dictionary<string, PanelContainer> _infoContainers = new();
 
@@ -1122,6 +1126,11 @@ public partial class Unit : CharacterBody2D
 	public void OnPlacedTower(TowerUnit tower)
 	{
 		EmitSignal(SignalName.PlacedTower, tower);
+	}
+
+	public void OnMovedTower(TowerUnit tower)
+	{
+		EmitSignal(SignalName.MovedTower, tower);
 	}
 
 	public void OnVolleyEnded()

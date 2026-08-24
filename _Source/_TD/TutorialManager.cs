@@ -147,11 +147,11 @@ public partial class TutorialManager : Control
 		}
 		else if (_localWaveIndex == 0 && _localTextIndex == 2)
 		{
-			_darkOverlay.SetHighlightArea(_grid.GetGlobalTileRect(_grid.GetExitLocation()));
+			_darkOverlay.SetHighlightArea(_grid.GetGlobalTileRect(_grid.GetDefaultExitPosition()));
 		}
 		else if (_localWaveIndex == 0 && _localTextIndex == 3)
 		{
-			_darkOverlay.SetHighlightArea(_grid.GetGlobalTileRect(_grid.GetExitLocation()));
+			_darkOverlay.SetHighlightArea(_grid.GetGlobalTileRect(_grid.GetDefaultExitPosition()));
 		}
 		else if (_localWaveIndex == 0 && _localTextIndex == 4)
 		{
@@ -201,7 +201,7 @@ public partial class TutorialManager : Control
 		}
 		else if (_localWaveIndex == 3 && _localTextIndex == 1)
 		{
-			_darkOverlay.SetHighlightArea(_grid.GetGlobalTileRect(_grid.GetEntrancePosition()));
+			_darkOverlay.SetHighlightArea(_grid.GetGlobalTileRect(_grid.GetDefaultEntrancePosition()));
 		}
 		else
 		{

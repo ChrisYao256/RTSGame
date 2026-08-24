@@ -4,8 +4,8 @@
 [ext_resource type="Script" uid="uid://iamaod4iivlq" path="res://_Source/Effects/InvaderStatsIncrease/InvaderStatsIncreaseResource.cs" id="2_nu4fx"]
 [ext_resource type="Script" uid="uid://bu6prnkxpfjo0" path="res://_Source/Effects/PeriodicSpawnEnemies/PeriodicSpawnEnemiesResource.cs" id="3_45kf3"]
 [ext_resource type="Script" uid="uid://dtpcxn7d2dqcy" path="res://_Source/Effects/EffectResource.cs" id="3_nu4fx"]
-[ext_resource type="Texture2D" uid="uid://dgki3rdi8d7fo" path="res://_Assets/Slime.png" id="4_th8uk"]
 [ext_resource type="Texture2D" uid="uid://bc230321nqto5" path="res://icon.svg" id="5_ik8aj"]
+[ext_resource type="Texture2D" uid="uid://c5kxhikv0b0xd" path="res://_Assets/Necromancer.png" id="5_nu4fx"]
 
 [sub_resource type="Resource" id="Resource_nu4fx"]
 script = ExtResource("2_nu4fx")
@@ -74,33 +74,26 @@ _moneyBuff = Vector4i(0, 0, 20, 0)
 _startingEffects = Array[ExtResource("3_nu4fx")]([SubResource("Resource_dwr8y")])
 metadata/_custom_type_script = "uid://iamaod4iivlq"
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_4dwqt"]
-atlas = ExtResource("4_th8uk")
-region = Rect2(0, 0, 64, 64)
+[sub_resource type="AtlasTexture" id="AtlasTexture_y5yar"]
+atlas = ExtResource("5_nu4fx")
+region = Rect2(0, 0, 720, 720)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_8pwuo"]
-atlas = ExtResource("4_th8uk")
-region = Rect2(64, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_pgkd3"]
-atlas = ExtResource("4_th8uk")
-region = Rect2(128, 0, 64, 64)
+[sub_resource type="AtlasTexture" id="AtlasTexture_th8uk"]
+atlas = ExtResource("5_nu4fx")
+region = Rect2(720, 0, 720, 720)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_t3irf"]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_4dwqt")
+"texture": SubResource("AtlasTexture_y5yar")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_8pwuo")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_pgkd3")
+"texture": SubResource("AtlasTexture_th8uk")
 }],
 "loop": true,
 "name": &"default",
-"speed": 6.0
+"speed": 3.0
 }]
 
 [node name="BaseUnit" unique_id=481801141 instance=ExtResource("1_45kf3")]
@@ -110,7 +103,8 @@ _moveSpeed = 0.0
 _hpMax = 0
 _internalName = "Summoner"
 _name = "Portal Mage"
-_radius = 30.0
+_radius = 24.0
+_healthBarOffset = 40.0
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." index="1" unique_id=113917100]
 texture_filter = 1

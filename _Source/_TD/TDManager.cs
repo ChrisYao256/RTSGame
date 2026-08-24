@@ -127,11 +127,20 @@ public partial class TDManager : Node
 	private Label _inspectionLabel;
 	private TextureProgressBar _inspectionProgressBar;
 
+	private Camera _camera;
+	/// <summary>
+	/// The displacement from the true center of screen to the center of the map display in game.
+	/// </summary>
+	private Vector2 _centerOfDisplayOffset;
+
 	private Exit _exit;
+	private Entrance _entrance;
+
+	private Vector2 _mapSize;
 
 	private int _aliveInvaderCount;
 	private int _leakedInvaderCount;
-	private bool _waveEndProcessed = false;
+	public bool _waveEndProcessed = false;
 	private bool _inspectionProcessed = false;
 
 	private Array<SpawnerDataResource> _remainingBosses = [];
@@ -185,6 +194,8 @@ public partial class TDManager : Node
 
 		_fullscreenOverlay = GetParent().GetNode<CanvasLayer>("FullscreenOverlay");
 		_infoPanel = GetParent().GetNode<UnitInfoPanel>("UnitInfoPanel");
+
+		_camera = GetParent().GetNode<Camera>("Camera2D");
 	}
 
 	public void Initialize(GameGlobals.GameMode mode, LevelResource level)
@@ -197,10 +208,13 @@ public partial class TDManager : Node
 
 		_towerManager.Initialize(_unitManager);
 
-		_exit = (Exit)(_unitManager.SpawnUnit(_grid.GetExitLocation(), 0, "Exit"));
+		_exit = (Exit)(_unitManager.SpawnUnit(_grid.GetDefaultExitPosition(), 0, "Exit", gridLocation: _grid.GetDefaultExitMapPosition()));
 		_exit._tdManager = this;
-		_exit._radius = TDManager.TileSize / (float)Math.Sqrt(2);
-		_exit.SetSize();
+		_grid.OccupyCell(_exit._gridLocation, _exit);
+
+		_entrance = (Entrance)(_unitManager.SpawnUnit(_grid.GetDefaultEntrancePosition(), 0, "Entrance", gridLocation: _grid.GetDefaultEntranceMapPosition()));
+		_grid.OccupyCell(_entrance._gridLocation, _entrance);
+
 		_saveManager = SaveManager.Instance;
 		_saveManager._tdManager = this;
 
@@ -322,6 +336,10 @@ public partial class TDManager : Node
 		InitializeWaveProgressionBar();
 
 		_towerManager.InitializeTowersPanel(TowerUnit.TowerType.Defense);
+
+		_centerOfDisplayOffset = new (GetParent().GetNode("RightPanelCanvasLayer").GetNode<Control>("RightPanel").Size.X / 2f, _infoPanel.GetNode<Control>("PanelContainer").Size.Y / 2f);
+		_camera._offset = _centerOfDisplayOffset;
+		_camera.CenterCamera();
 	}
 
 	private void InitializeLevel()
@@ -341,6 +359,30 @@ public partial class TDManager : Node
 		TileMapLayer mapLayer = _allMaps[_level._mapID].Instantiate<TileMapLayer>();
 		GetParent().AddChild(mapLayer);
 		GetParent().MoveChild(mapLayer, 0);
+		Rect2I usedRect = mapLayer.GetUsedRect();
+		Vector2 cellCenter = usedRect.Position + ((Vector2)usedRect.Size / 2f);
+		Vector2 localPixelCenter = cellCenter * mapLayer.TileSet.TileSize * mapLayer.Transform.Scale;
+		mapLayer.GlobalPosition = -localPixelCenter;
+		_mapSize = _level._mapSize * mapLayer.TileSet.TileSize * mapLayer.Transform.Scale;
+		_camera._leftBoundary = -_mapSize.X / 2f;
+		_camera._rightBoundary = _mapSize.X / 2f;
+		_camera._topBoundary = -_mapSize.Y / 2f;
+		_camera._bottomBoundary = _mapSize.Y / 2f;
+		Vector2[] outline = new Vector2[]
+				{
+						new Vector2(-_mapSize.X / 2f, -_mapSize.Y / 2f),
+						new Vector2(-_mapSize.X / 2f, _mapSize.Y / 2f),
+						new Vector2(_mapSize.X / 2f, _mapSize.Y / 2f),
+						new Vector2(_mapSize.X / 2f, -_mapSize.Y / 2f),
+				};
+
+		NavigationRegion2D navRegion = GetParent().GetNode<NavigationRegion2D>("NavigationRegion2D");
+		navRegion.NavigationPolygon.Clear();
+
+		// 3. Set vertices and the polygon index array
+		navRegion.NavigationPolygon.Vertices = outline;
+		navRegion.NavigationPolygon.AddPolygon(new int[] { 0, 1, 2, 3 });
+		navRegion.NavigationPolygon = navRegion.NavigationPolygon;
 	}
 
 	public void SpawnNextWave()
@@ -430,17 +472,32 @@ public partial class TDManager : Node
 	{
 		_inspectionLayer.Show();
 		_inspectionRequirementLabel.Text = $"Total Resources due: {requirement}";
-		_inspectionSummaryLabel.Text = $"Liquid Capitol: {Utils.MakeMoneyText(_money)} = {Utils.VectorSum(_money)} \n";
-		Vector4I towerCost = new Vector4I(0,0,0,0);
+		if (_money != new Vector4I(0, 0, 0, 0))
+		{
+			_inspectionSummaryLabel.Text = $"Liquid Capitol: {Utils.MakeMoneyText(_money)} = {Utils.VectorSum(_money)} \n";
+		}
+		else
+		{
+			_inspectionSummaryLabel.Text = $"Liquid Capitol: 0 \n";
+		}
+			Vector4I towerCost = new Vector4I(0, 0, 0, 0);
 		foreach (TowerUnit tower in _towerManager._towersOnField)
 		{
 			towerCost += tower.GetTotalCost();
 		}
-		_inspectionSummaryLabel.Text += $"Invested Capitol: {Utils.MakeMoneyText(towerCost)} = {Utils.VectorSum(towerCost)} \n";
-		int total = Utils.VectorSum(_money) + Utils.VectorSum(towerCost);
+		if (towerCost != new Vector4I(0, 0, 0, 0))
+		{
+			_inspectionSummaryLabel.Text += $"Invested Capitol: {Utils.MakeMoneyText(towerCost)} = {Utils.VectorSum(towerCost)} \n";
+		}
+		else
+		{
+			_inspectionSummaryLabel.Text += $"Invested Capitol: 0 \n";
+		}
+			int total = Utils.VectorSum(_money) + Utils.VectorSum(towerCost);
+		_inspectionSummaryLabel.Text += $"Total Capitol: {total} \n";
 		if (total >= requirement)
 		{
-			_inspectionSummaryLabel.Text += $"Inspection Passed! Proceed to the next Term.";
+			_inspectionSummaryLabel.Text += $"Congratulations for passing the inspection! Please proceed to the next Term.";
 			_inspectionDoneButton.Pressed += () =>
 			{
 				UpdateInspectionCounter();
@@ -981,7 +1038,7 @@ public partial class TDManager : Node
 			node.QueueFree();
 		}
 
-		float xPos = (float)(total / _inspectionProgressBar.MaxValue * _inspectionProgressBar.Size.X);
+		float xPos = (float)(Math.Clamp(total / _inspectionProgressBar.MaxValue, 0, 1) * _inspectionProgressBar.Size.X);
 
 		Label indexLabel = new Label();
 
@@ -1004,7 +1061,7 @@ public partial class TDManager : Node
 		size = targetLabel.GetMinimumSize();
 
 		// Position top-right corner at the target location
-		targetLabel.Position = new Vector2(_inspectionProgressBar.Size.X - size.X / 2, _inspectionProgressBar.Size.Y);
+		targetLabel.Position = new Vector2(_inspectionProgressBar.Size.X - size.X / 2, - size.Y);
 	}
 
 	/// <summary>
@@ -1049,9 +1106,9 @@ public partial class TDManager : Node
 
 	private InvaderUnit SpawnEnemyAtEntrance(string name)
 	{
-		Unit unit = _unitManager.SpawnUnit(_grid.GetEntrancePosition(), 1, name, true);
+		Unit unit = _unitManager.SpawnUnit(_grid.MapToGlobal(_entrance._gridLocation), 1, name, true);
 
-		List<Vector2> waypoints = _grid.GetPath(_grid.GetEntrancePosition(), _grid.GetExitLocation());
+		List<Vector2> waypoints = _grid.GetPath(_entrance._gridLocation, _exit._gridLocation);
 		if (unit is InvaderUnit invader)
 		{
 			invader.SetRandomPathOffset();
@@ -1066,7 +1123,7 @@ public partial class TDManager : Node
 	{
 		Vector2 offset = position - _grid.MapToGlobal((_grid.LocalToMap(_grid.ToLocal(position))));
 		Unit unit = _unitManager.SpawnUnit(position, 1, name, true);
-		List<Vector2> waypoints = _grid.GetPath(position, _grid.GetExitLocation());
+		List<Vector2> waypoints = _grid.GetPath(position, _exit._gridLocation);
 		if (unit is InvaderUnit invader)
 		{
 			invader.SetPathOffset(offset);
@@ -1080,7 +1137,7 @@ public partial class TDManager : Node
 	public InvaderUnit SpawnEnemyFromTower(string name, Vector2 position)
 	{
 		Unit unit = _unitManager.SpawnUnit(position, 1, name, true);
-		List<Vector2> waypoints = _grid.GetPath(position, _grid.GetExitLocation());
+		List<Vector2> waypoints = _grid.GetPath(position, _exit._gridLocation);
 		if (unit is InvaderUnit invader)
 		{
 			invader.SetRandomPathOffset();
@@ -1094,7 +1151,8 @@ public partial class TDManager : Node
 	public InvaderUnit SpawnEnemyFromTower(string name, Vector2I gridPosition)
 	{
 		Unit unit = _unitManager.SpawnUnit(_grid.MapToGlobal(gridPosition), 1, name, true);
-		List<Vector2> waypoints = _grid.GetPath(gridPosition, _grid.GetExitLocation());
+		List<Vector2> waypoints = _grid.GetPath(gridPosition, _exit._gridLocation);
+		Vector2 test = _grid.MapToGlobal(_exit._gridLocation);
 		if (unit is InvaderUnit invader)
 		{
 			invader.SetRandomPathOffset();

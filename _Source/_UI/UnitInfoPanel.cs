@@ -251,6 +251,35 @@ public partial class UnitInfoPanel : CanvasLayer
 			panelContainer.AddChild(towerButton);
 			container.AddChild(panelContainer);
 
+			StyleBoxFlat flatStyle = new StyleBoxFlat();
+
+			// 2. Set your solid background color
+			flatStyle.BgColor = ThemePalette.Gray;
+			flatStyle.BorderWidthLeft = 6;
+			flatStyle.BorderWidthTop = 6;
+			flatStyle.BorderWidthRight = 6;
+			flatStyle.BorderWidthBottom = 6;
+
+			flatStyle.ContentMarginLeft = 12;
+			flatStyle.ContentMarginTop = 12;
+			flatStyle.ContentMarginRight = 12;
+			flatStyle.ContentMarginBottom = 12;
+
+			if (tab == TowerUnit.TowerType.Defense)
+			{
+				flatStyle.BorderColor = ThemePalette.Blue;
+			}
+			else
+			{
+				flatStyle.BorderColor = ThemePalette.Red;
+			}
+				
+			// 3. Apply the stylebox override to the panel
+			panelContainer.AddThemeStyleboxOverride("panel", flatStyle);
+
+			panelContainer.SizeFlagsHorizontal = Control.SizeFlags.ShrinkCenter;
+			panelContainer.SizeFlagsVertical = Control.SizeFlags.ShrinkCenter;
+
 			TooltipRichTextLabel costLabel = new TooltipRichTextLabel();
 			costLabel.FitContent = true;
 			costLabel.BbcodeEnabled = true;

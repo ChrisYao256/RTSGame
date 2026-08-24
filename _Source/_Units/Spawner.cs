@@ -30,6 +30,13 @@ public partial class Spawner : TowerUnit
 	{
 		_spawnerData = (SpawnerDataResource)_spawnerData.Duplicate(true);
 		base._Ready();
+
+		_removable = true;
+		_movable = false;
+		_sellable = false;
+		_movable = true;
+		_mustBeNextToPath = true;
+
 		_tdManager = GetTree().CurrentScene.GetNode<TDManager>("TdManager");
 		_spawnArea = GetNode<Area2D>("AttackArea");
 
@@ -60,6 +67,10 @@ public partial class Spawner : TowerUnit
 				unit.QueueFree();
 			}
 		}
+
+		MakeGroundWalkableResource resource = new MakeGroundWalkableResource();
+		resource._bidirectional = false;
+		AddEffect(resource);
 
 		if (_description == null || _description == "")
 		{

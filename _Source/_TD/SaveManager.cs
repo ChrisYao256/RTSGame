@@ -42,6 +42,7 @@ public partial class SaveManager : Node
 						{ "Hp", hp},
 						{ "FinalWave", level._finalWave},
 						{ "Map", level._mapID},
+						{ "MapSize", level._mapSize},
 						{ "InspectionFailedCount", inspectionFailedCount},
 						{ "ChallengeCount", challengeCount},
 						{ "InspectionInterval", level._inspectionInterval},
@@ -184,6 +185,7 @@ public partial class SaveManager : Node
 		int loadedWaveCount = (int)gameData["WaveCount"];
 		int loadedHp = (int)gameData["Hp"];
 		int loadedMap = (int)gameData["Map"];
+		Vector2I loadedMapSize = VariantToVector2I(gameData["MapSize"]);
 		int loadedFinalWave = (int)gameData["FinalWave"];
 		int loadedInspectionFailedCount = (int)gameData["InspectionFailedCount"];
 		int loadedChallengeCount = (int)gameData["ChallengeCount"];
@@ -205,7 +207,7 @@ public partial class SaveManager : Node
 
 		// Send everything off to be reconstructed in your main match loop
 		// Send everything off to be reconstructed in your main match loop
-		ApplyLoadedData(gameMode, loadedMoney, loadedPortalLimit, loadedHp, loadedMap, loadedWaveCount, loadedTowers, loadedUnlockedTowers, loadedGlobalEffects, loadedFinalWave, loadedInspectionFailedCount, loadedChallengeCount, loadedChallengeEnabled, loadedInspectionEnabled, loadedPortalsEnabled, loadedFinalBoss, loadedNextChallenge);
+		ApplyLoadedData(gameMode, loadedMoney, loadedPortalLimit, loadedHp, loadedWaveCount, loadedTowers, loadedUnlockedTowers, loadedGlobalEffects, loadedFinalWave, loadedInspectionFailedCount, loadedChallengeCount, loadedChallengeEnabled, loadedInspectionEnabled, loadedPortalsEnabled, loadedFinalBoss, loadedNextChallenge);
 	}
 
 	public bool HasSavedGame()
@@ -234,6 +236,7 @@ public partial class SaveManager : Node
 		var gameData = (Dictionary<string, Variant>)json.Data;
 
 		int loadedMap = (int)gameData["Map"];
+		Vector2I loadedMapSize = VariantToVector2I(gameData["MapSize"]);
 		int loadedFinalWave = (int)gameData["FinalWave"];
 		int loadedInspectionInterval = (int)gameData["InspectionInterval"];
 
@@ -256,6 +259,7 @@ public partial class SaveManager : Node
 		levelResource._finalWave = loadedFinalWave;
 		levelResource._inspectionInterval = loadedInspectionInterval;
 		levelResource._mapID = loadedMap;
+		levelResource._mapSize = loadedMapSize;
 
 		levelResource._challengeEnabled = loadedChallengeEnabled;
 		levelResource._portalsEnabled = loadedPortalsEnabled;
@@ -269,7 +273,6 @@ public partial class SaveManager : Node
 		Vector4I money,
 		int portalLimit,
 		int hp,
-		int map, 
 		int waveCount,
 		Array<Dictionary<string, Variant>> towers,
 		Array<string> loadedUnlockedTowers,
@@ -369,5 +372,26 @@ public partial class SaveManager : Node
 
 		// Return default/zeroed vector if format is unexpected or broken
 		return Vector4I.Zero;
+	}
+
+	private Vector2I VariantToVector2I(Variant variantValue)
+	{
+		if (variantValue.VariantType == Variant.Type.String)
+		{
+			// Converts string format like "(100, 50, 0, 10)" safely back to vector values
+			string cleaned = ((string)variantValue).Replace("(", "").Replace(")", "").Replace(" ", "");
+			string[] components = cleaned.Split(',');
+
+			if (components.Length == 2)
+			{
+				return new Vector2I(
+						components[0].ToInt(),
+						components[1].ToInt()
+				);
+			}
+		}
+
+		// Return default/zeroed vector if format is unexpected or broken
+		return Vector2I.Zero;
 	}
 }

@@ -64,6 +64,8 @@ public partial class TowerUnit : StationaryUnit
 
 	public readonly string _fourthUpgradeBName = "Rank up B";
 
+	public Texture2D _background = GD.Load<Texture2D>("res://_Assets/TowerIconBackground.png");
+
 	private UpgradeButton _upgradeButton1; // the upgrade button at slot 1. Could be for any level.
 	private Vector4I _upgrade1Cost; // this is not the cost of the first upgrade, but it is the cost of whatever upgrade currently sits at slot 1.
 
@@ -72,6 +74,27 @@ public partial class TowerUnit : StationaryUnit
 
 	[Export]
 	private Array<EffectResource> _transformEffects = [];
+
+	/// <summary>
+	/// movable towers can be moved to any suitable tile
+	/// </summary>
+	[Export]
+	public bool _movable;
+
+	/// <summary>
+	/// removable towers can be sold for 75% of its cost
+	/// </summary>
+	[Export]
+	public bool _sellable;
+
+	/// <summary>
+	/// removable towers can be removed, but no refunds
+	/// </summary>
+	[Export]
+	public bool _removable;
+
+	[Export]
+	public bool _mustBeNextToPath = false;
 
 	public enum TargetPriority
 	{
@@ -355,30 +378,6 @@ public partial class TowerUnit : StationaryUnit
 		trigger.TextureNormal = GetIconTexture();
 		trigger.TextureFilter = TextureFilterEnum.Nearest;
 
-		// Buttons use "Flat" mode if you want them to look like your old labels
-		// or you can leave it off for a standard button look
-
-		// Create the solid background for the Button
-		StyleBoxFlat btnStyle = new StyleBoxFlat();
-		if (!clickable)
-		{
-			btnStyle.BgColor = new Color(0.2f, 0.2f, 0.2f, 1.0f); // Solid
-		}
-		else
-		{
-			btnStyle.BgColor = new Color(0.2f, 0.5f, 0.2f, 1.0f); // Solid
-		}
-		btnStyle.SetContentMarginAll(6);
-		btnStyle.CornerRadiusTopLeft = 3;
-		btnStyle.CornerRadiusBottomLeft = 3;
-		btnStyle.CornerRadiusTopRight = 3;
-		btnStyle.CornerRadiusBottomRight = 3;
-
-		// Apply to multiple states so it stays solid when clicked
-		trigger.AddThemeStyleboxOverride("normal", btnStyle);
-		trigger.AddThemeStyleboxOverride("hover", btnStyle);
-		trigger.AddThemeStyleboxOverride("pressed", btnStyle);
-
 		PanelContainer popup = new PanelContainer();
 		popup.ZIndex = 100;
 		popup.TopLevel = true; // Essential to avoid parent clipping
@@ -406,13 +405,6 @@ public partial class TowerUnit : StationaryUnit
 		return trigger;
 	}
 
-	public TextureRect MakeTowerIconBackground()
-	{
-		TextureRect background = new TextureRect();
-		background.Texture = TDTowerManager.TowerBackgroundTexture;
-		Utils.ScaleVisualToRadius(background, _iconSize);
-		return background;
-	}
 
 	public override Godot.Collections.Dictionary<string, PanelContainer> MakeUnitInfoContainer()
 	{
@@ -450,27 +442,48 @@ public partial class TowerUnit : StationaryUnit
 			totalDamageLabel.Visible = true;
 		}
 		
-		if (_towerType == TowerType.Defense)
+		if (_sellable)
 		{
 			Button sellButton = new();
 			sellButton.Text = "Sell for 75%";
 			sellButton.Pressed += () =>
 			{
-				_tdManager.GainMoney(Utils.VectorScalarMultiplication(GetTotalCost(), 0.75f));
-				_tdManager._towerManager.RemoveTower(_gridLocation);
+				if (_tdManager.CheckWaveFinished() && !_tdManager._waveEndProcessed)
+				{
+					_tdManager.GainMoney(Utils.VectorScalarMultiplication(GetTotalCost(), 0.75f));
+					_tdManager._towerManager.RemoveTower(_gridLocation);
+				}
+
 			};
 			moneyInfoV.AddChild(sellButton);
 		}
 
-		if (_towerType == TowerType.Spawner)
+		if (_removable)
 		{
 			Button sellButton = new();
 			sellButton.Text = "Remove";
 			sellButton.Pressed += () =>
 			{
-				_tdManager._towerManager.RemoveTower(_gridLocation);
+				if (_tdManager.CheckWaveFinished() && !_tdManager._waveEndProcessed)
+				{
+					_tdManager._towerManager.RemoveTower(_gridLocation);
+				}
 			};
 			moneyInfoV.AddChild(sellButton);
+		}
+
+		if (_movable)
+		{
+			Button moveButton = new();
+			moveButton.Text = "Move";
+			moveButton.Pressed += () =>
+			{
+				if (_tdManager.CheckWaveFinished() && !_tdManager._waveEndProcessed)
+				{
+					_tdManager._towerManager.EnterMoveMode(this);
+				}
+			};
+			moneyInfoV.AddChild(moveButton);
 		}
 
 

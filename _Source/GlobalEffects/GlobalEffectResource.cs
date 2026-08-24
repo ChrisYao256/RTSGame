@@ -21,6 +21,9 @@ public abstract partial class GlobalEffectResource : Resource
 
 	public Texture2D _defaultIcon = GD.Load<Texture2D>("res://_Assets/Upgrade.png");
 
+	public Texture2D _background = GD.Load<Texture2D>("res://_Assets/EffectIconBackground.png");
+
+
 	[Export]
 	public string _effectDescription = "";
 
@@ -65,13 +68,25 @@ public abstract partial class GlobalEffectResource : Resource
 		{
 			trigger.TextureNormal = _defaultIcon;
 		};
-		PanelContainer popup = TooltipManager.GetTooltipContainer((_effectDescription, ""));
+		string tooltipText = "";
+		if (_effectName != "")
+		{
+			tooltipText = _effectName + "\n";
+		}
+		tooltipText += _effectDescription;
+		PanelContainer popup = TooltipManager.GetTooltipContainer((tooltipText, ""));
 		trigger._popupBox = popup;
 		popup.Visible = false;
 
 		_iconNode = trigger;
 
 		trigger.ResetSize();
+
+		TextureRect background = new TextureRect();
+		background.Texture = _background;
+		trigger.AddChild(background);
+		background.ShowBehindParent = true;
+		background.Position = new Vector2(-4, -4);
 
 		return trigger;
 	}

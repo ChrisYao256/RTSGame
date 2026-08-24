@@ -1,0 +1,48 @@
+[gd_scene format=3 uid="uid://dyey0j4xnshnn"]
+
+[ext_resource type="Script" uid="uid://dltrnewg5aqrv" path="res://_Source/ExplosionVisualEffect.cs" id="1_knmxf"]
+[ext_resource type="Texture2D" uid="uid://bqaaifu7ikwa4" path="res://_Assets/DeathExplosion.png" id="2_knmxf"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_reovb"]
+atlas = ExtResource("2_knmxf")
+region = Rect2(0, 0, 720, 720)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hfxvo"]
+atlas = ExtResource("2_knmxf")
+region = Rect2(720, 0, 720, 720)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4iyt7"]
+atlas = ExtResource("2_knmxf")
+region = Rect2(1440, 0, 720, 720)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2xmeb"]
+atlas = ExtResource("2_knmxf")
+region = Rect2(2160, 0, 720, 720)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_auw5p"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_reovb")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hfxvo")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4iyt7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2xmeb")
+}],
+"loop": false,
+"name": &"default",
+"speed": 10.0
+}]
+
+[node name="ExplosionVisualEffect" type="Node2D" unique_id=856898756]
+script = ExtResource("1_knmxf")
+_time = 0.4
+
+[node name="Sprite2D" type="AnimatedSprite2D" parent="." unique_id=350110334]
+sprite_frames = SubResource("SpriteFrames_auw5p")
+autoplay = "default"

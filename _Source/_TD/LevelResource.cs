@@ -10,6 +10,9 @@ public partial class LevelResource : Resource
 	public int _mapID;
 
 	[Export]
+	public Vector2I _mapSize;
+
+	[Export]
 	public bool _portalsEnabled = true;
 
 	[Export]

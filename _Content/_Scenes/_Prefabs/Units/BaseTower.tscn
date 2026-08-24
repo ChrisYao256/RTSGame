@@ -1,13 +1,13 @@
 [gd_scene format=3 uid="uid://yhbw0b164ui2"]
 
 [ext_resource type="PackedScene" uid="uid://7vf0p5478xp8" path="res://_Content/_Scenes/_Prefabs/Units/BaseStationaryUnit.tscn" id="1_q0otc"]
-[ext_resource type="Script" uid="uid://b2ck2c8ddtlw3" path="res://_Source/_Units/TowerUnit.cs" id="2_2i4cj"]
+[ext_resource type="Script" uid="uid://dflqckbwm2s4m" path="res://_Source/_Units/BaseDefense.cs" id="2_hmgo8"]
 [ext_resource type="Script" uid="uid://dtpcxn7d2dqcy" path="res://_Source/Effects/EffectResource.cs" id="3_2i4cj"]
 [ext_resource type="FontFile" uid="uid://cbsqj8u26ju8q" path="res://_Assets/Fonts/edit-undo.brk.ttf" id="4_l3ce5"]
 [ext_resource type="Script" uid="uid://dmsd1wjc5yk5v" path="res://_Source/_UI/TooltipRichTextLabel.cs" id="5_hmgo8"]
 
 [node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_q0otc")]
-script = ExtResource("2_2i4cj")
+script = ExtResource("2_hmgo8")
 _cost = Vector4i(0, 0, 0, 0)
 _iconTexture = null
 _towerType = 0
@@ -25,6 +25,10 @@ _fourthUpgradeB = null
 _fourthUpgradeBTexture = null
 _fourthUpgradeBCost = Vector4i(0, 0, 0, 0)
 _transformEffects = Array[ExtResource("3_2i4cj")]([])
+_movable = false
+_sellable = false
+_removable = false
+_mustBeNextToPath = false
 
 [node name="CollisionShape2D" parent="." index="2" unique_id=1381764660]
 visible = true

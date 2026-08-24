@@ -135,6 +135,7 @@ animations = [{
 }]
 
 [node name="BaseUnit" unique_id=481801141 instance=ExtResource("1_k3h8r")]
+_deathAnimationScene = null
 _hpDeducted = 2
 _levelStats = Array[ExtResource("2_vl23e")]([SubResource("Resource_2mu3q"), SubResource("Resource_siojo"), SubResource("Resource_qqwbb"), SubResource("Resource_n47w0"), SubResource("Resource_1nwop"), SubResource("Resource_mguj0"), SubResource("Resource_egy4p"), SubResource("Resource_1363w")])
 _moveSpeed = 0.0
@@ -143,6 +144,7 @@ _startingEffects = Array[Object]([])
 _internalName = "Priest"
 _name = "Priest"
 _radius = 24.0
+_healthBarOffset = 40.0
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." index="1" unique_id=1840411261]
 scale = Vector2(0.2681919, 0.2681919)

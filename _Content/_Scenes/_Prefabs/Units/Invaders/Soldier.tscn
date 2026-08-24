@@ -5,6 +5,7 @@
 [ext_resource type="Script" uid="uid://bwnw1f3ti2dgi" path="res://_Source/Effects/SelfHealing/SelfHealingResource.cs" id="2_oxx1p"]
 [ext_resource type="Script" uid="uid://dtpcxn7d2dqcy" path="res://_Source/Effects/EffectResource.cs" id="3_2buii"]
 [ext_resource type="Texture2D" uid="uid://bc230321nqto5" path="res://icon.svg" id="3_oxx1p"]
+[ext_resource type="Texture2D" uid="uid://dfwsk70jl0etk" path="res://_Assets/Golem.png" id="5_7sdt5"]
 
 [sub_resource type="Resource" id="Resource_2buii"]
 script = ExtResource("2_oxx1p")
@@ -14,6 +15,7 @@ metadata/_custom_type_script = "uid://bwnw1f3ti2dgi"
 [sub_resource type="Resource" id="Resource_7sdt5"]
 script = ExtResource("2_0mepk")
 _hpBuff = 500
+_speedBuff = 30.0
 _moneyBuff = Vector4i(4, 8, 0, 0)
 _startingEffects = Array[ExtResource("3_2buii")]([SubResource("Resource_2buii")])
 metadata/_custom_type_script = "uid://iamaod4iivlq"
@@ -66,21 +68,50 @@ _hpBuff = 12120
 _moneyBuff = Vector4i(24, 48, 0, 0)
 metadata/_custom_type_script = "uid://iamaod4iivlq"
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_kh3lo"]
+atlas = ExtResource("5_7sdt5")
+region = Rect2(0, 0, 720, 720)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wsrpy"]
+atlas = ExtResource("5_7sdt5")
+region = Rect2(720, 0, 720, 720)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_nsalx"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kh3lo")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wsrpy")
+}],
+"loop": true,
+"name": &"default",
+"speed": 1.5
+}]
+
 [node name="BaseUnit" unique_id=481801141 instance=ExtResource("1_ksbbh")]
 _hpDeducted = 2
 _levelStats = Array[ExtResource("2_0mepk")]([SubResource("Resource_7sdt5"), SubResource("Resource_kh3lo"), SubResource("Resource_wsrpy"), SubResource("Resource_nsalx"), SubResource("Resource_neqga"), SubResource("Resource_l3sb1"), SubResource("Resource_nvxnu"), SubResource("Resource_w24uq")])
-_moveSpeed = 45.0
+_moveSpeed = 0.0
 _hpMax = 0
 _startingEffects = Array[Object]([])
 _internalName = "Soldier"
 _name = "Golem"
-_radius = 24.0
+_radius = 40.0
+_healthBarOffset = 45.0
 
-[node name="MainSprite" parent="." index="1" unique_id=597948513]
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." index="1" unique_id=278394335]
+texture_filter = 1
+sprite_frames = SubResource("SpriteFrames_nsalx")
+autoplay = "default"
+
+[node name="MainSprite" parent="." index="2" unique_id=597948513]
+visible = false
 scale = Vector2(1, 1)
 texture = ExtResource("3_oxx1p")
 
-[node name="HealthBar" parent="." index="5" unique_id=640038315]
+[node name="HealthBar" parent="." index="6" unique_id=640038315]
 offset_left = -24.0
 offset_top = -32.0
 offset_right = 24.0

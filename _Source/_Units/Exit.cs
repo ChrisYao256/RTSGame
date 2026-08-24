@@ -1,16 +1,19 @@
 using Godot;
 using RTSGame.Source;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RTSGame.Units;
 
-public partial class Exit : StationaryUnit
+public partial class Exit : TowerUnit
 {
-	public TDManager _tdManager;
+	public override void _Ready()
+	{
+		base._Ready();
+		_movable = true;
+		_removable = false;
+		_sellable = false;
+		_mustBeNextToPath = true;
+	}
 
 	public override void SetAttackRange()
 	{

@@ -19,29 +19,44 @@
 [ext_resource type="Script" uid="uid://iamaod4iivlq" path="res://_Source/Effects/InvaderStatsIncrease/InvaderStatsIncreaseResource.cs" id="9_o6hv2"]
 [ext_resource type="Script" uid="uid://dmsd1wjc5yk5v" path="res://_Source/_UI/TooltipRichTextLabel.cs" id="10_2i1sm"]
 [ext_resource type="Script" uid="uid://d3ixfo58oeqbc" path="res://_Source/GlobalEffects/GlobalSpawnerUpgrade/GlobalSpawnerUpgradeResource.cs" id="10_dntla"]
+[ext_resource type="Texture2D" uid="uid://b1xdlc4twpgx1" path="res://_Assets/Effects/Citrine.png" id="10_piuxs"]
 [ext_resource type="Script" uid="uid://cgg5b2jlposrp" path="res://_Source/GlobalEffects/GlobalColoredSpawnerUpgrade/GlobalColoredSpawnerUpgradeResource.cs" id="11_dntla"]
 [ext_resource type="FontFile" uid="uid://cbsqj8u26ju8q" path="res://_Assets/Fonts/edit-undo.brk.ttf" id="11_hcr7m"]
+[ext_resource type="Texture2D" uid="uid://devdupjbxjiui" path="res://_Assets/Effects/Orb.png" id="12_3yiie"]
 [ext_resource type="Script" uid="uid://dooi3c52a3oi3" path="res://_Source/GlobalEffects/GlobalStrongerSlow/GlobalStrongerSlowResource.cs" id="12_bjl3e"]
 [ext_resource type="Script" uid="uid://b88b1wxtshdjv" path="res://_Source/_UI/TooltipManager.cs" id="12_j46br"]
+[ext_resource type="Texture2D" uid="uid://cmtju340vkp4a" path="res://_Assets/Effects/Ruby.png" id="12_vr007"]
+[ext_resource type="Texture2D" uid="uid://oru8b1c5s2ew" path="res://_Assets/Effects/Sapphire.png" id="13_7kp2f"]
 [ext_resource type="Script" uid="uid://xl7uasnsnstt" path="res://_Source/GlobalEffects/GlobalFasterBurn/GlobalFasterBurnResource.cs" id="13_q8r2r"]
 [ext_resource type="Script" uid="uid://8nm8gvow7tmy" path="res://_Source/Effects/DropMoreMoneyOnKill/DropMoreMoneyOnKillResource.cs" id="14_uex6a"]
 [ext_resource type="Script" uid="uid://dke7fl3w4x1bt" path="res://_Source/GlobalEffects/GlobalColoredEffect/GlobalColoredEffectResource.cs" id="15_0kvg5"]
 [ext_resource type="Script" uid="uid://c4nnk8ppqp8tf" path="res://_Source/_TD/TutorialManager.cs" id="15_4rvgl"]
+[ext_resource type="Texture2D" uid="uid://dp25mmr55ltmk" path="res://_Assets/Effects/Emerald.png" id="15_ap1w4"]
 [ext_resource type="Script" uid="uid://cs2l33e6ilduw" path="res://_Source/Debug.gd" id="15_d7nqx"]
 [ext_resource type="Script" uid="uid://cd2wcid8wq8e8" path="res://_Source/GlobalEffects/GlobalWeaponTypeStatsIncrease/GlobalWeaponTypeStatsIncreaseResource.cs" id="16_0kvg5"]
 [ext_resource type="Script" uid="uid://ckdrb1qwbtdtn" path="res://_Source/_UI/HolePunchOverlay.cs" id="16_4rvgl"]
 [ext_resource type="Script" uid="uid://dp6ckxy1qef6o" path="res://_Source/Effects/RampUpDamage/RampUpDamageResource.cs" id="17_4qasu"]
+[ext_resource type="Texture2D" uid="uid://dosvfogj6d8j7" path="res://_Assets/Effects/RedBattery.png" id="17_jghf1"]
+[ext_resource type="Texture2D" uid="uid://ipdh6f8m6grn" path="res://_Assets/Effects/Dumbell.png" id="17_wbulx"]
 [ext_resource type="Script" uid="uid://dy2nueoscp1nk" path="res://_Source/GlobalEffects/GlobalWeaponTypeEffect/GlobalWeaponTypeEffectResource.cs" id="18_5vmbn"]
+[ext_resource type="Texture2D" uid="uid://bxfliwau6slei" path="res://_Assets/Effects/Shoes.png" id="18_laf8x"]
+[ext_resource type="Texture2D" uid="uid://iihpcpb21plj" path="res://_Assets/Effects/BlueBattery.png" id="19_i1dr5"]
+[ext_resource type="Texture2D" uid="uid://vtinw2kkbphr" path="res://_Assets/Effects/GreenBattery.png" id="20_02vbs"]
 [ext_resource type="Script" uid="uid://y1enulr4b71h" path="res://_Source/Effects/SlowMovement/SlowMovementResource.cs" id="21_6dmqx"]
 [ext_resource type="Script" uid="uid://cxg3f5ateuini" path="res://_Source/Effects/DebuffOnHit/DebuffOnHitResource.cs" id="22_v0mgk"]
 [ext_resource type="Script" uid="uid://bxjan6sk0oey0" path="res://_Source/GlobalEffects/GlobalLargerExplosion/GlobalLargerExplosionResource.cs" id="23_v0mgk"]
 [ext_resource type="Script" uid="uid://uu3xdbhx6v7" path="res://_Source/GlobalEffects/GlobalBossStatsIncrease/GlobalBossStatsIncreaseResource.cs" id="24_k6cfo"]
+[ext_resource type="Texture2D" uid="uid://bs425yn4a3ptb" path="res://_Assets/Effects/StrongerScanner.png" id="25_02vbs"]
 [ext_resource type="Texture2D" uid="uid://cg7fhb0yguxg0" path="res://_Assets/Border.png" id="25_5vmbn"]
 [ext_resource type="Script" uid="uid://d2fjiaxud7qit" path="res://_Source/GlobalEffects/GlobalGetReward/GlobalGetRewardResource.cs" id="25_kwxyj"]
 [ext_resource type="Script" uid="uid://fuvydh62phn" path="res://_Source/_UI/StripeManager.cs" id="26_jpjpv"]
-[ext_resource type="Script" uid="uid://xsa6d1nj15e0" path="res://_Source/GlobalEffects/GlobalSlowDamage/GlobalSlowDamageResource.cs" id="26_r3yin"]
 [ext_resource type="Script" uid="uid://bf746mou1jsik" path="res://_Source/Effects/StatsIncreaseOnKill/StatsIncreaseOnKillResource.cs" id="27_87ego"]
+[ext_resource type="Texture2D" uid="uid://vd6xlb0gvwo8" path="res://_Assets/Effects/BulletPierce.png" id="28_i1dr5"]
+[ext_resource type="Texture2D" uid="uid://b8mmsh1mako8b" path="res://_Assets/Effects/BiggerExplosion.png" id="32_rsgja"]
+[ext_resource type="Texture2D" uid="uid://bghu6rblplox" path="res://_Assets/Effects/TowerBook.png" id="36_dmkyn"]
 [ext_resource type="Script" uid="uid://dy6fwulpmhxdc" path="res://_Source/_TD/RewardManager.cs" id="39_4f8lp"]
+[ext_resource type="Texture2D" uid="uid://df0pytk1ndhhs" path="res://_Assets/Effects/TwoBooks.png" id="39_n7h35"]
+[ext_resource type="Texture2D" uid="uid://denc6ofvkv51b" path="res://_Assets/Effects/Soulgem.png" id="42_n7h35"]
 
 [sub_resource type="Resource" id="Resource_rsgja"]
 script = ExtResource("9_o6hv2")
@@ -211,6 +226,8 @@ metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 [sub_resource type="Resource" id="Resource_dntla"]
 script = ExtResource("7_ikq3i")
 _statsIncrease = SubResource("Resource_6wcfn")
+_effectName = "Citrine"
+_effectIcon = ExtResource("10_piuxs")
 metadata/_custom_type_script = "uid://d3qvvh1ko17dm"
 
 [sub_resource type="Resource" id="Resource_ikq3i"]
@@ -221,6 +238,8 @@ metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 [sub_resource type="Resource" id="Resource_bjl3e"]
 script = ExtResource("7_ikq3i")
 _statsIncrease = SubResource("Resource_ikq3i")
+_effectName = "Scrying Orb"
+_effectIcon = ExtResource("12_3yiie")
 metadata/_custom_type_script = "uid://d3qvvh1ko17dm"
 
 [sub_resource type="Resource" id="Resource_q8r2r"]
@@ -232,6 +251,8 @@ metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 script = ExtResource("8_ikq3i")
 _statsIncrease = SubResource("Resource_q8r2r")
 _color = 1
+_effectName = "Ruby"
+_effectIcon = ExtResource("12_vr007")
 metadata/_custom_type_script = "uid://bsunqifbwrvbx"
 
 [sub_resource type="Resource" id="Resource_uex6a"]
@@ -243,6 +264,8 @@ metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 script = ExtResource("8_ikq3i")
 _statsIncrease = SubResource("Resource_uex6a")
 _color = 2
+_effectName = "Sapphire"
+_effectIcon = ExtResource("13_7kp2f")
 metadata/_custom_type_script = "uid://bsunqifbwrvbx"
 
 [sub_resource type="Resource" id="Resource_4512f"]
@@ -254,6 +277,8 @@ metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 script = ExtResource("8_ikq3i")
 _statsIncrease = SubResource("Resource_4512f")
 _color = 3
+_effectName = "Emerald"
+_effectIcon = ExtResource("15_ap1w4")
 metadata/_custom_type_script = "uid://bsunqifbwrvbx"
 
 [sub_resource type="Resource" id="Resource_5vmbn"]
@@ -265,6 +290,8 @@ metadata/_custom_type_script = "uid://iamaod4iivlq"
 [sub_resource type="Resource" id="Resource_jpjpv"]
 script = ExtResource("10_dntla")
 _statsIncrease = SubResource("Resource_5vmbn")
+_effectName = "Dumbell"
+_effectIcon = ExtResource("17_wbulx")
 metadata/_custom_type_script = "uid://d3ixfo58oeqbc"
 
 [sub_resource type="Resource" id="Resource_ff0ka"]
@@ -276,6 +303,8 @@ metadata/_custom_type_script = "uid://iamaod4iivlq"
 [sub_resource type="Resource" id="Resource_ftcvg"]
 script = ExtResource("10_dntla")
 _statsIncrease = SubResource("Resource_ff0ka")
+_effectName = "Running Shoes"
+_effectIcon = ExtResource("18_laf8x")
 metadata/_custom_type_script = "uid://d3ixfo58oeqbc"
 
 [sub_resource type="Resource" id="Resource_50tfm"]
@@ -287,6 +316,8 @@ metadata/_custom_type_script = "uid://iamaod4iivlq"
 script = ExtResource("11_dntla")
 _statsIncrease = SubResource("Resource_50tfm")
 _color = 1
+_effectName = "Red Battery"
+_effectIcon = ExtResource("17_jghf1")
 metadata/_custom_type_script = "uid://cgg5b2jlposrp"
 
 [sub_resource type="Resource" id="Resource_k6cfo"]
@@ -298,6 +329,8 @@ metadata/_custom_type_script = "uid://iamaod4iivlq"
 script = ExtResource("11_dntla")
 _statsIncrease = SubResource("Resource_k6cfo")
 _color = 2
+_effectName = "Blue Battery"
+_effectIcon = ExtResource("19_i1dr5")
 metadata/_custom_type_script = "uid://cgg5b2jlposrp"
 
 [sub_resource type="Resource" id="Resource_kwxyj"]
@@ -309,6 +342,8 @@ metadata/_custom_type_script = "uid://iamaod4iivlq"
 script = ExtResource("11_dntla")
 _statsIncrease = SubResource("Resource_kwxyj")
 _color = 3
+_effectName = "Green Battery"
+_effectIcon = ExtResource("20_02vbs")
 metadata/_custom_type_script = "uid://cgg5b2jlposrp"
 
 [sub_resource type="Resource" id="Resource_87ego"]
@@ -351,6 +386,8 @@ metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 script = ExtResource("16_0kvg5")
 _statsIncrease = SubResource("Resource_2y7pb")
 _weaponType = 4
+_effectName = "Wavevector Calibrator"
+_effectIcon = ExtResource("25_02vbs")
 metadata/_custom_type_script = "uid://cd2wcid8wq8e8"
 
 [sub_resource type="Resource" id="Resource_jghf1"]
@@ -375,6 +412,8 @@ metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 script = ExtResource("16_0kvg5")
 _statsIncrease = SubResource("Resource_02vbs")
 _weaponType = 1
+_effectName = "Penetrative Casing"
+_effectIcon = ExtResource("28_i1dr5")
 metadata/_custom_type_script = "uid://cd2wcid8wq8e8"
 
 [sub_resource type="Resource" id="Resource_qnqky"]
@@ -397,6 +436,8 @@ metadata/_custom_type_script = "uid://dy2nueoscp1nk"
 [sub_resource type="Resource" id="Resource_ndjxy"]
 script = ExtResource("23_v0mgk")
 _extraRange = 0.2
+_effectName = "Ruby-infused Explosives"
+_effectIcon = ExtResource("32_rsgja")
 metadata/_custom_type_script = "uid://bxjan6sk0oey0"
 
 [sub_resource type="Resource" id="Resource_in4ly"]
@@ -413,21 +454,20 @@ metadata/_custom_type_script = "uid://uu3xdbhx6v7"
 [sub_resource type="Resource" id="Resource_jroq3"]
 script = ExtResource("25_kwxyj")
 _rewards = Array[int]([1, 0])
+_effectName = "Sword and Shield"
+_effectIcon = ExtResource("39_n7h35")
 metadata/_custom_type_script = "uid://d2fjiaxud7qit"
-
-[sub_resource type="Resource" id="Resource_0uvfj"]
-script = ExtResource("26_r3yin")
-_percentDamage = 0.01
-metadata/_custom_type_script = "uid://xsa6d1nj15e0"
 
 [sub_resource type="Resource" id="Resource_vi170"]
 script = ExtResource("25_kwxyj")
 _rewards = Array[int]([6])
+_effectName = "Master Tome"
+_effectIcon = ExtResource("36_dmkyn")
 metadata/_custom_type_script = "uid://d2fjiaxud7qit"
 
 [sub_resource type="Resource" id="Resource_b5o4e"]
 script = ExtResource("6_6wcfn")
-_damagePercentIncrease = 0.004
+_attackSpeedIncrease = 0.004
 metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 
 [sub_resource type="Resource" id="Resource_056qo"]
@@ -440,12 +480,11 @@ metadata/_custom_type_script = "uid://bf746mou1jsik"
 script = ExtResource("15_0kvg5")
 _resource = SubResource("Resource_056qo")
 _color = 3
+_effectName = "Soul Gem"
+_effectIcon = ExtResource("42_n7h35")
 metadata/_custom_type_script = "uid://dke7fl3w4x1bt"
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_dqwu5"]
-vertices = PackedVector2Array(1232, 810, -318, 810, -318, -45, 1232, -45)
-polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3)])
-outlines = Array[PackedVector2Array]([PackedVector2Array(1242, -55, 1242, 820, -328, 820, -328, -55)])
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_dqwu5"]
 texture = ExtResource("7_dqwu5")
@@ -502,11 +541,9 @@ _lateBosses = Array[Object]([SubResource("Resource_l5rss"), SubResource("Resourc
 _inspectionBosses = Array[Object]([SubResource("Resource_xxchu"), SubResource("Resource_7ayci"), SubResource("Resource_xdlyi"), SubResource("Resource_gtmwp")])
 _finalBosses = Array[Object]([SubResource("Resource_emq71")])
 _startingMoney = Vector4i(80, 80, 80, 80)
-_allGlobalEffects = Array[Object]([SubResource("Resource_dntla"), SubResource("Resource_bjl3e"), SubResource("Resource_q6tlc"), SubResource("Resource_0kvg5"), SubResource("Resource_4qasu"), SubResource("Resource_jpjpv"), SubResource("Resource_ftcvg"), SubResource("Resource_6dmqx"), SubResource("Resource_v0mgk"), SubResource("Resource_r3yin"), SubResource("Resource_4f8lp"), SubResource("Resource_2tfwb"), SubResource("Resource_7kp2f"), SubResource("Resource_ap1w4"), SubResource("Resource_8lxj5"), SubResource("Resource_i1dr5"), SubResource("Resource_dmkyn"), SubResource("Resource_okxfi"), SubResource("Resource_ndjxy"), SubResource("Resource_qc10m"), SubResource("Resource_jroq3"), SubResource("Resource_0uvfj"), SubResource("Resource_vi170"), SubResource("Resource_8ac4n")])
+_allGlobalEffects = Array[Object]([SubResource("Resource_dntla"), SubResource("Resource_bjl3e"), SubResource("Resource_q6tlc"), SubResource("Resource_0kvg5"), SubResource("Resource_4qasu"), SubResource("Resource_jpjpv"), SubResource("Resource_ftcvg"), SubResource("Resource_6dmqx"), SubResource("Resource_v0mgk"), SubResource("Resource_r3yin"), SubResource("Resource_4f8lp"), SubResource("Resource_2tfwb"), SubResource("Resource_7kp2f"), SubResource("Resource_ap1w4"), SubResource("Resource_8lxj5"), SubResource("Resource_i1dr5"), SubResource("Resource_dmkyn"), SubResource("Resource_okxfi"), SubResource("Resource_ndjxy"), SubResource("Resource_qc10m"), SubResource("Resource_jroq3"), SubResource("Resource_vi170"), SubResource("Resource_8ac4n")])
 
 [node name="NavigationRegion2D" type="NavigationRegion2D" parent="." unique_id=1731619863]
-visible = false
-position = Vector2(328, 55)
 navigation_polygon = SubResource("NavigationPolygon_dqwu5")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1539474158]
@@ -687,7 +724,9 @@ process_mode = 1
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "Next Cycle
-
+TODO: 
+1. draw new tiles for spawner, entrance, exit background
+2. implement chunk generation
 "
 
 [node name="Challenge" type="Button" parent="RightPanelCanvasLayer/RightPanel/VBoxContainer/HBoxContainer/VBoxContainer" unique_id=1383851800]
@@ -896,6 +935,8 @@ layout_mode = 2
 [node name="GridContainer" type="GridContainer" parent="RewardLayer/PanelContainer2/VBoxContainer" unique_id=1695878950]
 layout_mode = 2
 size_flags_horizontal = 4
+theme_override_constants/h_separation = 16
+theme_override_constants/v_separation = 16
 
 [node name="TutorialLayer" type="CanvasLayer" parent="." unique_id=213049663]
 layer = 10
@@ -976,6 +1017,7 @@ text = "Complete"
 
 [connection signal="pressed" from="RightPanelCanvasLayer/RightPanel/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/Button" to="TdManager" method="BuyExtraPortalLimit"]
 [connection signal="pressed" from="RightPanelCanvasLayer/RightPanel/VBoxContainer/HBoxContainer/VBoxContainer/NextWave" to="." method="OnNextWavePressed"]
+[connection signal="pressed" from="RightPanelCanvasLayer/RightPanel/VBoxContainer/HBoxContainer/VBoxContainer/Challenge" to="TdManager" method="BuyChallenge"]
 [connection signal="pressed" from="RightPanelCanvasLayer/RightPanel/VBoxContainer/HBoxContainer/VBoxContainer/GetPassive" to="TdManager" method="GetNewPassive"]
 [connection signal="pressed" from="RightPanelCanvasLayer/RightPanel/VBoxContainer/HBoxContainer/VBoxContainer/GetAnyPassive" to="TdManager" method="GetNewAnyPassive"]
 [connection signal="pressed" from="TopLeftOptions/VBoxContainer/Exit" to="TdManager" method="Quit"]

@@ -1,0 +1,15 @@
+[remap]
+
+importer="sicilica.import.pixelorama"
+type="SpriteFrames"
+uid="uid://do7bnwqnme27y"
+valid=false
+
+[deps]
+
+source_file="res://_Assets/Priest.png.pxo"
+
+[params]
+
+include_default_animation=true
+separate_layers=false

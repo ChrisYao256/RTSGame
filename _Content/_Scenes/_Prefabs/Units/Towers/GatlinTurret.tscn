@@ -31,7 +31,6 @@ metadata/_custom_type_script = "uid://c7ye5bgfhla5e"
 [sub_resource type="Resource" id="Resource_n37es"]
 script = ExtResource("4_88xlf")
 _transformedUnit = "RampUpGatlinTurret"
-_description = "Damage increases when focusing on the same target."
 metadata/_custom_type_script = "uid://be80c57wd06d0"
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_bkc43"]
@@ -74,7 +73,7 @@ _baseHealthBarWidth = 48.0
 scale = Vector2(1, 1)
 texture = ExtResource("7_7oaay")
 
-[node name="AidArea" parent="." index="7" unique_id=724286163]
+[node name="AidArea" parent="." index="6" unique_id=724286163]
 visible = false
 
 [node name="AidAreaCollision" parent="AidArea" index="0" unique_id=1952573643]

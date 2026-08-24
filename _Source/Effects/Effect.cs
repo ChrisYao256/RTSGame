@@ -92,6 +92,11 @@ public abstract partial class Effect : Node2D
 
 	}
 
+	protected virtual void OnMovement(Vector2I origin, Vector2I target)
+	{
+
+	}
+
 	protected virtual void OnUnitDied()
 	{
 
@@ -143,6 +148,11 @@ public abstract partial class Effect : Node2D
 	}
 
 	protected virtual void OnPlacedTower(TowerUnit tower)
+	{
+
+	}
+
+	protected virtual void OnMovedTower(TowerUnit tower)
 	{
 
 	}

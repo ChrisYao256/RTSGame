@@ -5,6 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://bc230321nqto5" path="res://icon.svg" id="3_6kxqy"]
 [ext_resource type="Script" uid="uid://dtpcxn7d2dqcy" path="res://_Source/Effects/EffectResource.cs" id="3_e2ca5"]
 [ext_resource type="Script" uid="uid://blleps1e6vdkq" path="res://_Source/Effects/OneTimeShield/OneTimeShieldResource.cs" id="4_orfog"]
+[ext_resource type="Texture2D" uid="uid://dqwg00r3xo85y" path="res://_Assets/Shield.png" id="5_e2ca5"]
 
 [sub_resource type="Resource" id="Resource_gmfqk"]
 script = ExtResource("4_orfog")
@@ -102,7 +103,30 @@ _moneyBuff = Vector4i(32, 32, 0, 0)
 _startingEffects = Array[ExtResource("3_e2ca5")]([SubResource("Resource_k42wq")])
 metadata/_custom_type_script = "uid://iamaod4iivlq"
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_orfog"]
+atlas = ExtResource("5_e2ca5")
+region = Rect2(0, 0, 720, 720)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gmfqk"]
+atlas = ExtResource("5_e2ca5")
+region = Rect2(720, 0, 720, 720)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_bhxt8"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_orfog")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gmfqk")
+}],
+"loop": true,
+"name": &"default",
+"speed": 1.5
+}]
+
 [node name="BaseUnit" unique_id=481801141 instance=ExtResource("1_t5nkc")]
+_deathAnimationScene = null
 _hpDeducted = 2
 _levelStats = Array[ExtResource("2_t5nkc")]([SubResource("Resource_bhxt8"), SubResource("Resource_e2ca5"), SubResource("Resource_j2ujy"), SubResource("Resource_wyfvh"), SubResource("Resource_c0c6m"), SubResource("Resource_dow8r"), SubResource("Resource_k83cs"), SubResource("Resource_ktim8")])
 _moveSpeed = 0.0
@@ -110,13 +134,20 @@ _hpMax = 0
 _startingEffects = Array[Object]([])
 _internalName = "Shield"
 _name = "Shield"
-_radius = 24.0
+_radius = 32.0
+_healthBarOffset = 40.0
 
-[node name="MainSprite" parent="." index="1" unique_id=597948513]
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." index="1" unique_id=1844284130]
+texture_filter = 1
+sprite_frames = SubResource("SpriteFrames_bhxt8")
+autoplay = "default"
+
+[node name="MainSprite" parent="." index="2" unique_id=597948513]
+visible = false
 scale = Vector2(1, 1)
 texture = ExtResource("3_6kxqy")
 
-[node name="HealthBar" parent="." index="5" unique_id=640038315]
+[node name="HealthBar" parent="." index="6" unique_id=640038315]
 offset_left = -24.0
 offset_top = -32.0
 offset_right = 24.0
