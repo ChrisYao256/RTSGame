@@ -531,15 +531,22 @@ public partial class UnitManager : Node2D
 				tower._gridLocation = (Vector2I)gridLocation;
 			}
 
-			//if (!hasEffects)
-			//{
-			//	newUnit._isDisplayUnit = true;
-			//	newUnit.SetDisplayUnit();
-			//}
+			if (!hasEffects)
+			{
+				newUnit._isDisplayUnit = true;
+			}
 
 			GetParent().AddChild(newUnit);
 
-			_activeUnits.Add(newUnit);
+			if (!hasEffects)
+			{
+				newUnit.SetDisplayUnit();
+			}
+			else
+			{
+				_activeUnits.Add(newUnit);
+			}
+				
 
 			return newUnit;
 		}

@@ -51,7 +51,7 @@ public partial class Unit : CharacterBody2D
 
 
 	[Export]
-	private Array<EffectResource> _startingEffects;
+	protected Array<EffectResource> _startingEffects = [];
 
 	public int _hp { get; private set; }
 
@@ -224,8 +224,8 @@ public partial class Unit : CharacterBody2D
 
 	public virtual void SetDisplayUnit()
 	{
-		_isDisplayUnit = true;
 		SetWeapon();
+		SetSelectionVisual();
 		SetStartingEffects(true);
 		_hp = GetHpMax();
 		SetAttackRange();
@@ -455,7 +455,7 @@ public partial class Unit : CharacterBody2D
 		return (int)Math.Round((_moveSpeed + _data._speedIncrease) * (1f - _speedDebuff) * (1f + _data._percentSpeedIncrease));
 	}
 
-	public virtual string GetName()
+	public new virtual string GetName()
 	{
 		return _name;
 	}

@@ -15,7 +15,7 @@ public partial class TDTowerManager : Node2D
 	private UnitManager _unitManager;
 	private VBoxContainer _rightPanel;
 	private GridContainer _towersBox;
-	private Grid _grid;
+	private GridManager _grid;
 
 	private Godot.Collections.Array<string> _towers;
 
@@ -42,7 +42,7 @@ public partial class TDTowerManager : Node2D
 	public void Initialize(UnitManager unitManager)
 	{
 		_unitManager = unitManager;
-		_grid = GetParent().GetNode<Grid>("TileMapLayer");
+		_grid = GetParent().GetNode<GridManager>("TileMapLayer");
 	}
 
 	public override void _Process(double delta)

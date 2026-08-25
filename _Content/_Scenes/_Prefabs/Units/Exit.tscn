@@ -5,6 +5,7 @@
 [ext_resource type="Script" uid="uid://dtpcxn7d2dqcy" path="res://_Source/Effects/EffectResource.cs" id="3_k4sr0"]
 [ext_resource type="FontFile" uid="uid://cbsqj8u26ju8q" path="res://_Assets/Fonts/edit-undo.brk.ttf" id="4_7gkx7"]
 [ext_resource type="Script" uid="uid://cla3xibbo83qy" path="res://_Source/Effects/MakeGroundWalkable/MakeGroundWalkableResource.cs" id="4_wy1fh"]
+[ext_resource type="Texture2D" uid="uid://bd48xdn8te23b" path="res://_Assets/HQ.png" id="5_1wv51"]
 [ext_resource type="Script" uid="uid://dmsd1wjc5yk5v" path="res://_Source/_UI/TooltipRichTextLabel.cs" id="5_wy1fh"]
 
 [sub_resource type="Resource" id="Resource_1wv51"]
@@ -41,6 +42,7 @@ _baseHealthBarWidth = 0.0
 
 [node name="MainSprite" parent="." index="1" unique_id=701942347]
 scale = Vector2(1, 1)
+texture = ExtResource("5_1wv51")
 
 [node name="CollisionShape2D" parent="." index="2" unique_id=1381764660]
 visible = true

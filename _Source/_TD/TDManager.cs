@@ -108,7 +108,7 @@ public partial class TDManager : Node
 	private TooltipRichTextLabel _redLabel;
 	private TooltipRichTextLabel _blueLabel;
 	private TooltipRichTextLabel _greenLabel;
-	private Grid _grid;
+	private GridManager _grid;
 	private Label _waveCounter;
 	private TextureProgressBar _progressionBar;
 	private StripeManager _progressionBarStripes;
@@ -136,7 +136,7 @@ public partial class TDManager : Node
 	private Exit _exit;
 	private Entrance _entrance;
 
-	private Vector2 _mapSize;
+	private Vector2 _mapPixelSize;
 
 	private int _aliveInvaderCount;
 	private int _leakedInvaderCount;
@@ -204,7 +204,8 @@ public partial class TDManager : Node
 		_towerManager = GetParent().GetNode<TDTowerManager>("TowerManager");
 		_level = level;
 		InitializeLevel();
-		_grid = GetParent().GetNode<Grid>("TileMapLayer");
+		_grid = GetParent().GetNode<GridManager>("TileMapLayer");
+		_grid.InitializeChunks();
 
 		_towerManager.Initialize(_unitManager);
 
@@ -356,24 +357,25 @@ public partial class TDManager : Node
 		{
 			GetParent().GetNode<HBoxContainer>("UnitInfoPanel/PanelContainer/Towers/HBoxContainer").Hide();
 		}
-		TileMapLayer mapLayer = _allMaps[_level._mapID].Instantiate<TileMapLayer>();
-		GetParent().AddChild(mapLayer);
-		GetParent().MoveChild(mapLayer, 0);
-		Rect2I usedRect = mapLayer.GetUsedRect();
+		GridManager grid = _allMaps[_level._mapID].Instantiate<GridManager>();
+		GetParent().AddChild(grid);
+		GetParent().MoveChild(grid, 0);
+
+		Rect2I usedRect = grid.GetUsedRect();
 		Vector2 cellCenter = usedRect.Position + ((Vector2)usedRect.Size / 2f);
-		Vector2 localPixelCenter = cellCenter * mapLayer.TileSet.TileSize * mapLayer.Transform.Scale;
-		mapLayer.GlobalPosition = -localPixelCenter;
-		_mapSize = _level._mapSize * mapLayer.TileSet.TileSize * mapLayer.Transform.Scale;
-		_camera._leftBoundary = -_mapSize.X / 2f;
-		_camera._rightBoundary = _mapSize.X / 2f;
-		_camera._topBoundary = -_mapSize.Y / 2f;
-		_camera._bottomBoundary = _mapSize.Y / 2f;
+		Vector2 localPixelCenter = cellCenter * grid.TileSet.TileSize * grid.Transform.Scale;
+		grid.GlobalPosition = -localPixelCenter;
+		_mapPixelSize = grid._mapSize * grid.TileSet.TileSize * grid.Transform.Scale;
+		_camera._leftBoundary = -_mapPixelSize.X / 2f;
+		_camera._rightBoundary = _mapPixelSize.X / 2f;
+		_camera._topBoundary = -_mapPixelSize.Y / 2f;
+		_camera._bottomBoundary = _mapPixelSize.Y / 2f;
 		Vector2[] outline = new Vector2[]
 				{
-						new Vector2(-_mapSize.X / 2f, -_mapSize.Y / 2f),
-						new Vector2(-_mapSize.X / 2f, _mapSize.Y / 2f),
-						new Vector2(_mapSize.X / 2f, _mapSize.Y / 2f),
-						new Vector2(_mapSize.X / 2f, -_mapSize.Y / 2f),
+						new Vector2(-_mapPixelSize.X / 2f, -_mapPixelSize.Y / 2f),
+						new Vector2(-_mapPixelSize.X / 2f, _mapPixelSize.Y / 2f),
+						new Vector2(_mapPixelSize.X / 2f, _mapPixelSize.Y / 2f),
+						new Vector2(_mapPixelSize.X / 2f, -_mapPixelSize.Y / 2f),
 				};
 
 		NavigationRegion2D navRegion = GetParent().GetNode<NavigationRegion2D>("NavigationRegion2D");
@@ -387,7 +389,7 @@ public partial class TDManager : Node
 
 	public void SpawnNextWave()
 	{
-		_saveManager.SaveGame(_gameMode, _money, _spawnerLimit, _hp, _waveIndex, _towerManager._towersOnField, _availTowerList, _globalEffects, _finalBoss, _level, _challengeCount, _inspectionFailedCount, _nextChallengeUnits);
+		_saveManager.SaveGame(_gameMode, _money, _spawnerLimit, _hp, _waveIndex, _towerManager._towersOnField, _availTowerList, _globalEffects, _finalBoss, _level, _challengeCount, _inspectionFailedCount, _nextChallengeUnits, _grid._revealedChunks);
 		_waveIndex++;
 		_leakedInvaderCount = 0;
 		_waveEndProcessed = false;
@@ -1216,7 +1218,7 @@ public partial class TDManager : Node
 		if (CheckWaveFinished())
 		{
 			_waveList.Add(_level._finalWave, _finalBoss);
-			_saveManager.SaveGame(_gameMode, _money, _spawnerLimit, _hp, _waveIndex, _towerManager._towersOnField, _availTowerList, _globalEffects, _finalBoss, _level, _challengeCount, _inspectionFailedCount, _nextChallengeUnits);
+			_saveManager.SaveGame(_gameMode, _money, _spawnerLimit, _hp, _waveIndex, _towerManager._towersOnField, _availTowerList, _globalEffects, _finalBoss, _level, _challengeCount, _inspectionFailedCount, _nextChallengeUnits, _grid._revealedChunks);
 		}
 		NormalSpeed();
 		GetTree().CallDeferred(SceneTree.MethodName.ChangeSceneToFile, MenuPath);

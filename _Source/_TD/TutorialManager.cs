@@ -88,7 +88,7 @@ public partial class TutorialManager : Control
 	private HolePunchOverlay _darkOverlay;
 
 	private TDManager _tdManager;
-	private Grid _grid;
+	private GridManager _grid;
 	private UnitManager _unitManager;
 
 	private int _localTextIndex;
@@ -96,7 +96,7 @@ public partial class TutorialManager : Control
 
 	public bool _active = false;
 
-	public void Initialize(TDManager tdManager, Grid grid, UnitManager unitManager)
+	public void Initialize(TDManager tdManager, GridManager grid, UnitManager unitManager)
 	{
 		_tdManager = tdManager;
 		_grid = grid;

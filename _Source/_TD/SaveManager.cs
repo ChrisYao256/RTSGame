@@ -30,7 +30,7 @@ public partial class SaveManager : Node
 	}
 
 	// A helper method to pack your current game data into a Godot Dictionary
-	public Dictionary<string, Variant> PackGameData(GameGlobals.GameMode gameMode,Vector4I money, int portalLimit, int hp, int waveCount, Array<TowerUnit> towers, Array<string> unlockedTowers, Array<GlobalEffectResource> globalEffects, Array<InvaderStatsIncreaseResource> finalBoss, LevelResource level, int challengeCount, int inspectionFailedCount, Array<InvaderStatsIncreaseResource> nextChallengeUnits)
+	public Dictionary<string, Variant> PackGameData(GameGlobals.GameMode gameMode,Vector4I money, int portalLimit, int hp, int waveCount, Array<TowerUnit> towers, Array<string> unlockedTowers, Array<GlobalEffectResource> globalEffects, Array<InvaderStatsIncreaseResource> finalBoss, LevelResource level, int challengeCount, int inspectionFailedCount, Array<InvaderStatsIncreaseResource> nextChallengeUnits, Array<Chunk> chunks)
 	{
 
 		var gameData = new Dictionary<string, Variant>
@@ -42,7 +42,6 @@ public partial class SaveManager : Node
 						{ "Hp", hp},
 						{ "FinalWave", level._finalWave},
 						{ "Map", level._mapID},
-						{ "MapSize", level._mapSize},
 						{ "InspectionFailedCount", inspectionFailedCount},
 						{ "ChallengeCount", challengeCount},
 						{ "InspectionInterval", level._inspectionInterval},
@@ -111,10 +110,10 @@ public partial class SaveManager : Node
 		return gameData;
 	}
 
-	public void SaveGame(GameGlobals.GameMode gameMode, Vector4I money, int portalLimit, int hp,int waveCount, Array<TowerUnit> currentTowers, Array<string> unlockedTowers, Array<GlobalEffectResource> globalEffects, Array<InvaderStatsIncreaseResource>finalBoss, LevelResource level, int challengeCount, int inspectionFailedCount, Array<InvaderStatsIncreaseResource> nextChallengeUnits)
+	public void SaveGame(GameGlobals.GameMode gameMode, Vector4I money, int portalLimit, int hp,int waveCount, Array<TowerUnit> currentTowers, Array<string> unlockedTowers, Array<GlobalEffectResource> globalEffects, Array<InvaderStatsIncreaseResource>finalBoss, LevelResource level, int challengeCount, int inspectionFailedCount, Array<InvaderStatsIncreaseResource> nextChallengeUnits, Array<Chunk> chunks)
 	{
 		// Pack the data using your defined method
-		Dictionary<string, Variant> dataToSave = PackGameData(gameMode, money, portalLimit, hp, waveCount, currentTowers, unlockedTowers, globalEffects, finalBoss, level, challengeCount, inspectionFailedCount, nextChallengeUnits);
+		Dictionary<string, Variant> dataToSave = PackGameData(gameMode, money, portalLimit, hp, waveCount, currentTowers, unlockedTowers, globalEffects, finalBoss, level, challengeCount, inspectionFailedCount, nextChallengeUnits, chunks);
 		// Convert the dictionary into a clean JSON text string
 		string jsonString = Json.Stringify(dataToSave);
 
@@ -185,7 +184,6 @@ public partial class SaveManager : Node
 		int loadedWaveCount = (int)gameData["WaveCount"];
 		int loadedHp = (int)gameData["Hp"];
 		int loadedMap = (int)gameData["Map"];
-		Vector2I loadedMapSize = VariantToVector2I(gameData["MapSize"]);
 		int loadedFinalWave = (int)gameData["FinalWave"];
 		int loadedInspectionFailedCount = (int)gameData["InspectionFailedCount"];
 		int loadedChallengeCount = (int)gameData["ChallengeCount"];
@@ -236,7 +234,6 @@ public partial class SaveManager : Node
 		var gameData = (Dictionary<string, Variant>)json.Data;
 
 		int loadedMap = (int)gameData["Map"];
-		Vector2I loadedMapSize = VariantToVector2I(gameData["MapSize"]);
 		int loadedFinalWave = (int)gameData["FinalWave"];
 		int loadedInspectionInterval = (int)gameData["InspectionInterval"];
 
@@ -259,7 +256,6 @@ public partial class SaveManager : Node
 		levelResource._finalWave = loadedFinalWave;
 		levelResource._inspectionInterval = loadedInspectionInterval;
 		levelResource._mapID = loadedMap;
-		levelResource._mapSize = loadedMapSize;
 
 		levelResource._challengeEnabled = loadedChallengeEnabled;
 		levelResource._portalsEnabled = loadedPortalsEnabled;

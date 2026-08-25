@@ -134,7 +134,7 @@ public partial class TowerUnit : StationaryUnit
 
 	public Array<int> _colors = [];
 
-	public Grid _grid;
+	public GridManager _grid;
 	public Vector2I _gridLocation;
 	private Label _lvLabel;
 	private TooltipRichTextLabel _incomeLabel;
@@ -142,7 +142,7 @@ public partial class TowerUnit : StationaryUnit
 	public override void _Ready()
 	{
 		_radius = TDManager.TileSize / (2f * (float)Math.Sqrt(2f));
-		_grid = GetTree().CurrentScene.GetNode<Grid>("TileMapLayer");
+		_grid = GetTree().CurrentScene.GetNode<GridManager>("TileMapLayer");
 		_tdManager = GetTree().CurrentScene.GetNode<TDManager>("TdManager");
 		base._Ready();
 		CollisionLayer = UnitManager.TowerLayerMask;

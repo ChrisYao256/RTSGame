@@ -34,6 +34,7 @@ public class StringDB
 		{ "PortalChoice", "Pick a portal to unlock this run."},
 		{ "TowerAnyChoice", "Pick any defense or portal to get this run."},
 		{ "PassiveChoice", "Pick a passive to get this run."},
+		{ "ChunkChoice", "Pick a Sector to place here."},
 
 		{ "MiniBoss", "A mini boss. Defeat it to get a tower and a passive. "},
 		{ "FinalBoss", "The final boss of this run."},

@@ -1,0 +1,14 @@
+[gd_scene format=4 uid="uid://l7aj8pyqsmwo"]
+
+[ext_resource type="TileSet" uid="uid://dvtw5c2hlwcre" path="res://_Assets/TileSet.tres" id="1_2vl4a"]
+[ext_resource type="Script" uid="uid://drgehfodmqghu" path="res://_Source/_TD/Chunk.cs" id="2_p8lnc"]
+
+[node name="TileMapLayer" type="TileMapLayer" unique_id=204972501]
+texture_filter = 1
+scale = Vector2(7.375, 7.375)
+tile_map_data = PackedByteArray("AAACAAAAAAAIAAIAAAABAAAAAAAFAAAAAAAAAAAAAAAEAAIAAAAAAAEAAAABAAAAAAABAAEAAAAJAAAAAAABAAIAAAAFAAIAAAACAAIAAAALAAIAAAAAAAIAAAAJAAIAAAACAAEAAAAFAAIAAAA=")
+tile_set = ExtResource("1_2vl4a")
+navigation_enabled = false
+script = ExtResource("2_p8lnc")
+_connectionLeft = true
+_connectionUp = true

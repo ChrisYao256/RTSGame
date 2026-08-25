@@ -21,14 +21,14 @@ public partial class MakeGroundWalkable : Effect
 	protected override void OnCreation()
 	{
 		TowerUnit parentTower = (TowerUnit)_parentUnit;
-		parentTower._grid.MakeTileWalkable(parentTower._gridLocation, bidirectinoal: _resource._bidirectional);
+		parentTower._grid.MakeTileWalkable(parentTower._gridLocation, bidirectional: _resource._bidirectional);
 	}
 
 	protected override void OnMovement(Vector2I origin, Vector2I target)
 	{
 		TowerUnit parentTower = (TowerUnit)_parentUnit;
 		parentTower._grid.MakeTileWalkable(origin, false);
-		parentTower._grid.MakeTileWalkable(target, true, bidirectinoal: _resource._bidirectional);
+		parentTower._grid.MakeTileWalkable(target, true, bidirectional: _resource._bidirectional);
 	}
 
 	public override void RemoveEffectNode()

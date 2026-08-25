@@ -14,6 +14,7 @@
 [ext_resource type="Script" uid="uid://cvroohkeaovqw" path="res://_Source/_Units/SpawnerDataResource.cs" id="7_ff0ka"]
 [ext_resource type="Script" uid="uid://dtpcxn7d2dqcy" path="res://_Source/Effects/EffectResource.cs" id="7_ftcvg"]
 [ext_resource type="Script" uid="uid://d3qvvh1ko17dm" path="res://_Source/GlobalEffects/GlobalStatsIncrease/GlobalStatsIncreaseResource.cs" id="7_ikq3i"]
+[ext_resource type="PackedScene" uid="uid://bo67n8gnbrv2x" path="res://_Content/_Scenes/_Prefabs/Maps/Map2.tscn" id="7_rrl2g"]
 [ext_resource type="Script" uid="uid://btuej683nli5d" path="res://_Source/_UI/UpgradeButton.cs" id="8_5ivv1"]
 [ext_resource type="Script" uid="uid://bsunqifbwrvbx" path="res://_Source/GlobalEffects/GlobalColoredStatsIncrease/GlobalColoredStatsIncreaseResource.cs" id="8_ikq3i"]
 [ext_resource type="Script" uid="uid://iamaod4iivlq" path="res://_Source/Effects/InvaderStatsIncrease/InvaderStatsIncreaseResource.cs" id="9_o6hv2"]
@@ -533,7 +534,7 @@ scale = Vector2(8.5, 8.5)
 tile_set = ExtResource("7_5ivv1")
 
 [node name="TdManager" parent="." unique_id=116729899 instance=ExtResource("3_v6k6q")]
-_allMaps = Array[PackedScene]([ExtResource("3_4f8lp"), ExtResource("6_2tfwb")])
+_allMaps = Array[PackedScene]([ExtResource("3_4f8lp"), ExtResource("6_2tfwb"), ExtResource("7_rrl2g")])
 _allTowerList = Array[String](["GunTurret", "PiercingTower", "MoneyTurret", "LaserTurret", "SniperTurret", "FlameTurret", "SlowTurret", "GatlinTurret", "SlimeSpawner", "ShieldSpawner", "SoldierSpawner", "PriestSpawner", "DisablerSpawner", "RocketSpawner", "HoundSpawner", "GeneratorSpawner"])
 _earlyBosses = Array[Object]([SubResource("Resource_3yiie"), SubResource("Resource_wbulx"), SubResource("Resource_piuxs")])
 _midBosses = Array[Object]([SubResource("Resource_t78eu"), SubResource("Resource_0ndgw"), SubResource("Resource_mjw58")])
@@ -724,9 +725,6 @@ process_mode = 1
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "Next Cycle
-TODO: 
-1. draw new tiles for spawner, entrance, exit background
-2. implement chunk generation
 "
 
 [node name="Challenge" type="Button" parent="RightPanelCanvasLayer/RightPanel/VBoxContainer/HBoxContainer/VBoxContainer" unique_id=1383851800]
@@ -933,6 +931,34 @@ layout_mode = 2
 layout_mode = 2
 
 [node name="GridContainer" type="GridContainer" parent="RewardLayer/PanelContainer2/VBoxContainer" unique_id=1695878950]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/h_separation = 16
+theme_override_constants/v_separation = 16
+
+[node name="ChunkSelectLayer" type="CanvasLayer" parent="." unique_id=1851404956]
+visible = false
+
+[node name="ColorRect" type="ColorRect" parent="ChunkSelectLayer" unique_id=661003068]
+offset_right = 1920.0
+offset_bottom = 1080.0
+color = Color(0.0023445894, 0.0023445901, 0.0023445883, 0.627451)
+
+[node name="PanelContainer" type="PanelContainer" parent="ChunkSelectLayer" unique_id=1768776891]
+custom_minimum_size = Vector2(600, 0)
+offset_left = 660.0
+offset_top = 390.0
+offset_right = 1260.0
+offset_bottom = 444.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ChunkSelectLayer/PanelContainer" unique_id=739699537]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="ChunkSelectLayer/PanelContainer/VBoxContainer" unique_id=1959095413]
+layout_mode = 2
+text = "Boss wave clear! Claim your reward:"
+
+[node name="GridContainer" type="GridContainer" parent="ChunkSelectLayer/PanelContainer/VBoxContainer" unique_id=1628119493]
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_constants/h_separation = 16

@@ -29,6 +29,10 @@ public partial class Spawner : TowerUnit
 	public override void _Ready()
 	{
 		_spawnerData = (SpawnerDataResource)_spawnerData.Duplicate(true);
+		MakeGroundWalkableResource resource = new MakeGroundWalkableResource();
+		resource._bidirectional = false;
+		_startingEffects.Add(resource);
+
 		base._Ready();
 
 		_removable = true;
@@ -67,10 +71,6 @@ public partial class Spawner : TowerUnit
 				unit.QueueFree();
 			}
 		}
-
-		MakeGroundWalkableResource resource = new MakeGroundWalkableResource();
-		resource._bidirectional = false;
-		AddEffect(resource);
 
 		if (_description == null || _description == "")
 		{

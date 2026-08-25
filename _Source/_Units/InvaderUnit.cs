@@ -138,12 +138,12 @@ public partial class InvaderUnit : Unit
 
 	public void SetRandomPathOffset()
 	{
-		_pathOffset = Grid.GetRandomOffset();
+		_pathOffset = GridManager.GetRandomOffset();
 	}
 
 	public void SetPathOffset(Vector2 offset)
 	{
-		_pathOffset = Grid.ClampOffset(offset);
+		_pathOffset = GridManager.ClampOffset(offset);
 	}
 
 	public void SetPathToExit(Array<Vector2> path)
