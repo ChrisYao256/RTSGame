@@ -410,145 +410,149 @@ public partial class TowerUnit : StationaryUnit
 	{
 		base.MakeUnitInfoContainer();
 
-		PanelContainer moneyInfo = new();
-		moneyInfo.CustomMinimumSize = new (200, 0);
-
-		VBoxContainer moneyInfoV = new();
-		moneyInfoV.Name = "VBoxContainer";
-		_infoContainers.Add("MoneyInfo", moneyInfo);
-
-		if (GetTotalCost() != new Vector4I(0, 0, 0, 0))
+		if (this is not EventTower)
 		{
-			TooltipRichTextLabel costLabel = new();
-			costLabel.Text = "Total cost: \n" + Utils.MakeMoneyText(GetTotalCost());
-			costLabel.Name = "CostLabel";
-			costLabel.CustomMinimumSize = new(200, 0);
-			costLabel.BbcodeEnabled = true;
-			costLabel.FitContent = true;
-			moneyInfoV.AddChild(costLabel);
-		}
+			PanelContainer moneyInfo = new();
+			moneyInfo.CustomMinimumSize = new(200, 0);
 
-		TooltipRichTextLabel totalDamageLabel = new();
-		totalDamageLabel.Text = "Bonus gained: \n" + Utils.MakeMoneyText(_moneyGained);
-		totalDamageLabel.Name = "TotalGainLabel";
-		totalDamageLabel.CustomMinimumSize = new(200, 0);
-		totalDamageLabel.BbcodeEnabled = true;
-		totalDamageLabel.FitContent = true;
-		totalDamageLabel.Visible = false;
-		moneyInfoV.AddChild(totalDamageLabel);
+			VBoxContainer moneyInfoV = new();
+			moneyInfoV.Name = "VBoxContainer";
+			_infoContainers.Add("MoneyInfo", moneyInfo);
 
-		if (_moneyGained != new Vector4I(0,0,0,0))
-		{
-			totalDamageLabel.Visible = true;
+			if (GetTotalCost() != new Vector4I(0, 0, 0, 0))
+			{
+				TooltipRichTextLabel costLabel = new();
+				costLabel.Text = "Total cost: \n" + Utils.MakeMoneyText(GetTotalCost());
+				costLabel.Name = "CostLabel";
+				costLabel.CustomMinimumSize = new(200, 0);
+				costLabel.BbcodeEnabled = true;
+				costLabel.FitContent = true;
+				moneyInfoV.AddChild(costLabel);
+			}
+
+			TooltipRichTextLabel totalDamageLabel = new();
+			totalDamageLabel.Text = "Bonus gained: \n" + Utils.MakeMoneyText(_moneyGained);
+			totalDamageLabel.Name = "TotalGainLabel";
+			totalDamageLabel.CustomMinimumSize = new(200, 0);
+			totalDamageLabel.BbcodeEnabled = true;
+			totalDamageLabel.FitContent = true;
+			totalDamageLabel.Visible = false;
+			moneyInfoV.AddChild(totalDamageLabel);
+
+			if (_moneyGained != new Vector4I(0, 0, 0, 0))
+			{
+				totalDamageLabel.Visible = true;
+			}
+
+			if (_sellable)
+			{
+				Button sellButton = new();
+				sellButton.Text = "Sell for 75%";
+				sellButton.Pressed += () =>
+				{
+					if (_tdManager.CheckWaveFinished())
+					{
+						_tdManager.GainMoney(Utils.VectorScalarMultiplication(GetTotalCost(), 0.75f));
+						_tdManager._towerManager.RemoveTower(_gridLocation);
+					}
+
+				};
+				moneyInfoV.AddChild(sellButton);
+			}
+
+			if (_removable)
+			{
+				Button sellButton = new();
+				sellButton.Text = "Remove";
+				sellButton.Pressed += () =>
+				{
+					if (_tdManager.CheckWaveFinished())
+					{
+						_tdManager._towerManager.RemoveTower(_gridLocation);
+					}
+				};
+				moneyInfoV.AddChild(sellButton);
+			}
+
+			if (_movable)
+			{
+				Button moveButton = new();
+				moveButton.Text = "Move";
+				moveButton.Pressed += () =>
+				{
+					if (_tdManager.CheckWaveFinished())
+					{
+						_tdManager._towerManager.EnterMoveMode(this);
+					}
+				};
+				moneyInfoV.AddChild(moveButton);
+			}
+
+			if (GetIncome() != new Vector4I(0, 0, 0, 0))
+			{
+				TooltipRichTextLabel incomeLabel = new();
+				incomeLabel.Text = "Produces " + Utils.MakeMoneyText(GetIncome());
+				incomeLabel.Name = "IncomeLabel";
+				incomeLabel.CustomMinimumSize = new(200, 0);
+				incomeLabel.BbcodeEnabled = true;
+				incomeLabel.FitContent = true;
+				moneyInfoV.AddChild(incomeLabel);
+			}
+
+			moneyInfo.AddChild(moneyInfoV);
+
+			if (this is Spawner spawner && spawner._spawnerData._units.Count() > 0)
+			{
+				TooltipRichTextLabel spawnLabel = new();
+				spawnLabel.Text = "Spawns: \n" + spawner.GetSpawns();
+				spawnLabel.Name = "SpawnLabel";
+				spawnLabel.CustomMinimumSize = new(200, 0);
+				spawnLabel.BbcodeEnabled = true;
+				spawnLabel.FitContent = true;
+				moneyInfoV.AddChild(spawnLabel);
+
+				PanelContainer spawnedUnitTotalInfo = new();
+				VBoxContainer spawnedUnitTotalInfoV = new();
+
+				Label spawnedUnitLabel = new();
+				spawnedUnitLabel.Text = "Spawned Unit:";
+				spawnedUnitLabel.CustomMinimumSize = new Vector2(100, 0);
+				spawnedUnitTotalInfoV.AddChild(spawnedUnitLabel);
+
+				HBoxContainer spawnedUnitTotalInfoH = new();
+				spawnedUnitTotalInfoV.AddChild(spawnedUnitTotalInfoH);
+
+				if (spawner._spawnedUnitArray.Count != 0)
+				{
+					foreach (InvaderUnit spawnedUnit in spawner._spawnedUnitArray)
+					{
+						PanelContainer spawnedUnitInfo = spawnedUnit.GetUnitInfoContainerWithString("BasicInfo");
+						spawnedUnitTotalInfoH.AddChild(spawnedUnitInfo);
+						PanelContainer spawnedUnitEffectInfo = spawnedUnit.GetUnitInfoContainerWithString("EffectsInfo");
+						spawnedUnitTotalInfoH.AddChild(spawnedUnitEffectInfo);
+					}
+				}
+				else
+				{
+					foreach (InvaderStatsIncreaseResource resource in spawner._spawnerData._units)
+					{
+						InvaderUnit spawnedUnit = resource.GetInvader();
+						spawner._spawnedUnitArray.Add(spawnedUnit);
+						PanelContainer spawnedUnitInfo = spawnedUnit.GetUnitInfoContainerWithString("BasicInfo");
+						spawnedUnitTotalInfoH.AddChild(spawnedUnitInfo);
+						PanelContainer spawnedUnitEffectInfo = spawnedUnit.GetUnitInfoContainerWithString("EffectsInfo");
+						spawnedUnitTotalInfoH.AddChild(spawnedUnitEffectInfo);
+					}
+				}
+
+
+				spawnedUnitTotalInfo.AddChild(spawnedUnitTotalInfoV);
+
+				_infoContainers.Add("SpawnedUnitInfo", spawnedUnitTotalInfo);
+			}
 		}
 		
-		if (_sellable)
-		{
-			Button sellButton = new();
-			sellButton.Text = "Sell for 75%";
-			sellButton.Pressed += () =>
-			{
-				if (_tdManager.CheckWaveFinished() && !_tdManager._waveEndProcessed)
-				{
-					_tdManager.GainMoney(Utils.VectorScalarMultiplication(GetTotalCost(), 0.75f));
-					_tdManager._towerManager.RemoveTower(_gridLocation);
-				}
-
-			};
-			moneyInfoV.AddChild(sellButton);
-		}
-
-		if (_removable)
-		{
-			Button sellButton = new();
-			sellButton.Text = "Remove";
-			sellButton.Pressed += () =>
-			{
-				if (_tdManager.CheckWaveFinished() && !_tdManager._waveEndProcessed)
-				{
-					_tdManager._towerManager.RemoveTower(_gridLocation);
-				}
-			};
-			moneyInfoV.AddChild(sellButton);
-		}
-
-		if (_movable)
-		{
-			Button moveButton = new();
-			moveButton.Text = "Move";
-			moveButton.Pressed += () =>
-			{
-				if (_tdManager.CheckWaveFinished() && !_tdManager._waveEndProcessed)
-				{
-					_tdManager._towerManager.EnterMoveMode(this);
-				}
-			};
-			moneyInfoV.AddChild(moveButton);
-		}
-
-
-		if (this is Spawner spawner && spawner._spawnerData._units.Count() > 0)
-		{
-			TooltipRichTextLabel spawnLabel = new();
-			spawnLabel.Text = "Spawns: \n" + spawner.GetSpawns();
-			spawnLabel.Name = "SpawnLabel";
-			spawnLabel.CustomMinimumSize = new(200, 0);
-			spawnLabel.BbcodeEnabled = true;
-			spawnLabel.FitContent = true;
-			moneyInfoV.AddChild(spawnLabel);
-
-			PanelContainer spawnedUnitTotalInfo = new();
-			VBoxContainer spawnedUnitTotalInfoV = new();
-
-			Label spawnedUnitLabel = new();
-			spawnedUnitLabel.Text = "Spawned Unit:";
-			spawnedUnitLabel.CustomMinimumSize = new Vector2(100, 0);
-			spawnedUnitTotalInfoV.AddChild(spawnedUnitLabel);
-
-			HBoxContainer spawnedUnitTotalInfoH = new();
-			spawnedUnitTotalInfoV.AddChild(spawnedUnitTotalInfoH);
-
-			if (spawner._spawnedUnitArray.Count != 0)
-			{
-				foreach (InvaderUnit spawnedUnit in spawner._spawnedUnitArray)
-				{
-					PanelContainer spawnedUnitInfo = spawnedUnit.GetUnitInfoContainerWithString("BasicInfo");
-					spawnedUnitTotalInfoH.AddChild(spawnedUnitInfo);
-					PanelContainer spawnedUnitEffectInfo = spawnedUnit.GetUnitInfoContainerWithString("EffectsInfo");
-					spawnedUnitTotalInfoH.AddChild(spawnedUnitEffectInfo);
-				}
-			}
-			else
-			{
-				foreach (InvaderStatsIncreaseResource resource in spawner._spawnerData._units)
-				{
-					InvaderUnit spawnedUnit = resource.GetInvader();
-					spawner._spawnedUnitArray.Add(spawnedUnit);
-					PanelContainer spawnedUnitInfo = spawnedUnit.GetUnitInfoContainerWithString("BasicInfo");
-					spawnedUnitTotalInfoH.AddChild(spawnedUnitInfo);
-					PanelContainer spawnedUnitEffectInfo = spawnedUnit.GetUnitInfoContainerWithString("EffectsInfo");
-					spawnedUnitTotalInfoH.AddChild(spawnedUnitEffectInfo);
-				}
-			}
-
-
-			spawnedUnitTotalInfo.AddChild(spawnedUnitTotalInfoV);
-
-			_infoContainers.Add("SpawnedUnitInfo", spawnedUnitTotalInfo);
-		}
-
-		if (GetIncome() != new Vector4I(0,0,0,0))
-		{
-			TooltipRichTextLabel incomeLabel = new();
-			incomeLabel.Text = "Produces " + Utils.MakeMoneyText(GetIncome());
-			incomeLabel.Name = "IncomeLabel";
-			incomeLabel.CustomMinimumSize = new(200, 0);
-			incomeLabel.BbcodeEnabled = true;
-			incomeLabel.FitContent = true;
-			moneyInfoV.AddChild(incomeLabel);
-		}
-
-		moneyInfo.AddChild(moneyInfoV);
+		
 
 		if (_weapon != null)
 		{
@@ -607,7 +611,7 @@ public partial class TowerUnit : StationaryUnit
 			_infoContainers.Add("AttackPriority", attackPriority);
 		}
 		
-		if (!(_hasThirdUpgrade && _fourthUpgradeA.Count == 0 && _fourthUpgradeB.Count == 0))
+		if (!(_hasThirdUpgrade && _fourthUpgradeA.Count == 0 && _fourthUpgradeB.Count == 0) && _firstUpgrade.Count > 0)
 		{
 			PanelContainer upgrades = new();
 

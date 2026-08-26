@@ -115,7 +115,7 @@ public partial class TDTowerManager : Node2D
 		_towerToPlace = "";
 		if (_previewTower is Spawner spawner)
 		{
-			spawner.HideSpawnRange();
+			_grid.MakeTileWalkable(_previewTower._gridLocation, false);
 		}
 		_previewTower.QueueFree();
 		_previewTower = null;
@@ -137,9 +137,19 @@ public partial class TDTowerManager : Node2D
 		{
 			buildableGridCoords = _grid.FindClosestBuildableCell(gridCoords, false);
 		}
-
 		_previewTower.GlobalPosition = _grid.ToGlobal(_grid.MapToLocal(buildableGridCoords));
+
+		if (_previewTower is Spawner spawner && !_grid._occupiedCells.ContainsKey(_previewTower._gridLocation))
+		{
+			_grid.MakeTileWalkable(_previewTower._gridLocation, false);
+		}
 		_previewTower._gridLocation = buildableGridCoords;
+		if (_previewTower is Spawner spawner_)
+		{
+			_grid.MakeTileWalkable(_previewTower._gridLocation, true, bidirectional: false);
+			spawner_.MakePathIndicator(true);
+		}
+
 
 		if (Input.IsActionJustPressed("Left_click"))
 		{

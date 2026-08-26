@@ -914,7 +914,7 @@ public partial class Unit : CharacterBody2D
 		_currentCommand = new NoCommand(this);
 	}
 
-	public void SetSelectionVisible(bool b)
+	public virtual void SetSelectionVisible(bool b)
 	{
 		_selectionVisual.Visible = b;
 		if (b)

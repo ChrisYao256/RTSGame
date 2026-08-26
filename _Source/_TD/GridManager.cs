@@ -23,7 +23,11 @@ public partial class GridManager : TileMapLayer
 		{ 7, GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Chunks/Chunk07.tscn") },
 		{ 8, GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Chunks/Chunk08.tscn") },
 		{ 9, GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Chunks/Chunk09.tscn") },
-		{ 10, GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Chunks/Chunk10.tscn") }
+		{ 10, GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Chunks/Chunk10.tscn") },
+		{ 11, GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Chunks/Chunk11.tscn") },
+		{ 12, GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Chunks/Chunk12.tscn") },
+		{ 13, GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Chunks/Chunk13.tscn") },
+		{ 14, GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Chunks/Chunk14.tscn") },
 	};
 
 	/// <summary>
@@ -61,6 +65,8 @@ public partial class GridManager : TileMapLayer
 	/// </summary>
 	[Export]
 	public Vector2I _topLeftTile;
+
+	private TDManager _tdManager;
 
 	private Array<Vector2I> _unrevealableChunks = [];
 
@@ -107,7 +113,7 @@ public partial class GridManager : TileMapLayer
 
 	private AStar2D _astar;
 
-	private Godot.Collections.Dictionary<Vector2I, TowerUnit> _occupiedCells = new Godot.Collections.Dictionary<Vector2I, TowerUnit>();
+	public Godot.Collections.Dictionary<Vector2I, TowerUnit> _occupiedCells = new Godot.Collections.Dictionary<Vector2I, TowerUnit>();
 
 	private TileMapLayer _overlayLayer;
 
@@ -119,6 +125,7 @@ public partial class GridManager : TileMapLayer
 		_choicesLayer = GetParent().GetNode<CanvasLayer>("ChunkSelectLayer");
 		_choicesPanel = GetParent().GetNode<PanelContainer>("ChunkSelectLayer/PanelContainer");
 		_choicesTitle = _choicesPanel.GetNode<Label>("VBoxContainer/Label");
+		_tdManager = GetParent().GetNode<TDManager>("TdManager");
 	}
 
 	private void CategorizeChunkLibrary()
@@ -429,11 +436,11 @@ public partial class GridManager : TileMapLayer
 					visited.Add(neighbor);
 
 					// If this neighbor meets our criteria, it is guaranteed to be the closest!
-					if (!mustBeNextToPath && CanBuildAt(neighbor))
+					if (!mustBeNextToPath && (CanBuildAt(neighbor)))
 					{
 						return neighbor;
 					}
-					else if (mustBeNextToPath && CanBuildAt(neighbor))
+					else if (mustBeNextToPath && (CanBuildAt(neighbor)))
 					{
 						foreach (Vector2I dir_ in Directions)
 						{
@@ -485,29 +492,32 @@ public partial class GridManager : TileMapLayer
 
 			if (!walkable)
 			{
-				// If turning unwalkable, sever the connection
-				_astar.DisconnectPoints(currentId, neighborId);
+				if (_astar.ArePointsConnected(currentId, neighborId))
+				{
+					// If turning unwalkable, sever the connection
+					_astar.DisconnectPoints(currentId, neighborId);
 
-				TileData neighborData = GetCellTileData(neighbor);
-				Vector2I newNeighborAtlas;
-				if (dir == new Vector2I(1, 0))
-				{
-					newNeighborAtlas = GetAtlasCoordsForPath((bool)neighborData.GetCustomData("PathUp"), (bool)neighborData.GetCustomData("PathDown"), false, (bool)neighborData.GetCustomData("PathRight"));
+					TileData neighborData = GetCellTileData(neighbor);
+					Vector2I newNeighborAtlas;
+					if (dir == new Vector2I(1, 0))
+					{
+						newNeighborAtlas = GetAtlasCoordsForPath((bool)neighborData.GetCustomData("PathUp"), (bool)neighborData.GetCustomData("PathDown"), false, (bool)neighborData.GetCustomData("PathRight"));
+					}
+					else if (dir == new Vector2I(-1, 0))
+					{
+						newNeighborAtlas = GetAtlasCoordsForPath((bool)neighborData.GetCustomData("PathUp"), (bool)neighborData.GetCustomData("PathDown"), (bool)neighborData.GetCustomData("PathLeft"), false);
+					}
+					else if (dir == new Vector2I(0, 1))
+					{
+						newNeighborAtlas = GetAtlasCoordsForPath(false, (bool)neighborData.GetCustomData("PathDown"), (bool)neighborData.GetCustomData("PathLeft"), (bool)neighborData.GetCustomData("PathRight"));
+					}
+					else
+					{
+						newNeighborAtlas = GetAtlasCoordsForPath((bool)neighborData.GetCustomData("PathUp"), false, (bool)neighborData.GetCustomData("PathLeft"), (bool)neighborData.GetCustomData("PathRight"));
+					}
+
+					SetCell(neighbor, 0, atlasCoords: newNeighborAtlas);
 				}
-				else if (dir == new Vector2I(-1, 0))
-				{
-					newNeighborAtlas = GetAtlasCoordsForPath((bool)neighborData.GetCustomData("PathUp"), (bool)neighborData.GetCustomData("PathDown"), (bool)neighborData.GetCustomData("PathLeft"), false);
-				}
-				else if (dir == new Vector2I(0, 1))
-				{
-					newNeighborAtlas = GetAtlasCoordsForPath(false, (bool)neighborData.GetCustomData("PathDown"), (bool)neighborData.GetCustomData("PathLeft"), (bool)neighborData.GetCustomData("PathRight"));
-				}
-				else
-				{
-					newNeighborAtlas = GetAtlasCoordsForPath((bool)neighborData.GetCustomData("PathUp"), false, (bool)neighborData.GetCustomData("PathLeft"), (bool)neighborData.GetCustomData("PathRight"));
-				}
-				
-				SetCell(neighbor, 0, atlasCoords: newNeighborAtlas);
 			}
 			else
 			{
@@ -730,11 +740,6 @@ public partial class GridManager : TileMapLayer
 	public List<Vector2> GetPath(Vector2I startMap, Vector2I endMap)
 	{
 		TileData data = GetCellTileData(startMap);
-		bool startedFromPath = (bool)data.GetCustomData("Path");
-		if (!startedFromPath)
-		{
-			SetPointSolid(startMap, false);
-		}
 
 		// This returns a list of world positions for the enemy to follow
 		long[] path = _astar.GetIdPath(GetIdForCell(startMap), GetIdForCell(endMap));
@@ -742,10 +747,6 @@ public partial class GridManager : TileMapLayer
 		foreach (long id in path)
 		{
 			waypoints.Add(ToGlobal(MapToLocal(GetCellForId(id))));
-		}
-		if (!startedFromPath)
-		{
-			SetPointSolid(startMap, true);
 		}
 		return waypoints;
 	}
@@ -919,8 +920,35 @@ public partial class GridManager : TileMapLayer
 			{
 				Vector2I atlasCoords = newChunk.GetCellAtlasCoords(new Vector2I(i, j));
 				SetCell(topLeft + new Vector2I(i,j), 0, atlasCoords: atlasCoords);
+
 			}
 		}
+
+		Random random = new Random();
+		int x = random.Next(ChunkSize);
+		int y = random.Next(ChunkSize);
+		switch (newChunk._event)
+		{
+			case Chunk.EventDifficulty.Easy:
+				string eventTower = Utils.GetRandomElements<string>(_tdManager._easyEventTowers, 1)[0];
+				EventTower towerInstance = (EventTower)UnitManager.GetUnit(eventTower, false);
+				Vector2I buildablePos = newChunk.FindClosestBuildableCell(new Vector2I(x,y), towerInstance._mustBeNextToPath);
+				_tdManager._towerManager.PlaceTower(topLeft + buildablePos, eventTower);
+				break;
+			case Chunk.EventDifficulty.Medium:
+				eventTower = Utils.GetRandomElements<string>(_tdManager._medEventTowers, 1)[0];
+				towerInstance = (EventTower)UnitManager.GetUnit(eventTower, false);
+				buildablePos = newChunk.FindClosestBuildableCell(new Vector2I(x, y), towerInstance._mustBeNextToPath);
+				_tdManager._towerManager.PlaceTower(topLeft + buildablePos, eventTower);
+				break;
+			case Chunk.EventDifficulty.Hard:
+				eventTower = Utils.GetRandomElements<string>(_tdManager._hardEventTowers, 1)[0];
+				towerInstance = (EventTower)UnitManager.GetUnit(eventTower, false);
+				buildablePos = newChunk.FindClosestBuildableCell(new Vector2I(x, y), towerInstance._mustBeNextToPath);
+				_tdManager._towerManager.PlaceTower(topLeft + buildablePos, eventTower);
+				break;
+		}
+
 		_revealedChunks.Add(newChunk);
 		newChunk._chunkCoord = chunkCoord;
 

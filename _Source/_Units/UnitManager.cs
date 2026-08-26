@@ -95,6 +95,12 @@ public partial class UnitManager : Node2D
 		{ "Pilot", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Invaders/Pilot.tscn")},
 		{ "Duplicator", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Invaders/Duplicator.tscn")},
 		{ "Inspector", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/Invaders/Inspector.tscn")},
+
+		{ "ChestPassiveEvent", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/EventTowers/ChestPassiveEvent.tscn")},
+		{ "ChestTowerEvent", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/EventTowers/ChestTowerEvent.tscn")},
+		{ "BossEvent", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/EventTowers/BossEvent.tscn")},
+		{ "EasyBossEvent", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/EventTowers/EasyBossEvent.tscn")},
+		{ "BuyPassiveEvent", GD.Load<PackedScene>("res://_Content/_Scenes/_Prefabs/Units/EventTowers/BuyPassiveEvent.tscn")},
 	};
 
 	public static uint UnitLayerMask = 2;
@@ -108,6 +114,10 @@ public partial class UnitManager : Node2D
 			if (setUnit)
 			{
 				newUnit.SetDisplayUnit();
+				if (newUnit is TowerUnit tower)
+				{
+					tower._gridLocation = new Vector2I(999, 999);
+				}
 			}
 			newUnit.TreeExiting += () =>
 			{

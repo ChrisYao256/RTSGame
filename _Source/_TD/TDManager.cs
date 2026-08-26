@@ -73,6 +73,15 @@ public partial class TDManager : Node
 	[Export]
 	public Array<GlobalEffectResource> _allGlobalEffects { get; private set; }
 
+	[Export]
+	public Array<string> _easyEventTowers;
+
+	[Export]
+	public Array<string> _medEventTowers;
+
+	[Export]
+	public Array<string> _hardEventTowers;
+
 	public static Array<int> _inspectionRequirements = [450, 800, 1500, 3000];
 
 	public LevelResource _level;
@@ -91,7 +100,7 @@ public partial class TDManager : Node
 
 	public Godot.Collections.Dictionary<int, int> _inspectionList = [];
 	public Godot.Collections.Dictionary<int, Array<InvaderStatsIncreaseResource>> _waveList = [];
-	public Godot.Collections.Dictionary<int, Array<RewardManager.RewardType>> _rewardList = [];
+	public Godot.Collections.Dictionary<int, Array<RewardResource>> _rewardList = [];
 	public Array<InvaderStatsIncreaseResource> _finalBoss;
 	public int _waveIndex = 0;
 
@@ -99,7 +108,7 @@ public partial class TDManager : Node
 	public TDTowerManager _towerManager;
 	private TutorialManager _tutorialManager;
 	private SaveManager _saveManager;
-	private RewardManager _rewardManager;
+	public RewardManager _rewardManager;
 
 	public VBoxContainer _rightPanel;
 	public UnitInfoPanel _infoPanel;
@@ -133,13 +142,13 @@ public partial class TDManager : Node
 	/// </summary>
 	private Vector2 _centerOfDisplayOffset;
 
-	private Exit _exit;
-	private Entrance _entrance;
+	public Exit _exit;
+	public Entrance _entrance;
 
 	private Vector2 _mapPixelSize;
 
 	private int _aliveInvaderCount;
-	private int _leakedInvaderCount;
+	public int _leakedInvaderCount;
 	public bool _waveEndProcessed = false;
 	private bool _inspectionProcessed = false;
 
@@ -155,7 +164,7 @@ public partial class TDManager : Node
 	public int _challengeCount;
 	public int _inspectionFailedCount;
 	public Array<InvaderStatsIncreaseResource> _nextChallengeUnits;
-	public Array<RewardManager.RewardType> _currentWaveRewards;
+	public Array<RewardResource> _currentWaveRewards;
 	public bool _inspectionWaveOnGoing;
 
 	public override void _Ready()
@@ -406,7 +415,10 @@ public partial class TDManager : Node
 
 	public async void SpawnNextChallenge()
 	{
-		_currentWaveRewards = [RewardManager.RewardType.Passive, RewardManager.RewardType.Tower];
+		PassiveRewardResource passive = new PassiveRewardResource();
+		TowerRewardResource tower = new TowerRewardResource();
+		tower._type = TowerRewardResource.TowerType.Tower;
+		_currentWaveRewards = [passive, tower];
 		Array<InvaderStatsIncreaseResource> challengeUnitsCopy = _nextChallengeUnits.Duplicate();
 		int challengeCountCopy = _challengeCount;
 		_challengeCount++;
@@ -418,7 +430,9 @@ public partial class TDManager : Node
 
 	public async void SpawnInspection()
 	{
-		_currentWaveRewards = [RewardManager.RewardType.Tower];
+		TowerRewardResource tower = new TowerRewardResource();
+		tower._type = TowerRewardResource.TowerType.Tower;
+		_currentWaveRewards = [tower];
 		_inspectionWaveOnGoing = true;
 		_waveEndProcessed = false;
 		if (_inspectionFailedCount< _inspectionBosses.Count)
@@ -431,7 +445,7 @@ public partial class TDManager : Node
 		}
 	}
 
-	private async System.Threading.Tasks.Task SpawnMiniBossWave(Array<InvaderStatsIncreaseResource> units, int challengeCount)
+	public async System.Threading.Tasks.Task SpawnMiniBossWave(Array<InvaderStatsIncreaseResource> units, int challengeCount)
 	{
 		Array<InvaderStatsIncreaseResource> enemyList = units.Duplicate();
 		for (int i = 0; i < enemyList.Count; i++)
@@ -441,7 +455,6 @@ public partial class TDManager : Node
 			InvaderUnit unit = SpawnEnemyAtEntrance(enemyCopy._unitName);
 			InvaderStatsIncreaseResource buff = new InvaderStatsIncreaseResource();
 			_miniBossBuff.MergeWithOld(buff, []);
-			float test = GetBossHpMultiplier(challengeCount);
 			buff._percentHpBuff += GetBossHpMultiplier(challengeCount);
 			buff.MergeWithOld(enemyCopy, []);
 			unit.AddEffect(enemyCopy);
@@ -531,7 +544,7 @@ public partial class TDManager : Node
 		}
 	}
 
-	public void AddRewardNow(RewardManager.RewardType reward)
+	public void AddRewardNow(RewardResource reward)
 	{
 		_rewardManager._choicesQueue.Add(reward);
 		_rewardManager.MakeRewardPrompt(RewardManager.RewardSource.GlobalEffect);
@@ -559,9 +572,9 @@ public partial class TDManager : Node
 		{
 			if (_currentWaveRewards is not null && _currentWaveRewards.Count != 0 && _leakedInvaderCount == 0)
 			{
-				foreach (RewardManager.RewardType type in _currentWaveRewards)
+				foreach (RewardResource resource in _currentWaveRewards)
 				{
-					_rewardManager._choicesQueue.Add(type);
+					_rewardManager._choicesQueue.Add(resource);
 				}
 				_rewardManager.MakeRewardPrompt(RewardManager.RewardSource.Boss);
 				_currentWaveRewards = [];
@@ -1125,7 +1138,7 @@ public partial class TDManager : Node
 	{
 		Vector2 offset = position - _grid.MapToGlobal((_grid.LocalToMap(_grid.ToLocal(position))));
 		Unit unit = _unitManager.SpawnUnit(position, 1, name, true);
-		List<Vector2> waypoints = _grid.GetPath(position, _exit._gridLocation);
+		List<Vector2> waypoints = _grid.GetPath(position, _grid.MapToGlobal(_exit._gridLocation));
 		if (unit is InvaderUnit invader)
 		{
 			invader.SetPathOffset(offset);
@@ -1139,7 +1152,7 @@ public partial class TDManager : Node
 	public InvaderUnit SpawnEnemyFromTower(string name, Vector2 position)
 	{
 		Unit unit = _unitManager.SpawnUnit(position, 1, name, true);
-		List<Vector2> waypoints = _grid.GetPath(position, _exit._gridLocation);
+		List<Vector2> waypoints = _grid.GetPath(position, _grid.MapToGlobal(_exit._gridLocation));
 		if (unit is InvaderUnit invader)
 		{
 			invader.SetRandomPathOffset();
@@ -1154,7 +1167,6 @@ public partial class TDManager : Node
 	{
 		Unit unit = _unitManager.SpawnUnit(_grid.MapToGlobal(gridPosition), 1, name, true);
 		List<Vector2> waypoints = _grid.GetPath(gridPosition, _exit._gridLocation);
-		Vector2 test = _grid.MapToGlobal(_exit._gridLocation);
 		if (unit is InvaderUnit invader)
 		{
 			invader.SetRandomPathOffset();
@@ -1478,7 +1490,8 @@ public partial class TDManager : Node
 		{
 			return;
 		}
-		_rewardManager._choicesQueue.Add(RewardManager.RewardType.Passive);
+		PassiveRewardResource passive = new PassiveRewardResource();
+		_rewardManager._choicesQueue.Add(passive);
 		_rewardManager.MakeRewardPrompt(RewardManager.RewardSource.GlobalEffect);
 	}
 
@@ -1488,7 +1501,9 @@ public partial class TDManager : Node
 		{
 			return;
 		}
-		_rewardManager._choicesQueue.Add(RewardManager.RewardType.PassiveAll);
+		PassiveRewardResource passive = new PassiveRewardResource();
+		passive._type = PassiveRewardResource.PassiveType.FromAll;
+		_rewardManager._choicesQueue.Add(passive);
 		_rewardManager.MakeRewardPrompt(RewardManager.RewardSource.GlobalEffect);
 	}
 

@@ -1,16 +1,17 @@
-[gd_scene format=4 uid="uid://bdq57fmixggfo"]
+[gd_scene format=4 uid="uid://6fg4474skn3w"]
 
-[ext_resource type="TileSet" uid="uid://dvtw5c2hlwcre" path="res://_Assets/TileSet.tres" id="1_v3wmp"]
-[ext_resource type="Script" uid="uid://drgehfodmqghu" path="res://_Source/_TD/Chunk.cs" id="2_2qiff"]
+[ext_resource type="TileSet" uid="uid://dvtw5c2hlwcre" path="res://_Assets/TileSet.tres" id="1_hddb2"]
+[ext_resource type="Script" uid="uid://drgehfodmqghu" path="res://_Source/_TD/Chunk.cs" id="2_6a4uw"]
 
 [node name="TileMapLayer" type="TileMapLayer" unique_id=204972501]
 texture_filter = 1
 scale = Vector2(7.375, 7.375)
-tile_map_data = PackedByteArray("AAACAAAAAAAIAAIAAAABAAAAAAAFAAAAAAAAAAAAAAAJAAIAAAAAAAEAAAABAAAAAAABAAEAAAAOAAAAAAABAAIAAAAFAAAAAAACAAIAAAALAAIAAAAAAAIAAAAIAAIAAAACAAEAAAABAAAAAAA=")
-tile_set = ExtResource("1_v3wmp")
+tile_map_data = PackedByteArray("AAACAAAAAAAIAAIAAAABAAAAAAAFAAAAAAAAAAAAAAAJAAIAAAAAAAEAAAABAAAAAAABAAEAAAAOAAAAAAABAAIAAAAFAAAAAAACAAIAAAAAAAkAAAAAAAIAAAAIAAIAAAACAAEAAAABAAAAAAA=")
+tile_set = ExtResource("1_hddb2")
 navigation_enabled = false
-script = ExtResource("2_2qiff")
+script = ExtResource("2_6a4uw")
 _connectionLeft = true
 _connectionRight = true
 _connectionUp = true
 _connectionDown = true
+_event = 1

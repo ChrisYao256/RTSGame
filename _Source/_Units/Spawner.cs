@@ -5,8 +5,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Xml.Linq;
 using static Godot.OpenXRCompositionLayer;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace RTSGame.Units;
 
@@ -26,6 +28,8 @@ public partial class Spawner : TowerUnit
 	private Godot.Collections.Dictionary<string, Variant> _infoDictionary = new();
 	public Godot.Collections.Array<InvaderUnit> _spawnedUnitArray = new();
 
+	private Node2D _pathArrows;
+
 	public override void _Ready()
 	{
 		_spawnerData = (SpawnerDataResource)_spawnerData.Duplicate(true);
@@ -43,6 +47,9 @@ public partial class Spawner : TowerUnit
 
 		_tdManager = GetTree().CurrentScene.GetNode<TDManager>("TdManager");
 		_spawnArea = GetNode<Area2D>("AttackArea");
+
+		_pathArrows = new();
+		AddChild(_pathArrows);
 
 		if (_spawnerData._units.Count == 1)
 		{
@@ -160,6 +167,38 @@ public partial class Spawner : TowerUnit
 		resource.RemoveFromOld(_spawnerData._units[index]);
 		ClearInfoCache();
 		EmitSignal(SignalName.UpdateInfo);
+	}
+
+	public void MakePathIndicator(bool b)
+	{
+		foreach (Node node in _pathArrows.GetChildren())
+		{
+			node.QueueFree();
+		}
+
+		if (b)
+		{
+			List<Vector2> waypoints = _grid.GetPath(_gridLocation, _tdManager._exit._gridLocation);
+			int arrowCount = 3;
+			if (waypoints.Count < 3)
+			{
+				arrowCount = waypoints.Count;
+			}
+			for (int i = 0; i < arrowCount; i++)
+			{
+				MoveIndicator arrow = new();
+				_pathArrows.AddChild(arrow);
+				arrow.StartPos = ToLocal(waypoints[i]);
+				arrow.EndPos = ToLocal(waypoints[i + 1]);
+			}
+		}
+	}
+
+	public override void SetSelectionVisible(bool b)
+	{
+		base.SetSelectionVisible(b);
+
+		MakePathIndicator(b);
 	}
 
 	//public void SetSpawnerHpBuff(int hpBuff)

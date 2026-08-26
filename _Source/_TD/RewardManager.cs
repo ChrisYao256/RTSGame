@@ -11,30 +11,20 @@ namespace RTSGame.Source;
 
 public partial class RewardManager : CanvasLayer
 {
-	/// <summary>
-	/// enums without All are chosen from 3, enums with all are chosen from all. 
-	/// </summary>
-	public enum RewardType
-	{
-		Defense,
-		Portal,
-		Tower,
-		Passive,
-		DefenseAll,
-		PortalAll,
-		TowerAll,
-		PassiveAll,
-	}
-
 	public enum RewardSource
 	{
 		Starting,
 		Boss,
-		GlobalEffect
+		GlobalEffect,
+		Event,
 	}
 
 	//public static Array<int> _wavesWithTowerUnlock = [4, 9, 14, 19, 24];
 	//public static Array<int> _wavesWithPassive = [2, 7, 12, 17, 22, 27];
+
+
+	[Export]
+	public Array<RewardResource> _startingRewards = [];
 
 	public Array<GlobalEffectResource> _remainingEffects;
 
@@ -53,7 +43,7 @@ public partial class RewardManager : CanvasLayer
 	/// </summary>
 	public bool _noStartingReward;
 
-	public Array<RewardType> _choicesQueue = [];
+	public Array<RewardResource> _choicesQueue = [];
 
 	private RewardSource _source;
 
@@ -76,7 +66,7 @@ public partial class RewardManager : CanvasLayer
 		_remainingEffects = _tdManager._allGlobalEffects.Duplicate();
 		if (!_noStartingReward)
 		{
-			_choicesQueue = [RewardType.Passive, RewardType.Defense, RewardType.Portal, RewardType.Defense, RewardType.Portal];
+			_choicesQueue = _startingRewards.Duplicate();
 			MakeRewardPrompt(RewardSource.Starting);
 		}
 		foreach (string tower in _tdManager._availTowerList)
@@ -318,110 +308,83 @@ public partial class RewardManager : CanvasLayer
 			case RewardSource.GlobalEffect:
 				_rewardsTitle.Text = "Claim your rewards:";
 				break;
+			case RewardSource.Event:
+				_rewardsTitle.Text = "Claim your rewards:";
+				break;
 		}
 		VBoxContainer vbox = _rewardsPanel.GetNode<VBoxContainer>("VBoxContainer/VBoxContainer");
 		foreach (var node in vbox.GetChildren())
 		{
 			node.QueueFree();
 		}
-		foreach (RewardType type in _choicesQueue)
+		foreach (RewardResource resource in _choicesQueue)
 		{
 			Button button = new Button();
 			button.Pressed += () =>
 			{
-				_choicesQueue.Remove(type);
+				_choicesQueue.Remove(resource);
 			};
 
-			switch (type)
+			if (resource is TowerRewardResource towerResource)
 			{
-				case RewardType.Defense:
-					button.Text = "Unlock a Defense";
-					button.Pressed += () =>
-					{
-						MakeRogueTowerUnlockChoicePrompt(GetRandomTowers(3, TowerUnit.TowerType.Defense));
-					};
-					break;
-				case RewardType.Portal:
-					button.Text = "Unlock a Portal";
-					button.Pressed += () =>
-					{
-						MakeRogueTowerUnlockChoicePrompt(GetRandomTowers(3, TowerUnit.TowerType.Spawner));
-					};
-					break;
-				case RewardType.Tower:
-					button.Text = "Unlock a Defense or Portal";
-					button.Pressed += () =>
-					{
-						MakeRogueTowerUnlockChoicePrompt(GetRandomTowers(3, TowerUnit.TowerType.Null));
-					};
-					break;
-				case RewardType.Passive:
-					button.Text = "Get a Passive";
-					button.Pressed += () =>
-					{
-						MakeRoguePassiveUnlockChoicePrompt(GetRandomPassives(3));
-					};
-					break;
-				case RewardType.PassiveAll:
-					button.Text = "Get any passive";
-					button.Pressed += () =>
-					{
-						MakeRoguePassiveUnlockChoicePrompt(GetRandomPassives(_remainingEffects.Count));
-					};
-					break;
-				case RewardType.TowerAll:
-					button.Text = "Unlock any Defense";
-					button.Pressed += () =>
-					{
-						MakeRogueTowerUnlockChoicePrompt(GetRandomTowers(_remainingTowers.Count, TowerUnit.TowerType.Null));
-					};
-					break;
+				switch (towerResource._type)
+				{
+					case TowerRewardResource.TowerType.Defense:
+						button.Text = "Unlock a Defense";
+						button.Pressed += () =>
+						{
+							MakeRogueTowerUnlockChoicePrompt(GetRandomTowers(3, TowerUnit.TowerType.Defense));
+						};
+						break;
+					case TowerRewardResource.TowerType.Portal:
+						button.Text = "Unlock a Portal";
+						button.Pressed += () =>
+						{
+							MakeRogueTowerUnlockChoicePrompt(GetRandomTowers(3, TowerUnit.TowerType.Spawner));
+						};
+						break;
+					case TowerRewardResource.TowerType.Tower:
+						button.Text = "Unlock a Defense or Portal";
+						button.Pressed += () =>
+						{
+							MakeRogueTowerUnlockChoicePrompt(GetRandomTowers(3, TowerUnit.TowerType.Null));
+						};
+						break;
+					case TowerRewardResource.TowerType.TowerAll:
+						button.Text = "Unlock any Defense";
+						button.Pressed += () =>
+						{
+							MakeRogueTowerUnlockChoicePrompt(GetRandomTowers(_remainingTowers.Count, TowerUnit.TowerType.Null));
+						};
+						break;
+				}
+			}
+			else if (resource is PassiveRewardResource passiveResource)
+			{
+				switch (passiveResource._type)
+				{
+					case PassiveRewardResource.PassiveType.FromThree:
+						button.Text = "Get a Passive";
+						button.Pressed += () =>
+						{
+							MakeRoguePassiveUnlockChoicePrompt(GetRandomPassives(3));
+						};
+						break;
+					case PassiveRewardResource.PassiveType.FromAll:
+						button.Text = "Get any passive";
+						button.Pressed += () =>
+						{
+							MakeRoguePassiveUnlockChoicePrompt(GetRandomPassives(_remainingEffects.Count));
+						};
+						break;
+				}
+			}
+			else if (resource is MoneyRewardResource)
+			{
+
 			}
 
 			vbox.AddChild(button);
 		}
-	}
-
-	public void ProcessChoicesQueue()
-	{
-		if (_processingChoicesQueue == true)
-		{
-			return;
-		}
-		if (_choicesQueue.Count == 0)
-		{
-			return;
-		}
-		_processingChoicesQueue = true;
-		RewardType type = _choicesQueue[0];
-		_choicesQueue.RemoveAt(0);
-		switch (type)
-		{
-			case RewardType.Defense:
-				MakeRogueTowerUnlockChoicePrompt(GetRandomTowers(3, TowerUnit.TowerType.Defense));
-				break;
-			case RewardType.Portal:
-				MakeRogueTowerUnlockChoicePrompt(GetRandomTowers(3, TowerUnit.TowerType.Spawner));
-				break;
-			case RewardType.Tower:
-				MakeRogueTowerUnlockChoicePrompt(GetRandomTowers(3, TowerUnit.TowerType.Null));
-				break;
-			case RewardType.Passive:
-				MakeRoguePassiveUnlockChoicePrompt(GetRandomPassives(3));
-				break;
-			case RewardType.DefenseAll:
-				MakeRogueTowerUnlockChoicePrompt(GetRandomTowers(3, TowerUnit.TowerType.Defense));
-				break;
-			case RewardType.PortalAll:
-				MakeRogueTowerUnlockChoicePrompt(GetRandomTowers(3, TowerUnit.TowerType.Spawner));
-				break;
-			case RewardType.TowerAll:
-				MakeRogueTowerUnlockChoicePrompt(GetRandomTowers(_remainingTowers.Count, TowerUnit.TowerType.Null));
-				break;
-			case RewardType.PassiveAll:
-				MakeRoguePassiveUnlockChoicePrompt(GetRandomPassives(_remainingEffects.Count));
-				break;
-		}
-		
 	}
 }

@@ -221,7 +221,7 @@ public partial class UnitInfoPanel : CanvasLayer
 			string name_ = name;
 			
 
-			if (unit._towerType != tab)
+			if (unit._towerType != tab && unit._towerType != TowerUnit.TowerType.Support)
 			{
 				continue;
 			}

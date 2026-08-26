@@ -1,0 +1,96 @@
+[gd_scene format=3 uid="uid://c6bfppoao3gw2"]
+
+[ext_resource type="PackedScene" uid="uid://7vf0p5478xp8" path="res://_Content/_Scenes/_Prefabs/Units/BaseStationaryUnit.tscn" id="1_j6h7a"]
+[ext_resource type="Script" uid="uid://clbx4g28u7y06" path="res://_Source/_Units/EventTower.cs" id="2_ljkgx"]
+[ext_resource type="Script" uid="uid://iamaod4iivlq" path="res://_Source/Effects/InvaderStatsIncrease/InvaderStatsIncreaseResource.cs" id="3_fsxri"]
+[ext_resource type="Script" uid="uid://dtpcxn7d2dqcy" path="res://_Source/Effects/EffectResource.cs" id="4_smgiy"]
+[ext_resource type="Script" uid="uid://cvroohkeaovqw" path="res://_Source/_Units/SpawnerDataResource.cs" id="5_f2mu7"]
+[ext_resource type="Script" uid="uid://b7lr0pdklwlj5" path="res://_Source/_TD/Rewards/TowerRewardResource.cs" id="7_21vvr"]
+[ext_resource type="Script" uid="uid://cq2qc3mndw3uv" path="res://_Source/_Units/Events/BossEvent.cs" id="8_cwig5"]
+[ext_resource type="FontFile" uid="uid://cbsqj8u26ju8q" path="res://_Assets/Fonts/edit-undo.brk.ttf" id="9_x0xij"]
+[ext_resource type="Script" uid="uid://dmsd1wjc5yk5v" path="res://_Source/_UI/TooltipRichTextLabel.cs" id="10_v0gwu"]
+
+[sub_resource type="Resource" id="Resource_a0dpb"]
+script = ExtResource("3_fsxri")
+_unitName = "Inspector"
+_level = 1
+metadata/_custom_type_script = "uid://iamaod4iivlq"
+
+[sub_resource type="Resource" id="Resource_4dh8u"]
+script = ExtResource("5_f2mu7")
+_units = Array[ExtResource("3_fsxri")]([SubResource("Resource_a0dpb")])
+metadata/_custom_type_script = "uid://cvroohkeaovqw"
+
+[sub_resource type="Resource" id="Resource_ajmsw"]
+script = ExtResource("7_21vvr")
+_type = 2
+metadata/_custom_type_script = "uid://b7lr0pdklwlj5"
+
+[sub_resource type="Resource" id="Resource_1usli"]
+script = ExtResource("8_cwig5")
+_boss = SubResource("Resource_4dh8u")
+_bossReward = Array[Object]([SubResource("Resource_ajmsw")])
+_description = "Fight a mini boss for a tower unlock!"
+metadata/_custom_type_script = "uid://cq2qc3mndw3uv"
+
+[node name="BaseStationaryUnit" unique_id=481801141 instance=ExtResource("1_j6h7a")]
+script = ExtResource("2_ljkgx")
+_event = SubResource("Resource_1usli")
+_cost = Vector4i(0, 0, 0, 0)
+_iconTexture = null
+_towerType = 1
+_description = "A Portal left behind by the Mages during the Great War. A powerful presence is trapped within."
+_firstUpgrade = null
+_firstUpgradeCost = Vector4i(0, 0, 0, 0)
+_secondUpgrade = null
+_secondUpgradeCost = Vector4i(0, 0, 0, 0)
+_thirdUpgrade = null
+_thirdUpgradeCost = Vector4i(0, 0, 0, 0)
+_fourthUpgradeA = null
+_fourthUpgradeATexture = null
+_fourthUpgradeACost = Vector4i(0, 0, 0, 0)
+_fourthUpgradeB = null
+_fourthUpgradeBTexture = null
+_fourthUpgradeBCost = Vector4i(0, 0, 0, 0)
+_transformEffects = Array[ExtResource("4_smgiy")]([])
+_movable = false
+_sellable = false
+_removable = false
+_mustBeNextToPath = true
+_internalName = "EasyBossEvent"
+_name = "Abandoned Portal"
+
+[node name="CollisionShape2D" parent="." index="2" unique_id=1381764660]
+visible = true
+
+[node name="HealthBar" parent="." index="4" unique_id=640038315]
+visible = false
+
+[node name="Level" type="Label" parent="." index="8" unique_id=1522381665]
+offset_left = 8.0
+offset_top = 23.0
+offset_right = 77.0
+offset_bottom = 90.0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 12
+theme_override_fonts/font = ExtResource("9_x0xij")
+theme_override_font_sizes/font_size = 24
+text = "Lv 1"
+
+[node name="Income" type="RichTextLabel" parent="." index="9" unique_id=961722696]
+clip_contents = false
+custom_minimum_size = Vector2(75, 0)
+offset_left = -58.0
+offset_top = -58.0
+offset_right = -8.0
+offset_bottom = -18.0
+mouse_filter = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 12
+theme_override_fonts/normal_font = ExtResource("9_x0xij")
+theme_override_fonts/italics_font = ExtResource("9_x0xij")
+theme_override_font_sizes/normal_font_size = 24
+theme_override_font_sizes/italics_font_size = 24
+bbcode_enabled = true
+fit_content = true
+script = ExtResource("10_v0gwu")

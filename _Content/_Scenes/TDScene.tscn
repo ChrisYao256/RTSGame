@@ -58,6 +58,8 @@
 [ext_resource type="Script" uid="uid://dy6fwulpmhxdc" path="res://_Source/_TD/RewardManager.cs" id="39_4f8lp"]
 [ext_resource type="Texture2D" uid="uid://df0pytk1ndhhs" path="res://_Assets/Effects/TwoBooks.png" id="39_n7h35"]
 [ext_resource type="Texture2D" uid="uid://denc6ofvkv51b" path="res://_Assets/Effects/Soulgem.png" id="42_n7h35"]
+[ext_resource type="Script" uid="uid://cquak5cnd6iml" path="res://_Source/_TD/Rewards/RewardResource.cs" id="57_t78eu"]
+[ext_resource type="Script" uid="uid://b7lr0pdklwlj5" path="res://_Source/_TD/Rewards/TowerRewardResource.cs" id="58_l5rss"]
 
 [sub_resource type="Resource" id="Resource_rsgja"]
 script = ExtResource("9_o6hv2")
@@ -518,6 +520,24 @@ action = &"Space"
 [sub_resource type="Shortcut" id="Shortcut_j46br"]
 events = [SubResource("InputEventAction_hcr7m")]
 
+[sub_resource type="Resource" id="Resource_0uvfj"]
+script = ExtResource("58_l5rss")
+metadata/_custom_type_script = "uid://b7lr0pdklwlj5"
+
+[sub_resource type="Resource" id="Resource_wvb24"]
+script = ExtResource("58_l5rss")
+_type = 1
+metadata/_custom_type_script = "uid://b7lr0pdklwlj5"
+
+[sub_resource type="Resource" id="Resource_j44fn"]
+script = ExtResource("58_l5rss")
+metadata/_custom_type_script = "uid://b7lr0pdklwlj5"
+
+[sub_resource type="Resource" id="Resource_xgqwb"]
+script = ExtResource("58_l5rss")
+_type = 1
+metadata/_custom_type_script = "uid://b7lr0pdklwlj5"
+
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_d7nqx"]
 texture = ExtResource("7_dqwu5")
 texture_margin_left = 12.0
@@ -543,6 +563,8 @@ _inspectionBosses = Array[Object]([SubResource("Resource_xxchu"), SubResource("R
 _finalBosses = Array[Object]([SubResource("Resource_emq71")])
 _startingMoney = Vector4i(80, 80, 80, 80)
 _allGlobalEffects = Array[Object]([SubResource("Resource_dntla"), SubResource("Resource_bjl3e"), SubResource("Resource_q6tlc"), SubResource("Resource_0kvg5"), SubResource("Resource_4qasu"), SubResource("Resource_jpjpv"), SubResource("Resource_ftcvg"), SubResource("Resource_6dmqx"), SubResource("Resource_v0mgk"), SubResource("Resource_r3yin"), SubResource("Resource_4f8lp"), SubResource("Resource_2tfwb"), SubResource("Resource_7kp2f"), SubResource("Resource_ap1w4"), SubResource("Resource_8lxj5"), SubResource("Resource_i1dr5"), SubResource("Resource_dmkyn"), SubResource("Resource_okxfi"), SubResource("Resource_ndjxy"), SubResource("Resource_qc10m"), SubResource("Resource_jroq3"), SubResource("Resource_vi170"), SubResource("Resource_8ac4n")])
+_easyEventTowers = Array[String](["EasyBossEvent", "ChestPassiveEvent", "ChestTowerEvent"])
+_medEventTowers = Array[String](["BossEvent", "BuyPassiveEvent"])
 
 [node name="NavigationRegion2D" type="NavigationRegion2D" parent="." unique_id=1731619863]
 navigation_polygon = SubResource("NavigationPolygon_dqwu5")
@@ -725,7 +747,9 @@ process_mode = 1
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "Next Cycle
-"
+TODO: 
+1. Added cost to revealing chunk
+2. Add chunk saving"
 
 [node name="Challenge" type="Button" parent="RightPanelCanvasLayer/RightPanel/VBoxContainer/HBoxContainer/VBoxContainer" unique_id=1383851800]
 custom_minimum_size = Vector2(250, 88)
@@ -887,6 +911,7 @@ text = "Done
 [node name="RewardLayer" type="CanvasLayer" parent="." unique_id=986343627]
 visible = false
 script = ExtResource("39_4f8lp")
+_startingRewards = Array[ExtResource("57_t78eu")]([SubResource("Resource_0uvfj"), SubResource("Resource_wvb24"), SubResource("Resource_j44fn"), SubResource("Resource_xgqwb")])
 
 [node name="ColorRect" type="ColorRect" parent="RewardLayer" unique_id=1477879284]
 offset_right = 1920.0
