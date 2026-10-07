@@ -117,7 +117,7 @@ public partial class TDManager : Node
 	private TooltipRichTextLabel _redLabel;
 	private TooltipRichTextLabel _blueLabel;
 	private TooltipRichTextLabel _greenLabel;
-	private GridManager _grid;
+	public GridManager _grid;
 	private Label _waveCounter;
 	private TextureProgressBar _progressionBar;
 	private StripeManager _progressionBarStripes;
@@ -166,6 +166,7 @@ public partial class TDManager : Node
 	public Array<InvaderStatsIncreaseResource> _nextChallengeUnits;
 	public Array<RewardResource> _currentWaveRewards;
 	public bool _inspectionWaveOnGoing;
+	public int _revealChunkCount;
 
 	public override void _Ready()
 	{
@@ -1004,6 +1005,11 @@ public partial class TDManager : Node
 	public int GetChallengeCost()
 	{
 		return 20 * (int)Math.Pow(2, (double)_challengeCount / 2f);
+	}
+
+	public int GetRevealChunkCost()
+	{
+		return 10 + 10 * (int)Math.Pow(2, (double)_revealChunkCount / 2f);
 	}
 
 	public float GetBossHpMultiplier(int challengeCount)

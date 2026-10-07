@@ -13,3 +13,4 @@ script = ExtResource("2_p8lnc")
 _connectionLeft = true
 _connectionUp = true
 _event = 1
+_id = 4

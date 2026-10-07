@@ -13,3 +13,4 @@ script = ExtResource("2_eh2js")
 _connectionRight = true
 _connectionDown = true
 _event = 1
+_id = 1

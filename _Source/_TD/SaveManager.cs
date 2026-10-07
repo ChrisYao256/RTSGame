@@ -96,6 +96,21 @@ public partial class SaveManager : Node
 
 		gameData.Add("Towers", towerList);
 
+		var chunkList = new Array<Dictionary<string, Variant>>();
+		foreach (Chunk chunk in chunks)
+		{
+			var chunkData = new Dictionary<string, Variant>
+			{
+				{ "ID", chunk._id},
+				{ "GridX", chunk._chunkCoord.X },
+				{ "GridY", chunk._chunkCoord.Y },
+				{ "Ghost", chunk._ghostChunk},
+			};
+			chunkList.Add(chunkData);
+		}
+
+		gameData.Add("Chunks", chunkList);
+
 		var effectsList = new Array<int>();
 
 		foreach (GlobalEffectResource effect in globalEffects)
@@ -198,6 +213,8 @@ public partial class SaveManager : Node
 		// Extract the nested tower array
 		var loadedTowers = (Array<Dictionary<string, Variant>>)gameData["Towers"];
 
+		var loadedChunks = (Array<Dictionary<string, Variant>>)gameData["Chunks"];
+
 		var loadedUnlockedTowers = (Array<string>)gameData["UnlockedTowers"];
 
 		var loadedGlobalEffects = (Array<int>)gameData["GlobalEffects"];
@@ -205,7 +222,7 @@ public partial class SaveManager : Node
 
 		// Send everything off to be reconstructed in your main match loop
 		// Send everything off to be reconstructed in your main match loop
-		ApplyLoadedData(gameMode, loadedMoney, loadedPortalLimit, loadedHp, loadedWaveCount, loadedTowers, loadedUnlockedTowers, loadedGlobalEffects, loadedFinalWave, loadedInspectionFailedCount, loadedChallengeCount, loadedChallengeEnabled, loadedInspectionEnabled, loadedPortalsEnabled, loadedFinalBoss, loadedNextChallenge);
+		ApplyLoadedData(gameMode, loadedMoney, loadedPortalLimit, loadedHp, loadedWaveCount, loadedTowers, loadedUnlockedTowers, loadedGlobalEffects, loadedFinalWave, loadedInspectionFailedCount, loadedChallengeCount, loadedChallengeEnabled, loadedInspectionEnabled, loadedPortalsEnabled, loadedFinalBoss, loadedNextChallenge, loadedChunks);
 	}
 
 	public bool HasSavedGame()
@@ -280,7 +297,8 @@ public partial class SaveManager : Node
 		bool inspectionEnabled,
 		bool portalsEnabled,
 		Array<Array<Variant>> finalBoss,
-		Array<Array<Variant>> nextChallenge
+		Array<Array<Variant>> nextChallenge,
+		Array<Dictionary<string, Variant>> chunks
 	)
 	{
 		_tdManager._gameMode = gameMode;
@@ -337,6 +355,18 @@ public partial class SaveManager : Node
 				tower.UpgradeFirst();
 				tower.UpgradeSecond();
 				tower.UpgradeThird();
+			}
+		}
+
+		foreach (var chunkData in chunks)
+		{
+			if ((bool)chunkData["Ghost"])
+			{
+				_tdManager._grid.AddGhostChunk(new Vector2I((int)chunkData["GridX"], (int)chunkData["GridY"]), (int)chunkData["ID"]);
+			}
+			else
+			{
+				_tdManager._grid.PlaceChunkById(new Vector2I((int)chunkData["GridX"], (int)chunkData["GridY"]), (int)chunkData["ID"]);
 			}
 		}
 

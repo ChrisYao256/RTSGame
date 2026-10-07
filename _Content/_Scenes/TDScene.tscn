@@ -746,12 +746,10 @@ columns = 8
 process_mode = 1
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
-text = "Next Cycle
-TODO: 
-1. Added cost to revealing chunk
-2. Add chunk saving"
+text = "Next Cycle"
 
 [node name="Challenge" type="Button" parent="RightPanelCanvasLayer/RightPanel/VBoxContainer/HBoxContainer/VBoxContainer" unique_id=1383851800]
+visible = false
 custom_minimum_size = Vector2(250, 88)
 layout_mode = 2
 theme_override_font_sizes/font_size = 24

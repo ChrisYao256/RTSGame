@@ -4,6 +4,7 @@ using RTSGame.Units;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace RTSGame.Source;
 
@@ -71,6 +72,8 @@ public partial class GridManager : TileMapLayer
 	private Array<Vector2I> _unrevealableChunks = [];
 
 	public Array<Chunk> _revealedChunks = [];
+
+	private Godot.Collections.Dictionary<Vector2I, Button> _revealButtons = new();
 
 	private Godot.Collections.Dictionary<Vector2I, Array<bool>> _walkableTiles = new();
 
@@ -192,7 +195,9 @@ public partial class GridManager : TileMapLayer
 
 		foreach (ChunkResource boundaryChunk in _startingBoundaryChunks)
 		{
-			_revealedChunks.Add(boundaryChunk.MakeChunk());
+			Chunk ghost = boundaryChunk.MakeChunk();
+			ghost._ghostChunk = true;
+			_revealedChunks.Add(ghost);
 		}
 		
 		SetupNavigation();
@@ -204,154 +209,190 @@ public partial class GridManager : TileMapLayer
 		_unrevealableChunks.Remove(chunkCoord);
 
 		Button unlockButton = new Button();
-		unlockButton.Text = "Unlock";
+		unlockButton.CustomMinimumSize = new Vector2(114, 80);
+		
 		_chunkUI.AddChild(unlockButton);
-		var test = ChunkCoordToMapCoord(chunkCoord);
-		unlockButton.GlobalPosition = MapToGlobal(ChunkCoordToMapCoord(chunkCoord)) + new Vector2(50, 50);
+		_revealButtons.Add(chunkCoord, unlockButton);
+		unlockButton.GlobalPosition = MapToGlobal(ChunkCoordToMapCoord(chunkCoord)) + new Vector2(50, 90);
 
 		unlockButton.Pressed += () =>
 		{
-			unlockButton.QueueFree();
-
-			bool upBlocked = false;
-			bool upRequired = false;
-			bool downBlocked = false;
-			bool downRequired = false;
-			bool rightRequired = false;
-			bool rightBlocked = false;
-			bool leftBlocked = false;
-			bool leftRequired = false;
-
-			foreach (Chunk oldChunk in _revealedChunks)
-			{
-				// Neighbor is to the Right
-				if (oldChunk._chunkCoord - chunkCoord == new Vector2I(1, 0))
-				{
-					if (oldChunk._connectionLeft)
-					{
-						rightRequired = true;
-					}
-					else
-					{
-						rightBlocked = true;
-					}
-				}
-
-				// Neighbor is to the Left
-				if (oldChunk._chunkCoord - chunkCoord == new Vector2I(-1, 0))
-				{
-					if (oldChunk._connectionRight)
-					{
-						leftRequired = true;
-					}
-					else
-					{
-						leftBlocked = true;
-					}
-				}
-
-				// Neighbor is Down
-				if (oldChunk._chunkCoord - chunkCoord == new Vector2I(0, 1))
-				{
-					if (oldChunk._connectionUp)
-					{
-						downRequired = true;
-					}
-					else
-					{
-						downBlocked = true;
-					}
-				}
-
-				// Neighbor is Up
-				if (oldChunk._chunkCoord - chunkCoord == new Vector2I(0, -1))
-				{
-					if (oldChunk._connectionDown)
-					{
-						upRequired = true;
-					}
-					else
-					{
-						upBlocked = true;
-					}
-				}
-			}
-
-			Array<string> requiredConnections = [];
-			if (rightRequired)
-			{
-				requiredConnections.Add("Right");
-			}
-			if (leftRequired)
-			{
-				requiredConnections.Add("Left");
-			}
-			if (upRequired)
-			{
-				requiredConnections.Add("Up");
-			}
-			if (downRequired)
-			{
-				requiredConnections.Add("Down");
-			}
-
-			Vector2I upChunk = new Vector2I(chunkCoord.X, chunkCoord.Y - 1);
-			Vector2I downChunk = new Vector2I(chunkCoord.X, chunkCoord.Y + 1);
-			Vector2I leftChunk = new Vector2I(chunkCoord.X - 1, chunkCoord.Y);
-			Vector2I rightChunk = new Vector2I(chunkCoord.X + 1, chunkCoord.Y);
-
-			Vector2I upMap = ChunkCoordToMapCoord(upChunk);
-			Vector2I downMap = ChunkCoordToMapCoord(downChunk);
-			Vector2I leftMap = ChunkCoordToMapCoord(leftChunk);
-			Vector2I rightMap = ChunkCoordToMapCoord(rightChunk);
-
-			// Blocked checks (Part of center or out of bounds)
-			if (_startingCells.Contains(upMap) || upMap.Y < _topLeftTile.Y)
-			{
-				upBlocked = true;
-			}
-
-			if (_startingCells.Contains(downMap) || downMap.Y > _topLeftTile.Y + _mapSize.Y)
-			{
-				downBlocked = true;
-			}
-
-			if (_startingCells.Contains(leftMap) || leftMap.X < _topLeftTile.X)
-			{
-				leftBlocked = true;
-			}
-
-			if (_startingCells.Contains(rightMap) || rightMap.X > _topLeftTile.X + _mapSize.X)
-			{
-				rightBlocked = true;
-			}
-
-			if (upRequired && upBlocked)
-			{
-				upBlocked = false;
-			}
-
-			if (downRequired && downBlocked)
-			{
-				downBlocked = false;
-			}
-
-			if (leftRequired && leftBlocked)
-			{
-				leftBlocked = false;
-			}
-
-			if (rightRequired && rightBlocked)
-			{
-				rightBlocked = false;
-			}
-
-			MakeChunkChoicePrompt(
-			upBlocked, downBlocked, leftBlocked, rightBlocked,
-			upRequired, downRequired, leftRequired, rightRequired,
-			chunkCoord
-			);
+			RevealButtonClicked(chunkCoord);
 		};
+
+		TooltipRichTextLabel label = new TooltipRichTextLabel();
+		label.Name = "Label";
+		label.Text = "Purchase\n" + Utils.MakeMoneyText(new Vector4I(_tdManager.GetRevealChunkCost(), 0, 0, 0));
+		label.CustomMinimumSize = new(90, 70);
+		label.FitContent = true;
+		label.Position = new Vector2(12, 12);
+		label.MouseFilter = Control.MouseFilterEnum.Ignore;
+
+		unlockButton.MouseEntered += () => label.AddThemeColorOverride("default_color", ThemePalette.White);
+		unlockButton.MouseExited += () => label.AddThemeColorOverride("default_color", ThemePalette.Yellow);
+
+		unlockButton.AddChild(label);
+
+	}
+
+	private void RevealButtonClicked(Vector2I chunkCoord)
+	{
+		if (_tdManager.GetRevealChunkCost() <= _tdManager._money[0])
+		{
+			_tdManager.SpendMoney(new Vector4I(_tdManager.GetRevealChunkCost(), 0, 0, 0));
+		}
+		else
+		{
+			return;
+		}
+		_tdManager._revealChunkCount++;
+		foreach (Button button_ in _revealButtons.Values)
+		{
+			button_.GetNode<TooltipRichTextLabel>("Label").Text = "Purchase\n" + Utils.MakeMoneyText(new Vector4I(_tdManager.GetRevealChunkCost(), 0, 0, 0));
+		}
+
+		Button button = _revealButtons[chunkCoord];
+		_revealButtons.Remove(chunkCoord);
+		button.QueueFree();
+
+		bool upBlocked = false;
+		bool upRequired = false;
+		bool downBlocked = false;
+		bool downRequired = false;
+		bool rightRequired = false;
+		bool rightBlocked = false;
+		bool leftBlocked = false;
+		bool leftRequired = false;
+
+		foreach (Chunk oldChunk in _revealedChunks)
+		{
+			// Neighbor is to the Right
+			if (oldChunk._chunkCoord - chunkCoord == new Vector2I(1, 0))
+			{
+				if (oldChunk._connectionLeft)
+				{
+					rightRequired = true;
+				}
+				else
+				{
+					rightBlocked = true;
+				}
+			}
+
+			// Neighbor is to the Left
+			if (oldChunk._chunkCoord - chunkCoord == new Vector2I(-1, 0))
+			{
+				if (oldChunk._connectionRight)
+				{
+					leftRequired = true;
+				}
+				else
+				{
+					leftBlocked = true;
+				}
+			}
+
+			// Neighbor is Down
+			if (oldChunk._chunkCoord - chunkCoord == new Vector2I(0, 1))
+			{
+				if (oldChunk._connectionUp)
+				{
+					downRequired = true;
+				}
+				else
+				{
+					downBlocked = true;
+				}
+			}
+
+			// Neighbor is Up
+			if (oldChunk._chunkCoord - chunkCoord == new Vector2I(0, -1))
+			{
+				if (oldChunk._connectionDown)
+				{
+					upRequired = true;
+				}
+				else
+				{
+					upBlocked = true;
+				}
+			}
+		}
+
+		Array<string> requiredConnections = [];
+		if (rightRequired)
+		{
+			requiredConnections.Add("Right");
+		}
+		if (leftRequired)
+		{
+			requiredConnections.Add("Left");
+		}
+		if (upRequired)
+		{
+			requiredConnections.Add("Up");
+		}
+		if (downRequired)
+		{
+			requiredConnections.Add("Down");
+		}
+
+		Vector2I upChunk = new Vector2I(chunkCoord.X, chunkCoord.Y - 1);
+		Vector2I downChunk = new Vector2I(chunkCoord.X, chunkCoord.Y + 1);
+		Vector2I leftChunk = new Vector2I(chunkCoord.X - 1, chunkCoord.Y);
+		Vector2I rightChunk = new Vector2I(chunkCoord.X + 1, chunkCoord.Y);
+
+		Vector2I upMap = ChunkCoordToMapCoord(upChunk);
+		Vector2I downMap = ChunkCoordToMapCoord(downChunk);
+		Vector2I leftMap = ChunkCoordToMapCoord(leftChunk);
+		Vector2I rightMap = ChunkCoordToMapCoord(rightChunk);
+
+		// Blocked checks (Part of center or out of bounds)
+		if (_startingCells.Contains(upMap) || upMap.Y < _topLeftTile.Y)
+		{
+			upBlocked = true;
+		}
+
+		if (_startingCells.Contains(downMap) || downMap.Y > _topLeftTile.Y + _mapSize.Y)
+		{
+			downBlocked = true;
+		}
+
+		if (_startingCells.Contains(leftMap) || leftMap.X < _topLeftTile.X)
+		{
+			leftBlocked = true;
+		}
+
+		if (_startingCells.Contains(rightMap) || rightMap.X > _topLeftTile.X + _mapSize.X)
+		{
+			rightBlocked = true;
+		}
+
+		if (upRequired && upBlocked)
+		{
+			upBlocked = false;
+		}
+
+		if (downRequired && downBlocked)
+		{
+			downBlocked = false;
+		}
+
+		if (leftRequired && leftBlocked)
+		{
+			leftBlocked = false;
+		}
+
+		if (rightRequired && rightBlocked)
+		{
+			rightBlocked = false;
+		}
+
+		MakeChunkChoicePrompt(
+		upBlocked, downBlocked, leftBlocked, rightBlocked,
+		upRequired, downRequired, leftRequired, rightRequired,
+		chunkCoord
+		);
 	}
 
 	public Vector2 GetSnappedPosition(Vector2 worldPosition)
@@ -911,7 +952,7 @@ public partial class GridManager : TileMapLayer
 		}
 	}
 
-	private void PlaceChunk(Vector2I chunkCoord, Chunk newChunk)
+	private void PlaceChunk(Vector2I chunkCoord, Chunk newChunk, bool spawnEvent = true)
 	{
 		Vector2I topLeft = ChunkCoordToMapCoord(chunkCoord) - new Vector2I(1,1);
 		for (int i = 0; i < ChunkSize; i++)
@@ -924,35 +965,79 @@ public partial class GridManager : TileMapLayer
 			}
 		}
 
-		Random random = new Random();
-		int x = random.Next(ChunkSize);
-		int y = random.Next(ChunkSize);
-		switch (newChunk._event)
+		if (spawnEvent)
 		{
-			case Chunk.EventDifficulty.Easy:
-				string eventTower = Utils.GetRandomElements<string>(_tdManager._easyEventTowers, 1)[0];
-				EventTower towerInstance = (EventTower)UnitManager.GetUnit(eventTower, false);
-				Vector2I buildablePos = newChunk.FindClosestBuildableCell(new Vector2I(x,y), towerInstance._mustBeNextToPath);
-				_tdManager._towerManager.PlaceTower(topLeft + buildablePos, eventTower);
-				break;
-			case Chunk.EventDifficulty.Medium:
-				eventTower = Utils.GetRandomElements<string>(_tdManager._medEventTowers, 1)[0];
-				towerInstance = (EventTower)UnitManager.GetUnit(eventTower, false);
-				buildablePos = newChunk.FindClosestBuildableCell(new Vector2I(x, y), towerInstance._mustBeNextToPath);
-				_tdManager._towerManager.PlaceTower(topLeft + buildablePos, eventTower);
-				break;
-			case Chunk.EventDifficulty.Hard:
-				eventTower = Utils.GetRandomElements<string>(_tdManager._hardEventTowers, 1)[0];
-				towerInstance = (EventTower)UnitManager.GetUnit(eventTower, false);
-				buildablePos = newChunk.FindClosestBuildableCell(new Vector2I(x, y), towerInstance._mustBeNextToPath);
-				_tdManager._towerManager.PlaceTower(topLeft + buildablePos, eventTower);
-				break;
+			Random random = new Random();
+			int x = random.Next(ChunkSize);
+			int y = random.Next(ChunkSize);
+			switch (newChunk._event)
+			{
+				case Chunk.EventDifficulty.Easy:
+					string eventTower = Utils.GetRandomElements<string>(_tdManager._easyEventTowers, 1)[0];
+					EventTower towerInstance = (EventTower)UnitManager.GetUnit(eventTower, false);
+					Vector2I buildablePos = newChunk.FindClosestBuildableCell(new Vector2I(x, y), towerInstance._mustBeNextToPath);
+					_tdManager._towerManager.PlaceTower(topLeft + buildablePos, eventTower);
+					break;
+				case Chunk.EventDifficulty.Medium:
+					eventTower = Utils.GetRandomElements<string>(_tdManager._medEventTowers, 1)[0];
+					towerInstance = (EventTower)UnitManager.GetUnit(eventTower, false);
+					buildablePos = newChunk.FindClosestBuildableCell(new Vector2I(x, y), towerInstance._mustBeNextToPath);
+					_tdManager._towerManager.PlaceTower(topLeft + buildablePos, eventTower);
+					break;
+				case Chunk.EventDifficulty.Hard:
+					eventTower = Utils.GetRandomElements<string>(_tdManager._hardEventTowers, 1)[0];
+					towerInstance = (EventTower)UnitManager.GetUnit(eventTower, false);
+					buildablePos = newChunk.FindClosestBuildableCell(new Vector2I(x, y), towerInstance._mustBeNextToPath);
+					_tdManager._towerManager.PlaceTower(topLeft + buildablePos, eventTower);
+					break;
+			}
 		}
 
 		_revealedChunks.Add(newChunk);
 		newChunk._chunkCoord = chunkCoord;
 
 		RefreshNavigation();
+	}
+
+	/// <summary>
+	/// This is used only when loading. The placed chunk goes directly from the revealable state to a real chunk without a popup.
+	/// </summary>
+	/// <param name="chunkCoord"></param>
+	/// <param name="id"></param>
+	public void PlaceChunkById(Vector2I chunkCoord, int id)
+	{
+		Chunk chunk = ChunkLibrary[id].Instantiate<Chunk>();
+		PlaceChunk(chunkCoord, chunk, false);
+		Button button = _revealButtons[chunkCoord];
+		_revealButtons.Remove(chunkCoord);
+		button.QueueFree();
+
+		_tdManager._revealChunkCount++;
+
+		if (chunk._connectionRight && _unrevealableChunks.Contains(chunkCoord + new Vector2I(1, 0)))
+		{
+			MakeNewRevealableChunk(chunkCoord + new Vector2I(1, 0));
+		}
+		if (chunk._connectionLeft && _unrevealableChunks.Contains(chunkCoord + new Vector2I(-1, 0)))
+		{
+			MakeNewRevealableChunk(chunkCoord + new Vector2I(-1, 0));
+		}
+		if (chunk._connectionDown && _unrevealableChunks.Contains(chunkCoord + new Vector2I(0, 1)))
+		{
+			MakeNewRevealableChunk(chunkCoord + new Vector2I(0, 1));
+		}
+		if (chunk._connectionUp && _unrevealableChunks.Contains(chunkCoord + new Vector2I(0, -1)))
+		{
+			MakeNewRevealableChunk(chunkCoord + new Vector2I(0, -1));
+		}
+	}
+
+	public void AddGhostChunk(Vector2I chunkCoord, int id)
+	{
+		Chunk chunk = ChunkLibrary[id].Instantiate<Chunk>();
+		chunk._chunkCoord = chunkCoord;
+		chunk._ghostChunk = true;
+		_revealedChunks.Add(chunk);
 	}
 
 	public void DrawVisualTiles(List<Vector2I> localCoords, Vector2I unitGridPos)

@@ -13,3 +13,4 @@ script = ExtResource("2_xl6yo")
 _connectionLeft = true
 _connectionRight = true
 _event = 1
+_id = 3

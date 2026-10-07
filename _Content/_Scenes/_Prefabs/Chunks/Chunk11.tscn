@@ -12,3 +12,4 @@ navigation_enabled = false
 script = ExtResource("2_2qiff")
 _connectionLeft = true
 _event = 2
+_id = 11

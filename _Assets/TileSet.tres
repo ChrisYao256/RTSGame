@@ -193,10 +193,12 @@ texture = ExtResource("1_lovk2")
 3:6/size_in_atlas = Vector2i(3, 3)
 3:6/0 = 0
 3:6/0/custom_data_8 = true
-1:9/0 = 0
-1:9/0/custom_data_9 = 2
+2:4/0 = 0
+2:3/0 = 0
 0:9/0 = 0
 0:9/0/custom_data_9 = 1
+1:9/0 = 0
+1:9/0/custom_data_9 = 2
 2:9/0 = 0
 2:9/0/custom_data_9 = 3
 

@@ -13,3 +13,4 @@ script = ExtResource("2_fxa84")
 _connectionRight = true
 _connectionUp = true
 _event = 1
+_id = 2

@@ -12,3 +12,4 @@ navigation_enabled = false
 script = ExtResource("2_pcmk2")
 _connectionRight = true
 _event = 2
+_id = 12

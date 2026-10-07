@@ -12,3 +12,4 @@ navigation_enabled = false
 script = ExtResource("2_uwg4u")
 _connectionUp = true
 _event = 2
+_id = 13

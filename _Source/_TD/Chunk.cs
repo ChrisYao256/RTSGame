@@ -41,7 +41,18 @@ public partial class Chunk : TileMapLayer
 	[Export]
 	public EventDifficulty _event;
 
+	[Export]
+	public int _id;
+
 	public Vector2I _chunkCoord;
+
+	/// <summary>
+	/// Ghost chunks are chunks that get added to _revealedChunks without being instantiated. They overlap with chunks in the center that have a connection outward. 
+	/// They help with connection logic for the initial revealable chunks. 
+	/// They are copied from _gridManager's _startingBoundaryChunks. 
+	/// While they don't have to exactly match the real chunk, their outward connection must be the same.
+	/// </summary>
+	public bool _ghostChunk = false;
 
 	public bool CanBuildAt(Vector2I gridPos)
 	{

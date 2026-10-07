@@ -13,3 +13,4 @@ script = ExtResource("2_2f2tg")
 _connectionLeft = true
 _connectionDown = true
 _event = 1
+_id = 5
